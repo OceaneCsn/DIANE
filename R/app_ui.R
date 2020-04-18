@@ -1,3 +1,6 @@
+library(shinydashboard)
+library(shinythemes)
+library(shinipsum)
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
@@ -22,7 +25,7 @@ app_ui <- function(request) {
           ),
           menuItem(
             "Data import",
-            tabName = "dataImport_tab",
+            tabName = "data_import_tab",
             icon = icon("table")
           ),
           menuItem(
@@ -43,7 +46,15 @@ app_ui <- function(request) {
         )
       ),
       
-      dashboardBody()
+      dashboardBody(
+
+        tabItems(
+          tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),
+          tabItem( tabName = "data_import_tab", mod_import_data_ui("import_data_ui_1"))
+
+        )
+        
+      )
     )
   )
 }
@@ -61,8 +72,9 @@ golem_add_external_resources <- function() {
   
   tags$head(favicon(),
             bundle_resources(path = app_sys('app/www'),
-                             app_title = 'DIANE')
+                             app_title = 'DIANE'),
             # Add here other external resources
             # for example, you can add shinyalert::useShinyalert() )
+            #shinyalert::useShinyalert()
   )
 }

@@ -21,12 +21,15 @@ usethis::use_package( "ggplot2" )
 usethis::use_package( "plotly" )
 usethis::use_package( "shinydashboard" )
 usethis::use_package( "shinythemes" )
+usethis::use_package( "shinipsum" )
+
 
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "import_data" ) # Name of the module
+golem::add_module( name = "differential_expression_analysis" ) # Name of the module
+golem::add_module( name = "context" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
