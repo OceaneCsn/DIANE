@@ -1,6 +1,7 @@
 library(shinydashboard)
 library(shinythemes)
 library(shinipsum)
+library(shinydashboardPlus)
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
