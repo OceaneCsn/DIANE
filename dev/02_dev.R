@@ -22,7 +22,8 @@ usethis::use_package( "plotly" )
 usethis::use_package( "shinydashboard" )
 usethis::use_package( "shinythemes" )
 usethis::use_package( "shinipsum" )
-
+usethis::use_package( "shinydashboardPlus" )
+usethis::use_package( "shinyWidgets" )
 
 
 ## Add modules ----

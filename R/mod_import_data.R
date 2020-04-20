@@ -1,4 +1,7 @@
 library(shinipsum)
+library(stringr)
+library(shinyWidgets)
+
 #' import_data UI Function
 #'
 #' @description A shiny Module.
@@ -12,43 +15,99 @@ mod_import_data_ui <- function(id) {
   ns <- NS(id)
   tagList(
     
+    ######################### Title and text
+    
     h1("Upload expression data and experimental design"),
     br(),
-    p("It should be a matrix like file, with genes
-       as rownames and conditions as columns. 
-       
+    p(
+      "It should be a matrix like file, with genes IDs in a column named \"Gene\"
+       as rownames and conditions as other columns.
        Please speficy the
-       replicates unsing the notation _i for the relicate i, placed after the condition name"),
-    
-    boxPlus(title = "Expression file upload",
-                width = 4,
-            solidHeader = F,
-                status = "primary", 
-                #boxToolSize = "xs", 
-                collapsible=T,
-                closable= F,
-                fileInput(
-                  ns('raw_data'),
-                  'Choose CSV/TXT file', 
-                  accept = c(
-                    'text/csv',
-                    'text/comma-separated-values,text/plain',
-                    '.csv',
-                    '.txt'
-                  )
-                ),
-                radioButtons(
-                  ns('sep'),
-                  'Separator : ',
-                  c(
-                    Comma = ',',
-                    Semicolon = ';',
-                    Tab = '\t'
-                  ),
-                  inline = T
-                )
+       replicates unsing the notation _i for the relicate i, placed after the condition name.
+      "
     ),
     
+    ######################### File upload
+    boxPlus(
+      title = "Expression file upload",
+      width = 4,
+      solidHeader = F,
+      status = "primary",
+      collapsible = T,
+      closable = F,
+      shinyWidgets::prettyCheckbox(ns("use_demo"),
+                     "Use demo data",
+                     value = TRUE,
+                     fill = T,
+                     thick = TRUE,
+                     status = "success",
+                     animation = "smooth",
+                     icon = NULL,
+                     bigger=TRUE,
+                     width = "200%"), 
+      radioButtons(
+        ns('sep'),
+        'Separator : ',
+        c(
+          Comma = ','
+          #Semicolon = ';',
+          #Tab = '\t'
+        ),
+        inline = T
+      ),
+      fileInput(
+        ns('raw_data'),
+        'Choose CSV/TXT expression file',
+        accept = c(
+          'text/csv',
+          'text/comma-separated-values,text/plain',
+          '.csv',
+          '.txt'
+        )
+      ),
+      p("It should be a matrix like file, with genes IDs in a column named \"Gene\" and conditions as other columns.<br>
+          Please speficy the replicates unsing the notation _i for the relicate i, placed after the condition name."),
+      fileInput(
+        ns('design'),
+        'Choose CSV/TXT design file',
+        accept = c(
+          'text/csv',
+          'text/comma-separated-values,text/plain',
+          '.csv',
+          '.txt'
+        )
+      ),
+      p("It should contain a column \"Condition\" containing the name of the conditions (columns of the expression matrix), as referring to what preceeds _i. <br>
+          The other columns are for each factor. The value of a cell is either 0 (if the condition is the reference level) or 1 (if it is the level of interest."),
+      valueBoxOutput(ns("data_dim")),
+      valueBoxOutput(ns("conditions"))
+    ),
+    
+    ###################### heatmap
+    
+    boxPlus(
+      title = "Preview of the expression matrix",
+      width = 3,
+      solidHeader = F,
+      status = "primary",
+      collapsible = T,
+      closable = F,
+      plotOutput(ns("heatmap_preview")),
+      footer = "This might help you visualize the different sequencing depths of your conditions."
+    ),
+    
+    boxPlus(
+      title = "Preview of the design",
+      width = 4,
+      solidHeader = F,
+      status = "primary",
+      collapsible = T,
+      closable = F,
+      DT::dataTableOutput(ns("design_preview")),
+      footer = "footer?"
+    ),
+    
+  
     hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
   )
@@ -60,17 +119,101 @@ mod_import_data_ui <- function(id) {
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
   
-  
   raw_data <- reactive({
-    validate(need(expr = input$raw_data, message = "No data provided"))
-    d <- read.csv(input$raw_data$datapath, sep = input$sep, header = T)
-    r$raw_data <- d
+    
+    print("reactive data")
+    if(input$use_demo){
+      path = paste0(r$PATH_TO_DEMO,"/rawData_At.csv")
+    }
+    else{ 
+      req(input$raw_data)
+      path = input$raw_data$datapath
+    }
+
+      attempt::attempt(
+        expr = {d <-
+          read.csv(
+            path,
+            sep = input$sep,
+            header = T,
+            stringsAsFactors = F
+          )
+        
+        if("Gene" %in% colnames(d)){
+          d <-
+            read.csv(
+              path,
+              sep = input$sep,
+              header = T,
+              stringsAsFactors = F,
+              row.names = "Gene"
+            )
+        }
+        else{stop()}
+        }
+      )
+      print("return d")
+      d
+    })
+   
+
+  ######### load the design  
+  design <- reactive({
+    if(input$use_demo){
+      print("design demo")
+      path = paste0(r$PATH_TO_DEMO, "/design_At.csv")
+    }
+    else{
+      req(input$design)
+      path = input$design$datapath
+    }
+      
+    d <- read.csv(
+      path,
+      header = T,
+      stringsAsFactors = F,
+      row.names = "Condition"
+    )
   })
   
+  ########### table view
+  
   output$raw_data_preview <- DT::renderDataTable({
-    
-    head(raw_data())
-    
+    head(raw_data(), n = 8)
+  })
+  
+  ########## matrix preview
+  output$heatmap_preview <- renderPlot({
+    validate(need(expr = raw_data(), message = "Data in the wrong format. Wrong separator? No column named Gene?"))
+    d <- raw_data()[rowSums(raw_data()) > 0, ]
+    sample <- sample(rownames(d), 200)
+    heatmap(as.matrix(d[sample, ]))
+  })
+  
+  ########### data summary
+  output$data_dim <- renderValueBox({
+    r$conditions <- stringr::str_split_fixed(colnames(raw_data()), "_", 2)[,1]
+    valueBox(
+      "Your data",
+      paste0(dim(raw_data())[1], " genes, ", dim(raw_data())[2], 
+             " samples"),
+      color = "teal",
+      width=4
+    )
+  })
+  output$conditions <- renderValueBox({
+    r$conditions <- stringr::str_split_fixed(colnames(raw_data()), "_", 2)[,1]
+    valueBox(
+      "Conditions",
+      paste0("Your ", length((unique(r$conditions))), " conditions are : ", paste(unique(r$conditions), collapse = ' ')),
+      color = "olive",
+      width=NULL
+    )
+  })
+  
+  ######### render design
+  output$design_preview <- DT::renderDataTable({
+    design()
   })
   
 }
