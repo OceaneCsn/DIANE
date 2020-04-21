@@ -13,9 +13,9 @@ mod_context_ui <- function(id){
   tagList(
     
     
-      h2("A Random Text 1"),
-      tableOutput(ns("text2"))
-      
+      h2("Dashboard for the Inference and Analysis of Networks from Expression data"),
+      #tableOutput(ns("text2")),
+      tags$img(src="/www/hex-DIANE.png", width = 300)
  
   )
 }

@@ -19,11 +19,11 @@ app_ui <- function(request) {
       dashboardHeader(title = "DIANE"),
       dashboardSidebar(
         sidebarMenu(
-          # menuItem(
-          #   "Context",
-          #   tabName = "context_tab",
-          #   icon = icon("seedling")
-          # ),
+          menuItem(
+            "Context",
+            tabName = "context_tab",
+            icon = icon("seedling")
+          ),
           menuItem(
             "Data import",
             tabName = "data_import_tab",

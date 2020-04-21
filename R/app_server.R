@@ -9,8 +9,8 @@ app_server <- function( input, output, session ) {
   r <- reactiveValues()
   r$PATH_TO_DEMO = "D:/These/QuantifFiles"
   
-  callModule(mod_context_server, "context_ui_1")
+  
   callModule(mod_import_data_server, "import_data_ui_1", r)
-
+  callModule(mod_context_server, "context_ui_1")
 }
 
