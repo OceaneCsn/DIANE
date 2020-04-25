@@ -1,4 +1,3 @@
-library(shinipsum)
 #' context UI Function
 #'
 #' @description A shiny Module.
@@ -14,7 +13,7 @@ mod_context_ui <- function(id){
     
     
       h2("Dashboard for the Inference and Analysis of Networks from Expression data"),
-      #tableOutput(ns("text2")),
+
       tags$img(src="/www/hex-DIANE.png", width = 300)
  
   )
@@ -25,10 +24,7 @@ mod_context_ui <- function(id){
 #' @noRd 
 mod_context_server <- function(input, output, session){
   ns <- session$ns
-  output$text2 <- renderText({
-    random_text(nwords = 50)
-
-  })
+  
 }
     
 ## To be copied in the UI

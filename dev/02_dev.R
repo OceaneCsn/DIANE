@@ -24,7 +24,7 @@ usethis::use_package( "shinythemes" )
 usethis::use_package( "shinipsum" )
 usethis::use_package( "shinydashboardPlus" )
 usethis::use_package( "shinyWidgets" )
-
+usethis::use_package( "stats" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/

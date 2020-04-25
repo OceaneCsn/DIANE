@@ -1,4 +1,3 @@
-library(shinipsum)
 library(stringr)
 library(shinyWidgets)
 
@@ -7,7 +6,8 @@ library(shinyWidgets)
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
+#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinydashboard valueBoxOutput
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
@@ -20,14 +20,13 @@ mod_import_data_ui <- function(id) {
     h1("Upload expression data and experimental design"),
     br(),
     p(
-      "It should be a matrix like file, with genes IDs in a column named \"Gene\"
-       as rownames and conditions as other columns.
-       Please speficy the
-       replicates unsing the notation _i for the relicate i, placed after the condition name.
+      "Upload a comma separated dataframe. It hould have genes IDs in a column named \"Gene\"
+       and experimental conditions as other columns.
+       Those conditions should be formatted as follow : conditionName_replicateNumber. (For example cnF_2).
       "
     ),
     
-    ######################### File upload
+    ######################### File upload ###################
     boxPlus(
       title = "Expression file upload",
       width = 4,
@@ -47,6 +46,8 @@ mod_import_data_ui <- function(id) {
                      width = "200%"), 
       radioButtons(
         ns('sep'),
+          
+          
         'Separator : ',
         c(
           Comma = ','
@@ -114,14 +115,17 @@ mod_import_data_ui <- function(id) {
 }
 
 #' import_data Server Function
-#'
+#' @importFrom utils read.csv
+#' @importFrom utils head
+#' @importFrom stats heatmap
+#' @importFrom shinydashboard renderValueBox
+#' @importFrom shinydashboard valueBox
 #' @noRd
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
   
   raw_data <- reactive({
     
-    print("reactive data")
     if(input$use_demo){
       path = paste0(r$PATH_TO_DEMO,"/rawData_At.csv")
     }
@@ -152,7 +156,6 @@ mod_import_data_server <- function(input, output, session, r) {
         else{stop()}
         }
       )
-      print("return d")
       d
     })
    
@@ -160,7 +163,6 @@ mod_import_data_server <- function(input, output, session, r) {
   ######### load the design  
   design <- reactive({
     if(input$use_demo){
-      print("design demo")
       path = paste0(r$PATH_TO_DEMO, "/design_At.csv")
     }
     else{
