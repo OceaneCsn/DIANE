@@ -1,6 +1,8 @@
 library(stringr)
 library(shinyWidgets)
 
+source("R/fct_heatmap.R")
+
 #' import_data UI Function
 #'
 #' @description A shiny Module.
@@ -88,23 +90,23 @@ mod_import_data_ui <- function(id) {
     
     boxPlus(
       title = "Preview of the expression matrix",
-      width = 3,
-      solidHeader = F,
-      status = "primary",
-      collapsible = T,
-      closable = F,
-      plotOutput(ns("heatmap_preview")),
-      footer = "This might help you visualize the different sequencing depths of your conditions."
-    ),
-    
-    boxPlus(
-      title = "Preview of the design",
       width = 4,
       solidHeader = F,
       status = "primary",
       collapsible = T,
       closable = F,
-      DT::dataTableOutput(ns("design_preview")),
+      shiny::plotOutput(ns("heatmap_preview"), height = 550),
+      footer = "This might help you visualize the different sequencing depths of your conditions."
+    ),
+    
+    boxPlus(
+      title = "Preview of the design",
+      width = 3,
+      solidHeader = F,
+      status = "primary",
+      collapsible = T,
+      closable = F,
+      DT::dataTableOutput(ns("design_preview"), height = 550),
       footer = "footer?"
     ),
     
@@ -124,7 +126,7 @@ mod_import_data_ui <- function(id) {
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
   
-  raw_data <- reactive({
+  raw_data <- shiny::reactive({
     
     if(input$use_demo){
       path = paste0(r$PATH_TO_DEMO,"/rawData_At.csv")
@@ -161,7 +163,7 @@ mod_import_data_server <- function(input, output, session, r) {
    
 
   ######### load the design  
-  design <- reactive({
+  design <- shiny::reactive({
     if(input$use_demo){
       path = paste0(r$PATH_TO_DEMO, "/design_At.csv")
     }
@@ -188,8 +190,11 @@ mod_import_data_server <- function(input, output, session, r) {
   output$heatmap_preview <- renderPlot({
     validate(need(expr = raw_data(), message = "Data in the wrong format. Wrong separator? No column named Gene?"))
     d <- raw_data()[rowSums(raw_data()) > 0, ]
-    sample <- sample(rownames(d), 200)
-    heatmap(as.matrix(d[sample, ]))
+    
+    draw_heatmap(d)
+    
+    # sample <- sample(rownames(d), 200)
+    # heatmap(as.matrix(d[sample, ]))
   })
   
   ########### data summary
