@@ -1,6 +1,6 @@
 #' context UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module for the application context.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'

@@ -5,7 +5,7 @@ source("R/fct_heatmap.R")
 
 #' import_data UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module to import expression data.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #' @importFrom shinydashboardPlus boxPlus
@@ -128,7 +128,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   raw_data <- shiny::reactive({
     
-    if(input$use_demo){
+    if (input$use_demo) {
       path = paste0(r$PATH_TO_DEMO,"/rawData_At.csv")
     }
     else{ 
@@ -145,7 +145,7 @@ mod_import_data_server <- function(input, output, session, r) {
             stringsAsFactors = F
           )
         
-        if("Gene" %in% colnames(d)){
+        if ("Gene" %in% colnames(d)) {
           d <-
             read.csv(
               path,
@@ -158,13 +158,14 @@ mod_import_data_server <- function(input, output, session, r) {
         else{stop()}
         }
       )
+      r$raw_counts <- d
       d
     })
    
 
   ######### load the design  
   design <- shiny::reactive({
-    if(input$use_demo){
+    if (input$use_demo) {
       path = paste0(r$PATH_TO_DEMO, "/design_At.csv")
     }
     else{
@@ -178,6 +179,7 @@ mod_import_data_server <- function(input, output, session, r) {
       stringsAsFactors = F,
       row.names = "Condition"
     )
+    r$design <- d
   })
   
   ########### table view
@@ -187,19 +189,14 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   ########## matrix preview
-  output$heatmap_preview <- renderPlot({
-    validate(need(expr = raw_data(), message = "Data in the wrong format. Wrong separator? No column named Gene?"))
+  output$heatmap_preview <- shiny::renderPlot({
+    shiny::validate(need(expr = raw_data(), message = "Data in the wrong format. Wrong separator? No column named Gene?"))
     d <- raw_data()[rowSums(raw_data()) > 0, ]
-    
     draw_heatmap(d)
-    
-    # sample <- sample(rownames(d), 200)
-    # heatmap(as.matrix(d[sample, ]))
   })
   
   ########### data summary
   output$data_dim <- renderValueBox({
-    r$conditions <- stringr::str_split_fixed(colnames(raw_data()), "_", 2)[,1]
     valueBox(
       "Your data",
       paste0(dim(raw_data())[1], " genes, ", dim(raw_data())[2], 

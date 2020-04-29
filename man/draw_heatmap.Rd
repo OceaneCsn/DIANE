@@ -8,7 +8,9 @@ draw_heatmap(
   normalized.count,
   subset = "random",
   show_rownames = F,
-  title = "Random preview heatmap of log(expression)"
+  title = "Random preview heatmap",
+  log = TRUE,
+  profiles = FALSE
 )
 }
 \arguments{
@@ -19,6 +21,10 @@ draw_heatmap(
 \item{show_rownames}{}
 
 \item{title}{}
+
+\item{log}{Show log(expression+1) in the heatmap if TRUE, expression if FALSE}
+
+\item{profiles}{Show expression/mean(expression) for each gene if TRUE, expression if FALSE}
 }
 \value{
 plot of the heatmap

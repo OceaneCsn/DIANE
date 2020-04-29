@@ -1,15 +1,15 @@
 library(pheatmap)
 library(stringr)
 
-
-
-
 #' Draw heatmap
 #'
 #' @param normalized.count 
 #' @param subset 
 #' @param show_rownames 
 #' @param title 
+#' @param log Show log(expression+1) in the heatmap if TRUE, expression if FALSE
+#' @param profiles Show expression/mean(expression) for each gene if TRUE, expression if FALSE
+#' 
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
 #'
@@ -17,13 +17,16 @@ library(stringr)
 
 draw_heatmap <- function(normalized.count, subset = "random", show_rownames = F, 
                          title = "Random preview heatmap",
-                         log = TRUE){
+                         log = TRUE, profiles=FALSE){
   
   if (subset == "random") sample_subset <- sample(rownames(normalized.count), size = 100)
   else sample_subset <- subset
   
-  if(log) mat <- log(normalized.count[sample_subset,] + 1)
-  else mat <- normalized.count[sample_subset,]
+  if (log) normalized.count <- log(normalized.count + 1)
+  if (profiles) normalized.count <- normalized.count/rowMeans(normalized.count)
+
+    
+  mat <- normalized.count[sample_subset,]
   
   sample <- stringr::str_split_fixed(colnames(mat), '_',2) [,1]
   samples <- data.frame(sample, row.names = colnames(mat))

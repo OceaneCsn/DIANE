@@ -21,22 +21,26 @@ usethis::use_package( "ggplot2" )
 usethis::use_package( "plotly" )
 usethis::use_package( "shinydashboard" )
 usethis::use_package( "shinythemes" )
-usethis::use_package( "shinipsum" )
 usethis::use_package( "shinydashboardPlus" )
 usethis::use_package( "shinyWidgets" )
 usethis::use_package( "stats" )
 usethis::use_package( "pheatmap" )
-
+usethis::use_package( "HTSFilter" )
+usethis::use_package( "TCC" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
 golem::add_module( name = "import_data" ) # Name of the module
 golem::add_module( name = "differential_expression_analysis" ) # Name of the module
 golem::add_module( name = "context" )
+golem::add_module( name = "normalisation" )
+
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
-golem::add_fct( "heatmap" ) 
+golem::add_fct( "heatmap" )
+golem::add_fct( "normalisation")
+
 #golem::add_utils( "helpers" )
 
 ## External resources
