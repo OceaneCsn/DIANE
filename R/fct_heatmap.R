@@ -30,6 +30,7 @@ draw_heatmap <- function(normalized.count, subset = "random", show_rownames = F,
   
   sample <- stringr::str_split_fixed(colnames(mat), '_',2) [,1]
   samples <- data.frame(sample, row.names = colnames(mat))
+
   pheatmap::pheatmap(mat, annotation_col = samples, show_rownames = show_rownames, 
            main = title, fontsize = 17)
 }

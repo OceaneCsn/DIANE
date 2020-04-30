@@ -2,18 +2,18 @@
 % Please edit documentation in R/fct_normalisation.R
 \name{filter_hts}
 \alias{filter_hts}
-\title{filter_sum}
+\title{filter_hts}
 \usage{
 filter_hts(data, conditions)
 }
 \arguments{
 \item{data}{data to be filtered to remove low count genes}
 
-\item{thr}{the sum of counts across all samples to be exceeded for a gene}
+\item{conditions}{the sum of counts across all samples to be exceeded for a gene}
 }
 \value{
 the filtered data
 }
 \description{
-filter_sum
+filter_hts
 }

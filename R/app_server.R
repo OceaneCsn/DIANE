@@ -9,8 +9,8 @@ app_server <- function (input, output, session) {
   r <- shiny::reactiveValues(
     PATH_TO_DEMO = "D:/These/QuantifFiles",
     raw_counts = NULL,
-    filtered_raw_counts = NULL,
-    normalized.count = NULL,
+    normalized_counts = NULL,
+    normalized_counts_pre_filter = NULL,
     norm_factor = NULL,
     conditions = NULL,
     design = NULL

@@ -158,7 +158,7 @@ mod_import_data_server <- function(input, output, session, r) {
         else{stop()}
         }
       )
-      r$raw_counts <- d
+      r$raw_counts <- data.frame(d)
       d
     })
    

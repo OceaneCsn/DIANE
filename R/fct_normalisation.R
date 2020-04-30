@@ -39,16 +39,17 @@ filter_sum <- function(data, thr){
 }
 
 
-#' filter_sum
+#' filter_hts
 #'
 #' @param data data to be filtered to remove low count genes
 #' 
-#' @param thr the sum of counts across all samples to be exceeded for a gene
+#' @param conditions the sum of counts across all samples to be exceeded for a gene
 #'
 #' @return the filtered data
 
 filter_hts <- function(data, conditions){
-  return(data[rowSums(data) > thr,])
+  filter <- HTSFilter::HTSFilter(data, conditions)
+  return(filter$filteredData)
 }
 
 
