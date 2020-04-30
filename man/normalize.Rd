@@ -9,7 +9,8 @@ normalize(
   conditions,
   norm_method = "tmm",
   deg_method = "edgeR",
-  fdr = 0.01
+  fdr = 0.01,
+  iteration = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ normalize(
 \item{deg_method}{method used for deg detection, between edgeR ou deseq2}
 
 \item{fdr}{pvalue threshold for adjusted pvalues for degs}
+
+\item{iteration}{weather or not to perform a prior removal of DEGs}
 }
 \value{
 the normalized data

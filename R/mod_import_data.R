@@ -20,8 +20,9 @@ mod_import_data_ui <- function(id) {
     ######################### Title and text
     
     h1("Upload expression data and experimental design"),
-    br(),
-    p(
+    shiny::hr(),
+    
+    h2(
       "Upload a comma separated dataframe. It hould have genes IDs in a column named \"Gene\"
        and experimental conditions as other columns.
        Those conditions should be formatted as follow : conditionName_replicateNumber. (For example cnF_2).
@@ -158,7 +159,7 @@ mod_import_data_server <- function(input, output, session, r) {
         else{stop()}
         }
       )
-      r$raw_counts <- data.frame(d)
+      r$raw_counts <- d
       d
     })
    
@@ -213,7 +214,7 @@ mod_import_data_server <- function(input, output, session, r) {
       color = "olive",
       width=NULL
     )
-  })
+  }) 
   
   ######### render design
   output$design_preview <- DT::renderDataTable({

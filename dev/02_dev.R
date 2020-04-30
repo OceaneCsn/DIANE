@@ -27,6 +27,8 @@ usethis::use_package( "stats" )
 usethis::use_package( "pheatmap" )
 usethis::use_package( "HTSFilter" )
 usethis::use_package( "TCC" )
+usethis::use_package( "shinybusy" )
+usethis::use_package( "reshape2" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/

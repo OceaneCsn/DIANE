@@ -5,7 +5,7 @@
 \title{Draw heatmap}
 \usage{
 draw_heatmap(
-  normalized.count,
+  data,
   subset = "random",
   show_rownames = F,
   title = "Random preview heatmap",
@@ -14,13 +14,13 @@ draw_heatmap(
 )
 }
 \arguments{
-\item{normalized.count}{}
+\item{data}{data to plot}
 
-\item{subset}{}
+\item{subset}{subset of rows to display}
 
-\item{show_rownames}{}
+\item{show_rownames}{show rownames or not}
 
-\item{title}{}
+\item{title}{plot title}
 
 \item{log}{Show log(expression+1) in the heatmap if TRUE, expression if FALSE}
 

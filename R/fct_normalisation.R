@@ -9,18 +9,21 @@ library(HTSFilter)
 #' @param norm_method method used for normalisation, between tmm or deseq2
 #' @param deg_method method used for deg detection, between edgeR ou deseq2
 #' @param fdr pvalue threshold for adjusted pvalues for degs
+#' @param iteration weather or not to perform a prior removal of DEGs
 #' 
 #' @import TCC
 #' @import HTSFilter
-#'
 #' @return the normalized data
 #' @export
 
-normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01){
+normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
+                      iteration = TRUE){
   tcc <- new("TCC", data, conditions)
   tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
-                              iteration = 1, FDR = 0.01, floorPDEG = 0.05)
-  return(list("normalized.counts" = TCC::getNormalizedData(tcc), "norm_factors" = tcc$norm.factors))
+                              iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
+  norm_data <- TCC::getNormalizedData(tcc)
+  print(head(norm_data))
+  return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
 }
 
 

@@ -22,7 +22,9 @@ Imports:
     stats,
     pheatmap,
     HTSFilter,
-    TCC
+    TCC,
+    shinybusy,
+    reshape2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0

@@ -16,7 +16,16 @@ library(shinybusy)
 mod_normalisation_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    
+    shinybusy::add_busy_spinner(
+      spin = "self-building-square",
+      position = 'top-left',
+      margins = c(700, 700)
+    ),
+    
+    
     shiny::h1("Data filtering and normalisation"),
+    shiny::hr(),
     shiny::h2(
       "Because low count genes and differences in sequencing depths are a true source of bias, we want to perform some data cleaning and transformation."
     ),
@@ -29,45 +38,52 @@ mod_normalisation_ui <- function(id) {
         status = "primary",
         collapsible = T,
         closable = F,
-        col_6(h3("TCC package : ")),
+        
+        h4("Pior removal of differentially expressed genes:"),
+
+        fluidRow(col_8(shinyWidgets::switchInput(
+          inputId = ns("prior_removal"),
+          value = FALSE,
+          onLabel = "ON",
+          offLabel = "OFF",
+          inline = T
+        )),
+        
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          tags$h3("Normalisation method :"),
+          h5(
+            "TCC performs normalisation to correct for different secencing depth between the samples, so they can be comparable in terms of transcript counts.
+          Most normalisation methods rely on the hypothesis that very few genes are differentially expressed. TCC proposes
+           a prior step to first detect differentially expressed genes, and remove them to perform the final normalisation. If you suspect you have a lot of differentially
+           expressed genes in your data, keep \"remove differentially expressed genes first\" enabled. Else, standard normalisation will be performed, using either TMM or DESeq2
+           "
+          ),
+          circle = TRUE,
+          status = "primary",
+          icon = icon("question"),
+          width = "300px",
+          tooltip = tooltipOptions(title = "More details")
+        )),
+        
+        shinyWidgets::awesomeRadio(
+          inputId = "norm_method", label = "Normalisation :",
+          choices = c("tmm", "deseq"),inline = T,
+          selected = "tmm"
+        ),
         
         
-        col_4(
-          shinyWidgets::actionBttn(
-            ns("normalize_btn"),
-            label = "Normalize",
-            color = "primary",
-            style = 'bordered'
-          )
-        ),
-        col_2(
-          shinyWidgets::dropdownButton(
-            size = 'xs',
-            tags$h3("Normalisation method :"),
-            h5(
-              "TCC performs normalisation to correct for different secencing depth between the samples, so they can be comparable in terms of transcript counts.
-            Most normalisation methods rely on the hypothesis that very few genes are differentially expressed. TCC proposes
-             a prior step to first detect differentially expressed genes, and remove them to perform the final normalisation. If you suspect you have a lot of differentially
-             expressed genes in your data, keep \"remove differentially expressed genes first\" enabled. Else, standard normalisation will be performed, using either TMM or DESeq2
-             "
-            ),
-            circle = TRUE,
-            status = "info",
-            icon = icon("question"),
-            width = "300px",
-            tooltip = tooltipOptions(title = "More details")
-          )
-        ),
+        fluidRow(
+          col_12(shinyWidgets::actionBttn(
+          ns("normalize_btn"),
+          label = "Normalize",
+          color = "primary",
+          style = 'bordered'
+        ))),
+        
         
         shiny::hr(),
-        
-        
-        shinybusy::add_busy_spinner(
-          spin = "self-building-square",
-          position = 'top-left',
-          margins = c(500, 500)
-        ),
-        
+  
         valueBoxOutput(ns("norm_summary"), width = 12)
       ),
       
@@ -110,31 +126,39 @@ mod_normalisation_ui <- function(id) {
       )
     ),
     col_6(
-      col_4(
-        shinyWidgets::switchInput(
-          inputId = ns("preview_norm_heatmap"),
-          value = TRUE,
-          onLabel = "normalized",
-          offLabel = "raw",
-          onStatus = "success",
-          offStatus = "danger"
-        )
-      ),
-      col_4(
-        shinyWidgets::switchInput(
-          inputId = ns("log_preview"),
-          value = TRUE,
-          onLabel = "Log(Value+1)",
-          offLabel = "Value"
-        )
-      ),
-      shiny::plotOutput(ns('heatmap_preview_norm'))
       
+      boxPlus(
+        title = "Samples distributions",
+        solidHeader = F,
+        width = 9,
+        height = "600px",
+        status = "primary",
+        collapsible = T,
+        closable = F,
+        col_4(
+          shinyWidgets::switchInput(
+            inputId = ns("preview_norm_heatmap"),
+            value = TRUE,
+            onLabel = "normalized",
+            offLabel = "raw",
+            onStatus = "success",
+            offStatus = "danger"
+          )
+        ),
+        col_4(
+          shinyWidgets::switchInput(
+            inputId = ns("violin_preview"),
+            value = TRUE,
+            onLabel = "Boxplots",
+            offLabel = "Violin"
+          )
+        ),
+        shiny::plotOutput(ns('heatmap_preview_norm'))
+        ),
+
     ),
     shiny::br(),
     DT::dataTableOutput(ns("norm_factor"))
-    
-    
   )
 }
 
@@ -145,12 +169,13 @@ mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
   shiny::observeEvent((input$normalize_btn), {
-    norm <- normalize(r$raw_counts, r$conditions)
+    norm <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
+                      iteration = input$prior_removal)
     r$normalized_counts_pre_filter <- norm$normalized.counts
     r$norm_factors <- norm$norm_factors
-    shinyWidgets::sendSweetAlert(session = session,
-                                 title = "Normalisation completed, you can proceed to filtering now",
-                                 type = "success")
+    # shinyWidgets::sendSweetAlert(session = session,
+    #                              title = "Normalisation completed, you can proceed to filtering now",
+    #                              type = "success")
     
   })
   
@@ -232,9 +257,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         d <- r$normalized_counts
       }
     }
-    print(typeof(d))
-    print(d)
-    draw_heatmap(d, title = "", log = input$log_preview)
+    draw_distributions(d, boxplot = input$violin_preview)
   })
   
 }

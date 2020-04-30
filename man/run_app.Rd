@@ -4,7 +4,7 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(..., launch.browser = T)
+run_app(...)
 }
 \arguments{
 \item{...}{A series of options to be used inside the app.}
