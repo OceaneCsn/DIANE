@@ -192,6 +192,7 @@ mod_normalisation_server <- function(input, output, session, r) {
     data.frame(t(round(r$norm_factors, 3)))
   })
   
+  # TODO make HTS work without graphical bug
   # shiny::observeEvent((input$use_HTSFilter), {
   #   shiny::req(r$normalized_counts_pre_filter)
   #   r$normalized_counts <-
@@ -260,7 +261,7 @@ mod_normalisation_server <- function(input, output, session, r) {
     )
   })
   
-  
+  # IDEA also implement PCA, maybe 3D, in data exploration
   output$heatmap_preview_norm <- shiny::renderPlot({
     shiny::req(r$normalized_counts_pre_filter)
     
