@@ -56,7 +56,7 @@ golem::add_fct( "normalisation")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "markdown", open = FALSE ) 
+usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
 
 ## Tests ----
 ## Add one line by test you want to create

@@ -56,7 +56,7 @@ mod_import_data_ui <- function(id) {
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Input file requirements",
-        shiny::includeMarkdown('markdown/expressionFile.md'),
+        shiny::includeMarkdown(system.file("extdata", "expressionFile.md", package = "DIANE")),
         circle = TRUE,
         status = "primary",
         icon = icon("question"),
@@ -80,7 +80,7 @@ mod_import_data_ui <- function(id) {
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Design file requirements",
-        shiny::includeMarkdown('markdown/designFile.md'),
+        shiny::includeMarkdown(system.file("extdata", "designFile.md", package = "DIANE")),
         circle = TRUE,
         status = "primary",
         icon = icon("question"),
