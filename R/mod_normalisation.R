@@ -178,6 +178,7 @@ mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
   shiny::observeEvent((input$normalize_btn), {
+    req(r$raw_counts)
     norm <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
                       iteration = input$prior_removal)
     r$normalized_counts_pre_filter <- norm$normalized.counts
