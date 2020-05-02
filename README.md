@@ -21,6 +21,14 @@ remotes::install_github("OceaneCsn/DIANE")
 ```
 
 
-Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor if needed.
+Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor.
+
+You can then launch the application with 
+
+```R
+library(DIANE)
+
+DIANE::run_app()
+```
 
 
