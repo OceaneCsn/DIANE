@@ -73,8 +73,6 @@ mod_normalisation_ui <- function(id) {
           selected = "tmm"
         )),
         
-        
-      
         col_4(shinyWidgets::actionBttn(
           ns("normalize_btn"),
           label = "Normalize",
@@ -83,9 +81,7 @@ mod_normalisation_ui <- function(id) {
         ))
         ),
         
-        
         shiny::hr(),
-  
         shiny::uiOutput(ns("norm_summary")),
         shiny::hr(),
      
@@ -139,7 +135,7 @@ mod_normalisation_ui <- function(id) {
     col_8(
       
       shinydashboard::tabBox(title = "Data exploration",
-                             width = 12, height = "700px",
+                             width = 12, height = "750px",
                              
         shiny::tabPanel(
           

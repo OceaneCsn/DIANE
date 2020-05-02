@@ -99,7 +99,8 @@ mod_import_data_ui <- function(id) {
       ),
      
       valueBoxOutput(ns("data_dim")),
-      valueBoxOutput(ns("conditions"))
+      valueBoxOutput(ns("conditions")),
+      valueBoxOutput(ns("samples"))
     ),
     
     ###################### heatmap
@@ -123,7 +124,7 @@ mod_import_data_ui <- function(id) {
       collapsible = T,
       closable = F,
       DT::dataTableOutput(ns("design_preview"), height = 550),
-      footer = "footer?"
+      footer = "Describe the levels of each factors for your conditions"
     ),
     
   
@@ -149,6 +150,16 @@ mod_import_data_server <- function(input, output, session, r) {
       d <- raw_data_At
     }
     else{ 
+      
+      # reset the global reactive variables that were maybe already created :
+      
+      r$raw_counts = NULL
+      r$normalized_counts = NULL
+      r$normalized_counts_pre_filter = NULL
+      r$norm_factor = NULL
+      r$conditions = NULL
+      r$design = NULL
+      
       req(input$raw_data)
       path = input$raw_data$datapath
 
@@ -215,20 +226,27 @@ mod_import_data_server <- function(input, output, session, r) {
   ########### data summary
   output$data_dim <- renderValueBox({
     valueBox(
-      "Your data",
-      paste0(dim(raw_data())[1], " genes, ", dim(raw_data())[2], 
-             " samples"),
-      color = "teal",
+      
+      value = dim(raw_data())[1],
+      subtitle = "genes",
+      color = "aqua",
       width=4
     )
   })
   output$conditions <- renderValueBox({
     r$conditions <- stringr::str_split_fixed(colnames(raw_data()), "_", 2)[,1]
     valueBox(
-      "Conditions",
-      paste0("Your ", length((unique(r$conditions))), " conditions are : ", paste(unique(r$conditions), collapse = ' ')),
-      color = "olive",
-      width=NULL
+      value = length((unique(r$conditions))),
+      subtitle = "conditions",
+      color = "teal"
+    )
+  }) 
+  
+  output$samples <- renderValueBox({
+    valueBox(
+      value = length(colnames(raw_data())),
+      subtitle = "samples",
+      color = "olive"
     )
   }) 
   
