@@ -57,6 +57,7 @@ draw_heatmap <-
 #' @param data count data
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, as a violin plot
 #' @import ggplot2
+#' @importFrom reshape2 melt
 #' 
 #'
 #' @return plot

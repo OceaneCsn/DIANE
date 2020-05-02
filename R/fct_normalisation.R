@@ -22,7 +22,6 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
   tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
                               iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
   norm_data <- TCC::getNormalizedData(tcc)
-  print(head(norm_data))
   return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
 }
 

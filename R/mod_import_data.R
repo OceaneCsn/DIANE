@@ -56,12 +56,12 @@ mod_import_data_ui <- function(id) {
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Input file requirements",
-        shiny::includeMarkdown('markdown/normalisation.md'),
+        shiny::includeMarkdown('markdown/expressionFile.md'),
         circle = TRUE,
         status = "primary",
         icon = icon("question"),
         width = "600px",
-        tooltip = tooltipOptions(title = "More details")
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
     
     
@@ -75,18 +75,17 @@ mod_import_data_ui <- function(id) {
           '.txt'
         )
       ),
-      p("It should be a matrix like file, with genes IDs in a column named \"Gene\" and conditions as other columns.<br>
-          Please speficy the replicates unsing the notation _i for the relicate i, placed after the condition name."),
+    
     
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Design file requirements",
-        shiny::includeMarkdown('markdown/normalisation.md'),
+        shiny::includeMarkdown('markdown/designFile.md'),
         circle = TRUE,
         status = "primary",
         icon = icon("question"),
-        width = "600px",
-        tooltip = tooltipOptions(title = "More details")
+        width = "1200px",
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
       fileInput(
         ns('design'),
@@ -98,8 +97,7 @@ mod_import_data_ui <- function(id) {
           '.txt'
         )
       ),
-      p("It should contain a column \"Condition\" containing the name of the conditions (columns of the expression matrix), as referring to what preceeds _i. <br>
-          The other columns are for each factor. The value of a cell is either 0 (if the condition is the reference level) or 1 (if it is the level of interest."),
+     
       valueBoxOutput(ns("data_dim")),
       valueBoxOutput(ns("conditions"))
     ),

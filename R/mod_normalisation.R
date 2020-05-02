@@ -50,7 +50,7 @@ mod_normalisation_ui <- function(id) {
           status = "primary",
           icon = icon("question"),
           width = "600px",
-          tooltip = tooltipOptions(title = "More details")
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
         
         h4("Prior removal of differentially expressed genes:"),
@@ -98,7 +98,7 @@ mod_normalisation_ui <- function(id) {
           status = "primary",
           icon = icon("question"),
           width = "600px",
-          tooltip = tooltipOptions(title = "More details")
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
 
         
