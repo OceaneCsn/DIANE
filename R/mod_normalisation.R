@@ -45,7 +45,7 @@ mod_normalisation_ui <- function(id) {
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown('markdown/normalisation.md'),
+          shiny::includeMarkdown('inst/markdown/normalisation.md'),
           circle = TRUE,
           status = "primary",
           icon = icon("question"),
@@ -93,7 +93,7 @@ mod_normalisation_ui <- function(id) {
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown('markdown/normalisation.md'),
+          shiny::includeMarkdown('inst/markdown/normalisation.md'),
           circle = TRUE,
           status = "primary",
           icon = icon("question"),
