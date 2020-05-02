@@ -145,56 +145,57 @@ mod_import_data_server <- function(input, output, session, r) {
   raw_data <- shiny::reactive({
     
     if (input$use_demo) {
-      path = paste0(r$PATH_TO_DEMO,"/rawData_At.csv")
+      load(system.file("extdata", "raw_counts_At.RData", package = "DIANE"))
+      d <- raw_data_At
     }
     else{ 
       req(input$raw_data)
       path = input$raw_data$datapath
-    }
 
-      attempt::attempt(
-        expr = {d <-
+      d <-
+        read.csv(
+          path,
+          sep = input$sep,
+          header = T,
+          stringsAsFactors = F
+        )
+      
+      if ("Gene" %in% colnames(d)) {
+        d <-
           read.csv(
             path,
             sep = input$sep,
             header = T,
-            stringsAsFactors = F
+            stringsAsFactors = F,
+            row.names = "Gene"
           )
-        
-        if ("Gene" %in% colnames(d)) {
-          d <-
-            read.csv(
-              path,
-              sep = input$sep,
-              header = T,
-              stringsAsFactors = F,
-              row.names = "Gene"
-            )
-        }
-        else{stop()}
-        }
-      )
-      r$raw_counts <- d
-      d
+      }
+      else{
+        print("Gene was not in columns of the expression file...")
+        stop()
+      }
+    }
+    r$raw_counts <- d
+    d
     })
    
 
   ######### load the design  
   design <- shiny::reactive({
     if (input$use_demo) {
-      path = paste0(r$PATH_TO_DEMO, "/design_At.csv")
+      load(system.file("extdata", "design_At.RData", package = "DIANE"))
+      d <- design_At
     }
     else{
       req(input$design)
       path = input$design$datapath
+      d <- read.csv(
+        path,
+        header = T,
+        stringsAsFactors = F,
+        row.names = "Condition"
+      )
     }
-      
-    d <- read.csv(
-      path,
-      header = T,
-      stringsAsFactors = F,
-      row.names = "Condition"
-    )
     r$design <- d
   })
   

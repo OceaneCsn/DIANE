@@ -7,7 +7,7 @@
 app_server <- function (input, output, session) {
   # List the first level callModules here
   r <- shiny::reactiveValues(
-    PATH_TO_DEMO = "D:/These/QuantifFiles",
+    #PATH_TO_DEMO = "D:/These/QuantifFiles",
     raw_counts = NULL,
     normalized_counts = NULL,
     normalized_counts_pre_filter = NULL,
