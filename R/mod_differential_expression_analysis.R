@@ -10,6 +10,7 @@
 mod_differential_expression_analysis_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shiny::h1("Differential expression analysis")
  
   )
 }

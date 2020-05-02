@@ -130,8 +130,9 @@ mod_normalisation_ui <- function(id) {
       shiny::hr(),
       shiny::hr(),
       shiny::uiOutput(ns("filtering_summary")),
-      shiny::hr()
+      shiny::hr(),
       
+      col_12(shiny::uiOutput(ns("dl_bttns")))
       )
     ),
     
@@ -170,7 +171,8 @@ mod_normalisation_ui <- function(id) {
       )
 
     ),
-    shiny::br()
+    shiny::br(),
+  
     #DT::dataTableOutput(ns("norm_factor"))
   )
 }
@@ -232,6 +234,9 @@ mod_normalisation_server <- function(input, output, session, r) {
     )
   })
   
+  toDownload <- shiny::reactiveVal()
+  
+  
   output$filtering_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
       number_color = "red"
@@ -252,6 +257,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         number_icon = "fa fa-check"
         header = paste(dim(r$normalized_counts)[1],
                        " genes after filtering")
+        toDownload <<- r$normalized_counts
       }
     }
     shinydashboardPlus::descriptionBlock(
@@ -268,7 +274,6 @@ mod_normalisation_server <- function(input, output, session, r) {
     shiny::req(r$normalized_counts_pre_filter)
     
     if (!input$preview_norm_heatmap) {
-      # raw data
       d <- r$raw_counts 
     }
     else{
@@ -287,6 +292,46 @@ mod_normalisation_server <- function(input, output, session, r) {
     draw_MDS(r$normalized_counts)
   })
   
+  
+  output$dl_bttns <- shiny::renderUI({
+    
+    shiny::req(r$normalized_counts)
+    shiny::fluidRow(
+      shinyWidgets::downloadBttn(
+      outputId = ns("download_normalized_counts_csv"),
+      label = "Download normalized counts as .csv",
+      style = "bordered",
+      color = "default"
+    ),
+    
+    shinyWidgets::downloadBttn(
+      outputId = ns("download_normalized_counts_RData"),
+      label = "Download normalized counts as .RData",
+      style = "bordered",
+      color = "default"
+    ))
+    
+  })
+  
+  output$download_normalized_counts_RData <- shiny::downloadHandler(
+    
+    filename = function(){
+      paste("normalized_counts.RData")
+    },
+    content = function(file){
+      save(toDownload, file = file)
+    }
+  )
+  
+  output$download_normalized_counts_csv <- shiny::downloadHandler(
+    
+    filename = function(){
+      paste("normalized_counts.csv")
+    },
+    content = function(file){
+      write.csv(toDownload, file = file, quote = FALSE)
+    }
+  )
 }
 
 ## To be copied in the UI
