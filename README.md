@@ -2,13 +2,17 @@
 # Dashboard for the Inference and Analysis of Networks from Expression data
 ![alt text](inst/app/www/favicon.ico "DIANE")
 
-DIANE is a shiny application for the analysis of high throughput gene expression data (RNA-Seq). The objective is to extract important gene clusters or regulators involved in the response to various perturbation factors, given the popularity of combinatorial approaches in experimental biology.
+DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). The objective is to extract important gene clusters or regulators involved in the response to various perturbations, given the popularity of combinatorial approaches in experimental biology.
 
-The package provides the user with tools to process, explore, and perform advanced statistical analysis on its data.
+This package provides the user with tools to process, explore, and perform advanced statistical analysis on its data using state of the art methods.
 
-It starts with count data processing, normalisation, and then proceeds to differential expression analysis using state of the art methods.
++ Count data pre-processing
++ Sample-wise normalisation
++ Differential expression analysis
 
-As several interactive tools already offer those kind of data exploration, we try to go further in the analysis by proposing expression based clustering, as well as gene regulatory network inference.
+As several interactive tools already offer those kind of service, we try to go further in the analysis :
++ Expression based clustering in the framework of Poisson Mixture Models
++ Machine learning based Gene regulatory network inference
 
 **DIANE is in a very early stage of development**.
 
@@ -21,7 +25,7 @@ remotes::install_github("OceaneCsn/DIANE")
 ```
 
 
-Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor.
+Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor, usign ```Biocmanager::install(...)```.
 
 You can then launch the application with 
 
@@ -31,4 +35,6 @@ library(DIANE)
 DIANE::run_app()
 ```
 
+Author : Océane Cassan
 
+PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
