@@ -2,6 +2,7 @@ library(pheatmap)
 library(stringr)
 library(ggplot2)
 library(reshape2)
+library(limma)
 
 #' Draw heatmap
 #'
@@ -14,7 +15,7 @@ library(reshape2)
 #'
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
-#'
+#' @export
 #' @return plot of the heatmap
 
 draw_heatmap <-
@@ -56,6 +57,7 @@ draw_heatmap <-
 #' @param data count data
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, as a violin plot
 #' @import ggplot2
+#' 
 #'
 #' @return plot
 #' @export
@@ -106,3 +108,35 @@ draw_distributions <- function(data, boxplot = T) {
   
   g
 }
+
+#' draw_MDS
+#'
+#' @param normalized.count data to plot for MDS
+#' @importFrom limma plotMDS
+#' @return MDS plot
+#' @export
+#'
+draw_MDS <- function(normalized.count){
+  mds <- limma::plotMDS(normalized.count, plot = F)
+  d <- data.frame( dim1 = mds$x, dim2 = mds$y, sample = names(mds$x), condition = str_split_fixed(names(mds$x), '_', 2)[,1])
+  g <- ggplot(data = d, aes(x = dim1, y = dim2, color = condition)) + geom_point(size = 6)
+  
+  g <- g + ggtitle("Multi Dimensional Scaling plot") 
+  
+  g + theme(
+    plot.title = element_text(size = 22, face = "bold"),
+    strip.text.x = element_text(size = 20),
+    legend.position = "bottom",
+    legend.title = element_text(size = 20, face = "bold"),
+    legend.text = element_text(size = 20, angle = 0),
+    axis.text.y = element_text(size = 20, angle = 0),
+    axis.text.x = element_text(
+      size = 20,
+      angle = 0,
+      hjust = 0
+    ),
+    legend.text.align = 1,
+    axis.title = element_blank()
+  )
+}
+

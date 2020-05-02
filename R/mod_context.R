@@ -14,7 +14,12 @@ mod_context_ui <- function(id){
     
       h2("Dashboard for the Inference and Analysis of Networks from Expression data"),
 
-      tags$img(src="/www/hex-DIANE.png", width = 300)
+      tags$img(src="/www/hex-DIANE.png", width = 300),
+      
+      shinydashboardPlus::socialButton(
+        url = "https://github.com/OceaneCsn/DIANE",
+        type = "github"
+      )
  
   )
 }

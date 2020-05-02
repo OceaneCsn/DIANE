@@ -20,7 +20,7 @@ mod_normalisation_ui <- function(id) {
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(700, 700)
+      margins = c(600, 800)
     ),
     
     
@@ -30,70 +30,77 @@ mod_normalisation_ui <- function(id) {
       "Because low count genes and differences in sequencing depths are a true source of bias, we want to perform some data cleaning and transformation."
     ),
     shiny::hr(),
-    col_6(
+    col_3(
       boxPlus(
-        title = "Sample-wise Normalisation",
+        title = "Parameters",
         solidHeader = F,
-        height = "600px",
         status = "primary",
         collapsible = T,
         closable = F,
+        width = 12,
         
-        h4("Pior removal of differentially expressed genes:"),
-
-        fluidRow(col_8(shinyWidgets::switchInput(
-          inputId = ns("prior_removal"),
-          value = FALSE,
-          onLabel = "ON",
-          offLabel = "OFF",
-          inline = T
-        )),
+        
+        h2("Normalisation"),
+        
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          tags$h3("Normalisation method :"),
-          h5(
-            "TCC performs normalisation to correct for different secencing depth between the samples, so they can be comparable in terms of transcript counts.
-          Most normalisation methods rely on the hypothesis that very few genes are differentially expressed. TCC proposes
-           a prior step to first detect differentially expressed genes, and remove them to perform the final normalisation. If you suspect you have a lot of differentially
-           expressed genes in your data, keep \"remove differentially expressed genes first\" enabled. Else, standard normalisation will be performed, using either TMM or DESeq2
-           "
-          ),
+          shiny::includeMarkdown('markdown/normalisation.md'),
           circle = TRUE,
           status = "primary",
           icon = icon("question"),
-          width = "300px",
+          width = "600px",
           tooltip = tooltipOptions(title = "More details")
-        )),
+        ),
         
-        shinyWidgets::awesomeRadio(
+        h4("Prior removal of differentially expressed genes:"),
+
+        shiny::fluidRow(col_12(shinyWidgets::switchInput(
+          inputId = ns("prior_removal"),
+          value = TRUE,
+          onLabel = "ON",
+          offLabel = "OFF",
+          inline = T
+        ))),
+        
+        
+        
+        shiny::fluidRow(
+          
+        col_8(shinyWidgets::awesomeRadio(
           inputId = "norm_method", label = "Normalisation :",
           choices = c("tmm", "deseq"),inline = T,
           selected = "tmm"
-        ),
+        )),
         
         
-        fluidRow(
-          col_12(shinyWidgets::actionBttn(
+      
+        col_4(shinyWidgets::actionBttn(
           ns("normalize_btn"),
           label = "Normalize",
           color = "primary",
           style = 'bordered'
-        ))),
+        ))
+        ),
         
         
         shiny::hr(),
   
-        valueBoxOutput(ns("norm_summary"), width = 12)
-      ),
-      
-      boxPlus(
-        title = "Low counts filtering",
-        solidHeader = F,
-        height = "600px",
-        status = "primary",
-        collapsible = T,
-        closable = F,
+        shiny::uiOutput(ns("norm_summary")),
+        shiny::hr(),
+     
+        h2("Low counts filtering"),
+        
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          shiny::includeMarkdown('markdown/normalisation.md'),
+          circle = TRUE,
+          status = "primary",
+          icon = icon("question"),
+          width = "600px",
+          tooltip = tooltipOptions(title = "More details")
+        ),
+
         
         shiny::h5("Minimal gene count sum accross conditions : "),
         col_8(shiny::numericInput(
@@ -112,53 +119,59 @@ mod_normalisation_ui <- function(id) {
         ),
         
         
-        shiny::br(),
+      shiny::hr(),
         
-        shinyWidgets::actionBttn(
-          ns("use_HTSFilter"),
-          label = "Use HST Filter, an entropy based filtering method",
-          style = 'bordered',
-          color = 'success'
-        ),
-        shiny::hr(),
-        valueBoxOutput(ns("filtering_summary"), width = 12)
-        #footer = "This might help you visualize the different sequencing depths of your conditions."
+      # shinyWidgets::actionBttn(
+      #   ns("use_HTSFilter"),
+      #   label = "Use HST Filter, an entropy based filtering method",
+      #   style = 'bordered',
+      #   color = 'success'
+      # ),
+      shiny::hr(),
+      shiny::hr(),
+      shiny::uiOutput(ns("filtering_summary")),
+      shiny::hr()
+      
       )
     ),
-    col_6(
+    
+    
+    col_8(
       
-      boxPlus(
-        title = "Samples distributions",
-        solidHeader = F,
-        width = 9,
-        height = "600px",
-        status = "primary",
-        collapsible = T,
-        closable = F,
-        col_4(
-          shinyWidgets::switchInput(
-            inputId = ns("preview_norm_heatmap"),
-            value = TRUE,
-            onLabel = "normalized",
-            offLabel = "raw",
-            onStatus = "success",
-            offStatus = "danger"
-          )
+      shinydashboard::tabBox(title = "Data exploration",
+                             width = 12, height = "700px",
+                             
+        shiny::tabPanel(
+          
+          title = "Samples distributions",
+          col_4(
+            shinyWidgets::switchInput(
+              inputId = ns("preview_norm_heatmap"),
+              value = TRUE,
+              onLabel = "normalized",
+              offLabel = "raw",
+              onStatus = "success",
+              offStatus = "danger"
+            )
+          ),
+          col_4(
+            shinyWidgets::switchInput(
+              inputId = ns("violin_preview"),
+              value = TRUE,
+              onLabel = "Boxplots",
+              offLabel = "Violin"
+            )
+          ),
+          shiny::plotOutput(ns('heatmap_preview_norm'), height = "600px")
         ),
-        col_4(
-          shinyWidgets::switchInput(
-            inputId = ns("violin_preview"),
-            value = TRUE,
-            onLabel = "Boxplots",
-            offLabel = "Violin"
-          )
-        ),
-        shiny::plotOutput(ns('heatmap_preview_norm'))
-        ),
+        
+        shiny::tabPanel(title = "MDS plot",
+                        shiny::plotOutput(ns('mds_plot'), height = "600px"))
+      )
 
     ),
-    shiny::br(),
-    DT::dataTableOutput(ns("norm_factor"))
+    shiny::br()
+    #DT::dataTableOutput(ns("norm_factor"))
   )
 }
 
@@ -173,9 +186,6 @@ mod_normalisation_server <- function(input, output, session, r) {
                       iteration = input$prior_removal)
     r$normalized_counts_pre_filter <- norm$normalized.counts
     r$norm_factors <- norm$norm_factors
-    # shinyWidgets::sendSweetAlert(session = session,
-    #                              title = "Normalisation completed, you can proceed to filtering now",
-    #                              type = "success")
     
   })
   
@@ -185,13 +195,11 @@ mod_normalisation_server <- function(input, output, session, r) {
     data.frame(t(round(r$norm_factors, 3)))
   })
   
-  # 
   # shiny::observeEvent((input$use_HTSFilter), {
   #   shiny::req(r$normalized_counts_pre_filter)
   #   r$normalized_counts <-
   #     filter_hts(r$normalized_counts_pre_filter, conditions = r$conditions)
   # })
-  
   
   
   shiny::observeEvent((input$use_SumFilter), {
@@ -201,44 +209,58 @@ mod_normalisation_server <- function(input, output, session, r) {
   })
   
   
-  output$norm_summary <- renderValueBox({
+  output$norm_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
-      color = "orange"
-      value = "Normalisation needed"
-      text = ""
+      number_color = "orange"
+      number = "Normalisation needed"
+      header = ""
+      number_icon = "fa fa-times"
     }
     else{
-      color = "olive"
-      text = paste(dim(r$normalized_counts_pre_filter)[1],
-                   " genes before filtering")
-      value = "Done"
+      number_color = "olive"
+      number = "Done"
+      number_icon = "fa fa-check"
+      header =  paste(dim(r$normalized_counts_pre_filter)[1],
+                      " genes before filtering")
     }
-    valueBox(value,
-             text,
-             color = color)
+    shinydashboardPlus::descriptionBlock(
+      number = number, 
+      number_color = number_color, 
+      number_icon = number_icon,
+      header = header,
+      right_border = FALSE
+    )
   })
   
-  output$filtering_summary <- renderValueBox({
+  output$filtering_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
-      color = "red"
-      value = "Normalisation needed"
-      text = ""
+      number_color = "red"
+      number = "Normalisation needed"
+      header = ""
+      number_icon = "fa fa-times"
     }
     else{
       if (is.null(r$normalized_counts)) {
-        color = "orange"
-        text = ""
-        value = "Filetring needed"
+        number_color = "orange"
+        number = "Filtering needed"
+        header = ""
+        number_icon = "fa fa-times"
       }
       else{
-        color = "olive"
-        text = paste(dim(r$normalized_counts)[1], " genes after filtering")
-        value = "Done"
+        number_color = "olive"
+        number = "Done"
+        number_icon = "fa fa-check"
+        header = paste(dim(r$normalized_counts)[1],
+                       " genes after filtering")
       }
     }
-    valueBox(value,
-             text,
-             color = color)
+    shinydashboardPlus::descriptionBlock(
+      number = number, 
+      number_color = number_color, 
+      number_icon = number_icon,
+      header = header,
+      right_border = FALSE
+    )
   })
   
   
@@ -258,6 +280,11 @@ mod_normalisation_server <- function(input, output, session, r) {
       }
     }
     draw_distributions(d, boxplot = input$violin_preview)
+  })
+  
+  output$mds_plot <- shiny::renderPlot({
+    shiny::req(r$normalized_counts)
+    draw_MDS(r$normalized_counts)
   })
   
 }

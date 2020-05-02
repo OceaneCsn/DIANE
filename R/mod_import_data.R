@@ -22,13 +22,6 @@ mod_import_data_ui <- function(id) {
     h1("Upload expression data and experimental design"),
     shiny::hr(),
     
-    h2(
-      "Upload a comma separated dataframe. It hould have genes IDs in a column named \"Gene\"
-       and experimental conditions as other columns.
-       Those conditions should be formatted as follow : conditionName_replicateNumber. (For example cnF_2).
-      "
-    ),
-    
     ######################### File upload ###################
     boxPlus(
       title = "Expression file upload",
@@ -59,6 +52,19 @@ mod_import_data_ui <- function(id) {
         ),
         inline = T
       ),
+      
+      shinyWidgets::dropdownButton(
+        size = 'xs',
+        label = "Input file requirements",
+        shiny::includeMarkdown('markdown/normalisation.md'),
+        circle = TRUE,
+        status = "primary",
+        icon = icon("question"),
+        width = "600px",
+        tooltip = tooltipOptions(title = "More details")
+      ),
+    
+    
       fileInput(
         ns('raw_data'),
         'Choose CSV/TXT expression file',
@@ -71,6 +77,17 @@ mod_import_data_ui <- function(id) {
       ),
       p("It should be a matrix like file, with genes IDs in a column named \"Gene\" and conditions as other columns.<br>
           Please speficy the replicates unsing the notation _i for the relicate i, placed after the condition name."),
+    
+      shinyWidgets::dropdownButton(
+        size = 'xs',
+        label = "Design file requirements",
+        shiny::includeMarkdown('markdown/normalisation.md'),
+        circle = TRUE,
+        status = "primary",
+        icon = icon("question"),
+        width = "600px",
+        tooltip = tooltipOptions(title = "More details")
+      ),
       fileInput(
         ns('design'),
         'Choose CSV/TXT design file',

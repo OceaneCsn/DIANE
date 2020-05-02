@@ -29,6 +29,9 @@ usethis::use_package( "HTSFilter" )
 usethis::use_package( "TCC" )
 usethis::use_package( "shinybusy" )
 usethis::use_package( "reshape2" )
+usethis::use_package( "limma" )
+usethis::use_package( "markdown" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/

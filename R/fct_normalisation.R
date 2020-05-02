@@ -34,7 +34,7 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
 #' @param data data to be filtered to remove low count genes
 #' 
 #' @param thr the sum of counts across all samples to be exceeded for a gene
-#'
+#' @export
 #' @return the filtered data
 
 filter_sum <- function(data, thr){
@@ -47,11 +47,11 @@ filter_sum <- function(data, thr){
 #' @param data data to be filtered to remove low count genes
 #' 
 #' @param conditions the sum of counts across all samples to be exceeded for a gene
-#'
+#' @export
 #' @return the filtered data
 
 filter_hts <- function(data, conditions){
-  filter <- HTSFilter::HTSFilter(data, conditions)
+  filter <- HTSFilter::HTSFilter(data, conditions, normalization = 'none')
   return(filter$filteredData)
 }
 
