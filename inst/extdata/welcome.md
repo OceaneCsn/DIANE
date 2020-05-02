@@ -1,6 +1,6 @@
  
 # Dashboard for the Inference and Analysis of Networks from Expression data
-![alt text](inst/app/www/favicon.ico "DIANE")
+![alt text](www/favicon.ico "DIANE")
 
 DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). The objective is to extract important gene clusters or regulators involved in the response to various perturbations, given the popularity of combinatorial approaches in experimental biology.
 

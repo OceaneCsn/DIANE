@@ -12,10 +12,10 @@ mod_context_ui <- function(id){
   tagList(
     
     
-      h2("Dashboard for the Inference and Analysis of Networks from Expression data"),
-
-      tags$img(src="/www/hex-DIANE.png", width = 300),
-      
+      # h2("Dashboard for the Inference and Analysis of Networks from Expression data"),
+      # 
+      # tags$img(src="/www/hex-DIANE.png", width = 300),
+      shiny::includeMarkdown(system.file("extdata", "welcome.md", package = "DIANE")),
       shinydashboardPlus::socialButton(
         url = "https://github.com/OceaneCsn/DIANE",
         type = "github"
