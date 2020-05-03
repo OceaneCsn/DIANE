@@ -3,7 +3,6 @@
 export(draw_MDS)
 export(draw_distributions)
 export(draw_heatmap)
-export(filter_hts)
 export(filter_sum)
 export(normalize)
 export(run_app)
