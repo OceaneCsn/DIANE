@@ -4,7 +4,7 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation, fdr = 0.01)
+estimateDEGs(fit, reference, perturbation)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
@@ -16,7 +16,7 @@ estimateDEGs(fit, reference, perturbation, fdr = 0.01)
 \item{fdr}{adjusted pvalue for DEGs detection during glmLRT}
 }
 \value{
-top tags dataframe
+tags dataframe
 }
 \description{
 Given a glmFit, performs a log ratio test and

@@ -104,7 +104,26 @@ mod_differential_expression_analysis_ui <- function(id){
       shinydashboard::tabBox(title = "Results", width = 12,
                              shiny::tabPanel(title = "Results table",
                                              DT::dataTableOutput(ns("deg_table"))),
-                             shiny::tabPanel(title = "MA - Vulcano plots"),
+                             shiny::tabPanel(title = "MA - Vulcano plots",
+                                             
+                                             shinyWidgets::switchInput(
+                                               inputId = ns("MA_vulcano_switch"),
+                                               value = TRUE,
+                                               onLabel = "MA",
+                                               offLabel = "Vulcano"
+                                             ),
+                                             
+                                             # shinyWidgets::switchInput(
+                                             #   ns("MA_vulcano_switch"),
+                                             #   label = " PLOT ", 
+                                             #   onLabel = "MA",
+                                             #   value = "TRUE",
+                                             #   offLabel = "Vulcano",
+                                             #   labelWidth = "80px"
+                                             # ),
+                                             shiny::plotOutput(ns("ma_vulcano"), height = "700px")
+                                             
+                             ),
                              shiny::tabPanel(title = "Heatmap", shiny::uiOutput(ns("heatmap_conditions_choice")),
                                              shiny::plotOutput(ns("heatmap"), height = "700px")),
                              shiny::tabPanel(title = "EdgeR summary",
@@ -188,10 +207,11 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     shiny::req(r_dea$fit, input$dea_fdr, input$reference, input$perturbation)
     shiny::req(input$reference != input$perturbation)
     print(input$dea_fdr)
-    r_dea$top_tags <- estimateDEGs(r_dea$fit, reference = input$reference, 
-                                 perturbation = input$perturbation, 
-                                 fdr = input$dea_fdr)
-    r_dea$DEGs <- r_dea$top_tags$table$genes
+    r_dea$tags <- estimateDEGs(r_dea$fit, reference = input$reference, 
+                                 perturbation = input$perturbation)
+    
+    r_dea$top_tags <- r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
+    r_dea$DEGs <- r_dea$top_tags$genes
     r_dea$ref <- input$reference
     r_dea$trt <- input$perturbation
     
@@ -265,7 +285,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     tagList(
       shiny::fluidRow(
         shinydashboardPlus::descriptionBlock(
-          number = sum(r_dea$top_tags$table$logFC > 0), 
+          number = sum(r_dea$top_tags$logFC > 0), 
           number_color = "olive", 
           number_icon = "fa fa-caret-up",
           header = "up regulated",
@@ -273,7 +293,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
           right_border = TRUE
         ),
         shinydashboardPlus::descriptionBlock(
-          number = sum(r_dea$top_tags$table$logFC < 0),
+          number = sum(r_dea$top_tags$logFC < 0),
           number_color = "red", 
           number_icon = "fa fa-caret-down",
           header = "down-regulated",
@@ -290,9 +310,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   output$deg_table <- DT::renderDataTable({
     req(r_dea$top_tags)
     
-    top <- r_dea$top_tags$table
-    print(dim(top))
-
+    top <- r_dea$top_tags
     top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
     DT::formatStyle(DT::datatable(top[,c("logFC", "logCPM", "FDR", "Regulation")], 
                                   options(list(pageLength = 20,
@@ -322,6 +340,10 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
                  title = paste0("LogCount of differentially expressed genes between : ", r_dea$top_tags$comparison))
   })
   
+  output$ma_vulcano <- shiny::renderPlot({
+     print("coucou")
+     plotDEGs(tags = r_dea$tags, fdr = input$dea_fdr, MA = input$MA_vulcano_switch)
+   })
 
   
 }

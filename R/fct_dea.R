@@ -1,5 +1,3 @@
-
-
 #' estimateDispersion
 #'
 #' The function computes the common, trend, and tag-wise dispersions of the dataset.
@@ -41,18 +39,34 @@ estimateDispersion <- function(tcc){
 #' @param perturbation condition we can to compare to the reference
 #' @param fdr adjusted pvalue for DEGs detection during glmLRT
 #'
-#' @return top tags dataframe
+#' @return tags dataframe
 #' @export
 
-estimateDEGs <- function(fit, reference, perturbation, fdr = 0.01){
+estimateDEGs <- function(fit, reference, perturbation){
   contrast <- ifelse(colnames(fit$design) == reference, -1, ifelse(colnames(fit$design) == perturbation, 1, 0))
-  print(contrast)
-  print(colnames(fit$design))
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
-  print(fdr)
-  top <- edgeR::topTags(lrt, p.value = fdr, n = Inf)
+  top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
   return(top)
 }
   
   
-  
+#' Title
+#'
+#' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR
+#' @param fdr pvalue for DEGs
+#' @param MA TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for
+#' FDR depending on logFC.
+#'
+#' @return plot object
+#' @export
+#'
+plotDEGs <- function(tags, fdr = 0.01, MA = TRUE){
+  top <- tags$table
+  top$isDE <- ifelse(top$FDR < fdr, TRUE, FALSE)
+  print(tags)
+  print(top)
+  if (MA) g <- ggplot2::ggplot(data = top, aes(x = logCPM, y = logFC, color = isDE)) + ggtitle("M-A plot")
+  else g <- ggplot2::ggplot(data = top, aes(y = FDR, x = logFC, color = isDE)) + ggplot2::ggtitle("Vulcano plot")
+  g + ggplot2::geom_point(size = 1.5) + ggplot2::scale_color_manual(values = c("#999999", "#00B4E6"))
+  g
+}
