@@ -16,7 +16,7 @@ mod_differential_expression_analysis_ui <- function(id){
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(800, 200)
+      margins = c(200, 800)
     ),
 #   ____________________________________________________________________________
 #   Dispersion estimation                                                   ####
@@ -91,7 +91,8 @@ mod_differential_expression_analysis_ui <- function(id){
         
         shiny::hr(),
         shiny::uiOutput(ns("deg_test_summary")),
-        shiny::hr()
+        shiny::hr(),
+        shiny::uiOutput(ns("deg_number_summary"))
         
       )
     ),
@@ -101,6 +102,10 @@ mod_differential_expression_analysis_ui <- function(id){
 
     col_8(
       shinydashboard::tabBox(title = "Results", width = 12,
+                             shiny::tabPanel(title = "Results table",
+                                             DT::dataTableOutput(ns("deg_table"))),
+                             shiny::tabPanel(title = "MA - Vulcano plots"),
+                             shiny::tabPanel(title = "heatmap"),
                              shiny::tabPanel(title = "EdgeR summary",
                       shiny::verbatimTextOutput(ns("edgeR_summary")))
       )
@@ -179,7 +184,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   shiny::observeEvent((input$deg_test_btn), {
     shiny::req(r_dea$fit, input$dea_fdr, input$reference, input$perturbation)
     shiny::req(input$reference != input$perturbation)
-    print("before tests")
+    print(input$dea_fdr)
     r_dea$top_tags <- estimateDEGs(r_dea$fit, reference = input$reference, 
                                  perturbation = input$perturbation, 
                                  fdr = input$dea_fdr)
@@ -216,6 +221,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
       right_border = FALSE
     )
   })
+
   
   output$deg_test_summary <- shiny::renderUI({
     if (is.null(r_dea$fit)) {
@@ -246,6 +252,53 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
       right_border = FALSE
     )
   })
+  
+  output$deg_number_summary <- shiny::renderUI({
+    shiny::req(r_dea$top_tags)
+    
+    tagList(
+      shiny::fluidRow(
+        shinydashboardPlus::descriptionBlock(
+          number = sum(r_dea$top_tags$table$logFC > 0), 
+          number_color = "olive", 
+          number_icon = "fa fa-caret-up",
+          header = "up regulated",
+          text = "genes",
+          right_border = TRUE
+        ),
+        shinydashboardPlus::descriptionBlock(
+          number = sum(r_dea$top_tags$table$logFC < 0),
+          number_color = "red", 
+          number_icon = "fa fa-caret-down",
+          header = "down-regulated",
+          text = "genes",
+          right_border = FALSE
+        )
+      )
+    )
+  })
+  
+  #   ____________________________________________________________________________
+  #   Result plots                                                            ####
+  
+  output$deg_table <- DT::renderDataTable({
+    req(r_dea$top_tags)
+    
+    top <- r_dea$top_tags$table
+    print(dim(top))
+
+    top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
+    DT::formatStyle(DT::datatable(top[,c("logFC", "logCPM", "FDR", "Regulation")], 
+                                  options(list(pageLength = 20,
+                                               lengthMenu = c(10, 20)))), 
+                    columns = c("Regulation"), 
+                    target = c("cell", "row"),
+                    backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035"))))
+  })
+  
+  
+
+  
 }
     
 ## To be copied in the UI

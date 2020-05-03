@@ -49,7 +49,8 @@ estimateDEGs <- function(fit, reference, perturbation, fdr = 0.01){
   print(contrast)
   print(colnames(fit$design))
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
-  top <- edgeR::topTags(lrt, p.value = fdr)
+  print(fdr)
+  top <- edgeR::topTags(lrt, p.value = fdr, n = Inf)
   return(top)
 }
   
