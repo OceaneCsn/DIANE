@@ -12,6 +12,7 @@ library(limma)
 #' @param title plot title
 #' @param log Show log(expression+1) in the heatmap if TRUE, expression if FALSE
 #' @param profiles Show expression/mean(expression) for each gene if TRUE, expression if FALSE
+#' @param conditions if NULL, shows all the conditions, else if character vector, shows only the required ones
 #'
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
@@ -20,23 +21,31 @@ library(limma)
 
 draw_heatmap <-
   function(data,
-           subset = "random",
+           subset = NULL,
            show_rownames = F,
            title = "Random preview heatmap",
            log = TRUE,
-           profiles = FALSE) {
-    if (subset == "random")
+           profiles = FALSE,
+           conditions = NULL) {
+    if (is.null(subset)){
       sample_subset <- sample(rownames(data), size = 100)
+    }
     else
       sample_subset <- subset
     
+    if (is.null(conditions))
+      conds <- colnames(data)
+    else
+      conds <- unique(grep(paste(conditions, collapse = "|"), 
+                            colnames(data), value = TRUE))
+
     if (log)
       data <- log(data + 1)
     if (profiles)
       data <- data / rowMeans(data)
     
     
-    mat <- data[sample_subset, ]
+    mat <- data[sample_subset, conds]
     
     sample <- stringr::str_split_fixed(colnames(mat), '_', 2) [, 1]
     samples <- data.frame(sample, row.names = colnames(mat))

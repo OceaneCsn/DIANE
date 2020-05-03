@@ -105,7 +105,8 @@ mod_differential_expression_analysis_ui <- function(id){
                              shiny::tabPanel(title = "Results table",
                                              DT::dataTableOutput(ns("deg_table"))),
                              shiny::tabPanel(title = "MA - Vulcano plots"),
-                             shiny::tabPanel(title = "heatmap"),
+                             shiny::tabPanel(title = "Heatmap", shiny::uiOutput(ns("heatmap_conditions_choice")),
+                                             shiny::plotOutput(ns("heatmap"), height = "700px")),
                              shiny::tabPanel(title = "EdgeR summary",
                       shiny::verbatimTextOutput(ns("edgeR_summary")))
       )
@@ -128,7 +129,10 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   
   r_dea <- shiny::reactiveValues(
     fit = NULL,
-    top_tags = NULL
+    top_tags = NULL,
+    DEGs = NULL,
+    ref = NULL,
+    trt = NULL
   )
   
   
@@ -160,15 +164,14 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     )
     )
   })
-  
-  shiny::observe({
-    shiny::req(r$conditions)
-    shinyWidgets::updateRadioGroupButtons(session, ns("reference"),
-                            choices = ) 
-    shinyWidgets::updateRadioGroupButtons(session, ns("perturbation"),
-                            choices = r$conditions)
-  })
-  
+  # 
+  # shiny::observe({
+  #   shiny::req(r$conditions)
+  # 
+  #   shinyWidgets::updateRadioGroupButtons(session, ns("perturbation"),
+  #                           choices = r$conditions)
+  # })
+  # 
 #   ____________________________________________________________________________
 #   Buttons reactives                                                       ####
 
@@ -188,6 +191,9 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     r_dea$top_tags <- estimateDEGs(r_dea$fit, reference = input$reference, 
                                  perturbation = input$perturbation, 
                                  fdr = input$dea_fdr)
+    r_dea$DEGs <- r_dea$top_tags$table$genes
+    r_dea$ref <- input$reference
+    r_dea$trt <- input$perturbation
     
   })
   
@@ -296,6 +302,25 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
                     backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035"))))
   })
   
+  
+  output$heatmap_conditions_choice <- shiny::renderUI({
+    shiny::req(r_dea$ref, r_dea$trt)
+    shinyWidgets::checkboxGroupButtons(
+      inputId = ns("conds_heatmap"),
+      label = "Reference",
+      choices = unique(r$conditions),
+      selected = c(r_dea$ref, r_dea$trt),
+        justified = TRUE,
+      checkIcon = list(
+        yes = shiny::icon("ok", 
+                          lib = "glyphicon")))
+  })
+  output$heatmap <- shiny::renderPlot({
+    shiny::req(input$conds_heatmap, r_dea$DEGs)
+    draw_heatmap(data = r$normalized_counts, subset = r_dea$DEGs,log = T,
+                 conditions = input$conds_heatmap,
+                 title = paste0("LogCount of differentially expressed genes between : ", r_dea$top_tags$comparison))
+  })
   
 
   

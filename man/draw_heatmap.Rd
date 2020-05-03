@@ -6,11 +6,12 @@
 \usage{
 draw_heatmap(
   data,
-  subset = "random",
+  subset = NULL,
   show_rownames = F,
   title = "Random preview heatmap",
   log = TRUE,
-  profiles = FALSE
+  profiles = FALSE,
+  conditions = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ draw_heatmap(
 \item{log}{Show log(expression+1) in the heatmap if TRUE, expression if FALSE}
 
 \item{profiles}{Show expression/mean(expression) for each gene if TRUE, expression if FALSE}
+
+\item{conditions}{if NULL, shows all the conditions, else if character vector, shows only the required ones}
 }
 \value{
 plot of the heatmap
