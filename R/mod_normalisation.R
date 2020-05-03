@@ -67,7 +67,7 @@ mod_normalisation_ui <- function(id) {
         shiny::fluidRow(
           
         col_8(shinyWidgets::awesomeRadio(
-          inputId = "norm_method", label = "Normalisation :",
+          inputId = ns("norm_method"), label = "Normalisation method:",
           choices = c("tmm", "deseq"),inline = T,
           selected = "tmm"
         )),
