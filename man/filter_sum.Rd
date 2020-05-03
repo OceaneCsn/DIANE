@@ -4,10 +4,10 @@
 \alias{filter_sum}
 \title{filter_sum}
 \usage{
-filter_sum(data, thr)
+filter_sum(tcc_, thr)
 }
 \arguments{
-\item{data}{data to be filtered to remove low count genes}
+\item{tcc_}{data to be filtered to remove low count genes}
 
 \item{thr}{the sum of counts across all samples to be exceeded for a gene}
 }

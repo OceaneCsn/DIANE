@@ -1,6 +1,5 @@
 
 library(TCC)
-library(HTSFilter)
 
 #' normalize raw count data
 #'
@@ -12,7 +11,6 @@ library(HTSFilter)
 #' @param iteration weather or not to perform a prior removal of DEGs
 #' 
 #' @import TCC
-#' @import HTSFilter
 #' @return the normalized data
 #' @export
 
@@ -21,8 +19,9 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
   tcc <- new("TCC", data, conditions)
   tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
                               iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
-  norm_data <- TCC::getNormalizedData(tcc)
-  return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
+
+  return(tcc)
+  #return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
 }
 
 
@@ -30,28 +29,14 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
 
 #' filter_sum
 #'
-#' @param data data to be filtered to remove low count genes
+#' @param tcc_ data to be filtered to remove low count genes
 #' 
 #' @param thr the sum of counts across all samples to be exceeded for a gene
 #' @export
 #' @return the filtered data
 
-filter_sum <- function(data, thr){
-  return(data[rowSums(data) > thr,])
+filter_sum <- function(tcc_, thr){
+  tcc <- TCC::filterLowCountGenes(tcc_, low.count = thr)
+  return(tcc)
 }
-
-
-#' filter_hts
-#'
-#' @param data data to be filtered to remove low count genes
-#' 
-#' @param conditions the sum of counts across all samples to be exceeded for a gene
-#' @export
-#' @return the filtered data
-
-filter_hts <- function(data, conditions){
-  filter <- HTSFilter::HTSFilter(data, conditions, normalization = 'none')
-  return(filter$filteredData)
-}
-
 

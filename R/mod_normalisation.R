@@ -22,8 +22,7 @@ mod_normalisation_ui <- function(id) {
       position = 'top-left',
       margins = c(600, 800)
     ),
-    
-    
+
     shiny::h1("Data filtering and normalisation"),
     shiny::hr(),
     shiny::h2(
@@ -68,7 +67,7 @@ mod_normalisation_ui <- function(id) {
         shiny::fluidRow(
           
         col_8(shinyWidgets::awesomeRadio(
-          inputId = "norm_method", label = "Normalisation :",
+          inputId = ns("norm_method"), label = "Normalisation method:",
           choices = c("tmm", "deseq"),inline = T,
           selected = "tmm"
         )),
@@ -116,13 +115,7 @@ mod_normalisation_ui <- function(id) {
         
         
       shiny::hr(),
-        
-      # shinyWidgets::actionBttn(
-      #   ns("use_HTSFilter"),
-      #   label = "Use HST Filter, an entropy based filtering method",
-      #   style = 'bordered',
-      #   color = 'success'
-      # ),
+
       shiny::hr(),
       shiny::hr(),
       shiny::uiOutput(ns("filtering_summary")),
@@ -163,49 +156,38 @@ mod_normalisation_ui <- function(id) {
         ),
         
         shiny::tabPanel(title = "MDS plot",
-                        shiny::plotOutput(ns('mds_plot'), height = "600px"))
+                        shiny::plotOutput(ns('mds_plot'), height = "600px")),
+        
+        shiny::tabPanel(title = "Summary",
+                        shiny::verbatimTextOutput(ns("tcc_summary")))
       )
 
     ),
     shiny::br(),
-  
-    #DT::dataTableOutput(ns("norm_factor"))
   )
 }
 
 #' normalisation Server Function
-#'
+#' @importFrom TCC getNormalizedData
 #' @noRd
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
   shiny::observeEvent((input$normalize_btn), {
     req(r$raw_counts)
-    norm <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
+    r$tcc <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
                       iteration = input$prior_removal)
-    r$normalized_counts_pre_filter <- norm$normalized.counts
-    r$norm_factors <- norm$norm_factors
+    r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
+    # the filtering needs to be done again if previously made, so :
+    r$normalized_counts <- NULL
     
   })
   
-  
-  output$norm_factor <- DT::renderDataTable({
-    req(r$norm_factors)
-    data.frame(t(round(r$norm_factors, 3)))
-  })
-  
-  # TODO make HTS work without graphical bug
-  # shiny::observeEvent((input$use_HTSFilter), {
-  #   shiny::req(r$normalized_counts_pre_filter)
-  #   r$normalized_counts <-
-  #     filter_hts(r$normalized_counts_pre_filter, conditions = r$conditions)
-  # })
-  
-  
   shiny::observeEvent((input$use_SumFilter), {
     shiny::req(r$normalized_counts_pre_filter)
-    r$normalized_counts <-
-      filter_sum(r$normalized_counts_pre_filter, thr = input$low_counts_filter)
+    r$tcc <- filter_sum(r$tcc, thr = input$low_counts_filter)
+    r$normalized_counts <- TCC::getNormalizedData(r$tcc)
+      
   })
   
   
@@ -230,6 +212,10 @@ mod_normalisation_server <- function(input, output, session, r) {
       header = header,
       right_border = FALSE
     )
+  })
+  
+  output$tcc_summary <- shiny::renderPrint({
+    print(r$tcc)
   })
   
   toDownload <- shiny::reactiveVal()
