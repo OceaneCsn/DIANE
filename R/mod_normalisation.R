@@ -178,6 +178,8 @@ mod_normalisation_server <- function(input, output, session, r) {
     r$tcc <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
                       iteration = input$prior_removal)
     r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
+    # the filtering needs to be done again if previously made, so :
+    r$normalized_counts <- NULL
     
   })
   
