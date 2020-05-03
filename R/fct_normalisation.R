@@ -21,8 +21,9 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
   tcc <- new("TCC", data, conditions)
   tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
                               iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
-  norm_data <- TCC::getNormalizedData(tcc)
-  return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
+
+  return(tcc)
+  #return(list("normalized.counts" = norm_data, "norm_factors" = tcc$norm.factors))
 }
 
 
@@ -36,8 +37,10 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
 #' @export
 #' @return the filtered data
 
-filter_sum <- function(data, thr){
-  return(data[rowSums(data) > thr,])
+filter_sum <- function(tcc_, thr){
+  tcc <- TCC::filterLowCountGenes(tcc_, low.count = thr)
+  #save(tcc, file = "D:/These/tcc.RData")
+  return(tcc)
 }
 
 

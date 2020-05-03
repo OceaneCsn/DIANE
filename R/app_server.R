@@ -11,7 +11,7 @@ app_server <- function (input, output, session) {
     raw_counts = NULL,
     normalized_counts = NULL,
     normalized_counts_pre_filter = NULL,
-    norm_factor = NULL,
+    tcc = NULL,
     conditions = NULL,
     design = NULL
   )

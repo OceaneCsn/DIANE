@@ -168,31 +168,28 @@ mod_normalisation_ui <- function(id) {
 
     ),
     shiny::br(),
-  
-    #DT::dataTableOutput(ns("norm_factor"))
   )
 }
 
 #' normalisation Server Function
-#'
+#' @importFrom TCC getNormalizedData
 #' @noRd
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
   shiny::observeEvent((input$normalize_btn), {
     req(r$raw_counts)
-    norm <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
+    r$tcc <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
                       iteration = input$prior_removal)
-    r$normalized_counts_pre_filter <- norm$normalized.counts
-    r$norm_factors <- norm$norm_factors
+    r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
     
   })
   
-  
-  output$norm_factor <- DT::renderDataTable({
-    req(r$norm_factors)
-    data.frame(t(round(r$norm_factors, 3)))
-  })
+  # 
+  # output$norm_factor <- DT::renderDataTable({
+  #   req(r$norm_factors)
+  #   data.frame(t(round(r$norm_factors, 3)))
+  # })
   
   # TODO make HTS work without graphical bug
   # shiny::observeEvent((input$use_HTSFilter), {
@@ -204,8 +201,9 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   shiny::observeEvent((input$use_SumFilter), {
     shiny::req(r$normalized_counts_pre_filter)
-    r$normalized_counts <-
-      filter_sum(r$normalized_counts_pre_filter, thr = input$low_counts_filter)
+    r$tcc <- filter_sum(r$tcc, thr = input$low_counts_filter)
+    r$normalized_counts <- TCC::getNormalizedData(r$tcc)
+      
   })
   
   
