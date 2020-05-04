@@ -218,7 +218,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   ########## matrix preview
   output$heatmap_preview <- shiny::renderPlot({
-    shiny::validate(need(expr = raw_data(), message = "Data in the wrong format. Wrong separator? No column named Gene?"))
+    shiny::req(r$raw_counts)
     d <- raw_data()[rowSums(raw_data()) > 0, ]
     draw_heatmap(d)
   })

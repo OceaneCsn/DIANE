@@ -4,7 +4,7 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation)
+estimateDEGs(fit, reference, perturbation, lfc)
 }
 \arguments{
 \item{fit}{edgeR glmFit}

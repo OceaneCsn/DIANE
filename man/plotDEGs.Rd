@@ -4,14 +4,16 @@
 \alias{plotDEGs}
 \title{Title}
 \usage{
-plotDEGs(tags, fdr = 0.01, MA = TRUE)
+plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 }
 \arguments{
 \item{tags}{tags returned bu estimateDEGs, function, that is to say topTags from edgeR}
 
 \item{fdr}{pvalue for DEGs}
 
-\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for
+\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for}
+
+\item{flc}{absolute logFC threshold for DEGs
 FDR depending on logFC.}
 }
 \value{

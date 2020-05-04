@@ -16,14 +16,14 @@ mod_differential_expression_analysis_ui <- function(id){
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(200, 800)
+      margins = c(150, 700)
     ),
 #   ____________________________________________________________________________
 #   Dispersion estimation                                                   ####
 
     col_3(
       boxPlus(
-        title = "Parameters",
+        title = "Settings",
         solidHeader = F,
         status = "primary",
         collapsible = T,
@@ -74,13 +74,20 @@ mod_differential_expression_analysis_ui <- function(id){
         shiny::uiOutput(ns("condition_choices")),
 
         
-        col_8(shiny::numericInput(
+        shiny::numericInput(
           ns("dea_fdr"),
           min = 0,
           max = 1,
           value = 0.01,
           label = "Adjusted pvalue (fdr)"
-        )),
+        ),
+        shiny::numericInput(
+          ns("dea_lfc"),
+          min = 0,
+          max = Inf,
+          value = 0,
+          label = "Minimum absolute log Fold Change :"
+        ),
         
           shinyWidgets::actionBttn(
             ns("deg_test_btn"),
@@ -113,14 +120,7 @@ mod_differential_expression_analysis_ui <- function(id){
                                                offLabel = "Vulcano"
                                              ),
                                              
-                                             # shinyWidgets::switchInput(
-                                             #   ns("MA_vulcano_switch"),
-                                             #   label = " PLOT ", 
-                                             #   onLabel = "MA",
-                                             #   value = "TRUE",
-                                             #   offLabel = "Vulcano",
-                                             #   labelWidth = "80px"
-                                             # ),
+
                                              shiny::plotOutput(ns("ma_vulcano"), height = "700px")
                                              
                              ),
@@ -130,10 +130,15 @@ mod_differential_expression_analysis_ui <- function(id){
                       shiny::verbatimTextOutput(ns("edgeR_summary")))
       )
       
-    )
+    ),
+  shiny::actionButton(ns("browser"), "backdoor"),
   )
 }
+# TODO place spinners correctly
 
+# TODO lfc threshold dea
+
+# TODO cleaner demo data
 
 
 #   __________________________________________________________________________________________________________________________________
@@ -211,6 +216,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
                                  perturbation = input$perturbation)
     
     r_dea$top_tags <- r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
+    r_dea$top_tags <- r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
     r_dea$DEGs <- r_dea$top_tags$genes
     r_dea$ref <- input$reference
     r_dea$trt <- input$perturbation
@@ -341,9 +347,14 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   })
   
   output$ma_vulcano <- shiny::renderPlot({
-     print("coucou")
-     plotDEGs(tags = r_dea$tags, fdr = input$dea_fdr, MA = input$MA_vulcano_switch)
-   })
+  shiny::req(r_dea$tags)
+  plotDEGs(tags = r_dea$tags, fdr = input$dea_fdr, lfc = input$dea_lfc, 
+           MA = input$MA_vulcano_switch)
+  })
+  
+  shiny::observeEvent(input$browser,{
+    browser()
+  })
 
   
 }
