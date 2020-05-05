@@ -11,10 +11,10 @@ plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 
 \item{fdr}{pvalue for DEGs}
 
-\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for}
-
-\item{flc}{absolute logFC threshold for DEGs
+\item{lfc}{absolute logFC threshold for DEGs
 FDR depending on logFC.}
+
+\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for}
 }
 \value{
 plot object

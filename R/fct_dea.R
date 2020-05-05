@@ -37,13 +37,12 @@ estimateDispersion <- function(tcc){
 #' @param fit edgeR glmFit
 #' @param reference condition being considered as "normal"
 #' @param perturbation condition we can to compare to the reference
-#' @param fdr adjusted pvalue for DEGs detection during glmLRT
 #' 
 #'
 #' @return tags dataframe
 #' @export
 
-estimateDEGs <- function(fit, reference, perturbation, lfc){
+estimateDEGs <- function(fit, reference, perturbation){
   contrast <- ifelse(colnames(fit$design) == reference, -1, ifelse(colnames(fit$design) == perturbation, 1, 0))
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
   top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
@@ -56,7 +55,7 @@ estimateDEGs <- function(fit, reference, perturbation, lfc){
 #' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR
 #' @param fdr pvalue for DEGs
 #' @param MA TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for
-#' @param flc absolute logFC threshold for DEGs
+#' @param lfc absolute logFC threshold for DEGs
 #' FDR depending on logFC.
 #' @return plot object
 #' @export

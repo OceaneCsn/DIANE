@@ -31,6 +31,7 @@ usethis::use_package( "shinybusy" )
 usethis::use_package( "reshape2" )
 usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
+usethis::use_package( "edgeR" )
 
 
 ## Add modules ----

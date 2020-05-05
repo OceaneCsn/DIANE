@@ -32,7 +32,15 @@ mod_differential_expression_analysis_ui <- function(id){
         
         shiny::h4("Estimation of disperion : "),
 
-        shinyWidgets::dropdownButton(
+       
+        shiny::fluidRow(
+        col_8(shinyWidgets::actionBttn(
+          ns("estimate_disp_btn"),
+          label = "Launch estimation",
+          color = "primary",
+          style = 'bordered'
+        )),
+        col_2(shinyWidgets::dropdownButton(
           size = 'xs',
           shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
@@ -40,14 +48,7 @@ mod_differential_expression_analysis_ui <- function(id){
           icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        ),
-        
-        shinyWidgets::actionBttn(
-          ns("estimate_disp_btn"),
-          label = "Launch estimation",
-          color = "primary",
-          style = 'bordered'
-        ),
+        ))),
         
         
         shiny::hr(),
@@ -58,18 +59,7 @@ mod_differential_expression_analysis_ui <- function(id){
 #   DEG parameters                                                          ####
 
         
-        shiny::h4("Choose the conditions to compare for differential analysis : "),
-        
-        shinyWidgets::dropdownButton(
-          size = 'xs',
-          shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
-          circle = TRUE,
-          status = "primary",
-          icon = icon("question"),
-          width = "600px",
-          tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        ),
-        
+        shiny::h4("Conditions to compare for differential analysis : "),
         
         shiny::uiOutput(ns("condition_choices")),
 
@@ -136,10 +126,9 @@ mod_differential_expression_analysis_ui <- function(id){
 }
 # TODO place spinners correctly
 
-# TODO lfc threshold dea
-
 # TODO cleaner demo data
 
+# TODO many deas stored in petit r
 
 #   __________________________________________________________________________________________________________________________________
 #   Server                                                                                                                        ####

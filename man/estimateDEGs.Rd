@@ -4,7 +4,7 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation, lfc)
+estimateDEGs(fit, reference, perturbation)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
@@ -12,8 +12,6 @@ estimateDEGs(fit, reference, perturbation, lfc)
 \item{reference}{condition being considered as "normal"}
 
 \item{perturbation}{condition we can to compare to the reference}
-
-\item{fdr}{adjusted pvalue for DEGs detection during glmLRT}
 }
 \value{
 tags dataframe
