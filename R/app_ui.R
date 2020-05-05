@@ -36,7 +36,7 @@ app_ui <- function(request) {
           ),
           shinydashboard::menuItem(
             "Differential Expression Analysis",
-            tabName = "DEA_tab",
+            tabName = "dea_tab",
             icon = shiny::icon("table")
           ),
           shinydashboard::menuItem(
@@ -57,7 +57,8 @@ app_ui <- function(request) {
         shinydashboard::tabItems(
           shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),
           shinydashboard::tabItem( tabName = "data_import_tab", mod_import_data_ui("import_data_ui_1")),
-          shinydashboard::tabItem( tabName = "normalisation_tab", mod_normalisation_ui("normalisation_ui_1"))
+          shinydashboard::tabItem( tabName = "normalisation_tab", mod_normalisation_ui("normalisation_ui_1")),
+          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1"))
 
         )
         

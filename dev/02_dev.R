@@ -31,6 +31,7 @@ usethis::use_package( "shinybusy" )
 usethis::use_package( "reshape2" )
 usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
+usethis::use_package( "edgeR" )
 
 
 ## Add modules ----
@@ -45,6 +46,7 @@ golem::add_module( name = "normalisation" )
 ## Creates ftc_* and utils_*
 golem::add_fct( "heatmap" )
 golem::add_fct( "normalisation")
+golem::add_fct( "dea")
 
 #golem::add_utils( "helpers" )
 
