@@ -16,3 +16,5 @@ run_app()
 # TODO download dea results
 
 # TODO tester avec d'autres donnees
+
+# TODO change axis sizes en ma vulcano plot, edgeR summary

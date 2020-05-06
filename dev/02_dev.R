@@ -32,7 +32,7 @@ usethis::use_package( "reshape2" )
 usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
 usethis::use_package( "edgeR" )
-
+usethis::use_package("dashboardthemes")
 
 ## Add modules ----
 ## Create a module infrastructure in R/

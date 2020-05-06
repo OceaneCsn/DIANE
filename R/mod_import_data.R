@@ -19,7 +19,7 @@ mod_import_data_ui <- function(id) {
     
     ######################### Title and text
     
-    h1("Upload expression data and experimental design"),
+    shiny::h1("Upload expression data and experimental design"),
     shiny::hr(),
     
     ######################### File upload ###################
@@ -27,7 +27,7 @@ mod_import_data_ui <- function(id) {
       title = "Expression file upload",
       width = 4,
       solidHeader = F,
-      status = "primary",
+      status = "success",
       collapsible = T,
       closable = F,
       shinyWidgets::prettyCheckbox(ns("use_demo"),
@@ -46,9 +46,9 @@ mod_import_data_ui <- function(id) {
         # FIXME bug avec les separateurs du fichier d'expression  
         'Separator : ',
         c(
-          Comma = ','
-          #Semicolon = ';',
-          #Tab = '\t'
+          Comma = ',',
+          Semicolon = ';',
+          Tab = '\t'
         ),
         inline = T
       ),
@@ -59,13 +59,13 @@ mod_import_data_ui <- function(id) {
         shiny::includeMarkdown(system.file("extdata", "expressionFile.md", package = "DIANE")),
         circle = TRUE,
         status = "primary",
-        icon = icon("question"),
+        icon = shiny::icon("question"),
         width = "600px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
     
     
-      fileInput(
+      shiny::fileInput(
         ns('raw_data'),
         'Choose CSV/TXT expression file',
         accept = c(
@@ -83,11 +83,11 @@ mod_import_data_ui <- function(id) {
         shiny::includeMarkdown(system.file("extdata", "designFile.md", package = "DIANE")),
         circle = TRUE,
         status = "primary",
-        icon = icon("question"),
+        icon = shiny::icon("question"),
         width = "1200px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
-      fileInput(
+      shiny::fileInput(
         ns('design'),
         'Choose CSV/TXT design file',
         accept = c(
@@ -109,7 +109,7 @@ mod_import_data_ui <- function(id) {
       title = "Preview of the expression matrix",
       width = 4,
       solidHeader = F,
-      status = "primary",
+      status = "success",
       collapsible = T,
       closable = F,
       shiny::plotOutput(ns("heatmap_preview"), height = 550),
@@ -120,7 +120,7 @@ mod_import_data_ui <- function(id) {
       title = "Preview of the design",
       width = 3,
       solidHeader = F,
-      status = "primary",
+      status = "success",
       collapsible = T,
       closable = F,
       DT::dataTableOutput(ns("design_preview"), height = 550),
@@ -128,7 +128,7 @@ mod_import_data_ui <- function(id) {
     ),
     
   
-    hr(),
+    shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
   )
 }
@@ -200,7 +200,7 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       req(input$design)
       path = input$design$datapath
-      d <- read.csv(
+      d <- read.csv(sep = input$sep,
         path,
         header = T,
         stringsAsFactors = F,
@@ -230,7 +230,7 @@ mod_import_data_server <- function(input, output, session, r) {
       value = dim(raw_data())[1],
       subtitle = "genes",
       color = "aqua",
-      width=4
+      width = 4
     )
   })
   output$conditions <- renderValueBox({

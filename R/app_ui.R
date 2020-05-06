@@ -7,6 +7,7 @@ try(library(shinydashboardPlus), silent = T)
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import shinydashboard
+#' 
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -14,7 +15,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here
     shinydashboard::dashboardPage(
-      skin = "black", 
+      
       
       shinydashboard::dashboardHeader(title = "DIANE"),
       shinydashboard::dashboardSidebar(
@@ -53,6 +54,11 @@ app_ui <- function(request) {
       ),
       
       shinydashboard::dashboardBody(
+        
+        dashboardthemes::shinyDashboardThemes(
+          theme = "grey_light"
+        ), 
+        
 
         shinydashboard::tabItems(
           shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),

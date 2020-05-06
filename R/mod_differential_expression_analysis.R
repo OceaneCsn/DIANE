@@ -25,7 +25,7 @@ mod_differential_expression_analysis_ui <- function(id){
       boxPlus(
         title = "Settings",
         solidHeader = F,
-        status = "primary",
+        status = "success",
         collapsible = T,
         closable = F,
         width = 12,
@@ -37,14 +37,14 @@ mod_differential_expression_analysis_ui <- function(id){
         col_8(shinyWidgets::actionBttn(
           ns("estimate_disp_btn"),
           label = "Launch estimation",
-          color = "primary",
+          color = "success",
           style = 'bordered'
         )),
         col_2(shinyWidgets::dropdownButton(
           size = 'xs',
           shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
-          status = "primary",
+          status = "success",
           icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
@@ -82,7 +82,7 @@ mod_differential_expression_analysis_ui <- function(id){
           shinyWidgets::actionBttn(
             ns("deg_test_btn"),
             label = "Detect differentially expressed genes",
-            color = "primary",
+            color = "success",
             style = 'bordered'
           ),
         

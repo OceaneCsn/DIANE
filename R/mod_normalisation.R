@@ -31,9 +31,9 @@ mod_normalisation_ui <- function(id) {
     shiny::hr(),
     col_3(
       boxPlus(
-        title = "Parameters",
+        title = "Settings",
         solidHeader = F,
-        status = "primary",
+        status = "success",
         collapsible = T,
         closable = F,
         width = 12,
@@ -46,7 +46,7 @@ mod_normalisation_ui <- function(id) {
           size = 'xs',
           shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
-          status = "primary",
+          status = "success",
           icon = icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
@@ -75,7 +75,7 @@ mod_normalisation_ui <- function(id) {
         col_4(shinyWidgets::actionBttn(
           ns("normalize_btn"),
           label = "Normalize",
-          color = "primary",
+          color = "success",
           style = 'bordered'
         ))
         ),
@@ -90,7 +90,7 @@ mod_normalisation_ui <- function(id) {
           size = 'xs',
           shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
-          status = "primary",
+          status = "success",
           icon = icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
@@ -108,7 +108,7 @@ mod_normalisation_ui <- function(id) {
           shinyWidgets::actionBttn(
             ns("use_SumFilter"),
             label = "Filter",
-            color = "primary",
+            color = "success",
             style = 'bordered'
           )
         ),
