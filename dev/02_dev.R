@@ -35,6 +35,7 @@ usethis::use_package( "edgeR" )
 usethis::use_package("dashboardthemes")
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
+usethis::use_package( "gridExtra" )
 
 
 ## Add modules ----
@@ -43,6 +44,7 @@ golem::add_module( name = "import_data" ) # Name of the module
 golem::add_module( name = "differential_expression_analysis" ) # Name of the module
 golem::add_module( name = "context" )
 golem::add_module( name = "normalisation" )
+golem::add_module( name = "clustering" )
 
 
 ## Add helper functions ----
@@ -50,6 +52,7 @@ golem::add_module( name = "normalisation" )
 golem::add_fct( "heatmap" )
 golem::add_fct( "normalisation")
 golem::add_fct( "dea")
+golem::add_fct( "coseq")
 
 #golem::add_utils( "helpers" )
 

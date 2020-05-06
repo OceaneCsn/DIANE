@@ -54,12 +54,12 @@ app_ui <- function(request) {
           shinydashboard::menuItem(
             "Differential Expression",
             tabName = "dea_tab",
-            icon = shiny::icon("table")
+            icon = shiny::icon("greater-than-equal")
           ),
           shinydashboard::menuItem(
             "Expression based clustering",
-            tabName = "coseq",
-            icon = shiny::icon("greater-than-equal")
+            tabName = "clustering_tab",
+            icon = shiny::icon("circle-notch")
           ),
           shinydashboard::menuItem(
             "Network inference",
@@ -80,7 +80,9 @@ app_ui <- function(request) {
           shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),
           shinydashboard::tabItem( tabName = "data_import_tab", mod_import_data_ui("import_data_ui_1")),
           shinydashboard::tabItem( tabName = "normalisation_tab", mod_normalisation_ui("normalisation_ui_1")),
-          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1"))
+          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")),
+          shinydashboard::tabItem( tabName = "clustering_tab", mod_clustering_ui("clustering_ui_1"))
+          
 
         )
         
