@@ -1,6 +1,22 @@
 library(shinydashboard)
 library(shinythemes)
 try(library(shinydashboardPlus), silent = T)
+
+
+logo_diane <- dashboardthemes::shinyDashboardLogoDIY(
+  
+  boldText = ""
+  ,mainText = ""
+  ,textSize = 16
+  ,badgeText = "DIANE"
+  ,badgeTextColor = "white"
+  ,badgeTextSize = 7
+  ,badgeBackColor = "#5FBF64"
+  ,badgeBorderRadius = 5
+  
+)
+
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
@@ -17,7 +33,7 @@ app_ui <- function(request) {
     shinydashboard::dashboardPage(
       
       
-      shinydashboard::dashboardHeader(title = "DIANE"),
+      shinydashboard::dashboardHeader(title = logo_diane),
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem(

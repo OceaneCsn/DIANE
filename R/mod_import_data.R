@@ -182,7 +182,7 @@ mod_import_data_server <- function(input, output, session, r) {
           )
       }
       else{
-        print("Gene was not in columns of the expression file...")
+        shinyalert::shinyalert("Invalid input data...", "Did you correctly set the separator? Does your data contains a column named \"Gene\"?", type = "error")
         stop()
       }
     }

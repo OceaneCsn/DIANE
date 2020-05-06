@@ -33,6 +33,7 @@ usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
 usethis::use_package( "edgeR" )
 usethis::use_package("dashboardthemes")
+usethis::use_package( "shinyalert" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/

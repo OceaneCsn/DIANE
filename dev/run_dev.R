@@ -13,8 +13,5 @@ golem::document_and_reload()
 run_app()
 
 
-# TODO download dea results
 
-# TODO tester avec d'autres donnees
-
-# TODO change axis sizes en ma vulcano plot, edgeR summary
+# FIXME shiny alert does't appear when wrong separator
