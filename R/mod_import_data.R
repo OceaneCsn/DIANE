@@ -251,7 +251,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   ######### render design
   output$design_preview <- DT::renderDataTable({
-    design()
+    DT::datatable(design())
   })
   
 }

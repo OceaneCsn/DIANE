@@ -16,7 +16,7 @@ mod_differential_expression_analysis_ui <- function(id){
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(150, 700)
+      margins = c(70, 1200)
     ),
 #   ____________________________________________________________________________
 #   Dispersion estimation                                                   ####
@@ -367,7 +367,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   output$heatmap <- shiny::renderPlot({
     shiny::req(input$conds_heatmap, r_dea$DEGs)
     draw_heatmap(data = r$normalized_counts, subset = r_dea$DEGs,log = T,
-                 conditions = input$conds_heatmap,
+                 conditions = input$conds_heatmap, profiles = T,
                  title = paste0("LogCount of differentially expressed genes between : ", r_dea$top_tags$comparison))
   })
   

@@ -51,7 +51,7 @@ draw_heatmap <-
     samples <- data.frame(sample, row.names = colnames(mat))
     
     pheatmap::pheatmap(
-      mat,
+      mat, color = colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
       annotation_col = samples,
       show_rownames = show_rownames,
       main = title,

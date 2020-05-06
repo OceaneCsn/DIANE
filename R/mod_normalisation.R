@@ -20,7 +20,7 @@ mod_normalisation_ui <- function(id) {
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(600, 800)
+      margins = c(70, 800)
     ),
 
     shiny::h1("Data filtering and normalisation"),
@@ -59,7 +59,7 @@ mod_normalisation_ui <- function(id) {
           value = TRUE,
           onLabel = "ON",
           offLabel = "OFF",
-          inline = T
+          inline = T, onStatus = "success"
         ))),
         
         
@@ -69,7 +69,7 @@ mod_normalisation_ui <- function(id) {
         col_8(shinyWidgets::awesomeRadio(
           inputId = ns("norm_method"), label = "Normalisation method:",
           choices = c("tmm", "deseq"),inline = T,
-          selected = "tmm"
+          selected = "tmm", status = "success"
         )),
         
         col_4(shinyWidgets::actionBttn(
@@ -149,7 +149,7 @@ mod_normalisation_ui <- function(id) {
               inputId = ns("violin_preview"),
               value = TRUE,
               onLabel = "Boxplots",
-              offLabel = "Violin"
+              offLabel = "Violin", onStatus = "success"
             )
           ),
           shiny::plotOutput(ns('heatmap_preview_norm'), height = "600px")
