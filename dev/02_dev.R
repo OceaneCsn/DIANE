@@ -35,7 +35,7 @@ usethis::use_package( "edgeR" )
 usethis::use_package("dashboardthemes")
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
-usethis::use_package( "gridExtra" )
+usethis::use_package( "coseq" )
 
 
 ## Add modules ----
