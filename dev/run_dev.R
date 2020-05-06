@@ -13,6 +13,5 @@ golem::document_and_reload()
 run_app()
 
 
-# TODO download dea results
 
-# TODO tester avec d'autres donnees
+# FIXME shiny alert does't appear when wrong separator

@@ -1,12 +1,29 @@
 library(shinydashboard)
 library(shinythemes)
 try(library(shinydashboardPlus), silent = T)
+
+
+logo_diane <- dashboardthemes::shinyDashboardLogoDIY(
+  
+  boldText = ""
+  ,mainText = ""
+  ,textSize = 16
+  ,badgeText = "DIANE"
+  ,badgeTextColor = "white"
+  ,badgeTextSize = 7
+  ,badgeBackColor = "#5FBF64"
+  ,badgeBorderRadius = 5
+  
+)
+
+
 #' The application User-Interface
 #'
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import shinydashboard
+#' 
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -14,9 +31,9 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here
     shinydashboard::dashboardPage(
-      skin = "black", 
       
-      shinydashboard::dashboardHeader(title = "DIANE"),
+      
+      shinydashboard::dashboardHeader(title = logo_diane),
       shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem(
@@ -35,7 +52,7 @@ app_ui <- function(request) {
             icon = shiny::icon("table")
           ),
           shinydashboard::menuItem(
-            "Differential Expression Analysis",
+            "Differential Expression",
             tabName = "dea_tab",
             icon = shiny::icon("table")
           ),
@@ -53,6 +70,11 @@ app_ui <- function(request) {
       ),
       
       shinydashboard::dashboardBody(
+        
+        dashboardthemes::shinyDashboardThemes(
+          theme = "grey_light"
+        ), 
+        
 
         shinydashboard::tabItems(
           shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),

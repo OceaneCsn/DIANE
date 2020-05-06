@@ -25,7 +25,7 @@ mod_differential_expression_analysis_ui <- function(id){
       boxPlus(
         title = "Settings",
         solidHeader = F,
-        status = "primary",
+        status = "success",
         collapsible = T,
         closable = F,
         width = 12,
@@ -37,14 +37,14 @@ mod_differential_expression_analysis_ui <- function(id){
         col_8(shinyWidgets::actionBttn(
           ns("estimate_disp_btn"),
           label = "Launch estimation",
-          color = "primary",
+          color = "success",
           style = 'bordered'
         )),
         col_2(shinyWidgets::dropdownButton(
           size = 'xs',
           shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
-          status = "primary",
+          status = "success",
           icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
@@ -82,14 +82,18 @@ mod_differential_expression_analysis_ui <- function(id){
           shinyWidgets::actionBttn(
             ns("deg_test_btn"),
             label = "Detect differentially expressed genes",
-            color = "primary",
+            color = "success",
             style = 'bordered'
           ),
         
         shiny::hr(),
         shiny::uiOutput(ns("deg_test_summary")),
         shiny::hr(),
-        shiny::uiOutput(ns("deg_number_summary"))
+        shiny::uiOutput(ns("deg_number_summary")),
+
+        shiny::hr(),
+        shiny::uiOutput(ns("dl_bttns"))
+
         
       )
     ),
@@ -115,9 +119,10 @@ mod_differential_expression_analysis_ui <- function(id){
                                              
                              ),
                              shiny::tabPanel(title = "Heatmap", shiny::uiOutput(ns("heatmap_conditions_choice")),
-                                             shiny::plotOutput(ns("heatmap"), height = "700px")),
-                             shiny::tabPanel(title = "EdgeR summary",
-                      shiny::verbatimTextOutput(ns("edgeR_summary")))
+                                             shiny::plotOutput(ns("heatmap"), height = "700px"))
+                             #shiny::tabPanel(title = "EdgeR summary",
+                      #shiny::verbatimTextOutput(ns("edgeR_summary")),
+                      
       )
       
     ),
@@ -212,12 +217,12 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     
   })
   
-  output$edgeR_summary <- shiny::renderPrint({
-    shiny::req(r_dea$fit)
-    print(r_dea$fit)
-  })
-  
-  
+  # output$edgeR_summary <- shiny::renderPrint({
+  #   shiny::req(r_dea$fit)
+  #   print(r_dea$fit$coefficients)
+  # })
+  # 
+  # 
 #   ____________________________________________________________________________
 #   Summaries                                                               ####
 
@@ -298,6 +303,37 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
       )
     )
   })
+  
+  
+#   ____________________________________________________________________________
+#   Dl button                                                               ####
+
+  
+  
+  output$dl_bttns <- shiny::renderUI({
+    
+    shiny::req(r_dea$top_tags)
+    shiny::fluidRow(
+      shinyWidgets::downloadBttn(
+        outputId = ns("download_table_csv"),
+        label = "Download result table as .csv",
+        style = "bordered",
+        color = "default"
+      )
+    )
+    
+  })
+  
+  output$download_table_csv <- shiny::downloadHandler(
+    
+    filename = function(){
+      paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
+    },
+    content = function(file){
+      write.csv(r_dea$top_tags, file = file, quote = FALSE)
+    }
+  )
+
   
   #   ____________________________________________________________________________
   #   Result plots                                                            ####

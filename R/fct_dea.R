@@ -65,6 +65,7 @@ plotDEGs <- function(tags, fdr = 0.01, lfc = 0, MA = TRUE){
   top$isDE <- ifelse(top$FDR < fdr & abs(top$logFC) > lfc, TRUE, FALSE)
   if (MA) g <- ggplot2::ggplot(data = top, aes(x = logCPM, y = logFC, color = isDE)) + ggtitle("M-A plot")
   else g <- ggplot2::ggplot(data = top, aes(y = -log10(FDR), x = logFC, color = isDE)) + ggplot2::ggtitle("Vulcano plot")
-  g <- g + ggplot2::geom_point(size = 1.2) + ggplot2::scale_color_manual(values = c("#999999", "#00B4E6"))
-  g
+  g <- g + ggplot2::geom_point(size = 1.2) + ggplot2::scale_color_manual(values = c("#999999", "#25BA40"))
+  g + theme(axis.text.x = element_text(size = 18), axis.text.y = element_text(size = 18),
+            title = element_text(size = 20, face = "bold"))
 }
