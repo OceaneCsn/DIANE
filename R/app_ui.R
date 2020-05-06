@@ -52,7 +52,7 @@ app_ui <- function(request) {
             icon = shiny::icon("table")
           ),
           shinydashboard::menuItem(
-            "Differential Expression Analysis",
+            "Differential Expression",
             tabName = "dea_tab",
             icon = shiny::icon("table")
           ),

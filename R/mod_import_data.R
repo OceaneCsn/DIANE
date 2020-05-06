@@ -43,7 +43,6 @@ mod_import_data_ui <- function(id) {
       radioButtons(
         ns('sep'),
           
-        # FIXME bug avec les separateurs du fichier d'expression  
         'Separator : ',
         c(
           Comma = ',',
