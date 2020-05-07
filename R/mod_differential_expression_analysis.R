@@ -197,8 +197,6 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   shiny::observeEvent((input$estimate_disp_btn), {
     shiny::req(r$tcc)
     r_dea$fit <- estimateDispersion(r$tcc)
-    # the filtering needs to be done again if previously made, so :
-    #r$normalized_counts <- NULL
     
   })
   

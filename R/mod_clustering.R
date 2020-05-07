@@ -78,28 +78,21 @@ mod_clustering_ui <- function(id){
     
     col_8(
       shinydashboard::tabBox(title = "Results", width = 12,
-                             # shiny::tabPanel(title = "Results table",
-                             #                 DT::dataTableOutput(ns("deg_table"))),
-                             # shiny::tabPanel(title = "MA - Vulcano plots",
-                             #                 
-                             #                 shinyWidgets::switchInput(
-                             #                   inputId = ns("MA_vulcano_switch"),
-                             #                   value = TRUE,
-                             #                   onLabel = "MA",
-                             #                   offLabel = "Vulcano"
-                             #                 ),
-                             #                 
-                             #                 
-                             #                 shiny::plotOutput(ns("ma_vulcano"), height = "700px")
-                             #                 
-                             # ),
-                             shiny::tabPanel(title = "Clustering quality", col_6(shiny::plotOutput(ns("plot_coseq_icl"))),
-                                             col_6(shiny::plotOutput(ns("plot_coseq_barplots")))),
-                             shiny::tabPanel(title = "Coseq summary",
-                              shiny::verbatimTextOutput(ns("coseq_run_summary")))
-                        
+
+
+                               shiny::tabPanel(title = "Cluster profiles", 
+                                               shiny::uiOutput(ns("profiles_clusters_choice")),
+                                               shiny::plotOutput(ns("clusters_profiles")
+                                                                             ,height = "800px"
+                                                                             )),
+                               shiny::tabPanel(title = "Clustering quality", 
+                                               shiny::fluidRow(
+                                                 col_6(shiny::plotOutput(ns("plot_coseq_icl"))),
+                                                  col_6(shiny::plotOutput(ns("plot_coseq_barplots"))))),
+                             
+                               shiny::tabPanel(title = "Coseq summary",
+                                shiny::verbatimTextOutput(ns("coseq_run_summary")))
       )
-      
     )
   )
 }
@@ -112,7 +105,8 @@ mod_clustering_server <- function(input, output, session, r){
   
   
   r_coseq <- shiny::reactiveValues(model = NULL,
-                                   membership=NULL)
+                                   membership = NULL)
+
   
 #   ____________________________________________________________________________
 #   degs input select                                                       ####
@@ -130,7 +124,30 @@ mod_clustering_server <- function(input, output, session, r){
   })
   
   
+
+  #   ____________________________________________________________________________
+  #   Clusters choices ui                                                     ####
   
+  
+  
+  output$profiles_clusters_choice <- shiny::renderUI({
+    shiny::req(r_coseq$membership)
+    tagList(
+      
+      shinyWidgets::checkboxGroupButtons(
+        inputId = ns("clusters"),
+        label = NULL,
+        choices = unique(r_coseq$membership),
+        justified = TRUE,
+        checkIcon = list(
+          yes = shiny::icon("ok", 
+                            lib = "glyphicon")),
+        selected = unique(r_coseq$membership)
+      ),
+    )
+  })
+  
+
   #   ____________________________________________________________________________
   #   coseq summary ui                                                        ####
   
@@ -178,20 +195,28 @@ mod_clustering_server <- function(input, output, session, r){
   #   ____________________________________________________________________________
   #   results                                                                 ####
   output$coseq_run_summary <- shiny::renderPrint({
-    shiny::req(r_coseq$model)
+
+    shiny::req(r_coseq$model, r$DEGs)
     print(r_coseq$model)
   })
   
   output$plot_coseq_icl <- shiny::renderPlot({
-    shiny::req(r_coseq$model)
+
+    shiny::req(r_coseq$model, r$DEGs)
     draw_coseq_run(r_coseq$model)
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
-    shiny::req(r_coseq$model)
+    shiny::req(r_coseq$model, r$DEGs)
     draw_coseq_run(r_coseq$model, plot = "barplot")
   })
-    
+  
+  output$clusters_profiles <- shiny::renderPlot({
+    shiny::req(r_coseq$membership, r$DEGs)
+    draw_profiles(data = r$normalized_counts, membership = r_coseq$membership,
+                  k = input$clusters)
+  })
+
 }
 
 
