@@ -87,7 +87,7 @@ draw_distributions <- function(data, boxplot = T) {
   
   if (boxplot) {
     g <-
-      g + geom_boxplot(
+      g + ggplot2::geom_boxplot(
         alpha = 0.5,
         lwd = 1,
         aes(fill = condition),
@@ -95,11 +95,11 @@ draw_distributions <- function(data, boxplot = T) {
         outlier.alpha = 0.1
       )
   } else{
-    g <- g + geom_violin(alpha = 0.5, lwd = 1, aes(fill = condition))
+    g <- g + ggplot2::geom_violin(alpha = 0.5, lwd = 1, aes(fill = condition))
   }
   
   g <-
-    g + theme(
+    g + ggplot2::theme(
       plot.title = element_text(size = 22, face = "bold"),
       strip.text.x = element_text(size = 20),
       legend.position = "bottom",
@@ -115,7 +115,6 @@ draw_distributions <- function(data, boxplot = T) {
       legend.text.align = 1,
       axis.title = element_text(size = 24)
     )
-  
   g
 }
 

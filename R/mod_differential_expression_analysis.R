@@ -68,14 +68,14 @@ mod_differential_expression_analysis_ui <- function(id){
           ns("dea_fdr"),
           min = 0,
           max = 1,
-          value = 0.01,
+          value = 0.05,
           label = "Adjusted pvalue (fdr)"
         ),
         shiny::numericInput(
           ns("dea_lfc"),
           min = 0,
           max = Inf,
-          value = 0,
+          value = 1,
           label = "Minimum absolute log Fold Change :"
         ),
         
@@ -197,8 +197,6 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   shiny::observeEvent((input$estimate_disp_btn), {
     shiny::req(r$tcc)
     r_dea$fit <- estimateDispersion(r$tcc)
-    # the filtering needs to be done again if previously made, so :
-    #r$normalized_counts <- NULL
     
   })
   
@@ -214,6 +212,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     r_dea$DEGs <- r_dea$top_tags$genes
     r_dea$ref <- input$reference
     r_dea$trt <- input$perturbation
+    r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
     
   })
   

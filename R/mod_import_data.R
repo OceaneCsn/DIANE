@@ -158,7 +158,10 @@ mod_import_data_server <- function(input, output, session, r) {
       r$norm_factor = NULL
       r$conditions = NULL
       r$design = NULL
+      r$DEGs = list()
+      r$tcc = NULL
       
+     
       req(input$raw_data)
       path = input$raw_data$datapath
 
@@ -239,7 +242,7 @@ mod_import_data_server <- function(input, output, session, r) {
       subtitle = "conditions",
       color = "teal"
     )
-  }) 
+  })  
   
   output$samples <- renderValueBox({
     valueBox(

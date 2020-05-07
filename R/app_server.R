@@ -13,7 +13,7 @@ app_server <- function (input, output, session) {
     tcc = NULL,
     conditions = NULL,
     design = NULL,
-    DEGs = NULL
+    DEGs = list()
   )
   
   
@@ -21,4 +21,5 @@ app_server <- function (input, output, session) {
   shiny::callModule(mod_import_data_server, "import_data_ui_1", r)
   shiny::callModule(mod_normalisation_server, "normalisation_ui_1", r)
   shiny::callModule(mod_differential_expression_analysis_server, "differential_expression_analysis_ui_1", r)
+  shiny::callModule(mod_clustering_server, "clustering_ui_1", r)
 }
