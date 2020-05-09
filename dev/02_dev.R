@@ -36,6 +36,7 @@ usethis::use_package("dashboardthemes")
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "coseq" )
+#usethis::use_package( "MASS" )
 
 
 ## Add modules ----
@@ -45,7 +46,7 @@ golem::add_module( name = "differential_expression_analysis" ) # Name of the mod
 golem::add_module( name = "context" )
 golem::add_module( name = "normalisation" )
 golem::add_module( name = "clustering" )
-
+golem::add_module( name = "cluster_exploration" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

@@ -141,12 +141,14 @@ mod_import_data_ui <- function(id) {
 #' @noRd
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
-  
+  print("hhh")
   raw_data <- shiny::reactive({
-    
+    print("hey")
     if (input$use_demo) {
+      print("coucou1")
       load(system.file("extdata", "raw_counts_At.RData", package = "DIANE"))
       d <- raw_data_At
+      print("coucou")
     }
     else{ 
       
@@ -155,7 +157,6 @@ mod_import_data_server <- function(input, output, session, r) {
       r$raw_counts = NULL
       r$normalized_counts = NULL
       r$normalized_counts_pre_filter = NULL
-      r$norm_factor = NULL
       r$conditions = NULL
       r$design = NULL
       r$DEGs = list()

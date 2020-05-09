@@ -56,11 +56,14 @@ app_ui <- function(request) {
             tabName = "dea_tab",
             icon = shiny::icon("greater-than-equal")
           ),
-          shinydashboard::menuItem(
-            "Expression based clustering",
-            tabName = "clustering_tab",
-            icon = shiny::icon("circle-notch")
-          ),
+          # shinydashboard::menuItem(
+          #   "Expression based clustering",
+          #   tabName = "clustering_tab",
+          #   icon = shiny::icon("circle-notch"),
+          #   shinydashboard::menuSubItem(tabName = "cluster_exploration_sub_tab",
+          #                               text = "Explore clusters")
+          # ),
+
           shinydashboard::menuItem(
             "Network inference",
             tabName = "network_tab",
@@ -80,8 +83,10 @@ app_ui <- function(request) {
           shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),
           shinydashboard::tabItem( tabName = "data_import_tab", mod_import_data_ui("import_data_ui_1")),
           shinydashboard::tabItem( tabName = "normalisation_tab", mod_normalisation_ui("normalisation_ui_1")),
-          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")),
-          shinydashboard::tabItem( tabName = "clustering_tab", mod_clustering_ui("clustering_ui_1"))
+          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1"))
+          
+          #shinydashboard::tabItem( tabName = "clustering_tab", mod_clustering_ui("clustering_ui_1")),
+          #shinydashboard::tabItem( tabName = "cluster_exploration_sub_tab", mod_clustering_ui("clustering_ui_1"))
           
 
         )

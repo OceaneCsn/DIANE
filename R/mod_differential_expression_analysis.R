@@ -213,6 +213,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
     r_dea$ref <- input$reference
     r_dea$trt <- input$perturbation
     r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
+    r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
     
   })
   

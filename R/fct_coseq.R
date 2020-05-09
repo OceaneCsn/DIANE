@@ -45,6 +45,19 @@ draw_coseq_run <- function(run_pois, plot = "ICL"){
 }
 
 
+#' get_genes_in_cluster
+#'
+#' @param membership named vector from run_coseq
+#' @param cluster desired cluster number
+#'
+#' @return genes belonging to the desired cluster
+#' @export
+#'
+get_genes_in_cluster <- function(membership, cluster){
+  return(names(membership[membership == cluster]))
+}
+
+
 #' Draw profiles of a clustering
 #'
 #' @param data normalized counts

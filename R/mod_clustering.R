@@ -103,11 +103,6 @@ mod_clustering_ui <- function(id){
 mod_clustering_server <- function(input, output, session, r){
   ns <- session$ns
   
-  
-  r_coseq <- shiny::reactiveValues(model = NULL,
-                                   membership = NULL)
-
-  
 #   ____________________________________________________________________________
 #   degs input select                                                       ####
 
@@ -131,18 +126,18 @@ mod_clustering_server <- function(input, output, session, r){
   
   
   output$profiles_clusters_choice <- shiny::renderUI({
-    shiny::req(r_coseq$membership)
+    shiny::req(r$clusterings[[input$input_deg_genes]]$membership)
     tagList(
       
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("clusters"),
         label = NULL,
-        choices = unique(r_coseq$membership),
+        choices = unique(r$clusterings[[input$input_deg_genes]]$membership),
         justified = TRUE,
         checkIcon = list(
           yes = shiny::icon("ok", 
                             lib = "glyphicon")),
-        selected = unique(r_coseq$membership)
+        selected = unique(r$clusterings[[input$input_deg_genes]]$membership)
       ),
     )
   })
@@ -153,7 +148,7 @@ mod_clustering_server <- function(input, output, session, r){
   
   
   output$coseq_summary <- shiny::renderUI({
-    if (is.null(r_coseq$model)) {
+    if (is.null(r$clusterings[[input$input_deg_genes]]$model)) {
       number_color = "orange"
       number = "Needed"
       header = ""
@@ -179,14 +174,12 @@ mod_clustering_server <- function(input, output, session, r){
   #   Bttn reactive                                                           ####
   shiny::observeEvent((input$launch_coseq_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes, r$conditions)
-    print(unique(r$conditions))
-    print(input$cluster_range)
-    print(r$DEGs[[input$input_deg_genes]])
     run <- run_coseq(data = r$normalized_counts, genes = r$DEGs[[input$input_deg_genes]],
                          conds = unique(r$conditions), K = seq(input$cluster_range[1], input$cluster_range[2]))
-    r_coseq$model <- run$model
-    r_coseq$membership <- run$membership
-    print("Done")
+    r$clusterings[[input$input_deg_genes]]$model <- run$model
+    r$clusterings[[input$input_deg_genes]]$membership <- run$membership
+    r$current_comparison <- input$input_deg_genes
+    
   })
   
   
@@ -196,24 +189,24 @@ mod_clustering_server <- function(input, output, session, r){
   #   results                                                                 ####
   output$coseq_run_summary <- shiny::renderPrint({
 
-    shiny::req(r_coseq$model, r$DEGs)
-    print(r_coseq$model)
+    shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
+    print(r$clusterings[[input$input_deg_genes]]$model)
   })
   
   output$plot_coseq_icl <- shiny::renderPlot({
 
-    shiny::req(r_coseq$model, r$DEGs)
-    draw_coseq_run(r_coseq$model)
+    shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
+    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model)
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
-    shiny::req(r_coseq$model, r$DEGs)
-    draw_coseq_run(r_coseq$model, plot = "barplot")
+    shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
+    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "barplot")
   })
   
   output$clusters_profiles <- shiny::renderPlot({
-    shiny::req(r_coseq$membership, r$DEGs)
-    draw_profiles(data = r$normalized_counts, membership = r_coseq$membership,
+    shiny::req(r$clusterings[[input$input_deg_genes]]$membership, r$DEGs)
+    draw_profiles(data = r$normalized_counts, membership = r$clusterings[[input$input_deg_genes]]$membership,
                   k = input$clusters)
   })
 

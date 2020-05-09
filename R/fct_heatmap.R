@@ -72,7 +72,6 @@ draw_heatmap <-
 #' @return plot
 #' @export
 #'
-#' @examples
 draw_distributions <- function(data, boxplot = T) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
