@@ -133,8 +133,6 @@ mod_differential_expression_analysis_ui <- function(id){
 
 # TODO cleaner demo data
 
-# TODO many deas stored in petit r
-
 #   __________________________________________________________________________________________________________________________________
 #   Server                                                                                                                        ####
 

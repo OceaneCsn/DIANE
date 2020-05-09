@@ -19,7 +19,7 @@ mod_cluster_exploration_ui <- function(id){
 #   ____________________________________________________________________________
 #   Profiles column                                                         ####
 
-  col_4(
+  col_6(
     boxPlus( width = 12, title = "Expression profiles",
       shiny::plotOutput(ns("profiles_to_explore"), height = "700px"))
   ),
@@ -29,7 +29,7 @@ mod_cluster_exploration_ui <- function(id){
 #   Clusters characteristics                                                ####
 
 
-  col_8(
+  col_6(
     shinydashboard::tabBox(title = "Genes in that clusters", width = 12,
            shiny::tabPanel(title = "Genes table",
                            DT::dataTableOutput(ns("genes_to_explore"))),
@@ -40,6 +40,10 @@ mod_cluster_exploration_ui <- function(id){
  
   )
 }
+
+# TODO : faire choisir le clustering préfait (comparaison) plutot que le dernier deja fait
+
+# TODO : add valueBox with number of genes in the cluster
     
 #' cluster_exploration Server Function
 #'
@@ -50,6 +54,12 @@ mod_cluster_exploration_server <- function(input, output, session, r){
   membership <- shiny::reactive({
     req(r$clusterings[[r$current_comparison]])
     r$clusterings[[r$current_comparison]]$membership
+  })
+  
+  
+  conditions <- shiny::reactive({
+    req(r$clusterings[[r$current_comparison]])
+    r$clusterings[[r$current_comparison]]$conditions
   })
     
   output$cluster_to_explore_choice <- shiny::renderUI({
@@ -68,7 +78,8 @@ mod_cluster_exploration_server <- function(input, output, session, r){
   output$profiles_to_explore <- shiny::renderPlot({
     draw_profiles(data = r$normalized_counts,
                   membership = membership(),
-                  k = input$cluster_to_explore)
+                  k = input$cluster_to_explore,
+                  conds = conditions())
     })
   
   output$genes_to_explore <- DT::renderDataTable({

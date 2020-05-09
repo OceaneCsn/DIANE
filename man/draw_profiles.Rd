@@ -4,12 +4,21 @@
 \alias{draw_profiles}
 \title{Draw profiles of a clustering}
 \usage{
-draw_profiles(data, membership, expression = "profiles", k = NULL, nrow = 3)
+draw_profiles(
+  data,
+  membership,
+  conds,
+  expression = "profiles",
+  k = NULL,
+  nrow = 3
+)
 }
 \arguments{
 \item{data}{normalized counts}
 
 \item{membership}{membership item of the coseq object returned by run_coseq object}
+
+\item{conds}{conditions on which to perform clustering, ingoring the others}
 
 \item{expression}{if it is set to "profiles" (default), plots expression/sum(expression). if "counts", plots log(Counts+1)}
 

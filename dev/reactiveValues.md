@@ -19,8 +19,9 @@ r
 |   | ref trt 
 |   |    | model (coseqResult)
 |   |    | membership (named vector)
+|   |    | conditions (vector)
 ``` 
 
 Juste pour savoir ce qui est accessible à tout moment dans l'appli.
 
-Peut être aussi pour être stockée dans une session.
+Peut être aussi pour être stockée dans une session et reloadé direct.

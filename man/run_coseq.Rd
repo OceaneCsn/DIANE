@@ -11,7 +11,7 @@ run_coseq(conds, genes, data, K = 6:12)
 
 \item{genes}{Genes used as an input for the clustering}
 
-\item{data}{normalized counts}
+\item{data}{normalized counts (MUST be normalized!)}
 
 \item{K}{number of clusters range}
 }
