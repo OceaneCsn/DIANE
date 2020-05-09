@@ -105,7 +105,13 @@ draw_profiles <- function(data, membership, expression = "profiles", k = NULL,
     g <- ggplot2::ggplot(data = d[d$cluster %in% k,], aes(x=group, y=value)) + ggplot2::facet_wrap(~cluster, scales = "free") 
   }
   
-  g <- g + ggplot2::geom_line(alpha = 0.08,lwd = 0.9, aes(group = geneRep, color = as.factor(cluster)))
+  if(!is.null(k) && length(k) == 1){
+    g <- g + ggplot2::geom_line(alpha = 0.12,lwd = 0.9, color = "darkgreen", aes(group = geneRep))
+  }
+  else {
+    g <- g + ggplot2::geom_line(alpha = 0.08,lwd = 0.9, aes(group = geneRep, color = as.factor(cluster)))
+  }
+  
   
   g <- g + ggplot2::geom_boxplot(alpha=0.4, lwd=1, color = "black", outlier.color = "black", outlier.alpha = 0.1) + 
     ggplot2::geom_jitter(width = 0.1, alpha = 0.0015) + ggtitle("Expression profiles of the clusters")

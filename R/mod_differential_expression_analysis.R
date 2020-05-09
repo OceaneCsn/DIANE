@@ -308,8 +308,6 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
 #   ____________________________________________________________________________
 #   Dl button                                                               ####
 
-  
-  
   output$dl_bttns <- shiny::renderUI({
     
     shiny::req(r_dea$top_tags)

@@ -30,7 +30,7 @@ mod_clustering_ui <- function(id){
         closable = F,
         width = 12,
         
-        shiny::h4("Input list of genes : "),
+        col_10(shiny::h4("Input list of genes : ")),
         
         col_2(shinyWidgets::dropdownButton(
           size = 'xs',
@@ -42,10 +42,12 @@ mod_clustering_ui <- function(id){
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
         )),
         
-        shiny::fluidRow(shiny::uiOutput(ns("input_genes"))),
+        
+        shiny::br(),
+        shiny::fluidRow(col_10(shiny::uiOutput(ns("input_genes")))),
 
           
-        col_12(shinyWidgets::sliderTextInput(
+        shiny::fluidRow(col_12(shinyWidgets::sliderTextInput(
           inputId = ns("cluster_range"),
           label = "Min mand max number of clusters to test :", 
           choices = seq(3,15),
@@ -54,7 +56,8 @@ mod_clustering_ui <- function(id){
           from_max = 7,
           to_min = 8,
           to_max = 15
-        )),
+        ))),
+        shiny::br(),
         
         shiny::fluidRow(
           col_12(shinyWidgets::actionBttn(
@@ -62,15 +65,13 @@ mod_clustering_ui <- function(id){
             label = "Launch clustering",
             color = "success",
             style = 'bordered'
-          )),
+          ))),
         
         shiny::fluidRow(
-        shiny::br(),
-        shiny::br(),
         shiny::hr(),
         shiny::uiOutput(ns("coseq_summary")),
         shiny::hr()
-      )))
+      ))
     ),
     
     #   ____________________________________________________________________________
@@ -188,23 +189,25 @@ mod_clustering_server <- function(input, output, session, r){
   #   ____________________________________________________________________________
   #   results                                                                 ####
   output$coseq_run_summary <- shiny::renderPrint({
-
+    shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
     print(r$clusterings[[input$input_deg_genes]]$model)
   })
   
   output$plot_coseq_icl <- shiny::renderPlot({
-
+    shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
     draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model)
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
+    shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
     draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "barplot")
   })
   
   output$clusters_profiles <- shiny::renderPlot({
+    shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$membership, r$DEGs)
     draw_profiles(data = r$normalized_counts, membership = r$clusterings[[input$input_deg_genes]]$membership,
                   k = input$clusters)
