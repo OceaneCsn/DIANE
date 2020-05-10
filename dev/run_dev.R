@@ -11,7 +11,3 @@ golem::document_and_reload()
 
 # Run the application
 run_app()
-
-
-
-# FIXME shiny alert doesn't appear when wrong separator
