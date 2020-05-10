@@ -11,6 +11,12 @@ mod_cluster_exploration_ui <- function(id){
   ns <- NS(id)
   tagList(
     
+    shinybusy::add_busy_spinner(
+      spin = "self-building-square",
+      position = 'top-left',
+      margins = c(70, 800)
+    ),
+    
     shiny::h1("Analyse the genes of a specific cluster"),
     shiny::hr(),
     shiny::uiOutput(ns("cluster_to_explore_choice")),
@@ -116,7 +122,7 @@ mod_cluster_exploration_server <- function(input, output, session, r){
     valueBox(
       value = length(get_genes_in_cluster(membership = membership(), cluster = input$cluster_to_explore)),
       subtitle = "genes in this cluster",
-      color = "teal"
+      color = "olive"
     )
   })
   

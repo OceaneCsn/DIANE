@@ -1,6 +1,6 @@
-source("R/fct_normalisation.R")
-source("R/fct_heatmap.R")
-library(shinybusy)
+# source("R/fct_normalisation.R")
+# source("R/fct_heatmap.R")
+# library(shinybusy)
 
 #' normalisation UI Function
 #'
@@ -29,6 +29,11 @@ mod_normalisation_ui <- function(id) {
       "Because low count genes and differences in sequencing depths are a true source of bias, we want to perform some data cleaning and transformation."
     ),
     shiny::hr(),
+    
+    
+#   ____________________________________________________________________________
+#   Normalisation settings                                                  ####
+
     col_3(
       boxPlus(
         title = "Settings",
@@ -83,6 +88,11 @@ mod_normalisation_ui <- function(id) {
         shiny::hr(),
         shiny::uiOutput(ns("norm_summary")),
         shiny::hr(),
+        
+        
+#   ____________________________________________________________________________
+#   filtering settings                                                      ####
+
      
         h2("Low counts filtering"),
         
@@ -126,6 +136,9 @@ mod_normalisation_ui <- function(id) {
     ),
     
     
+#   ____________________________________________________________________________
+#   plot results ui                                                         ####
+
     col_8(
       
       shinydashboard::tabBox(title = "Data exploration",
@@ -136,7 +149,7 @@ mod_normalisation_ui <- function(id) {
           title = "Samples distributions",
           col_4(
             shinyWidgets::switchInput(
-              inputId = ns("preview_norm_heatmap"),
+              inputId = ns("preview_norm_distr"),
               value = TRUE,
               onLabel = "normalized",
               offLabel = "raw",
@@ -163,7 +176,7 @@ mod_normalisation_ui <- function(id) {
       )
 
     ),
-    shiny::br(),
+    shiny::br()
   )
 }
 
@@ -174,8 +187,13 @@ mod_normalisation_ui <- function(id) {
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
-  shiny::observeEvent((input$normalize_btn), {
-    req(r$raw_counts)
+  
+  
+#   ____________________________________________________________________________
+#   buttn reactives                                                         ####
+
+  shiny::observeEvent(input$normalize_btn, {
+    shiny::req(r$raw_counts)
     r$tcc <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
                       iteration = input$prior_removal)
     r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
@@ -192,6 +210,9 @@ mod_normalisation_server <- function(input, output, session, r) {
   })
   
   
+#   ____________________________________________________________________________
+#   summaries                                                               ####
+
   output$norm_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
       number_color = "orange"
@@ -254,11 +275,15 @@ mod_normalisation_server <- function(input, output, session, r) {
     )
   })
   
+  
+#   ____________________________________________________________________________
+#   distribution plots                                                      ####
+
   # IDEA also implement PCA, maybe 3D, in data exploration
   output$heatmap_preview_norm <- shiny::renderPlot({
-    shiny::req(r$normalized_counts_pre_filter)
+    shiny::req(r$raw_counts)
     
-    if (!input$preview_norm_heatmap) {
+    if (!input$preview_norm_distr | is.null(r$normalized_counts_pre_filter)) {
       d <- r$raw_counts 
     }
     else{
@@ -277,7 +302,10 @@ mod_normalisation_server <- function(input, output, session, r) {
     draw_MDS(r$normalized_counts)
   })
   
-  
+
+#   ____________________________________________________________________________
+#   download buttons                                                        ####
+
   output$dl_bttns <- shiny::renderUI({
     
     shiny::req(r$normalized_counts)
