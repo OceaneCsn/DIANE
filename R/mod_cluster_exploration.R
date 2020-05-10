@@ -32,7 +32,9 @@ mod_cluster_exploration_ui <- function(id){
   col_6(
     shinydashboard::tabBox(title = "Genes in that clusters", width = 12,
            shiny::tabPanel(title = "Genes table",
-                           DT::dataTableOutput(ns("genes_to_explore"))),
+                           DT::dataTableOutput(ns("genes_to_explore")),
+                           shiny::hr(),
+                           shiny::fluidRow(valueBoxOutput(ns("gene_number_cluster")))),
            shiny::tabPanel(title = "Ontologies enrichment"),
            shiny::tabPanel(title = "GLM for factors effect")
     )
@@ -51,6 +53,11 @@ mod_cluster_exploration_ui <- function(id){
 mod_cluster_exploration_server <- function(input, output, session, r){
   ns <- session$ns
   
+  
+#   ____________________________________________________________________________
+#   Reactive memberships and conds                                          ####
+
+  
   membership <- shiny::reactive({
     req(r$clusterings[[r$current_comparison]])
     r$clusterings[[r$current_comparison]]$membership
@@ -61,6 +68,12 @@ mod_cluster_exploration_server <- function(input, output, session, r){
     req(r$clusterings[[r$current_comparison]])
     r$clusterings[[r$current_comparison]]$conditions
   })
+  
+  
+  
+#   ____________________________________________________________________________
+#   cluster to explore choice                                               ####
+
     
   output$cluster_to_explore_choice <- shiny::renderUI({
     shiny::req(membership())
@@ -75,12 +88,22 @@ mod_cluster_exploration_server <- function(input, output, session, r){
     )
   })
   
+  
+#   ____________________________________________________________________________
+#   profiles                                                                ####
+
+  
   output$profiles_to_explore <- shiny::renderPlot({
     draw_profiles(data = r$normalized_counts,
                   membership = membership(),
                   k = input$cluster_to_explore,
                   conds = conditions())
     })
+  
+  
+#   ____________________________________________________________________________
+#   table                                                                   ####
+
   
   output$genes_to_explore <- DT::renderDataTable({
     req(r$top_tags, r$current_comparison, membership())
@@ -89,6 +112,17 @@ mod_cluster_exploration_server <- function(input, output, session, r){
     table[table$genes %in% get_genes_in_cluster(membership = membership(), cluster = input$cluster_to_explore),
           c("logFC", "logCPM", "FDR")]
   })
+  
+  
+  output$gene_number_cluster <- renderValueBox({
+    valueBox(
+      value = length(get_genes_in_cluster(membership = membership(), cluster = input$cluster_to_explore)),
+      subtitle = "genes in this cluster",
+      color = "teal"
+    )
+  })
+  
+  
   
  
 }

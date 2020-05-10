@@ -173,6 +173,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
       inputId = ns("perturbation"),
       label = "Perturbation",
       choices = unique(r$conditions),
+      selected = unique(r$conditions)[2],
       justified = TRUE,
       checkIcon = list(
         yes = shiny::icon("ok", 

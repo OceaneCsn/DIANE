@@ -22,7 +22,10 @@ mod_import_data_ui <- function(id) {
     shiny::h1("Upload expression data and experimental design"),
     shiny::hr(),
     
-    ######################### File upload ###################
+
+#   ____________________________________________________________________________
+#   File upload                                                             ####
+
     boxPlus(
       title = "Expression file upload",
       width = 4,
@@ -75,6 +78,9 @@ mod_import_data_ui <- function(id) {
         )
       ),
     
+#   ____________________________________________________________________________
+#   design upload                                                           ####
+
     
       shinyWidgets::dropdownButton(
         size = 'xs',
@@ -102,7 +108,10 @@ mod_import_data_ui <- function(id) {
       valueBoxOutput(ns("samples"))
     ),
     
-    ###################### heatmap
+
+#   ____________________________________________________________________________
+#   Previews                                                                ####
+
     
     boxPlus(
       title = "Preview of the expression matrix",
@@ -141,6 +150,11 @@ mod_import_data_ui <- function(id) {
 #' @noRd
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
+  
+  
+#   ____________________________________________________________________________
+#   expression file                                                         ####
+
   raw_data <- shiny::reactive({
     if (input$use_demo) {
       load(system.file("extdata", "raw_counts_At.RData", package = "DIANE"))
@@ -181,7 +195,9 @@ mod_import_data_server <- function(input, output, session, r) {
           )
       }
       else{
-        shinyalert::shinyalert("Invalid input data...", "Did you correctly set the separator? Does your data contains a column named \"Gene\"?", type = "error")
+        #bug here
+        shinyalert::shinyalert("Invalid input data...", "Did you correctly set the separator? 
+                               Does your data contains a column named \"Gene\"?", type = "error")
         stop()
       }
     }
@@ -190,7 +206,10 @@ mod_import_data_server <- function(input, output, session, r) {
     })
    
 
-  ######### load the design  
+
+#   ____________________________________________________________________________
+#   design loading                                                          ####
+
   design <- shiny::reactive({
     if (input$use_demo) {
       load(system.file("extdata", "design_At.RData", package = "DIANE"))
@@ -222,7 +241,11 @@ mod_import_data_server <- function(input, output, session, r) {
     draw_heatmap(d)
   })
   
-  ########### data summary
+
+  
+#   ____________________________________________________________________________
+#   ValueBoxes summaries                                                    ####
+
   output$data_dim <- renderValueBox({
     valueBox(
       
