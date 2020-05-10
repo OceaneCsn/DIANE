@@ -1,6 +1,5 @@
 library(stringr)
 library(shinyWidgets)
-
 source("R/fct_heatmap.R")
 
 #' import_data UI Function
@@ -16,7 +15,7 @@ source("R/fct_heatmap.R")
 mod_import_data_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    
+    shinyalert::useShinyalert(),
     ######################### Title and text
     
     shiny::h1("Upload expression data and experimental design"),
@@ -43,7 +42,7 @@ mod_import_data_ui <- function(id) {
                      icon = NULL,
                      bigger=TRUE,
                      width = "200%"), 
-      radioButtons(
+      shiny::radioButtons(
         ns('sep'),
           
         'Separator : ',
@@ -183,7 +182,7 @@ mod_import_data_server <- function(input, output, session, r) {
           header = T,
           stringsAsFactors = F
         )
-      
+      print(d)
       if ("Gene" %in% colnames(d)) {
         d <-
           read.csv(

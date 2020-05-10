@@ -12,7 +12,7 @@ mod_clustering_ui <- function(id){
   tagList(
     shiny::h1("Expression based clustering"),
     shiny::hr(),
-    
+    shinyalert::useShinyalert(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
@@ -203,6 +203,12 @@ mod_clustering_server <- function(input, output, session, r){
   shiny::observeEvent((input$launch_coseq_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes, r$conditions)
     
+    genes_conditions = as.vector(str_split_fixed(input$input_deg_genes, ' ', 2))
+    if (length(intersect(genes_conditions, input$input_conditions)) < 2) {
+      shinyalert::shinyalert(paste0("The conditions used for clustering should contain the conditions used to compute the input 
+                             differentially expressed genes. In that case : ", input$input_deg_genes), type = "error")
+    }
+    shiny::req(length(intersect(genes_conditions, input$input_conditions)) == 2)
     run <- run_coseq(data = r$normalized_counts, genes = r$DEGs[[input$input_deg_genes]],
                          conds = input$input_conditions, K = seq(input$cluster_range[1], input$cluster_range[2]))
     r$clusterings[[input$input_deg_genes]]$model <- run$model

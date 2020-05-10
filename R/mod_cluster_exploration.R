@@ -45,8 +45,6 @@ mod_cluster_exploration_ui <- function(id){
 
 # TODO : faire choisir le clustering préfait (comparaison) plutot que le dernier deja fait
 
-# TODO : add valueBox with number of genes in the cluster
-    
 #' cluster_exploration Server Function
 #'
 #' @noRd 

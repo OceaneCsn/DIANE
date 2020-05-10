@@ -56,7 +56,7 @@ mod_normalisation_ui <- function(id) {
 
         shiny::fluidRow(col_12(shinyWidgets::switchInput(
           inputId = ns("prior_removal"),
-          value = TRUE,
+          value = FALSE,
           onLabel = "ON",
           offLabel = "OFF",
           inline = T, onStatus = "success"

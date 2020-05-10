@@ -15,5 +15,3 @@ run_app()
 
 
 # FIXME shiny alert doesn't appear when wrong separator
-
-# FIXME ne pas selectioner les memes conditions
