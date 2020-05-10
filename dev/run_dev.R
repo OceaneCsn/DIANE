@@ -14,4 +14,4 @@ run_app()
 
 
 
-# FIXME shiny alert does't appear when wrong separator
+# FIXME shiny alert doesn't appear when wrong separator

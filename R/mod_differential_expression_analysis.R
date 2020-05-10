@@ -12,7 +12,7 @@ mod_differential_expression_analysis_ui <- function(id){
   tagList(
     shiny::h1("Differential expression analysis - Now we're talking!"),
     shiny::hr(),
-    
+    shinyalert::useShinyalert(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
@@ -173,6 +173,7 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
       inputId = ns("perturbation"),
       label = "Perturbation",
       choices = unique(r$conditions),
+      selected = unique(r$conditions)[2],
       justified = TRUE,
       checkIcon = list(
         yes = shiny::icon("ok", 
@@ -200,7 +201,14 @@ mod_differential_expression_analysis_server <- function(input, output, session, 
   
   shiny::observeEvent((input$deg_test_btn), {
     shiny::req(r_dea$fit, input$dea_fdr, input$reference, input$perturbation)
-    shiny::req(input$reference != input$perturbation)
+    
+    print(input$reference == input$perturbation)
+    if(input$reference == input$perturbation) {
+      shinyalert::shinyalert("You tried to compare the same conditions! You may need some coffee...", type = "error")
+    }
+    shiny::req(!input$reference == input$perturbation)
+    
+    
     print(input$dea_fdr)
     r_dea$tags <- estimateDEGs(r_dea$fit, reference = input$reference, 
                                  perturbation = input$perturbation)
