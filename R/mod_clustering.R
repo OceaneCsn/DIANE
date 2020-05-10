@@ -94,7 +94,7 @@ mod_clustering_ui <- function(id){
                                                  col_6(shiny::plotOutput(ns("plot_coseq_icl"))),
                                                   col_6(shiny::plotOutput(ns("plot_coseq_barplots")))),
                                                
-                                               shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE"))),
+                                               shiny::includeMarkdown(system.file("extdata", "ICL.md", package = "DIANE"))),
                              
                                shiny::tabPanel(title = "Coseq summary",
                                 shiny::verbatimTextOutput(ns("coseq_run_summary")),
