@@ -94,26 +94,21 @@ mod_normalisation_ui <- function(id) {
 #   filtering settings                                                      ####
 
      
-        h2("Low counts filtering"),
+        shiny::h2("Low counts filtering"),
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+          shiny::includeMarkdown(system.file("extdata", "filtering.md", package = "DIANE")),
           circle = TRUE,
           status = "success",
-          icon = icon("question"),
+          icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
 
         
         shiny::h5("Minimal gene count sum accross conditions : "),
-        col_8(shiny::numericInput(
-          ns("low_counts_filter"),
-          min = 0,
-          value = 40,
-          label = NULL
-        )),
+        col_8(shiny::uiOutput(ns("filter_proposition"))),
         col_4(
           shinyWidgets::actionBttn(
             ns("use_SumFilter"),
@@ -187,6 +182,15 @@ mod_normalisation_ui <- function(id) {
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
+  
+  output$filter_proposition <- shiny::renderUI({
+    shiny::numericInput(
+      ns("low_counts_filter"),
+      min = 0,
+      value = 10*length(r$conditions),
+      label = NULL
+    )
+  })
   
   
 #   ____________________________________________________________________________
