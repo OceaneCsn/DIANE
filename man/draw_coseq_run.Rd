@@ -2,16 +2,19 @@
 % Please edit documentation in R/fct_coseq.R
 \name{draw_coseq_run}
 \alias{draw_coseq_run}
-\title{draw_coseq_run}
+\title{draw_coseq_run : displays the indications of}
 \usage{
 draw_coseq_run(run_pois, plot = "ICL")
 }
 \arguments{
 \item{run_pois}{result of a coseq run}
+
+\item{plot}{plot to display, eather integrated Complete Likelihood, or barplots
+of the posterior probabilities for the clustering}
 }
 \value{
 plot describing the quality of the clustering process
 }
 \description{
-draw_coseq_run
+draw_coseq_run : displays the indications of
 }

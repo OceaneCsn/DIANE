@@ -36,10 +36,11 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 
 
 
-#' draw_coseq_run
+#' draw_coseq_run : displays the indications of 
 #'
 #' @param run_pois result of a coseq run
-#'
+#' @param plot plot to display, eather integrated Complete Likelihood, or barplots
+#' of the posterior probabilities for the clustering
 #' @return plot describing the quality of the clustering process
 #'
 #' @importFrom coseq plot

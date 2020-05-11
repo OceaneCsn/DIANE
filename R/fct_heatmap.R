@@ -13,6 +13,7 @@ library(limma)
 #' @param log Show log(expression+1) in the heatmap if TRUE, expression if FALSE
 #' @param profiles Show expression/mean(expression) for each gene if TRUE, expression if FALSE
 #' @param conditions if NULL, shows all the conditions, else if character vector, shows only the required ones
+#' 
 #'
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
@@ -51,7 +52,7 @@ draw_heatmap <-
     samples <- data.frame(sample, row.names = colnames(mat))
     
     pheatmap::pheatmap(
-      mat, color = colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
+      mat, color = grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
       annotation_col = samples,
       show_rownames = show_rownames,
       main = title,

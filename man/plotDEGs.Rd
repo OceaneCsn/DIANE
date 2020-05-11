@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_dea.R
 \name{plotDEGs}
 \alias{plotDEGs}
-\title{Title}
+\title{plotDEGs : MA or vulcano plot for DEGs}
 \usage{
 plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 }
@@ -20,5 +20,5 @@ FDR depending on logFC.}
 plot object
 }
 \description{
-Title
+plotDEGs : MA or vulcano plot for DEGs
 }

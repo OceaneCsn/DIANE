@@ -6,13 +6,14 @@
 #' @param tcc object countaining count, and norm factors
 #' @importFrom stringr str_split_fixed
 #' @importFrom edgeR DGEList estimateDisp glmFit
+#' @importFrom stats model.matrix
 #' @return fit object, containing teh fitted models
 #' @export
 #'
 estimateDispersion <- function(tcc){
   
-  groups <- str_split_fixed(colnames(tcc$count), '_', 2)[,1]
-  design = model.matrix(~groups+0)
+  groups <- stringr::str_split_fixed(colnames(tcc$count), '_', 2)[,1]
+  design = stats::model.matrix(~groups+0)
   rownames(design) <- colnames(tcc$count)
   colnames(design) <- str_split_fixed(colnames(design), 'groups', 2)[,2]
   # TODO : add a genes dataframe containing the annotations here, they will be kept furing all dea process in edgeR
@@ -50,7 +51,7 @@ estimateDEGs <- function(fit, reference, perturbation){
 }
   
   
-#' Title
+#' plotDEGs : MA or vulcano plot for DEGs
 #'
 #' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR
 #' @param fdr pvalue for DEGs
