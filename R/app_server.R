@@ -30,9 +30,11 @@ app_server <- function(input, output, session) {
   shiny::callModule(mod_context_server, "context_ui_1")
   shiny::callModule(mod_import_data_server, "import_data_ui_1", r)
   shiny::callModule(mod_normalisation_server, "normalisation_ui_1", r)
-  shiny::callModule(mod_differential_expression_analysis_server, "differential_expression_analysis_ui_1", r)
+  shiny::callModule(mod_differential_expression_analysis_server, 
+                    "differential_expression_analysis_ui_1", r)
   
   # clustering modules
   shiny::callModule(mod_clustering_server, "clustering_ui_1", r)
-  shiny::callModule(mod_cluster_exploration_server, "cluster_exploration_ui_1", r)
+  shiny::callModule(mod_cluster_exploration_server, 
+                    "cluster_exploration_ui_1", r)
 }

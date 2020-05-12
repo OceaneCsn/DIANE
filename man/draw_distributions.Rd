@@ -4,7 +4,7 @@
 \alias{draw_distributions}
 \title{draw_distributions of count data}
 \usage{
-draw_distributions(data, boxplot = T)
+draw_distributions(data, boxplot = TRUE)
 }
 \arguments{
 \item{data}{count data}

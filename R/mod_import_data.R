@@ -21,51 +21,55 @@ mod_import_data_ui <- function(id) {
     shiny::h1("Upload expression data and experimental design"),
     shiny::hr(),
     
-
-#   ____________________________________________________________________________
-#   File upload                                                             ####
-
+    
+    #   ____________________________________________________________________________
+    #   File upload                                                             ####
+    
     boxPlus(
       title = "Expression file upload",
       width = 4,
-      solidHeader = F,
+      solidHeader = FALSE,
       status = "success",
-      collapsible = T,
-      closable = F,
-      shinyWidgets::prettyCheckbox(ns("use_demo"),
-                     "Use demo data",
-                     value = TRUE,
-                     fill = T,
-                     thick = TRUE,
-                     status = "success",
-                     animation = "smooth",
-                     icon = NULL,
-                     bigger=TRUE,
-                     width = "200%"), 
+      collapsible = TRUE,
+      closable = FALSE,
+      shinyWidgets::prettyCheckbox(
+        ns("use_demo"),
+        "Use demo data",
+        value = TRUE,
+        fill = TRUE,
+        thick = TRUE,
+        status = "success",
+        animation = "smooth",
+        icon = NULL,
+        bigger = TRUE,
+        width = "200%"
+      ),
       shiny::radioButtons(
         ns('sep'),
-          
+        
         'Separator : ',
         c(
           Comma = ',',
           Semicolon = ';',
           Tab = '\t'
         ),
-        inline = T
+        inline = TRUE
       ),
       
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Input file requirements",
-        shiny::includeMarkdown(system.file("extdata", "expressionFile.md", package = "DIANE")),
+        shiny::includeMarkdown(
+          system.file("extdata", "expressionFile.md", package = "DIANE")
+        ),
         circle = TRUE,
         status = "primary",
         icon = shiny::icon("question"),
         width = "600px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
-    
-    
+      
+      
       shiny::fileInput(
         ns('raw_data'),
         'Choose CSV/TXT expression file',
@@ -76,15 +80,16 @@ mod_import_data_ui <- function(id) {
           '.txt'
         )
       ),
-    
-#   ____________________________________________________________________________
-#   design upload                                                           ####
-
-    
+      
+      #   ____________________________________________________________________________
+      #   design upload                                                           ####
+      
+      
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Design file requirements",
-        shiny::includeMarkdown(system.file("extdata", "designFile.md", package = "DIANE")),
+        shiny::includeMarkdown(system.file("extdata", "designFile.md", 
+                                           package = "DIANE")),
         circle = TRUE,
         status = "primary",
         icon = shiny::icon("question"),
@@ -101,40 +106,41 @@ mod_import_data_ui <- function(id) {
           '.txt'
         )
       ),
-     
+      
       valueBoxOutput(ns("data_dim")),
       valueBoxOutput(ns("conditions")),
       valueBoxOutput(ns("samples"))
     ),
     
-
-#   ____________________________________________________________________________
-#   Previews                                                                ####
-
+    
+    #   ____________________________________________________________________________
+    #   Previews                                                                ####
+    
     
     boxPlus(
       title = "Preview of the expression matrix",
       width = 4,
-      solidHeader = F,
+      solidHeader = FALSE,
       status = "success",
-      collapsible = T,
-      closable = F,
+      collapsible = TRUE,
+      closable = FALSE,
       shiny::plotOutput(ns("heatmap_preview"), height = 550),
-      footer = "This might help you visualize the different sequencing depths of your conditions."
+      footer = "This might help you visualize the different sequencing depths 
+      of your conditions."
     ),
     
     boxPlus(
       title = "Preview of the design",
       width = 3,
-      solidHeader = F,
+      solidHeader = FALSE,
       status = "success",
-      collapsible = T,
-      closable = F,
+      collapsible = TRUE,
+      closable = FALSE,
       DT::dataTableOutput(ns("design_preview"), height = 550),
       footer = "Describe the levels of each factors for your conditions"
     ),
     
-  
+    
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
   )
@@ -151,16 +157,15 @@ mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
   
   
-#   ____________________________________________________________________________
-#   expression file                                                         ####
-
+  #   ____________________________________________________________________________
+  #   expression file                                                         ####
+  
   raw_data <- shiny::reactive({
     if (input$use_demo) {
       load(system.file("extdata", "raw_counts_At.RData", package = "DIANE"))
       d <- raw_data_At
     }
-    else{ 
-      
+    else{
       # reset the global reactive variables that were maybe already created :
       
       r$raw_counts = NULL
@@ -171,16 +176,16 @@ mod_import_data_server <- function(input, output, session, r) {
       r$DEGs = list()
       r$tcc = NULL
       
-     
+      
       req(input$raw_data)
       path = input$raw_data$datapath
-
+      
       d <-
         read.csv(
           path,
           sep = input$sep,
-          header = T,
-          stringsAsFactors = F
+          header = TRUE,
+          stringsAsFactors = FALSE
         )
       print(d)
       if ("Gene" %in% colnames(d)) {
@@ -188,27 +193,31 @@ mod_import_data_server <- function(input, output, session, r) {
           read.csv(
             path,
             sep = input$sep,
-            header = T,
-            stringsAsFactors = F,
+            header = TRUE,
+            stringsAsFactors = FALSE,
             row.names = "Gene"
           )
       }
       else{
         #bug here
-        shinyalert::shinyalert("Invalid input data...", "Did you correctly set the separator? 
-                               Does your data contains a column named \"Gene\"?", type = "error")
+        shinyalert::shinyalert(
+          "Invalid input data...",
+          "Did you correctly set the separator?
+                               Does your data contains a column named \"Gene\"?",
+          type = "error"
+        )
         stop()
       }
     }
     r$raw_counts <- d
     d
-    })
-   
-
-
-#   ____________________________________________________________________________
-#   design loading                                                          ####
-
+  })
+  
+  
+  
+  #   ____________________________________________________________________________
+  #   design loading                                                          ####
+  
   design <- shiny::reactive({
     if (input$use_demo) {
       load(system.file("extdata", "design_At.RData", package = "DIANE"))
@@ -217,10 +226,11 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       req(input$design)
       path = input$design$datapath
-      d <- read.csv(sep = input$sep,
+      d <- read.csv(
+        sep = input$sep,
         path,
-        header = T,
-        stringsAsFactors = F,
+        header = TRUE,
+        stringsAsFactors = FALSE,
         row.names = "Condition"
       )
     }
@@ -236,18 +246,17 @@ mod_import_data_server <- function(input, output, session, r) {
   ########## matrix preview
   output$heatmap_preview <- shiny::renderPlot({
     shiny::req(r$raw_counts)
-    d <- raw_data()[rowSums(raw_data()) > 0, ]
+    d <- raw_data()[rowSums(raw_data()) > 0,]
     draw_heatmap(d)
   })
   
-
   
-#   ____________________________________________________________________________
-#   ValueBoxes summaries                                                    ####
-
+  
+  #   ____________________________________________________________________________
+  #   ValueBoxes summaries                                                    ####
+  
   output$data_dim <- renderValueBox({
     valueBox(
-      
       value = dim(raw_data())[1],
       subtitle = "genes",
       color = "aqua",
@@ -255,21 +264,18 @@ mod_import_data_server <- function(input, output, session, r) {
     )
   })
   output$conditions <- renderValueBox({
-    r$conditions <- stringr::str_split_fixed(colnames(raw_data()), "_", 2)[,1]
-    valueBox(
-      value = length((unique(r$conditions))),
-      subtitle = "conditions",
-      color = "teal"
-    )
-  })  
+    r$conditions <-
+      stringr::str_split_fixed(colnames(raw_data()), "_", 2)[, 1]
+    valueBox(value = length((unique(r$conditions))),
+             subtitle = "conditions",
+             color = "teal")
+  })
   
   output$samples <- renderValueBox({
-    valueBox(
-      value = length(colnames(raw_data())),
-      subtitle = "samples",
-      color = "olive"
-    )
-  }) 
+    valueBox(value = length(colnames(raw_data())),
+             subtitle = "samples",
+             color = "olive")
+  })
   
   ######### render design
   output$design_preview <- DT::renderDataTable({

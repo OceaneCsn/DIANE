@@ -7,7 +7,7 @@
 draw_heatmap(
   data,
   subset = NULL,
-  show_rownames = F,
+  show_rownames = FALSE,
   title = "Random preview heatmap",
   log = TRUE,
   profiles = FALSE,

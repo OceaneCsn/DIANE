@@ -18,7 +18,7 @@ tags dataframe
 }
 \description{
 Given a glmFit, performs a log ratio test and
-returns the genes that are differentially expressed 
+returns the genes that are differentially expressed
 between the reference and perturbation conditions.
 log ratios will be expressed as log(perturbation/reference)
 }

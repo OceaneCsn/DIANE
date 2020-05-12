@@ -1,4 +1,5 @@
 
+
 #' run_coseq
 #'
 #' @param conds Condition names to be used for clustering
@@ -36,7 +37,7 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 
 
 
-#' draw_coseq_run : displays the indications of 
+#' draw_coseq_run : displays the indications of
 #'
 #' @param run_pois result of a coseq run
 #' @param plot plot to display, eather integrated Complete Likelihood, or barplots
@@ -118,14 +119,14 @@ draw_profiles <-
     
     if (is.null(k)) {
       g <-
-        ggplot2::ggplot(data = d, aes(x = group, y = value))  + 
-        ggplot2::facet_wrap( ~ cluster, scales = "free")
+        ggplot2::ggplot(data = d, aes(x = group, y = value))  +
+        ggplot2::facet_wrap(~ cluster, scales = "free")
     }
     else{
       k <- as.vector(k)
       g <-
-        ggplot2::ggplot(data = d[d$cluster %in% k, ], aes(x = group, y = value)) + 
-        ggplot2::facet_wrap( ~ cluster, scales = "free")
+        ggplot2::ggplot(data = d[d$cluster %in% k,], aes(x = group, y = value)) +
+        ggplot2::facet_wrap(~ cluster, scales = "free")
     }
     if (!is.null(k) && length(k) == 1) {
       g <-
@@ -150,7 +151,7 @@ draw_profiles <-
         outlier.color = "black",
         outlier.alpha = 0.1
       ) +
-      ggplot2::geom_jitter(width = 0.1, alpha = 0.0015) + 
+      ggplot2::geom_jitter(width = 0.1, alpha = 0.0015) +
       ggtitle("Expression profiles of the clusters")
     
     g <-
