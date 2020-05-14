@@ -80,7 +80,7 @@ draw_heatmap <-
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
-                                   replace = F,
+                                   replace = FALSE,
                                    size = round(dim(data)[1] / 4, 0)),] + 1))
   
   colnames(d)[c(length(colnames(d)) - 1, length(colnames(d)))] <-

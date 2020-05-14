@@ -24,10 +24,10 @@ mod_clustering_ui <- function(id){
     col_3(
       boxPlus(
         title = "Settings",
-        solidHeader = F,
+        solidHeader = FALSE,
         status = "success",
-        collapsible = T,
-        closable = F,
+        collapsible = TRUE,
+        closable = FALSE,
         width = 12,
         
         col_10(shiny::h4("Poisson mixture model clustering")),

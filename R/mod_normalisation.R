@@ -80,7 +80,7 @@ mod_normalisation_ui <- function(id) {
               inputId = ns("norm_method"),
               label = "Normalisation method:",
               choices = c("tmm", "deseq"),
-              inline = T,
+              inline = TRUE,
               selected = "tmm",
               status = "success"
             )
