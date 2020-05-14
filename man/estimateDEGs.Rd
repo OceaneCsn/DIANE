@@ -4,21 +4,32 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation)
+estimateDEGs(fit, reference, perturbation, p.value = 1)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
 
-\item{reference}{condition being considered as "normal"}
+\item{reference}{condition being considered as teh reference for differential analysis}
 
-\item{perturbation}{condition we can to compare to the reference}
+\item{perturbation}{condition we compared to the reference for differential analysis}
+
+\item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or lower than specified are returned}
 }
 \value{
-tags dataframe
+topTags object, which table element contains DEGs dataframe
 }
 \description{
-Given a glmFit, performs a log ratio test and
+Given a glmFit, performs a log ratio test using edgeR function glmLRT and
 returns the genes that are differentially expressed
 between the reference and perturbation conditions.
-log ratios will be expressed as log(perturbation/reference)
+log ratios are expressed as log(perturbation/reference)
+}
+\examples{
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+DEGs <- topTags$table
 }

@@ -19,7 +19,7 @@ mod_normalisation_ui <- function(id) {
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(70, 800)
+      margins = c(70, 1000)
     ),
     
     shiny::h1("Data filtering and normalisation"),
@@ -227,7 +227,7 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   shiny::observeEvent((input$use_SumFilter), {
     shiny::req(r$normalized_counts_pre_filter)
-    r$tcc <- filter_sum(r$tcc, thr = input$low_counts_filter)
+    r$tcc <- filter_low_counts(r$tcc, thr = input$low_counts_filter)
     r$normalized_counts <- TCC::getNormalizedData(r$tcc)
     
   })

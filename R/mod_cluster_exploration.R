@@ -13,7 +13,7 @@ mod_cluster_exploration_ui <- function(id) {
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(70, 800)
+      margins = c(70, 1100)
     ),
     
     shiny::h1("Analyse the genes of a specific cluster"),

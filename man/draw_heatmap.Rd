@@ -35,3 +35,7 @@ plot of the heatmap
 \description{
 Draw heatmap
 }
+\examples{
+data("demo_data_At")
+DIANE::draw_heatmap(demo_data_At$raw_counts)
+}

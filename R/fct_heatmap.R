@@ -19,7 +19,9 @@ library(limma)
 #' @importFrom stringr str_split_fixed
 #' @export
 #' @return plot of the heatmap
-
+#' @examples
+#' data("demo_data_At")
+#' DIANE::draw_heatmap(demo_data_At$raw_counts)
 draw_heatmap <-
   function(data,
            subset = NULL,
@@ -66,15 +68,15 @@ draw_heatmap <-
 
 #' draw_distributions of count data
 #'
-#' @param data count data
-#' @param boxplot if TRUE, plot each sample as a boxplot, else, as a violin plot
+#' @param data count data, as a numeric dataframe with condition names as columns and genes as rows
+#' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
 #' @import ggplot2
 #' @importFrom reshape2 melt
-#'
-#'
-#' @return plot
+#' @return ggplot plot
 #' @export
-#'
+#' @examples
+#' data("demo_data_At")
+#' DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
@@ -124,11 +126,22 @@ draw_distributions <- function(data, boxplot = TRUE) {
 #' draw_MDS
 #'
 #' @param normalized.count data to plot for MDS
+#' 
+#' @param conditions if NULL (default, takes the split before the character '_' as condition names)
+#' else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
+#' columns names of the expression matrix used to build the tcc object.
 #' @importFrom limma plotMDS
 #' @return MDS plot
 #' @export
-#'
-draw_MDS <- function(normalized.count) {
+#' @examples 
+#' data("demo_data_At")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' DIANE::draw_MDS(normalized.count = normalized_counts)
+
+draw_MDS <- function(normalized.count, conditions = NULL) {
   mds <- limma::plotMDS(normalized.count, plot = FALSE)
   d <-
     data.frame(

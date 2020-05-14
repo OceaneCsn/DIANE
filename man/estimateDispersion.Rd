@@ -4,10 +4,14 @@
 \alias{estimateDispersion}
 \title{estimateDispersion}
 \usage{
-estimateDispersion(tcc)
+estimateDispersion(tcc, conditions = NULL)
 }
 \arguments{
 \item{tcc}{object countaining count, and norm factors}
+
+\item{conditions}{if NULL (default, takes the split before the character '_' as condition names)
+else, the conditions regardless of biological replicates, as a character vector. Its order should match the 
+columns names of the expression matrix used to build the tcc object.}
 }
 \value{
 fit object, containing teh fitted models
@@ -15,4 +19,12 @@ fit object, containing teh fitted models
 \description{
 The function computes the common, trend, and tag-wise dispersions of the dataset.
 It then fits a negative binomial model for each gene using default design : ~group+0 and GLMs.
+}
+\examples{
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+
 }

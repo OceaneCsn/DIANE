@@ -232,13 +232,13 @@ mod_clustering_server <- function(input, output, session, r){
   output$plot_coseq_icl <- shiny::renderPlot({
     shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
-    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model)
+    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "ICL")
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
     shiny::req(r$DEGs)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
-    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "barplot")
+    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "barplots")
   })
   
   output$clusters_profiles <- shiny::renderPlot({

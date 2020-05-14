@@ -7,13 +7,17 @@
 draw_distributions(data, boxplot = TRUE)
 }
 \arguments{
-\item{data}{count data}
+\item{data}{count data, as a numeric dataframe with condition names as columns and genes as rows}
 
-\item{boxplot}{if TRUE, plot each sample as a boxplot, else, as a violin plot}
+\item{boxplot}{if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot}
 }
 \value{
-plot
+ggplot plot
 }
 \description{
 draw_distributions of count data
+}
+\examples{
+data("demo_data_At")
+DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
 }

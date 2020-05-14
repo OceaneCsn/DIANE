@@ -4,14 +4,26 @@
 \alias{draw_MDS}
 \title{draw_MDS}
 \usage{
-draw_MDS(normalized.count)
+draw_MDS(normalized.count, conditions = NULL)
 }
 \arguments{
 \item{normalized.count}{data to plot for MDS}
+
+\item{conditions}{if NULL (default, takes the split before the character '_' as condition names)
+else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
+columns names of the expression matrix used to build the tcc object.}
 }
 \value{
 MDS plot
 }
 \description{
 draw_MDS
+}
+\examples{
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+DIANE::draw_MDS(normalized.count = normalized_counts)
 }

@@ -11,3 +11,6 @@ golem::document_and_reload()
 
 # Run the application
 run_app()
+
+
+# FIXME silent melt in reshape2
