@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_normalisation.R
 \name{normalize}
 \alias{normalize}
-\title{normalize raw count data}
+\title{normalize raw count data, using the TCC package}
 \usage{
 normalize(
   data,
@@ -24,11 +24,15 @@ normalize(
 
 \item{fdr}{pvalue threshold for adjusted pvalues for degs}
 
-\item{iteration}{weather or not to perform a prior removal of DEGs}
+\item{iteration}{weather or not to perform a prior removal of DEGs (TRUE or FALSE)}
 }
 \value{
-the normalized data
+a TCC-Class object containing the normalized data (filtering is highly recommended after normalization)
 }
 \description{
-normalize raw count data
+normalize raw count data, using the TCC package
+}
+\examples{
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
 }

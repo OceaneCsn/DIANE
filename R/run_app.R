@@ -1,6 +1,7 @@
 #' Run the Shiny Application
 #'
 #' @param ... A series of options to be used inside the app.
+#' @return shiny application
 #'
 #' @export
 #' @importFrom shiny shinyApp

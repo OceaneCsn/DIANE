@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_dea.R
 \name{plotDEGs}
 \alias{plotDEGs}
-\title{Title}
+\title{plotDEGs : MA or volcano plot for DEGs}
 \usage{
 plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 }
@@ -11,14 +11,21 @@ plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 
 \item{fdr}{pvalue for DEGs}
 
-\item{lfc}{absolute logFC threshold for DEGs
-FDR depending on logFC.}
+\item{lfc}{absolute log fold change threshold for differentially expressed genes, default is 0.}
 
-\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Vulcano" for}
+\item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.}
 }
 \value{
 plot object
 }
 \description{
-Title
+plotDEGs : MA or volcano plot for DEGs
+}
+\examples{
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(demo_data_At$conditions))
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
+DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
 }

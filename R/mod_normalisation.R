@@ -1,6 +1,6 @@
-source("R/fct_normalisation.R")
-source("R/fct_heatmap.R")
-library(shinybusy)
+# source("R/fct_normalisation.R")
+# source("R/fct_heatmap.R")
+# library(shinybusy)
 
 #' normalisation UI Function
 #'
@@ -16,94 +16,112 @@ library(shinybusy)
 mod_normalisation_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
-      margins = c(70, 800)
+      margins = c(70, 1000)
     ),
-
+    
     shiny::h1("Data filtering and normalisation"),
     shiny::hr(),
     shiny::h2(
-      "Because low count genes and differences in sequencing depths are a true source of bias, we want to perform some data cleaning and transformation."
+      "Because low count genes and differences in sequencing depths are a 
+      source of bias, we want to perform some data cleaning and transformation."
     ),
     shiny::hr(),
+    
+    
+    #   ____________________________________________________________________________
+    #   Normalisation settings                                                  ####
+    
     col_3(
       boxPlus(
         title = "Settings",
-        solidHeader = F,
+        solidHeader = FALSE,
         status = "success",
-        collapsible = T,
-        closable = F,
+        collapsible = TRUE,
+        closable = FALSE,
         width = 12,
         
         
-        h2("Normalisation"),
+        shiny::h2("Normalisation"),
         
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+          shiny::includeMarkdown(
+            system.file("extdata", "normalisation.md", package = "DIANE")
+          ),
           circle = TRUE,
           status = "success",
-          icon = icon("question"),
+          icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
         
-        h4("Prior removal of differentially expressed genes:"),
-
-        shiny::fluidRow(col_12(shinyWidgets::switchInput(
-          inputId = ns("prior_removal"),
-          value = TRUE,
-          onLabel = "ON",
-          offLabel = "OFF",
-          inline = T, onStatus = "success"
-        ))),
+        shiny::h4("Prior removal of differentially expressed genes:"),
+        
+        shiny::fluidRow(col_12(
+          shinyWidgets::switchInput(
+            inputId = ns("prior_removal"),
+            value = FALSE,
+            onLabel = "ON",
+            offLabel = "OFF",
+            inline = TRUE,
+            onStatus = "success"
+          )
+        )),
         
         
         
         shiny::fluidRow(
+          col_8(
+            shinyWidgets::awesomeRadio(
+              inputId = ns("norm_method"),
+              label = "Normalisation method:",
+              choices = c("tmm", "deseq"),
+              inline = TRUE,
+              selected = "tmm",
+              status = "success"
+            )
+          ),
           
-        col_8(shinyWidgets::awesomeRadio(
-          inputId = ns("norm_method"), label = "Normalisation method:",
-          choices = c("tmm", "deseq"),inline = T,
-          selected = "tmm", status = "success"
-        )),
-        
-        col_4(shinyWidgets::actionBttn(
-          ns("normalize_btn"),
-          label = "Normalize",
-          color = "success",
-          style = 'bordered'
-        ))
+          col_4(
+            shinyWidgets::actionBttn(
+              ns("normalize_btn"),
+              label = "Normalize",
+              color = "success",
+              style = 'bordered'
+            )
+          )
         ),
         
         shiny::hr(),
         shiny::uiOutput(ns("norm_summary")),
         shiny::hr(),
-     
-        h2("Low counts filtering"),
+        
+        
+        #   ____________________________________________________________________________
+        #   filtering settings                                                      ####
+        
+        
+        shiny::h2("Low counts filtering"),
         
         shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+          shiny::includeMarkdown(system.file("extdata", "filtering.md", package = "DIANE")),
           circle = TRUE,
           status = "success",
-          icon = icon("question"),
+          icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
-
+        
         
         shiny::h5("Minimal gene count sum accross conditions : "),
-        col_8(shiny::numericInput(
-          ns("low_counts_filter"),
-          min = 0,
-          value = 40,
-          label = NULL
-        )),
+        col_8(shiny::uiOutput(ns(
+          "filter_proposition"
+        ))),
         col_4(
           shinyWidgets::actionBttn(
             ns("use_SumFilter"),
@@ -114,29 +132,32 @@ mod_normalisation_ui <- function(id) {
         ),
         
         
-      shiny::hr(),
-
-      shiny::hr(),
-      shiny::hr(),
-      shiny::uiOutput(ns("filtering_summary")),
-      shiny::hr(),
-      
-      col_12(shiny::uiOutput(ns("dl_bttns")))
+        shiny::hr(),
+        
+        shiny::hr(),
+        shiny::hr(),
+        shiny::uiOutput(ns("filtering_summary")),
+        shiny::hr(),
+        
+        col_12(shiny::uiOutput(ns("dl_bttns")))
       )
     ),
     
     
+    #   ____________________________________________________________________________
+    #   plot results ui                                                         ####
+    
     col_8(
-      
-      shinydashboard::tabBox(title = "Data exploration",
-                             width = 12, height = "750px",
-                             
+      shinydashboard::tabBox(
+        title = "Data exploration",
+        width = 12,
+        height = "750px",
+        
         shiny::tabPanel(
-          
           title = "Samples distributions",
           col_4(
             shinyWidgets::switchInput(
-              inputId = ns("preview_norm_heatmap"),
+              inputId = ns("preview_norm_distr"),
               value = TRUE,
               onLabel = "normalized",
               offLabel = "raw",
@@ -149,7 +170,8 @@ mod_normalisation_ui <- function(id) {
               inputId = ns("violin_preview"),
               value = TRUE,
               onLabel = "Boxplots",
-              offLabel = "Violin", onStatus = "success"
+              offLabel = "Violin",
+              onStatus = "success"
             )
           ),
           shiny::plotOutput(ns('heatmap_preview_norm'), height = "600px")
@@ -161,9 +183,9 @@ mod_normalisation_ui <- function(id) {
         shiny::tabPanel(title = "Summary",
                         shiny::verbatimTextOutput(ns("tcc_summary")))
       )
-
+      
     ),
-    shiny::br(),
+    shiny::br()
   )
 }
 
@@ -174,10 +196,29 @@ mod_normalisation_ui <- function(id) {
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
-  shiny::observeEvent((input$normalize_btn), {
-    req(r$raw_counts)
-    r$tcc <- normalize(r$raw_counts, r$conditions, norm_method = input$norm_method,
-                      iteration = input$prior_removal)
+  
+  output$filter_proposition <- shiny::renderUI({
+    shiny::numericInput(
+      ns("low_counts_filter"),
+      min = 0,
+      value = 10 * length(r$conditions),
+      label = NULL
+    )
+  })
+  
+  
+  #   ____________________________________________________________________________
+  #   buttn reactives                                                         ####
+  
+  shiny::observeEvent(input$normalize_btn, {
+    shiny::req(r$raw_counts)
+    r$tcc <-
+      normalize(
+        r$raw_counts,
+        r$conditions,
+        norm_method = input$norm_method,
+        iteration = input$prior_removal
+      )
     r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
     # the filtering needs to be done again if previously made, so :
     r$normalized_counts <- NULL
@@ -186,11 +227,14 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   shiny::observeEvent((input$use_SumFilter), {
     shiny::req(r$normalized_counts_pre_filter)
-    r$tcc <- filter_sum(r$tcc, thr = input$low_counts_filter)
+    r$tcc <- filter_low_counts(r$tcc, thr = input$low_counts_filter)
     r$normalized_counts <- TCC::getNormalizedData(r$tcc)
-      
+    
   })
   
+  
+  #   ____________________________________________________________________________
+  #   summaries                                                               ####
   
   output$norm_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
@@ -207,8 +251,8 @@ mod_normalisation_server <- function(input, output, session, r) {
                       " genes before filtering")
     }
     shinydashboardPlus::descriptionBlock(
-      number = number, 
-      number_color = number_color, 
+      number = number,
+      number_color = number_color,
       number_icon = number_icon,
       header = header,
       right_border = FALSE
@@ -246,20 +290,25 @@ mod_normalisation_server <- function(input, output, session, r) {
       }
     }
     shinydashboardPlus::descriptionBlock(
-      number = number, 
-      number_color = number_color, 
+      number = number,
+      number_color = number_color,
       number_icon = number_icon,
       header = header,
       right_border = FALSE
     )
   })
   
+  
+  #   ____________________________________________________________________________
+  #   distribution plots                                                      ####
+  
   # IDEA also implement PCA, maybe 3D, in data exploration
   output$heatmap_preview_norm <- shiny::renderPlot({
-    shiny::req(r$normalized_counts_pre_filter)
+    shiny::req(r$raw_counts)
     
-    if (!input$preview_norm_heatmap) {
-      d <- r$raw_counts 
+    if (!input$preview_norm_distr |
+        is.null(r$normalized_counts_pre_filter)) {
+      d <- r$raw_counts
     }
     else{
       if (is.null(r$normalized_counts)) {
@@ -278,42 +327,43 @@ mod_normalisation_server <- function(input, output, session, r) {
   })
   
   
+  #   ____________________________________________________________________________
+  #   download buttons                                                        ####
+  
   output$dl_bttns <- shiny::renderUI({
-    
     shiny::req(r$normalized_counts)
     shiny::fluidRow(
       shinyWidgets::downloadBttn(
-      outputId = ns("download_normalized_counts_csv"),
-      label = "Download normalized counts as .csv",
-      style = "bordered",
-      color = "default"
-    ),
-    
-    shinyWidgets::downloadBttn(
-      outputId = ns("download_normalized_counts_RData"),
-      label = "Download normalized counts as .RData",
-      style = "bordered",
-      color = "default"
-    ))
+        outputId = ns("download_normalized_counts_csv"),
+        label = "Download normalized counts as .csv",
+        style = "bordered",
+        color = "default"
+      ),
+      
+      shinyWidgets::downloadBttn(
+        outputId = ns("download_normalized_counts_RData"),
+        label = "Download normalized counts as .RData",
+        style = "bordered",
+        color = "default"
+      )
+    )
     
   })
   
   output$download_normalized_counts_RData <- shiny::downloadHandler(
-    
-    filename = function(){
+    filename = function() {
       paste("normalized_counts.RData")
     },
-    content = function(file){
+    content = function(file) {
       save(toDownload, file = file)
     }
   )
   
   output$download_normalized_counts_csv <- shiny::downloadHandler(
-    
-    filename = function(){
+    filename = function() {
       paste("normalized_counts.csv")
     },
-    content = function(file){
+    content = function(file) {
       write.csv(toDownload, file = file, quote = FALSE)
     }
   )

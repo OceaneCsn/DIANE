@@ -7,7 +7,7 @@
 draw_heatmap(
   data,
   subset = NULL,
-  show_rownames = F,
+  show_rownames = FALSE,
   title = "Random preview heatmap",
   log = TRUE,
   profiles = FALSE,
@@ -34,4 +34,8 @@ plot of the heatmap
 }
 \description{
 Draw heatmap
+}
+\examples{
+data("demo_data_At")
+DIANE::draw_heatmap(demo_data_At$raw_counts)
 }

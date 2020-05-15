@@ -13,5 +13,4 @@ golem::document_and_reload()
 run_app()
 
 
-
-# FIXME shiny alert does't appear when wrong separator
+# FIXME silent melt in reshape2

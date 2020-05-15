@@ -35,6 +35,10 @@ usethis::use_package( "edgeR" )
 usethis::use_package("dashboardthemes")
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
+usethis::use_package( "coseq" )
+usethis::use_package( "utils" )
+
+#usethis::use_package( "MASS" )
 
 
 ## Add modules ----
@@ -43,13 +47,15 @@ golem::add_module( name = "import_data" ) # Name of the module
 golem::add_module( name = "differential_expression_analysis" ) # Name of the module
 golem::add_module( name = "context" )
 golem::add_module( name = "normalisation" )
-
+golem::add_module( name = "clustering" )
+golem::add_module( name = "cluster_exploration" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 golem::add_fct( "heatmap" )
 golem::add_fct( "normalisation")
 golem::add_fct( "dea")
+golem::add_fct( "coseq")
 
 #golem::add_utils( "helpers" )
 
@@ -61,6 +67,7 @@ golem::add_fct( "dea")
 
 ## Add internal datasets ----
 ## If you have data in your package
+usethis::use_data(demo_data_At, version = 3)
 usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
 
 ## Tests ----

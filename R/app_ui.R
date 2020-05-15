@@ -1,18 +1,24 @@
-library(shinydashboard)
-library(shinythemes)
-try(library(shinydashboardPlus), silent = T)
+# library(shinydashboard)
+# library(shinythemes)
+# try(library(shinydashboardPlus), silent = T)
 
 
 logo_diane <- dashboardthemes::shinyDashboardLogoDIY(
-  
   boldText = ""
-  ,mainText = ""
-  ,textSize = 16
-  ,badgeText = "DIANE"
-  ,badgeTextColor = "white"
-  ,badgeTextSize = 7
-  ,badgeBackColor = "#5FBF64"
-  ,badgeBorderRadius = 5
+  ,
+  mainText = ""
+  ,
+  textSize = 16
+  ,
+  badgeText = "DIANE"
+  ,
+  badgeTextColor = "white"
+  ,
+  badgeTextSize = 7
+  ,
+  badgeBackColor = "#5FBF64"
+  ,
+  badgeBorderRadius = 5
   
 )
 
@@ -23,7 +29,7 @@ logo_diane <- dashboardthemes::shinyDashboardLogoDIY(
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @import shinydashboard
-#' 
+#'
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -31,10 +37,9 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # List the first level UI elements here
     shinydashboard::dashboardPage(
-      
-      
       shinydashboard::dashboardHeader(title = logo_diane),
       shinydashboard::dashboardSidebar(
+        width = "300px",
         shinydashboard::sidebarMenu(
           shinydashboard::menuItem(
             "Context",
@@ -54,13 +59,18 @@ app_ui <- function(request) {
           shinydashboard::menuItem(
             "Differential Expression",
             tabName = "dea_tab",
-            icon = shiny::icon("table")
+            icon = shiny::icon("greater-than-equal")
           ),
           shinydashboard::menuItem(
             "Expression based clustering",
-            tabName = "coseq",
-            icon = shiny::icon("greater-than-equal")
+            startExpanded = TRUE,
+            icon = shiny::icon("circle-notch"),
+            shinydashboard::menuSubItem(tabName = "clustering_tab",
+                                        text = "Run a clustering"),
+            shinydashboard::menuSubItem(tabName = "cluster_exploration_sub_tab",
+                                        text = "Explore clusters")
           ),
+          
           shinydashboard::menuItem(
             "Network inference",
             tabName = "network_tab",
@@ -70,18 +80,29 @@ app_ui <- function(request) {
       ),
       
       shinydashboard::dashboardBody(
+        dashboardthemes::shinyDashboardThemes(theme = "grey_light"),
         
-        dashboardthemes::shinyDashboardThemes(
-          theme = "grey_light"
-        ), 
         
-
         shinydashboard::tabItems(
-          shinydashboard::tabItem( tabName = "context_tab", mod_context_ui("context_ui_1")),
-          shinydashboard::tabItem( tabName = "data_import_tab", mod_import_data_ui("import_data_ui_1")),
-          shinydashboard::tabItem( tabName = "normalisation_tab", mod_normalisation_ui("normalisation_ui_1")),
-          shinydashboard::tabItem( tabName = "dea_tab", mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1"))
-
+          shinydashboard::tabItem(tabName = "context_tab",
+                                  mod_context_ui("context_ui_1")),
+          shinydashboard::tabItem(tabName = "data_import_tab",
+                                  mod_import_data_ui("import_data_ui_1")),
+          shinydashboard::tabItem(tabName = "normalisation_tab",
+                                  mod_normalisation_ui("normalisation_ui_1")),
+          shinydashboard::tabItem(
+            tabName = "dea_tab",
+            mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")
+          ),
+          
+          shinydashboard::tabItem(tabName = "clustering_tab",
+                                  mod_clustering_ui("clustering_ui_1")),
+          shinydashboard::tabItem(
+            tabName = "cluster_exploration_sub_tab",
+            mod_cluster_exploration_ui("cluster_exploration_ui_1")
+          )
+          
+          
         )
         
       )
@@ -105,6 +126,6 @@ golem_add_external_resources <- function() {
             bundle_resources(path = app_sys('app/www'),
                              app_title = 'DIANE'),
             # Add here other external resources
-            #shinyalert::useShinyalert()
+            #shinyalert::useShinyalert())
   )
 }
