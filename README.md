@@ -1,4 +1,8 @@
 <a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Apkgdown" rel="pkgdown">![Foo](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)</a>
+<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Atest-coverage" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/test-coverage/badge.svg)</a>
+
+
+
 
 # Dashboard for the Inference and Analysis of Networks from Expression data
 ![logo here](inst/app/www/favicon.ico "DIANE")

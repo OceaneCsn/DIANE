@@ -92,7 +92,7 @@ pkgdown::build_site()
 
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
-
+usethis::use_github_action_check_standard()
 ## Code coverage ----
 ## (You'll need GitHub there)
 
