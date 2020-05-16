@@ -2,20 +2,29 @@
 # Dashboard for the Inference and Analysis of Networks from Expression data
 ![alt text](inst/app/www/favicon.ico "DIANE")
 
-DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). The objective is to extract important gene clusters or regulators involved in the response to various perturbations, given the popularity of combinatorial approaches in experimental biology.
+DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). The objective is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
 
-This package provides the user with tools to process, explore, and perform advanced statistical analysis on its data using state of the art methods.
+Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on **multifactorial expression data** using state of the art methods. It includes :
 
-+ Count data pre-processing and sample-wise normalisation
-+ Differential expression analysis
++ Raw count data pre-processing and sample-wise normalisation
++ Customizable differential expression analysis
 
-As several interactive tools already offer those kind of service, we try to go further in the analysis :
-+ Expression based clustering in the framework of Poisson Mixture Models
+As several interactive tools already offer those kind of service, we try to go further in the analysis by proposing :
+
++ Expression based clustering in the framework of Poisson Mixture Models, and characterisation of those clusters with generalized linar models and GO enrichment analysis
+
 + Machine learning based Gene regulatory network inference
 
-**DIANE is in a very early stage of development**.
 
-For now, it can be downloaded and installed from this repository with the following R code :
+As many biologists feel more comfortable with user interfaces rather than code, all of the features in DIANE are accessible via a signle page shiny application that can be locally launched.
+
+For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts. 
+
+Fore more information, please find full documentation and examples in the github page  https://oceanecsn.github.io/DIANE.
+
+**DIANE is in an early stage of development**.
+
+It can be downloaded and installed using the following R code :
 
 ```R
 library(remotes)
