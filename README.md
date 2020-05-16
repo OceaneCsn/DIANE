@@ -1,8 +1,7 @@
-![pkgdown](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)
-
+<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Apkgdown" rel="pkgdown">![Foo](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)</a>
 
 # Dashboard for the Inference and Analysis of Networks from Expression data
-![alt text](inst/app/www/favicon.ico "DIANE")
+![logo here](inst/app/www/favicon.ico "DIANE")
 
 DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). The objective is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
 
