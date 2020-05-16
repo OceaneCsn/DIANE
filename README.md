@@ -1,4 +1,6 @@
- 
+![pkgdown](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)
+
+
 # Dashboard for the Inference and Analysis of Networks from Expression data
 ![alt text](inst/app/www/favicon.ico "DIANE")
 

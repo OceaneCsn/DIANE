@@ -70,19 +70,22 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#dashboard-for-the-inference-and-analysis-of-networks-from-expression-data" class="anchor"></a>Dashboard for the Inference and Analysis of Networks from Expression data</h1></div>
 <p><img src="inst/app/www/favicon.ico" title="DIANE" alt="alt text"></p>
-<p>DIANE is a shiny application for the analysis of high throughput gene expression data (<strong>RNA-Seq</strong>). The objective is to extract important gene clusters or regulators involved in the response to various perturbations, given the popularity of combinatorial approaches in experimental biology.</p>
-<p>This package provides the user with tools to process, explore, and perform advanced statistical analysis on its data using state of the art methods.</p>
+<p>DIANE is a shiny application for the analysis of high throughput gene expression data (<strong>RNA-Seq</strong>). The objective is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.</p>
+<p>Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on <strong>multifactorial expression data</strong> using state of the art methods. It includes :</p>
 <ul>
-<li>Count data pre-processing and sample-wise normalisation</li>
-<li>Differential expression analysis</li>
+<li>Raw count data pre-processing and sample-wise normalisation</li>
+<li>Customizable differential expression analysis</li>
 </ul>
-<p>As several interactive tools already offer those kind of service, we try to go further in the analysis :</p>
+<p>As several interactive tools already offer those kind of service, we try to go further in the analysis by proposing :</p>
 <ul>
-<li>Expression based clustering in the framework of Poisson Mixture Models</li>
-<li>Machine learning based Gene regulatory network inference</li>
+<li><p>Expression based clustering in the framework of Poisson Mixture Models, and characterisation of those clusters with generalized linar models and GO enrichment analysis</p></li>
+<li><p>Machine learning based Gene regulatory network inference</p></li>
 </ul>
-<p><strong>DIANE is in a very early stage of development</strong>.</p>
-<p>For now, it can be downloaded and installed from this repository with the following R code :</p>
+<p>As many biologists feel more comfortable with user interfaces rather than code, all of the features in DIANE are accessible via a signle page shiny application that can be locally launched.</p>
+<p>For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts.</p>
+<p>Fore more information, please find full documentation and examples in the github page <a href="https://oceanecsn.github.io/DIANE" class="uri">https://oceanecsn.github.io/DIANE</a>.</p>
+<p><strong>DIANE is in an early stage of development</strong>.</p>
+<p>It can be downloaded and installed using the following R code :</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">remotes</span>)
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"OceaneCsn/DIANE"</span>)</pre></div>
 <p>Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor, usign <code><a href="https://rdrr.io/pkg/BiocManager/man/install.html">BiocManager::install(...)</a></code>.</p>
