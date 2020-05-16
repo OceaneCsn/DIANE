@@ -82,6 +82,13 @@ golem::browser_button()
 usethis::use_vignette("DIANE")
 devtools::build_vignettes()
 
+
+
+
+usethis::use_pkgdown()
+
+pkgdown::build_site()
+
 ## Code coverage ----
 ## (You'll need GitHub there)
 

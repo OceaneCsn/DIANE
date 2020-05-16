@@ -13,4 +13,3 @@ golem::document_and_reload()
 run_app()
 
 
-# FIXME silent melt in reshape2

@@ -1,0 +1,12 @@
+authors:
+  Océane Cassan:
+    href: https://oceanecsn.github.io/
+    
+    
+development:
+  mode: unreleased
+  
+template:
+  params:
+    bootswatch: flatly
+    

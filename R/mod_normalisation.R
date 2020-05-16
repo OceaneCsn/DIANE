@@ -1,6 +1,10 @@
-# source("R/fct_normalisation.R")
-# source("R/fct_heatmap.R")
-# library(shinybusy)
+# FIXME silent melt in reshape2
+
+# TODO markdown dea, coseq, glm
+
+# TODO glm
+
+# TODO gene labels et ontologies
 
 #' normalisation UI Function
 #'
