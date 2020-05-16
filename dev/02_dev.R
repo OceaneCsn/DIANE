@@ -91,6 +91,7 @@ pkgdown::build_site()
 
 
 usethis::use_github_action("pkgdown")
+usethis::use_github_action("test-coverage")
 
 ## Code coverage ----
 ## (You'll need GitHub there)
