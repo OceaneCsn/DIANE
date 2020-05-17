@@ -9,6 +9,8 @@
 #' }
 #' @examples
 #' {
-#'  demo_data_At
+#'  head(demo_data_At$raw_counts)
+#'  demo_data_At$conditions
+#'  demo_data_At$design
 #' }
 "demo_data_At"

@@ -93,6 +93,10 @@ pkgdown::build_site()
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_github_action_check_standard()
+
+
+usethis::use_travis()
+usethis::use_travis_badge()
 ## Code coverage ----
 ## (You'll need GitHub there)
 
