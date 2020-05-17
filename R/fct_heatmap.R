@@ -70,8 +70,6 @@ draw_heatmap <-
 #'
 #' @param data count data, as a numeric dataframe with condition names as columns and genes as rows
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
-#' @importFrom reshape2 melt
-#' @return ggplot plot
 #' @export
 #' @examples
 #' data("demo_data_At")
@@ -86,7 +84,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
     c("sample", "logCount")
   
   d$condition <- str_split_fixed(d$sample, "_", 2)[, 1]
-  g <- ggplot2::ggplot(data = d, aes(x = sample, y = logCount))
+  g <- ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
   
   if (boxplot) {
     g <-
