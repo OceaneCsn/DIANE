@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_normalisation.R
 \name{normalize}
 \alias{normalize}
-\title{normalize raw count data, using the TCC package}
+\title{Normalize raw count data}
 \usage{
 normalize(
   data,
@@ -27,10 +27,25 @@ normalize(
 \item{iteration}{weather or not to perform a prior removal of DEGs (TRUE or FALSE)}
 }
 \value{
-a TCC-Class object containing the normalized data (filtering is highly recommended after normalization)
+a TCC-Class object
 }
 \description{
-normalize raw count data, using the TCC package
+The function corrects for different sequencing depths bewteen samples.
+It relies on the TCC package, to build a TCC-class object containing the raw counts 
+and the conditions for each sample. The function calcNormFactors is then applied, 
+and uses the method chosen by the user. It can, weather or not, proceed to a first step or 
+removing potentially differentially expressed genes to have less biased normalisation
+factors in the second normalization step. It returns a TCC object,
+with an element norm_factors containing the computed normalization factors.
+}
+\details{
+# Warning
+Filtering is highly recommended after normalization, consider using the DIANE::filter_low_counts
+function just after.
+
+# Note
+You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
+tcc being the result of DIANE::normalize or DIANE::filter_low_counts
 }
 \examples{
 data("demo_data_At")

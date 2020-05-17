@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_normalisation.R
 \name{filter_low_counts}
 \alias{filter_low_counts}
-\title{filter_low_counts}
+\title{Remove low count genes}
 \usage{
 filter_low_counts(tcc, thr)
 }
@@ -12,10 +12,12 @@ filter_low_counts(tcc, thr)
 \item{thr}{the sum of counts across all samples to be exceeded for a gene}
 }
 \value{
-a TCC-Class object containing the filtered data
+a TCC-Class object
 }
 \description{
-filter_low_counts
+Removes genes having a sum of counts accross all sample
+inferior to the specified threshold. It returns un aupdated TCC object,
+which count element contains the filtered expression matrix.
 }
 \examples{
 data("demo_data_At")

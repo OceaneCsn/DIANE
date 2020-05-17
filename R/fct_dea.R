@@ -1,17 +1,28 @@
 #' estimateDispersion
 #'
-#' The function computes the common, trend, and tag-wise dispersions of the dataset.
-#' It then fits a negative binomial model for each gene using default design : ~group+0 and GLMs.
+#' @description This function computes the common, trended, and tag-wise dispersions of 
+#' the gene expression dataset. Once, the dispersion is estimated,
+#' it fits a negative binomial model for each gene using default design : ~group+0.
+#' In this configuration, the log average expression of each gene is approximated
+#' by a linear combination of each of the conditions.
+#' It returns a the value of a glmFit object from the package edgeR, containing the attributes
+#' of the tcc object given, plus fitted values and GLM coefficients, among other indicators of the 
+#' fitting procedure.
 #'
-#' @param tcc object countaining count, and norm factors
-#' @param conditions if NULL (default, takes the split before the character '_' as condition names)
-#' else, the conditions regardless of biological replicates, as a character vector. Its order should match the 
+#' @param tcc TCC-class object countaining counts, and norm factors, such as obtained after 
+#' DIANE::normalize() and DIANE::filter_low_counts()
+#' @param conditions if NULL (default), takes the split before the character '_' as condition names.
+#' else, the conditions specified by the user, as a character vector. Its order should match the 
 #' columns names of the expression matrix used to build the tcc object.
 #' @importFrom stringr str_split_fixed
 #' @importFrom edgeR DGEList estimateDisp glmFit
 #' @importFrom stats model.matrix
-#' @return fit object, containing teh fitted models
+#' @return glmFit
 #' @export
+#' 
+#' @section # Note:
+#' The return value is meant to be used directly as the parameter of
+#' DIANE::estimateDEGs()
 #' 
 #' @examples
 #' data("demo_data_At")
@@ -87,7 +98,6 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
 #' @param fdr pvalue for DEGs
 #' @param MA TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.
 #' @param lfc absolute log fold change threshold for differentially expressed genes, default is 0.
-#' @return plot object
 #' @export
 #' @examples
 #' data("demo_data_At")

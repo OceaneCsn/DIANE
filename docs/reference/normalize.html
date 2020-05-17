@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>normalize raw count data, using the TCC package — normalize • DIANE</title>
+<title>Normalize raw count data — normalize • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,14 @@
 
 
 
-<meta property="og:title" content="normalize raw count data, using the TCC package — normalize" />
-<meta property="og:description" content="normalize raw count data, using the TCC package" />
+<meta property="og:title" content="Normalize raw count data — normalize" />
+<meta property="og:description" content="The function corrects for different sequencing depths bewteen samples.
+It relies on the TCC package, to build a TCC-class object containing the raw counts 
+and the conditions for each sample. The function calcNormFactors is then applied, 
+and uses the method chosen by the user. It can, weather or not, proceed to a first step or 
+removing potentially differentially expressed genes to have less biased normalisation
+factors in the second normalization step. It returns a TCC object,
+with an element norm_factors containing the computed normalization factors." />
 
 
 
@@ -108,13 +114,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>normalize raw count data, using the TCC package</h1>
+    <h1>Normalize raw count data</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_normalisation.R'><code>R/fct_normalisation.R</code></a></small>
     <div class="hidden name"><code>normalize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>normalize raw count data, using the TCC package</p>
+    <p>The function corrects for different sequencing depths bewteen samples.
+It relies on the TCC package, to build a TCC-class object containing the raw counts 
+and the conditions for each sample. The function calcNormFactors is then applied, 
+and uses the method chosen by the user. It can, weather or not, proceed to a first step or 
+removing potentially differentially expressed genes to have less biased normalisation
+factors in the second normalization step. It returns a TCC object,
+with an element norm_factors containing the computed normalization factors.</p>
     </div>
 
     <pre class="usage"><span class='fu'>normalize</span>(
@@ -139,7 +151,7 @@
     </tr>
     <tr>
       <th>norm_method</th>
-      <td><p>method used for normalisation, between tmm or deseq2</p></td>
+      <td><p>method used for normalization, between tmm or deseq2</p></td>
     </tr>
     <tr>
       <th>deg_method</th>
@@ -157,7 +169,15 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a TCC-Class object containing the normalized data (filtering is highly recommended after normalization)</p>
+    <p>a TCC-Class object</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p># Warning
+Filtering is highly recommended after normalization, consider using the DIANE::filter_low_counts
+function just after.</p>
+<p># Note
+You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
+tcc being the result of DIANE::normalize or DIANE::filter_low_counts</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)

@@ -190,7 +190,7 @@ draw_profiles <-
         plot.title = ggplot2::element_text(size = 22, face = "bold"),
         strip.text.x = ggplot2::element_text(size = 20),
         legend.position = "none",
-        axis.text.y = ggplot2::element_text(size = 18, angle = 30),
+        axis.text.y = ggplot2::element_text(size = 12, angle = 30),
         axis.text.x = ggplot2::element_text(
           size = 12,
           hjust = 0,

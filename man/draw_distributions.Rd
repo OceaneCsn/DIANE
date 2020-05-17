@@ -11,9 +11,6 @@ draw_distributions(data, boxplot = TRUE)
 
 \item{boxplot}{if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot}
 }
-\value{
-ggplot plot
-}
 \description{
 draw_distributions of count data
 }

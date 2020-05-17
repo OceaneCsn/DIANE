@@ -15,9 +15,6 @@ plotDEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 
 \item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.}
 }
-\value{
-plot object
-}
 \description{
 plotDEGs : MA or volcano plot for DEGs
 }
