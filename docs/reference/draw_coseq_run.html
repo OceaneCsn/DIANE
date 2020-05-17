@@ -142,26 +142,7 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
 <span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>raw_counts</span>, <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='no'>threshold</span> <span class='kw'>=</span> <span class='fl'>10</span>*<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)
 <span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span>(<span class='no'>tcc_object</span>, <span class='no'>threshold</span>)
 <span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt;  [1] "cNF" "cNF" "cNF" "cnF" "cnF" "cnF" "cNf" "cnf" "cnf" "cNf" "cNf" "cnf"
-#&gt;       cnf cnF cNf cNF
-#&gt; cNF_3   0   0   0   1
-#&gt; cNF_2   0   0   0   1
-#&gt; cNF_1   0   0   0   1
-#&gt; cnF_2   0   1   0   0
-#&gt; cnF_1   0   1   0   0
-#&gt; cnF_3   0   1   0   0
-#&gt; cNf_1   0   0   1   0
-#&gt; cnf_2   1   0   0   0
-#&gt; cnf_1   1   0   0   0
-#&gt; cNf_2   0   0   1   0
-#&gt; cNf_3   0   0   1   0
-#&gt; cnf_3   1   0   0   0
-#&gt; attr(,"assign")
-#&gt; [1] 1 1 1 1
-#&gt; attr(,"contrasts")
-#&gt; attr(,"contrasts")$groups
-#&gt; [1] "contr.treatment"
-#&gt; </div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
 <span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
 #&gt; coseq analysis: Poisson approach &amp; none transformation
@@ -176,16 +157,17 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
 #&gt; [1] "Log-like diff: 10.336858994218"
 #&gt; [1] "Log-like diff: 14.052428610394"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00210398374435261"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000187947296471869"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 7.83977326754837e-05"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 7.43845706807633e-06"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 7.3246165969451"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 2.11611919456799"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.471904423879472"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.162978539012355"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0142180237622025"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 963.569585310306"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 973.313690963018"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1901.44865797646"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 795.219789046799"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 315.478837678556"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 724.756317751131"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 120.506999620327"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 213.274893219755"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 52.5177071082426"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 3.65136200631606"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
 #&gt; <span class='message'>[1] "Log-like diff: 4.73632900978113"</span>
 #&gt; <span class='message'>[1] "Log-like diff: 126.858583374279"</span>

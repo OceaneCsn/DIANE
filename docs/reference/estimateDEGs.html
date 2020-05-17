@@ -154,26 +154,7 @@ log ratios are expressed as log(perturbation/reference)</p>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)
 <span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>raw_counts</span>, <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='no'>threshold</span> <span class='kw'>=</span> <span class='fl'>10</span>*<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)
 <span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span>(<span class='no'>tcc_object</span>, <span class='no'>threshold</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt;  [1] "cNF" "cNF" "cNF" "cnF" "cnF" "cnF" "cNf" "cnf" "cnf" "cNf" "cNf" "cnf"
-#&gt;       cnf cnF cNf cNF
-#&gt; cNF_3   0   0   0   1
-#&gt; cNF_2   0   0   0   1
-#&gt; cNF_1   0   0   0   1
-#&gt; cnF_2   0   1   0   0
-#&gt; cnF_1   0   1   0   0
-#&gt; cnF_3   0   1   0   0
-#&gt; cNf_1   0   0   1   0
-#&gt; cnf_2   1   0   0   0
-#&gt; cnf_1   1   0   0   0
-#&gt; cNf_2   0   0   1   0
-#&gt; cNf_3   0   0   1   0
-#&gt; cnf_3   1   0   0   0
-#&gt; attr(,"assign")
-#&gt; [1] 1 1 1 1
-#&gt; attr(,"contrasts")
-#&gt; attr(,"contrasts")$groups
-#&gt; [1] "contr.treatment"
-#&gt; </div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>estimateDEGs</span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>estimateDEGs</span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
 <span class='no'>DEGs</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

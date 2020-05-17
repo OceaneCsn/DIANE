@@ -6,7 +6,6 @@ cache: packages
 
 r:
   - bioc-release
-  - bioc-devel
   
 script:
   - R CMD build .

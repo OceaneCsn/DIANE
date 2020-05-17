@@ -1,10 +1,9 @@
-<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Apkgdown" rel="pkgdown">![Foo](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)</a>
 <a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Atest-coverage" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/test-coverage/badge.svg)</a>
 <a href="https://github.com/OceaneCsn/DIANE/actions" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/R-CMD-check/badge.svg)</a>
 [![Travis build status](https://travis-ci.com/OceaneCsn/DIANE.svg?branch=master)](https://travis-ci.com/OceaneCsn/DIANE)
 
 
-# Dashboard for the Inference and Analysis of Networks from Expression data <img src="inst/app/www/favicon.ico" align="right" alt="" width="120" />
+# Dashboard for the Inference and Analysis of Networks from Expression data <img src="man/figures/hex-DIANE.png" align="right" alt="" width="120" />
 
 
 DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
@@ -36,9 +35,7 @@ library(remotes)
 remotes::install_github("OceaneCsn/DIANE")
 ```
 
-Packages mentioned as unavailable (because they are not on CRAN) during the installation may have to be manually installed from Bioconductor, usign ```BiocManager::install(...)```.
-
-You can then launch the application with 
+You can then launch the application :
 
 ```R
 library(DIANE)
