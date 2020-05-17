@@ -1,6 +1,6 @@
-<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Apkgdown" rel="pkgdown">![Foo](https://github.com/OceaneCsn/DIANE/workflows/pkgdown/badge.svg)</a>
 <a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Atest-coverage" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/test-coverage/badge.svg)</a>
 <a href="https://github.com/OceaneCsn/DIANE/actions" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/R-CMD-check/badge.svg)</a>
+[![Travis build status](https://travis-ci.com/OceaneCsn/DIANE.svg?branch=master)](https://travis-ci.com/OceaneCsn/DIANE)
 
 
 
