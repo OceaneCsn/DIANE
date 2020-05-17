@@ -101,7 +101,6 @@ get_genes_in_cluster <- function(membership, cluster) {
 #'
 #' @importFrom reshape2 melt
 #' @importFrom stringr str_split_fixed
-#' @import ggplot2
 #' @return 
 #' @export
 #' @examples
@@ -151,13 +150,13 @@ draw_profiles <-
     
     if (is.null(k)) {
       g <-
-        ggplot2::ggplot(data = d, aes(x = group, y = value))  +
+        ggplot2::ggplot(data = d, ggplot2::aes(x = group, y = value))  +
         ggplot2::facet_wrap(~ cluster, scales = "free")
     }
     else{
       k <- as.vector(k)
       g <-
-        ggplot2::ggplot(data = d[d$cluster %in% k,], aes(x = group, y = value)) +
+        ggplot2::ggplot(data = d[d$cluster %in% k,], ggplot2::aes(x = group, y = value)) +
         ggplot2::facet_wrap(~ cluster, scales = "free")
     }
     if (!is.null(k) && length(k) == 1) {
@@ -166,14 +165,14 @@ draw_profiles <-
           alpha = 0.12,
           lwd = 0.9,
           color = "darkgreen",
-          aes(group = geneRep)
+          ggplot2::aes(group = geneRep)
         )
     }
     else {
       g <-
         g + ggplot2::geom_line(alpha = 0.08,
                                lwd = 0.9,
-                               aes(group = geneRep, color = as.factor(cluster)))
+                               ggplot2::aes(group = geneRep, color = as.factor(cluster)))
     }
     g <-
       g + ggplot2::geom_boxplot(
@@ -184,22 +183,22 @@ draw_profiles <-
         outlier.alpha = 0.1
       ) +
       ggplot2::geom_jitter(width = 0.1, alpha = 0.0015) +
-      ggtitle("Expression profiles of the clusters")
+      ggplot2::ggtitle("Expression profiles of the clusters")
     
     g <-
       g + ggplot2::theme(
-        plot.title = element_text(size = 22, face = "bold"),
-        strip.text.x = element_text(size = 20),
+        plot.title = ggplot2::element_text(size = 22, face = "bold"),
+        strip.text.x = ggplot2::element_text(size = 20),
         legend.position = "none",
-        axis.text.y = element_text(size = 18, angle = 30),
-        axis.text.x = element_text(
+        axis.text.y = ggplot2::element_text(size = 18, angle = 30),
+        axis.text.x = ggplot2::element_text(
           size = 12,
           hjust = 0,
           angle = -50,
           colour = "grey50"
         ),
         legend.text.align = 1,
-        axis.title = element_text(size = 24)
-      ) + xlab("") + ylab(ylab)
+        axis.title = ggplot2::element_text(size = 24)
+      ) + ggplot2::xlab("") + ggplot2::ylab(ylab)
     g
   }

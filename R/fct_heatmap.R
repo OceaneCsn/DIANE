@@ -70,7 +70,6 @@ draw_heatmap <-
 #'
 #' @param data count data, as a numeric dataframe with condition names as columns and genes as rows
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
-#' @import ggplot2
 #' @importFrom reshape2 melt
 #' @return ggplot plot
 #' @export
@@ -100,7 +99,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
       )
   } else{
     g <-
-      g + ggplot2::geom_violin(alpha = 0.5, lwd = 1, aes(fill = condition))
+      g + ggplot2::geom_violin(alpha = 0.5, lwd = 1, ggplot2::aes(fill = condition))
   }
   
   g <-
@@ -118,7 +117,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
         colour = "grey50"
       ),
       legend.text.align = 1,
-      axis.title = element_text(size = 24)
+      axis.title = ggplot2::element_text(size = 24)
     )
   g
 }
@@ -151,7 +150,7 @@ draw_MDS <- function(normalized.count, conditions = NULL) {
       condition = str_split_fixed(names(mds$x), '_', 2)[, 1]
     )
   g <-
-    ggplot2::ggplot(data = d, aes(x = dim1, y = dim2, color = condition)) + 
+    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition)) + 
     ggplot2::geom_point(size = 6)
   
   g <- g + ggplot2::ggtitle("Multi Dimensional Scaling plot")

@@ -1,14 +1,27 @@
-#' normalize raw count data, using the TCC package
+#' Normalize raw count data
+#' 
+#' @description The function corrects for different sequencing depths bewteen samples.
+#' It relies on the TCC package, to build a TCC-class object containing the raw counts 
+#' and the conditions for each sample. The function calcNormFactors is then applied, 
+#' and uses the method chosen by the user. It can, weather or not, proceed to a first step or 
+#' removing potentially differentially expressed genes to have less biased normalisation
+#' factors in the second normalization step. It returns a TCC object,
+#' with an element norm_factors containing the computed normalization factors. 
 #'
 #' @param data raw counts to be normalized (data frame or matrix)
 #' @param conditions condition of each column of the data argument
-#' @param norm_method method used for normalisation, between tmm or deseq2
+#' @param norm_method method used for normalization, between tmm or deseq2
 #' @param deg_method method used for deg detection, between edgeR ou deseq2
 #' @param fdr pvalue threshold for adjusted pvalues for degs
 #' @param iteration weather or not to perform a prior removal of DEGs (TRUE or FALSE)
-#' 
-#' @import TCC
-#' @return a TCC-Class object containing the normalized data (filtering is highly recommended after normalization)
+#' @details # Warning
+#' Filtering is highly recommended after normalization, consider using the DIANE::filter_low_counts
+#' function just after.
+#' @details # Note
+#' You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
+#' tcc being the result of DIANE::normalize or DIANE::filter_low_counts
+#' @importFrom TCC calcNormFactors TCC
+#' @return a TCC-Class object
 #' @export
 #' @examples
 #' data("demo_data_At")
@@ -17,7 +30,7 @@
 
 normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
                       iteration = TRUE){
-  tcc <- new("TCC", data, conditions)
+  tcc <- TCC::TCC(count =  data, group = conditions)
   tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
                               iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
   return(tcc)
@@ -26,13 +39,17 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
 
 
 
-#' filter_low_counts
+#' Remove low count genes
+#' 
+#' @description Removes genes having a sum of counts accross all sample
+#' inferior to the specified threshold. It returns un aupdated TCC object,
+#' which count element contains the filtered expression matrix.
 #'
 #' @param tcc data to be filtered to remove low count genes
-#' 
+#' @importFrom TCC filterLowCountGenes
 #' @param thr the sum of counts across all samples to be exceeded for a gene
 #' @export
-#' @return a TCC-Class object containing the filtered data
+#' @return a TCC-Class object
 #' @examples
 #' data("demo_data_At")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)

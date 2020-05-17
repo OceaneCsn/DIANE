@@ -18,7 +18,7 @@ normalize(
 
 \item{conditions}{condition of each column of the data argument}
 
-\item{norm_method}{method used for normalisation, between tmm or deseq2}
+\item{norm_method}{method used for normalization, between tmm or deseq2}
 
 \item{deg_method}{method used for deg detection, between edgeR ou deseq2}
 

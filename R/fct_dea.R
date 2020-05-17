@@ -27,12 +27,10 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   else{
     groups <- conditions
   }
-  print(groups)
   design = stats::model.matrix( ~ groups + 0)
   rownames(design) <- colnames(tcc$count)
   colnames(design) <-
     str_split_fixed(colnames(design), 'groups', 2)[, 2]
-  print(design)
   # TODO : add a genes dataframe containing the annotations here, they will 
   # be kept furing all dea process in edgeR
   dge <- edgeR::DGEList(
