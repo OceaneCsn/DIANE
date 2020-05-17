@@ -102,7 +102,7 @@ get_genes_in_cluster <- function(membership, cluster) {
 #' @importFrom reshape2 melt
 #' @importFrom stringr str_split_fixed
 #' @import ggplot2
-#' @return ggplot
+#' @return 
 #' @export
 #' @examples
 #' data("demo_data_At")

@@ -27,7 +27,7 @@ draw_profiles(
 \item{nrow}{on how many rows display the cluster profiles if k is NULL}
 }
 \value{
-ggplot
+
 }
 \description{
 Draw profiles of a clustering

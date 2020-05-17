@@ -11,6 +11,7 @@ Imports:
     DT,
     htmltools,
     stringr,
+    DESeq,
     ggplot2,
     shinydashboard,
     shinydashboardPlus,
