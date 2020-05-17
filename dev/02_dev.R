@@ -79,7 +79,8 @@ usethis::use_data_raw( name = "raw_data_demo", open = FALSE )
 golem::browser_button()
 
 ## Vignette ----
-usethis::use_vignette("DIANE")
+usethis::use_vignette("DIANE_Programming_Interface")
+
 devtools::build_vignettes()
 
 
@@ -97,6 +98,8 @@ usethis::use_github_action_check_standard()
 
 usethis::use_travis()
 usethis::use_travis_badge()
+
+
 ## Code coverage ----
 ## (You'll need GitHub there)
 

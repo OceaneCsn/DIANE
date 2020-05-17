@@ -1,0 +1,140 @@
+---
+title: "DIANE Programming Interface"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DIANE_Programming_Interface}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Why an application programming interface?
+
+
+# Input data
+
+The DIANE companion dataset is meant to illustrate its functionnality and provide an explicit example of the expected input data.
+
+```{r setup}
+library(DIANE)
+data("demo_data_At")
+```
+
+Here, the format of the count data, conditions, and design will be detailed.
+
+
+# Data pre-processing
+
+## Visualization of raw counts
+
+For each condition, we can visualize the distributions of gene counts with boxplots or violin plots.
+
+```{r vis_raw, fig.width=8, fig.height=5}
+DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = TRUE)
+```
+
+## Normalisation
+
+The [TCC R package](https://rdrr.io/bioc/TCC) is used for the normalisation step here, to make samples comparable by correcting for their differences in **sequencing depths**. This step is mandatory before further statitical analysis.
+
+You can choose to normalize using the methods implemented in edgeR, referenced as 'tmm', or the one used in DESeq, referenced as 'deseq2'.
+
+Those normalisation methods rely on the hypothesis that a very small proportion of genes are differentially expressed between your samples. If you suspect a lot of genes could be differentially expressed in your data, TCC offers the possibility to proceed to a first detection of potential differentially expressed genes, to remove them, and then provide a final less biased normalisation.
+
+In that case, enable "prior removal of differentially expressed genes".
+TCC will perform the following setp, depending on the normalisation method you chose :
++ tmm/deseq2 temporary normalisation
++ potential DEG identification and removal using edgeR test method
++ tmm/deseq2 definitive normalisation   
+
+We use here the default parameters :
+
+```{r normalize, fig.width=8, fig.height=5}
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+DIANE::draw_distributions(normalized_counts, boxplot = TRUE)
+```
+
+
+## Low counts removal
+
+Removing genes with very low aboundance is a common practice in RNA-Seq analysis pipelines for several reasons :
+
+
++ They have little biological signifiance, and could be caused either by noise or mapping errors.
++ The statitical modelling we are planning to perform next is not well suited for low counts, as they make the mean-variance relationship harder to estimate.
+
+There is no absolute and commonly accpeted threshold value, but it is recommended to allow only genes with more than 10 counts per sample in average. DIANE thus proposes a threshold at 10*sampleNumber, but feel free to experiment with other values depending on your dataset.
+
+```{r filter}
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+```
+
+
+We can really see the difference with the violin plot view of the effect of low count genes removal :
+
+```{r viz_filter, fig.width=8, fig.height=5}
+DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
+DIANE::draw_distributions(normalized_counts, boxplot = FALSE)
+```
+
+## Sample homogeneity
+
+The multi dimensional scaling plot indicates if the samples are close regarding the expression of the genes, and the colors represent the conditions.
+
+```{r mds, fig.width=8, fig.height=5}
+DIANE::draw_MDS(normalized.count = normalized_counts)
+```
+
+# Differential expression analysis
+
+Let's say we can't to preform DEA between the conditions cnF and cNF :
+
+```{r dea, fig.width=8, fig.height=5}
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+head(topTags$table)
+
+tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
+DIANE::plotDEGs(tags)
+DIANE::plotDEGs(tags, MA = FALSE)
+```
+
+# Expression based clustering
+
+The [coseq package](https://www.bioconductor.org/packages/release/bioc/vignettes/coseq/inst/doc/coseq.html) tests a range of different clusters in order to give the best fit to the data. It fits Poisson mixture models to the genes in order to estimate one multidimensional Poisson distribution par cluster.
+
+```{r coseq, fig.width=8, fig.height=5}
+genes <- topTags$table$genes
+clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+DIANE::draw_coseq_run(clustering$model, plot = "barplots")
+DIANE::draw_coseq_run(clustering$model, plot = "ICL")
+```
+
+
+
+For each number of cluster, the ICL (Integrated Completed Likelihood) is computed. It combines two elements : 
+
++ The global **likelihood** of the clustering. It quantifies how accurate the clustering seems, regarding the posterior probability of each element to belong the its predicted cluster. It can be computed using the Poisson probability densities resulting from the proposed clustering, for all the genes.
+
++ The **number of clusters**. As the likelihood tends to grow monotonously with the number of clusters, resulting in a very big number of groups, that would not be very informative for the user. Thus, the ICL penalizes the clustering quality criteria with the number of clusters.
+
+This is why the maximal value of ICL can be interpreted as an approximation of the ideal number of clusters. 
+
+
+## Profiles visualization
+
+The user can display either a view of all the clusters, or focus one one in particular :
+
+```{r profiles, fig.width=8, fig.height=6}
+DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions)) 
+DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions), k = 3) 
+```
