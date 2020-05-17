@@ -106,11 +106,11 @@ plotDEGs <- function(tags,
     ifelse(top$FDR < fdr & abs(top$logFC) > lfc, TRUE, FALSE)
   if (MA)
     g <-
-    ggplot2::ggplot(data = top, aes(x = logCPM, y = logFC, color = isDE)) + 
+    ggplot2::ggplot(data = top, ggplot2::aes(x = logCPM, y = logFC, color = isDE)) + 
     ggplot2::ggtitle("M-A plot")
   else
     g <-
-    ggplot2::ggplot(data = top, aes(
+    ggplot2::ggplot(data = top, ggplot2::aes(
       y = -log10(FDR),
       x = logFC,
       color = isDE
@@ -118,7 +118,7 @@ plotDEGs <- function(tags,
   g <-
     g + ggplot2::geom_point(size = 1.2) + 
     ggplot2::scale_color_manual(values = c("#999999", "#25BA40"))
-  g + theme(
+  g + ggplot2::theme(
     axis.text.x = ggplot2::element_text(size = 18),
     axis.text.y = ggplot2::element_text(size = 18),
     title = ggplot2::element_text(size = 20, face = "bold")
