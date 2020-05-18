@@ -56,6 +56,7 @@ golem::add_fct( "heatmap" )
 golem::add_fct( "normalisation")
 golem::add_fct( "dea")
 golem::add_fct( "coseq")
+golem::add_fct( "glm")
 
 #golem::add_utils( "helpers" )
 

@@ -50,7 +50,25 @@ mod_cluster_exploration_ui <- function(id) {
           )))
         ),
         shiny::tabPanel(title = "Ontologies enrichment"),
-        shiny::tabPanel(title = "GLM for factors effect")
+        shiny::tabPanel(title = "GLM for factors effect",
+                        col_2(shinyWidgets::dropdownButton(
+                          size = 'xs',
+                          shiny::verbatimTextOutput(ns("glm_summary")),
+                          circle = FALSE,
+                          status = "success",
+                          width = "600px",
+                          label = "Glm summary")
+                        ),
+                        shiny::plotOutput(ns("glm_plot")),
+                        shiny::h5("The absolute value of a coefficient gives information about the intensity of
+                           its effect on gene expression. The highest coefficient(s) thus are the one(s) 
+                           driving the profiles in a specific cluster. The genes in this cluster are potentially
+                           involved in the response to that factor.
+                           
+                           The sign of a coefficient gives information about the way it imapcts expression.
+                           If it is positive it increases the expression when the facot is in its perturbation
+                           level. If negative, it decreases it.")
+                      )
       )
     )
     
@@ -143,6 +161,26 @@ mod_cluster_exploration_server <-
     })
     
     
+    
+#   ____________________________________________________________________________
+#   glm                                                                     ####
+
+    
+    glm <- shiny::reactive({
+      req(r$design, r$normalized_counts, membership())
+      fit_glm(normalized_counts = r$normalized_counts,
+              genes = get_genes_in_cluster(membership = membership(),
+                                           cluster = input$cluster_to_explore),
+              design = r$design)
+    })
+    
+    output$glm_summary <- shiny::renderPrint({
+      print(summary(glm()))
+    })
+    
+    output$glm_plot <- shiny::renderPlot({
+      draw_glm(glm())
+    })
     
     
   }
