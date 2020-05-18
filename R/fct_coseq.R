@@ -9,7 +9,8 @@
 #'
 #' @importFrom coseq coseq clusters
 #'
-#' @return named list containing the coseq run result as "model", and the cluster membership for each gene as "membership"
+#' @return named list containing the coseq run result as "model", and the cluster membership 
+#' for each gene as "membership"
 #' @export
 #' @examples
 #' data("demo_data_At")
@@ -20,7 +21,8 @@
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+#' data = normalized_counts, genes = genes, K = 6:9)
 run_coseq <- function(conds, genes, data, K = 6:12) {
   conditions <- unique(grep(paste(conds, collapse = "|"),
                             colnames(data), value = TRUE))
@@ -64,7 +66,8 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+#' data = normalized_counts, genes = genes, K = 6:9)
 #' DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 #' DIANE::draw_coseq_run(clustering$model, plot = "ICL")
 draw_coseq_run <- function(run_pois, plot = "ICL") {
@@ -101,7 +104,6 @@ get_genes_in_cluster <- function(membership, cluster) {
 #'
 #' @importFrom reshape2 melt
 #' @importFrom stringr str_split_fixed
-#' @return 
 #' @export
 #' @examples
 #' data("demo_data_At")
@@ -112,9 +114,12 @@ get_genes_in_cluster <- function(membership, cluster) {
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
-#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions)) 
-#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions), k = 3) 
+#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+#' data = normalized_counts, genes = genes, K = 6:9)
+#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
+#' conds = unique(demo_data_At$conditions)) 
+#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
+#' conds = unique(demo_data_At$conditions), k = 3) 
 draw_profiles <-
   function(data,
            membership,
