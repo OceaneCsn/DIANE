@@ -20,5 +20,32 @@ all the factors of the design)}
 glm object
 }
 \description{
-more to come
+The idea is to extract the importance and effect of each factor.
+To do so, the expression of each gene is modelled as a Poisson distribution.
+The log of its parameter (the expected value) is approximated by a linear
+combination of the factors in the experiment. The coefficients associated to 
+each factors are estimated to fit gene expression, and can be insightful to
+characterize genes behavior in a particular cluster.
+}
+\section{Note }{
+
+Note that we can only apply a glm fit to a set of genes that have very close expression 
+profiles accros conditions, else we would have to introduce a new variable related to the genes
+themselves.
+}
+
+\examples{
+library(DIANE)
+data("demo_data_At")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+genes <- topTags$table$genes
+clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+genes_cluster <- DIANE::get_genes_in_cluster(clustering$membership, cluster = 3)
+glm <- DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
+summary(glm)
 }

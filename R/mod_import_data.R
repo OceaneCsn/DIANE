@@ -185,7 +185,8 @@ mod_import_data_server <- function(input, output, session, r) {
           path,
           sep = input$sep,
           header = TRUE,
-          stringsAsFactors = FALSE
+          stringsAsFactors = FALSE,
+          check.names = FALSE
         )
       print(d)
       if ("Gene" %in% colnames(d)) {
@@ -195,7 +196,8 @@ mod_import_data_server <- function(input, output, session, r) {
             sep = input$sep,
             header = TRUE,
             stringsAsFactors = FALSE,
-            row.names = "Gene"
+            row.names = "Gene",
+            check.names = FALSE
           )
       }
       else{
@@ -215,6 +217,7 @@ mod_import_data_server <- function(input, output, session, r) {
     d
   })
   
+  # TODO problem window id wrong design
   
   
   #   ____________________________________________________________________________

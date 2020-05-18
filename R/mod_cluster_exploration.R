@@ -32,7 +32,9 @@ mod_cluster_exploration_ui <- function(id) {
       )
     ),
     
+    # TODO download data from one cluster
     
+    # TODO true reset when toggle demo data
     #   ____________________________________________________________________________
     #   Clusters characteristics                                                ####
     
@@ -60,6 +62,7 @@ mod_cluster_exploration_ui <- function(id) {
                           label = "Glm summary")
                         ),
                         shiny::plotOutput(ns("glm_plot")),
+                        shiny::hr(),
                         shiny::h5("The absolute value of a coefficient gives information about the intensity of
                            its effect on gene expression. The highest coefficient(s) thus are the one(s) 
                            driving the profiles in a specific cluster. The genes in this cluster are potentially
