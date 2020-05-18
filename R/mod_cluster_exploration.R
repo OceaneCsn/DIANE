@@ -93,12 +93,14 @@ mod_cluster_exploration_server <-
     
     
     membership <- shiny::reactive({
+      shiny::req(r$clusterings, r$current_comparison)
       req(r$clusterings[[r$current_comparison]])
       r$clusterings[[r$current_comparison]]$membership
     })
     
     
     conditions <- shiny::reactive({
+      shiny::req(r$clusterings, r$current_comparison)
       req(r$clusterings[[r$current_comparison]])
       r$clusterings[[r$current_comparison]]$conditions
     })

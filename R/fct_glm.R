@@ -45,21 +45,15 @@ fit_glm <-
            factors = colnames(design)) {
     
     glmData <- melt(round(normalized_counts[genes, ], 0))
-    print(head(glmData))
     glmData <- glmData[, 2:length(colnames(glmData))]
-    print(head(glmData))
     colnames(glmData) <- c("Sample", "Counts")
     glmData$condition <- str_split_fixed(glmData$Sample, '_', 2)[, 1]
-    print(head(glmData))
     for (factor in factors) {
       glmData[, factor] <- design[glmData$condition, factor]
     }
-    print(head(glmData))
     formula <- paste("Counts ~ ", paste(factors, collapse = '*'))
-    print(formula)
     glm <-
       glm(formula , data = glmData, family = poisson(link = "log"))
-    summary(glm)
     return(glm)
   }
 

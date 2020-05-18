@@ -26,6 +26,8 @@ The log of its parameter (the expected value) is approximated by a linear
 combination of the factors in the experiment. The coefficients associated to 
 each factors are estimated to fit gene expression, and can be insightful to
 characterize genes behavior in a particular cluster.
+The model with interactions is considered. It your design in not a
+complete corssed design, the interaction term will be null.
 }
 \section{Note }{
 
