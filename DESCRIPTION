@@ -27,7 +27,6 @@ Imports:
     RColorBrewer,
     coseq,
     utils,
-    shinyjs
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
