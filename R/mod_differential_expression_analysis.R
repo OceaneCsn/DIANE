@@ -10,7 +10,7 @@
 mod_differential_expression_analysis_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    shiny::h1("Differential expression analysis - Now we're talking!"),
+    shiny::h1("Differential expression analysis"),
     shiny::hr(),
     shinyalert::useShinyalert(),
     shinybusy::add_busy_spinner(
@@ -157,14 +157,15 @@ mod_differential_expression_analysis_server <-
   function(input, output, session, r) {
     ns <- session$ns
     
+    
+    
     r_dea <- shiny::reactiveValues(
-      fit = NULL,
       top_tags = NULL,
       DEGs = NULL,
       ref = NULL,
       trt = NULL
     )
-    
+
     
     #   ____________________________________________________________________________
     #   Condition choices ui                                                    ####
@@ -172,6 +173,7 @@ mod_differential_expression_analysis_server <-
     
     
     output$condition_choices <- shiny::renderUI({
+      req(r$conditions)
       tagList(
         shinyWidgets::radioGroupButtons(
           inputId = ns("reference"),
@@ -193,26 +195,19 @@ mod_differential_expression_analysis_server <-
         )
       )
     })
-    #
-    # shiny::observe({
-    #   shiny::req(r$conditions)
-    #
-    #   shinyWidgets::updateRadioGroupButtons(session, ns("perturbation"),
-    #                           choices = r$conditions)
-    # })
-    #
+
     #   ____________________________________________________________________________
     #   Buttons reactives                                                       ####
     
     
     shiny::observeEvent((input$estimate_disp_btn), {
       shiny::req(r$tcc)
-      r_dea$fit <- estimateDispersion(r$tcc)
-      
+      #r_dea$fit <- estimateDispersion(r$tcc)
+      r$fit <- estimateDispersion(r$tcc)
     })
     
     shiny::observeEvent((input$deg_test_btn), {
-      shiny::req(r_dea$fit,
+      shiny::req(r$fit,
                  input$dea_fdr,
                  input$reference,
                  input$perturbation)
@@ -226,10 +221,9 @@ mod_differential_expression_analysis_server <-
       shiny::req(!input$reference == input$perturbation)
       
       
-      print(input$dea_fdr)
       r_dea$tags <-
         estimateDEGs(
-          r_dea$fit,
+          r$fit,
           reference = input$reference,
           perturbation = input$perturbation
         )
@@ -256,7 +250,7 @@ mod_differential_expression_analysis_server <-
     #   Summaries                                                               ####
     
     output$disp_estimate_summary <- shiny::renderUI({
-      if (is.null(r_dea$fit)) {
+      if (is.null(r$fit)) {
         number_color = "orange"
         number = "Needed"
         header = ""
@@ -279,7 +273,7 @@ mod_differential_expression_analysis_server <-
     
     
     output$deg_test_summary <- shiny::renderUI({
-      if (is.null(r_dea$fit)) {
+      if (is.null(r$fit)) {
         number_color = "red"
         number = "Dispersion estimation needed"
         header = ""
@@ -309,12 +303,13 @@ mod_differential_expression_analysis_server <-
     })
     
     output$deg_number_summary <- shiny::renderUI({
-      shiny::req(r_dea$top_tags)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
       tagList(
         shiny::fluidRow(
           shinydashboardPlus::descriptionBlock(
-            number = sum(r_dea$top_tags$logFC > 0),
+            number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
             number_color = "olive",
             number_icon = "fa fa-caret-up",
             header = "up regulated",
@@ -322,7 +317,7 @@ mod_differential_expression_analysis_server <-
             right_border = TRUE
           ),
           shinydashboardPlus::descriptionBlock(
-            number = sum(r_dea$top_tags$logFC < 0),
+            number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC < 0),
             number_color = "red",
             number_icon = "fa fa-caret-down",
             header = "down-regulated",
@@ -338,7 +333,8 @@ mod_differential_expression_analysis_server <-
     #   Dl button                                                               ####
     
     output$dl_bttns <- shiny::renderUI({
-      shiny::req(r_dea$top_tags)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       shiny::fluidRow(
         shinyWidgets::downloadBttn(
           outputId = ns("download_table_csv"),
@@ -364,7 +360,8 @@ mod_differential_expression_analysis_server <-
     #   Result plots                                                            ####
     
     output$deg_table <- DT::renderDataTable({
-      req(r_dea$top_tags)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
       top <- r_dea$top_tags
       top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
@@ -382,7 +379,9 @@ mod_differential_expression_analysis_server <-
     
     
     output$heatmap_conditions_choice <- shiny::renderUI({
-      shiny::req(r_dea$ref, r_dea$trt)
+      shiny::req(r$conditions)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("conds_heatmap"),
         label = "Reference",
@@ -394,7 +393,8 @@ mod_differential_expression_analysis_server <-
       )
     })
     output$heatmap <- shiny::renderPlot({
-      shiny::req(input$conds_heatmap, r_dea$DEGs)
+      shiny::req(input$conds_heatmap, r_dea$DEGs, r$normalized_counts)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       draw_heatmap(
         data = r$normalized_counts,
         subset = r_dea$DEGs,
@@ -409,7 +409,8 @@ mod_differential_expression_analysis_server <-
     })
     
     output$ma_vulcano <- shiny::renderPlot({
-      shiny::req(r_dea$tags)
+      shiny::req(r$top_tags)
+      shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       plotDEGs(
         tags = r_dea$tags,
         fdr = input$dea_fdr,

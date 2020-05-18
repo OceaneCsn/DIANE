@@ -132,7 +132,8 @@ mod_clustering_server <- function(input, output, session, r){
 
   
   output$input_conditions_choice <- shiny::renderUI({
-    shiny::req(r$DEGs)
+    shiny::req(r$DEGs, r$conditions)
+    
     shinyWidgets::checkboxGroupButtons(
       inputId = ns('input_conditions'),
       label = "Conditions to perform clustering on :", 
@@ -153,6 +154,7 @@ mod_clustering_server <- function(input, output, session, r){
   
   
   output$profiles_clusters_choice <- shiny::renderUI({
+    shiny::req(r$clusterings, input$input_deg_genes)
     shiny::req(r$clusterings[[input$input_deg_genes]]$membership)
     tagList(
       
@@ -175,6 +177,7 @@ mod_clustering_server <- function(input, output, session, r){
   
   
   output$coseq_summary <- shiny::renderUI({
+    shiny::req(r$clusterings, input$input_deg_genes)
     if (is.null(r$clusterings[[input$input_deg_genes]]$model)) {
       number_color = "orange"
       number = "Needed"
@@ -225,24 +228,28 @@ mod_clustering_server <- function(input, output, session, r){
   #   results                                                                 ####
   output$coseq_run_summary <- shiny::renderPrint({
     shiny::req(r$DEGs)
-    shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
+    shiny::req(r$clusterings, input$input_deg_genes)
+    shiny::req(r$clusterings[[input$input_deg_genes]]$model)
     print(r$clusterings[[input$input_deg_genes]]$model)
   })
   
   output$plot_coseq_icl <- shiny::renderPlot({
     shiny::req(r$DEGs)
+    shiny::req(r$clusterings, input$input_deg_genes)
     shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
     draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "ICL")
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
     shiny::req(r$DEGs)
-    shiny::req(r$clusterings[[input$input_deg_genes]]$model, r$DEGs)
+    shiny::req(r$clusterings, input$input_deg_genes)
+    shiny::req(r$clusterings[[input$input_deg_genes]]$model)
     draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "barplots")
   })
   
   output$clusters_profiles <- shiny::renderPlot({
     shiny::req(r$DEGs)
+    shiny::req(r$clusterings, input$input_deg_genes)
     shiny::req(r$clusterings[[input$input_deg_genes]]$membership, r$DEGs)
     draw_profiles(data = r$normalized_counts, conds = r$clusterings[[input$input_deg_genes]]$conditions, 
                   membership = r$clusterings[[input$input_deg_genes]]$membership,

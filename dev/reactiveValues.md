@@ -15,6 +15,7 @@ r
 |   | ref trt (vector of genes)
 | top_tags
 |   | ref trt (dataframe : (genes * (logFC, logCPM, FDR))
+| fit (dispersion and glmFit for dea)
 | clusterings
 |   | ref trt 
 |   |    | model (coseqResult)

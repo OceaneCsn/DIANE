@@ -1,6 +1,3 @@
-library(stringr)
-library(shinyWidgets)
-source("R/fct_heatmap.R")
 
 #' import_data UI Function
 #'
@@ -16,6 +13,7 @@ mod_import_data_ui <- function(id) {
   ns <- NS(id)
   tagList(
     shinyalert::useShinyalert(),
+    
     ######################### Title and text
     
     shiny::h1("Upload expression data and experimental design"),
@@ -156,26 +154,35 @@ mod_import_data_ui <- function(id) {
 mod_import_data_server <- function(input, output, session, r) {
   ns <- session$ns
   
+  # resets the global reactive variables that were maybe already created
+  # when demo usage is toggled :
+  shiny::observeEvent(input$use_demo,{
+    r$raw_counts = NULL
+    r$normalized_counts = NULL
+    r$normalized_counts_pre_filter = NULL
+    r$conditions = NULL
+    r$design = NULL
+    r$DEGs = list()
+    r$tcc = NULL
+    r$clusterings = list()
+    r$current_comparison = NULL
+    r$top_tags = list()
+    r$fit = NULL
+  })
   
   #   ____________________________________________________________________________
   #   expression file                                                         ####
+
   
   raw_data <- shiny::reactive({
+    
     if (input$use_demo) {
       data("demo_data_At", package = "DIANE")
       d <- demo_data_At$raw_counts
     }
     else{
-      # reset the global reactive variables that were maybe already created :
       
-      r$raw_counts = NULL
-      r$normalized_counts = NULL
-      r$normalized_counts_pre_filter = NULL
-      r$conditions = NULL
-      r$design = NULL
-      r$DEGs = list()
-      r$tcc = NULL
-      
+     
       
       req(input$raw_data)
       path = input$raw_data$datapath
@@ -185,7 +192,8 @@ mod_import_data_server <- function(input, output, session, r) {
           path,
           sep = input$sep,
           header = TRUE,
-          stringsAsFactors = FALSE
+          stringsAsFactors = FALSE,
+          check.names = FALSE
         )
       print(d)
       if ("Gene" %in% colnames(d)) {
@@ -195,7 +203,8 @@ mod_import_data_server <- function(input, output, session, r) {
             sep = input$sep,
             header = TRUE,
             stringsAsFactors = FALSE,
-            row.names = "Gene"
+            row.names = "Gene",
+            check.names = FALSE
           )
       }
       else{
@@ -215,6 +224,7 @@ mod_import_data_server <- function(input, output, session, r) {
     d
   })
   
+  # TODO problem window id wrong design
   
   
   #   ____________________________________________________________________________
@@ -266,7 +276,7 @@ mod_import_data_server <- function(input, output, session, r) {
     )
   })
   output$conditions <- renderValueBox({
-    
+    shiny::req(r$conditions)
     valueBox(value = length((unique(r$conditions))),
              subtitle = "conditions",
              color = "teal")

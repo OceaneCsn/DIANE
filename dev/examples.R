@@ -54,3 +54,10 @@ DIANE::draw_coseq_run(clustering$model, plot = "ICL")
 # visualize clustering profiles
 DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions)) 
 DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions), k = 3) 
+
+genes_cluster <- DIANE::get_genes_in_cluster(clustering$membership, cluster = 3)
+# clustering
+
+DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
+
+

@@ -37,6 +37,7 @@ usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "coseq" )
 usethis::use_package( "utils" )
+usethis::use_package( "shinyjs" )
 
 #usethis::use_package( "MASS" )
 
@@ -56,6 +57,7 @@ golem::add_fct( "heatmap" )
 golem::add_fct( "normalisation")
 golem::add_fct( "dea")
 golem::add_fct( "coseq")
+golem::add_fct( "glm")
 
 #golem::add_utils( "helpers" )
 
