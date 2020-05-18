@@ -162,8 +162,8 @@ mod_import_data_server <- function(input, output, session, r) {
   
   raw_data <- shiny::reactive({
     if (input$use_demo) {
-      load(system.file("extdata", "raw_counts_At.RData", package = "DIANE"))
-      d <- raw_data_At
+      data("demo_data_At", package = "DIANE")
+      d <- demo_data_At$raw_counts
     }
     else{
       # reset the global reactive variables that were maybe already created :
@@ -209,6 +209,8 @@ mod_import_data_server <- function(input, output, session, r) {
         stop()
       }
     }
+    r$conditions <-
+      stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$raw_counts <- d
     d
   })
@@ -220,8 +222,8 @@ mod_import_data_server <- function(input, output, session, r) {
   
   design <- shiny::reactive({
     if (input$use_demo) {
-      load(system.file("extdata", "design_At.RData", package = "DIANE"))
-      d <- design_At
+      data("demo_data_At", package = "DIANE")
+      d <- demo_data_At$design
     }
     else{
       req(input$design)
@@ -264,8 +266,7 @@ mod_import_data_server <- function(input, output, session, r) {
     )
   })
   output$conditions <- renderValueBox({
-    r$conditions <-
-      stringr::str_split_fixed(colnames(raw_data()), "_", 2)[, 1]
+    
     valueBox(value = length((unique(r$conditions))),
              subtitle = "conditions",
              color = "teal")

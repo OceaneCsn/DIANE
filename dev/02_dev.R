@@ -80,6 +80,7 @@ golem::browser_button()
 
 ## Vignette ----
 usethis::use_vignette("DIANE_Programming_Interface")
+usethis::use_vignette("DIANE")
 
 devtools::build_vignettes()
 

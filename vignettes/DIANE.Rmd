@@ -1,0 +1,32 @@
+---
+title: "DIANE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DIANE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# User Interface
+
+DIANE can launched with the following R code lines :
+
+```{r setup, eval=FALSE}
+library(DIANE)
+DIANE::run_app()
+```
+
+Details to come...
+
+<img src="import.PNG" align="center" alt="" width="800"/>
+<img src="norm.PNG" align="center" alt="" width="800"/>
+<img src="dea.PNG" align="center" alt="" width="800"/>
+<img src="coseq.PNG" align="center" alt="" width="800"/>
+<img src="clust.PNG" align="center" alt="" width="800"/>
