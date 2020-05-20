@@ -72,11 +72,17 @@ app_ui <- function(request) {
           ),
           
           shinydashboard::menuItem(
-            "Network inference",
-            tabName = "network_tab",
-            icon = shiny::icon("circle-notch")
+            "Gene Regulatory Network",
+            startExpanded = TRUE,
+            icon = shiny::icon("project-diagram"),
+            shinydashboard::menuSubItem(tabName = "network_inference_tab",
+                                        text = "Network inference"),
+            shinydashboard::menuSubItem(tabName = "network_analysis_tab",
+                                        text = "Network analysis"),
+            shinydashboard::menuSubItem(tabName = "module_analysis_tab",
+                                        text = "Explore communities")
+            )
           )
-        )
       ),
       
       shinydashboard::dashboardBody(

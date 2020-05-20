@@ -104,8 +104,8 @@ topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.v
 head(topTags$table)
 
 tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
-DIANE::plotDEGs(tags)
-DIANE::plotDEGs(tags, MA = FALSE)
+DIANE::draw_DEGs(tags)
+DIANE::draw_DEGs(tags, MA = FALSE)
 ```
 
 # Expression based clustering
