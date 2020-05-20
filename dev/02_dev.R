@@ -50,6 +50,9 @@ golem::add_module( name = "context" )
 golem::add_module( name = "normalisation" )
 golem::add_module( name = "clustering" )
 golem::add_module( name = "cluster_exploration" )
+golem::add_module( name = "network_inference" )
+golem::add_module( name = "network_analysis" )
+golem::add_module( name = "module_analysis" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
