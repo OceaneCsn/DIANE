@@ -41,5 +41,3 @@ Condition,treatment
 contr,0
 trt,1
 ```
-
-Please, for now, only comma seperated files are accepted.

@@ -189,7 +189,8 @@ themselves.</p>
 <span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
+<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>),
+<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
 #&gt; coseq analysis: Poisson approach &amp; none transformation
 #&gt; K = 6 to 9 
 #&gt; Use set.seed() prior to running coseq for reproducible results.
@@ -202,23 +203,23 @@ themselves.</p>
 #&gt; [1] "Log-like diff: 13.992219216283"
 #&gt; [1] "Log-like diff: 17.1009464677972"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 642.489088683807"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 73.6556548560898"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 36.9400212284619"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 86.2699015610276"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 47.3096994450798"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.278067337668776"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0469732341073055"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0160307238038966"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00449461122679562"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00135304200780872"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 157.229844735799"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 444.25478246178"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 109.846081027161"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 6.18835455160118"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 45.3760373939516"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 146.370285499767"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1.19442753947416"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.581354155369221"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.358276221962332"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.233443789817207"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 187.508275240089"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 278.457512046144"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 121.525492708007"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 184.259286907845"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 5.94173633496066"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+#&gt; <span class='message'>[1] "Log-like diff: 3.28789536868446"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.930758150992422"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1.07079815105465"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.922957424227423"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.579147871833758"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
 <span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -226,22 +227,22 @@ themselves.</p>
 #&gt; 
 #&gt; Deviance Residuals: 
 #&gt;    Min      1Q  Median      3Q     Max  
-#&gt; -68.76  -39.65  -27.40   -7.55  504.90  
+#&gt; -68.58  -39.14  -27.35   -7.64  505.47  
 #&gt; 
 #&gt; Coefficients:
 #&gt;                Estimate Std. Error z value Pr(&gt;|z|)    
-#&gt; (Intercept)   7.7974443  0.0008358 9329.01   &lt;2e-16 ***
-#&gt; Nitrate      -0.5480407  0.0013810 -396.85   &lt;2e-16 ***
-#&gt; Iron         -1.3511415  0.0018429 -733.16   &lt;2e-16 ***
-#&gt; Nitrate:Iron  0.1199545  0.0029569   40.57   &lt;2e-16 ***
+#&gt; (Intercept)   7.7921932  0.0008338 9345.60   &lt;2e-16 ***
+#&gt; Nitrate      -0.5478611  0.0013775 -397.72   &lt;2e-16 ***
+#&gt; Iron         -1.3496343  0.0018373 -734.58   &lt;2e-16 ***
+#&gt; Nitrate:Iron  0.1225181  0.0029460   41.59   &lt;2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 
 #&gt; (Dispersion parameter for poisson family taken to be 1)
 #&gt; 
-#&gt;     Null deviance: 8239249  on 2351  degrees of freedom
-#&gt; Residual deviance: 7043884  on 2348  degrees of freedom
-#&gt; AIC: 7060286
+#&gt;     Null deviance: 8251186  on 2375  degrees of freedom
+#&gt; Residual deviance: 7052896  on 2372  degrees of freedom
+#&gt; AIC: 7069494
 #&gt; 
 #&gt; Number of Fisher Scoring iterations: 6
 #&gt; </div></pre>

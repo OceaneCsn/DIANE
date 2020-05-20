@@ -26,9 +26,6 @@ draw_profiles(
 
 \item{nrow}{on how many rows display the cluster profiles if k is NULL}
 }
-\value{
-
-}
 \description{
 Draw profiles of a clustering
 }
@@ -41,7 +38,10 @@ normalized_counts <- TCC::getNormalizedData(tcc_object)
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 genes <- topTags$table$genes
-clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
-DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions)) 
-DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(demo_data_At$conditions), k = 3) 
+clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+data = normalized_counts, genes = genes, K = 6:9)
+DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
+conds = unique(demo_data_At$conditions)) 
+DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
+conds = unique(demo_data_At$conditions), k = 3) 
 }

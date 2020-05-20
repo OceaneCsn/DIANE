@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • DIANE</title>
+<title>MA or volcano plot for Differential expression — draw_DEGs • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="MA or volcano plot for Differential expression — draw_DEGs" />
+<meta property="og:description" content="MA or volcano plot for Differential expression" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,178 +121,47 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>MA or volcano plot for Differential expression</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_dea.R'><code>R/fct_dea.R</code></a></small>
+    <div class="hidden name"><code>draw_DEGs.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>MA or volcano plot for Differential expression</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>draw_DEGs</span>(<span class='no'>tags</span>, <span class='kw'>fdr</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>lfc</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>MA</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-diane-user-interface" class="hasAnchor"><a href="#section-diane-user-interface" class="anchor"></a>DIANE User Interface</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="run_app.html">run_app()</a></code> </p>
-        </td>
-        <td><p>Run the Shiny Application</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-pre-processing" class="hasAnchor"><a href="#section-pre-processing" class="anchor"></a>Pre-processing</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="normalize.html">normalize()</a></code> </p>
-        </td>
-        <td><p>Normalize raw count data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="filter_low_counts.html">filter_low_counts()</a></code> </p>
-        </td>
-        <td><p>Remove low count genes</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-differential-expression-analysis" class="hasAnchor"><a href="#section-differential-expression-analysis" class="anchor"></a>Differential expression analysis</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="estimateDEGs.html">estimateDEGs()</a></code> </p>
-        </td>
-        <td><p>estimateDEGs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="estimateDispersion.html">estimateDispersion()</a></code> </p>
-        </td>
-        <td><p>estimateDispersion</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-expression-based-clustering" class="hasAnchor"><a href="#section-expression-based-clustering" class="anchor"></a>Expression based clustering</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="run_coseq.html">run_coseq()</a></code> </p>
-        </td>
-        <td><p>run_coseq</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_genes_in_cluster.html">get_genes_in_cluster()</a></code> </p>
-        </td>
-        <td><p>get_genes_in_cluster</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_glm.html">fit_glm()</a></code> </p>
-        </td>
-        <td><p>Fits a Poisson generalized linear model to a set of genes</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-visualization-functions" class="hasAnchor"><a href="#section-visualization-functions" class="anchor"></a>Visualization functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="draw_coseq_run.html">draw_coseq_run()</a></code> </p>
-        </td>
-        <td><p>draw_coseq_run : displays the indications of clustering</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_DEGs.html">draw_DEGs()</a></code> </p>
-        </td>
-        <td><p>MA or volcano plot for Differential expression</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_distributions.html">draw_distributions()</a></code> </p>
-        </td>
-        <td><p>draw_distributions of count data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_glm.html">draw_glm()</a></code> </p>
-        </td>
-        <td><p>Plots the value of a Poisson generalized linear model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_heatmap.html">draw_heatmap()</a></code> </p>
-        </td>
-        <td><p>Draw heatmap</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_MDS.html">draw_MDS()</a></code> </p>
-        </td>
-        <td><p>draw_MDS</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_profiles.html">draw_profiles()</a></code> </p>
-        </td>
-        <td><p>Draw profiles of a clustering</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>tags</th>
+      <td><p>tags returned bu estimateDEGs, function, that is to say topTags from edgeR</p></td>
+    </tr>
+    <tr>
+      <th>fdr</th>
+      <td><p>pvalue for DEGs</p></td>
+    </tr>
+    <tr>
+      <th>lfc</th>
+      <td><p>absolute log fold change threshold for differentially expressed genes, default is 0.</p></td>
+    </tr>
+    <tr>
+      <th>MA</th>
+      <td><p>TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)
+<span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>raw_counts</span>, <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span>(<span class='no'>tcc_object</span>, <span class='fl'>10</span>*<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>))
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>tags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>plotDEGs</span>(<span class='no'>tags</span>, <span class='kw'>fdr</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>lfc</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='img'><img src='draw_DEGs-1.png' alt='' width='700' height='433' /></div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

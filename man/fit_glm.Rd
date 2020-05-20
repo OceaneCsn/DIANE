@@ -46,7 +46,8 @@ normalized_counts <- TCC::getNormalizedData(tcc_object)
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 genes <- topTags$table$genes
-clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+data = normalized_counts, genes = genes, K = 6:9)
 genes_cluster <- DIANE::get_genes_in_cluster(clustering$membership, cluster = 3)
 glm <- DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 summary(glm)

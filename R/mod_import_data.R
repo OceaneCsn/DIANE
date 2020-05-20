@@ -79,13 +79,14 @@ mod_import_data_ui <- function(id) {
         )
       ),
       
-      #   ____________________________________________________________________________
-      #   design upload                                                           ####
       
+      
+      #   ____________________________________________________________________________
+      #   gene infos upload                                                           ####
       
       shinyWidgets::dropdownButton(
         size = 'xs',
-        label = "Design file requirements",
+        label = "Gene information file requirements",
         shiny::includeMarkdown(system.file("extdata", "designFile.md", 
                                            package = "DIANE")),
         circle = TRUE,
@@ -95,8 +96,8 @@ mod_import_data_ui <- function(id) {
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
       shiny::fileInput(
-        ns('design'),
-        'Choose CSV/TXT design file',
+        ns('gene_info_input'),
+        'Choose CSV/TXT gene information file',
         accept = c(
           'text/csv',
           'text/comma-separated-values,text/plain',
@@ -104,6 +105,7 @@ mod_import_data_ui <- function(id) {
           '.txt'
         )
       ),
+      
       
       valueBoxOutput(ns("data_dim")),
       valueBoxOutput(ns("conditions")),
@@ -128,17 +130,48 @@ mod_import_data_ui <- function(id) {
     ),
     
     boxPlus(
-      title = "Preview of the design",
+      title = "Design file",
       width = 3,
       solidHeader = FALSE,
       status = "success",
       collapsible = TRUE,
       closable = FALSE,
-      DT::dataTableOutput(ns("design_preview"), height = 550),
+      shiny::radioButtons(
+        ns('sep_design'),
+        
+        'Separator : ',
+        c(
+          Comma = ',',
+          Semicolon = ';',
+          Tab = '\t'
+        ),
+        inline = TRUE
+      ),
+      shinyWidgets::dropdownButton(
+        size = 'xs',
+        label = "Design file requirements",
+        shiny::includeMarkdown(system.file("extdata", "designFile.md", 
+                                           package = "DIANE")),
+        circle = TRUE,
+        status = "primary",
+        icon = shiny::icon("question"),
+        width = "600px",
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
+      ),
+      shiny::fileInput(
+        ns('design'),
+        'Choose CSV/TXT design file',
+        accept = c(
+          'text/csv',
+          'text/comma-separated-values,text/plain',
+          '.csv',
+          '.txt'
+        )
+      ),
+      DT::dataTableOutput(ns("design_preview")),
       footer = "Describe the levels of each factors for your conditions"
     ),
-    
-    
+
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
   )
@@ -195,7 +228,6 @@ mod_import_data_server <- function(input, output, session, r) {
           stringsAsFactors = FALSE,
           check.names = FALSE
         )
-      print(d)
       if ("Gene" %in% colnames(d)) {
         d <-
           read.csv(
@@ -241,13 +273,13 @@ mod_import_data_server <- function(input, output, session, r) {
       req(input$design)
       path = input$design$datapath
       d <- read.csv(
-        sep = input$sep,
+        sep = input$sep_design,
         path,
         header = TRUE,
         stringsAsFactors = FALSE,
         row.names = "Condition"
       )
-      if (sum(rownames(design) %in% r$conditions) < dim(design)[1]) {
+      if (sum(rownames(d) %in% r$conditions) < dim(d)[1]) {
         shinyalert::shinyalert(
           "Invalid design rownames...",
           "The conditions in your design file are not all present

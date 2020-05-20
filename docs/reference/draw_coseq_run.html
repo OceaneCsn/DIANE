@@ -159,7 +159,8 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
 <span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
+<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>),
+<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
 #&gt; coseq analysis: Poisson approach &amp; none transformation
 #&gt; K = 6 to 9 
 #&gt; Use set.seed() prior to running coseq for reproducible results.
@@ -172,23 +173,23 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
 #&gt; [1] "Log-like diff: 10.336858994218"
 #&gt; [1] "Log-like diff: 14.052428610394"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.55798076482212"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.271014255360255"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.141228408659365"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00952711293725717"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00142720399345464"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 4.31980671625493"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.744151240183358"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.133200338110998"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.033433630003147"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00852953589036876"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1013.62037627174"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 17.2400978834859"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 159.933289240641"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 462.949231484247"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 398.580649572561"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 28.3454906899404"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 73.9417137017983"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 6.67260424584025"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1.17683393516703"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.363292537659814"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.222401235922986"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.123109727627337"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.064905184204064"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0338163233786934"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0178979873905476"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"barplots"</span>)</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
+#&gt; <span class='message'>[1] "Log-like diff: 18.2074514918356"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1.220045210811"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0469025734720505"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0110836805421002"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00608733833267827"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"barplots"</span>)</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

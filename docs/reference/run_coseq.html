@@ -157,7 +157,8 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>named list containing the coseq run result as "model", and the cluster membership for each gene as "membership"</p>
+    <p>named list containing the coseq run result as "model", and the cluster membership 
+for each gene as "membership"</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)
@@ -166,7 +167,8 @@
 <span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>run_coseq</span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>), <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
+<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>run_coseq</span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>),
+<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
 #&gt; coseq analysis: Poisson approach &amp; none transformation
 #&gt; K = 6 to 9 
 #&gt; Use set.seed() prior to running coseq for reproducible results.
@@ -179,23 +181,23 @@
 #&gt; [1] "Log-like diff: 10.336858994218"
 #&gt; [1] "Log-like diff: 14.052428610394"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.278067337668776"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0469732341073055"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0160307238038966"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00449461122679562"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00135304200780872"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 144.636208534122"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 84.1884845728268"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 183.80722199113"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 106.821522550999"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 56.1969685492668"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 157.229426555937"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 444.249107843339"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 109.845494583069"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 6.18845005826043"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 45.3761049437304"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 16.2420432975132"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 8.54152519123873"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 4.23446140731638"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1.87643946402148"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.637900202910378"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 87.6209356214437"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 19.51846692156"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.43575582084223"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.161920859833653"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0563000817902859"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div></pre>
+#&gt; <span class='message'>[1] "Log-like diff: 0.900924955526349"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.296311784087115"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0397224670583611"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00348793552894833"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00686927938164317"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

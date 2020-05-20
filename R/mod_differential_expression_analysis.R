@@ -411,7 +411,7 @@ mod_differential_expression_analysis_server <-
     output$ma_vulcano <- shiny::renderPlot({
       shiny::req(r$top_tags)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      plotDEGs(
+      draw_DEGs(
         tags = r_dea$tags,
         fdr = input$dea_fdr,
         lfc = input$dea_lfc,

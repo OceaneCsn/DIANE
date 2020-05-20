@@ -92,7 +92,7 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
 }
 
 
-#' plotDEGs : MA or volcano plot for DEGs
+#' MA or volcano plot for Differential expression
 #'
 #' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR
 #' @param fdr pvalue for DEGs
@@ -107,7 +107,7 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
 #' tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
 #' DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
 
-plotDEGs <- function(tags,
+draw_DEGs <- function(tags,
                      fdr = 0.01,
                      lfc = 0,
                      MA = TRUE) {

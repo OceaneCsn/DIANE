@@ -16,7 +16,8 @@ run_coseq(conds, genes, data, K = 6:12)
 \item{K}{number of clusters range}
 }
 \value{
-named list containing the coseq run result as "model", and the cluster membership for each gene as "membership"
+named list containing the coseq run result as "model", and the cluster membership 
+for each gene as "membership"
 }
 \description{
 run_coseq
@@ -30,5 +31,6 @@ normalized_counts <- TCC::getNormalizedData(tcc_object)
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 genes <- topTags$table$genes
-clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), data = normalized_counts, genes = genes, K = 6:9)
+clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
+data = normalized_counts, genes = genes, K = 6:9)
 }
