@@ -123,11 +123,7 @@ app_ui <- function(request) {
             mod_cluster_exploration_ui("cluster_exploration_ui_1")
           ),
           
-          
-          shinydashboard::tabItem(
-            tabName = "dea_tab",
-            mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")
-          ),
+         
           
 #   ____________________________________________________________________________
 #   network                                                                 ####
