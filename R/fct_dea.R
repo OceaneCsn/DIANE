@@ -105,7 +105,7 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(demo_data_At$conditions))
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
-#' DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
+#' DIANE::draw_DEGs(tags, fdr = 0.01, lfc = 1)
 
 draw_DEGs <- function(tags,
                      fdr = 0.01,
