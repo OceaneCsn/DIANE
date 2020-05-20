@@ -231,11 +231,13 @@ mod_import_data_server <- function(input, output, session, r) {
   #   design loading                                                          ####
   
   design <- shiny::reactive({
+    
     if (input$use_demo) {
       data("demo_data_At", package = "DIANE")
       d <- demo_data_At$design
     }
     else{
+      req(r$conditions)
       req(input$design)
       path = input$design$datapath
       d <- read.csv(
@@ -245,7 +247,17 @@ mod_import_data_server <- function(input, output, session, r) {
         stringsAsFactors = FALSE,
         row.names = "Condition"
       )
+      if (sum(rownames(design) %in% r$conditions) < dim(design)[1]) {
+        shinyalert::shinyalert(
+          "Invalid design rownames...",
+          "The conditions in your design file are not all present
+          in the conditions of your expression matrix.",
+          type = "error"
+        )
+        stop()
+      }
     }
+    
     r$design <- d
   })
   

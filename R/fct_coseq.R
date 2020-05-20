@@ -73,7 +73,7 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 draw_coseq_run <- function(run_pois, plot = "ICL") {
   if (plot == "ICL")
     p <- coseq::plot(run_pois, graphs = c("ICL"))
-  if (plot == "barplots"){
+  if (plot == "barplots") {
     p <- coseq::plot(run_pois, graphs = c("probapost_barplots"))
   }
   p

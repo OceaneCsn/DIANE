@@ -165,24 +165,25 @@
 #&gt; [1] "Log-like diff: 10.336858994218"
 #&gt; [1] "Log-like diff: 14.052428610394"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 156.966428185276"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 315.139151013672"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 332.308245200538"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 643.679130634591"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 74.201176577514"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 7.32461640654309"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 2.11611912042962"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.471904405907782"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.162978535369647"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0142180230640143"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 16.6710459501749"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.03055476279199"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.27940595318735"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.113789691482135"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0361975054451475"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 14.1140322912977"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 6.30451807428509"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 2.26838200978368"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.71221885194424"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.230721064733943"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 294.12616011887"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 485.484568101865"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1456.14304004731"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 122.312962225643"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 208.86605855043"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)</div><div class='output co'>#&gt; <span class='error'>Error: 'fit_glm' is not an exported object from 'namespace:DIANE'</span></div><div class='input'><span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; <span class='error'>Error in draw_glm(glm): could not find function "draw_glm"</span></div></pre>
+#&gt; <span class='message'>[1] "Log-like diff: 51.2936416981579"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 19.7143892223334"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 7.50663151820278"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 10.5033033175708"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.0135503125413372"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
+<span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</div><div class='img'><img src='draw_glm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

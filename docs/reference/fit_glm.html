@@ -45,7 +45,9 @@ To do so, the expression of each gene is modelled as a Poisson distribution.
 The log of its parameter (the expected value) is approximated by a linear
 combination of the factors in the experiment. The coefficients associated to 
 each factors are estimated to fit gene expression, and can be insightful to
-characterize genes behavior in a particular cluster." />
+characterize genes behavior in a particular cluster.
+The model with interactions is considered. It your design in not a
+complete corssed design, the interaction term will be null." />
 
 
 
@@ -139,7 +141,9 @@ To do so, the expression of each gene is modelled as a Poisson distribution.
 The log of its parameter (the expected value) is approximated by a linear
 combination of the factors in the experiment. The coefficients associated to 
 each factors are estimated to fit gene expression, and can be insightful to
-characterize genes behavior in a particular cluster.</p>
+characterize genes behavior in a particular cluster.
+The model with interactions is considered. It your design in not a
+complete corssed design, the interaction term will be null.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes</span>, <span class='no'>design</span>, <span class='kw'>factors</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>design</span>))</pre>
@@ -198,24 +202,49 @@ themselves.</p>
 #&gt; [1] "Log-like diff: 13.992219216283"
 #&gt; [1] "Log-like diff: 17.1009464677972"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 505.929624895485"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 149.783086465461"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 50.4058228070301"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 22.1498397539006"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 47.9035934588669"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 642.489088683807"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 73.6556548560898"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 36.9400212284619"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 86.2699015610276"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 47.3096994450798"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.1844380167095"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 4.25450174782539"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 2.96645539606086"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.15974648443843"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.613581456717938"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 157.229844735799"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 444.25478246178"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 109.846081027161"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 6.18835455160118"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 45.3760373939516"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 104.2363646605"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 123.750434887916"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 162.527978911273"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 14.3995074392426"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.307534291058297"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)</div><div class='output co'>#&gt; <span class='error'>Error: 'fit_glm' is not an exported object from 'namespace:DIANE'</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; <span class='error'>Error in object[[i]]: object of type 'closure' is not subsettable</span></div></pre>
+#&gt; <span class='message'>[1] "Log-like diff: 187.508275240089"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 278.457512046144"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 121.525492708007"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 184.259286907845"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 5.94173633496066"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; 
+#&gt; Call:
+#&gt; glm(formula = formula, family = poisson(link = "log"), data = glmData)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;    Min      1Q  Median      3Q     Max  
+#&gt; -68.76  -39.65  -27.40   -7.55  504.90  
+#&gt; 
+#&gt; Coefficients:
+#&gt;                Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)   7.7974443  0.0008358 9329.01   &lt;2e-16 ***
+#&gt; Nitrate      -0.5480407  0.0013810 -396.85   &lt;2e-16 ***
+#&gt; Iron         -1.3511415  0.0018429 -733.16   &lt;2e-16 ***
+#&gt; Nitrate:Iron  0.1199545  0.0029569   40.57   &lt;2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; (Dispersion parameter for poisson family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 8239249  on 2351  degrees of freedom
+#&gt; Residual deviance: 7043884  on 2348  degrees of freedom
+#&gt; AIC: 7060286
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 6
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

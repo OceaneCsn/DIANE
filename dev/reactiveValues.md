@@ -21,6 +21,11 @@ r
 |   |    | model (coseqResult)
 |   |    | membership (named vector)
 |   |    | conditions (vector)
+| networks
+|   | ref trt conds 
+|   |    | nodes
+|   |    | edges
+|   |    | membership clustering louvain(named vector)
 ``` 
 
 Juste pour savoir ce qui est accessible à tout moment dans l'appli.
