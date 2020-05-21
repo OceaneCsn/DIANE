@@ -24,5 +24,5 @@ tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions,
 tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(demo_data_At$conditions))
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
-DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
+DIANE::draw_DEGs(tags, fdr = 0.01, lfc = 1)
 }
