@@ -38,7 +38,7 @@ usethis::use_package( "RColorBrewer" )
 usethis::use_package( "coseq" )
 usethis::use_package( "utils" )
 usethis::use_package( "shinyjs" )
-
+usethis::use_package( "parallel" )
 #usethis::use_package( "MASS" )
 
 

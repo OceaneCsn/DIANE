@@ -88,21 +88,19 @@ mod_network_inference_ui <- function(id){
           ))),
         
         
-        shiny::uiOutput(ns("regulators_summary")),
-        
+        shiny::fluidRow(col_4(shiny::uiOutput(ns("input_summary"))),
+        col_8(shiny::uiOutput(ns("regulators_intersect_summary")))),
+
         shiny::hr(),
         
 #   ____________________________________________________________________________
 #   genie3 launch                                                           ####
-
-        shiny::numericInput(ns("n_cores"), 
-                            label = "Number of cores available for 
-                            multithreaded inference :", 
-                            min = 1, value = 1),
+        shiny::uiOutput(ns("n_cores_choice")),
+       
         shiny::numericInput(ns("n_trees"), 
                             label = "Number of trees for 
                             GENIE3 Random Forests :", 
-                            min = 1, value = 1),
+                            min = 500, value = 1000),
         
         shiny::fluidRow(
           col_12(shinyWidgets::actionBttn(
@@ -117,7 +115,8 @@ mod_network_inference_ui <- function(id){
         #shiny::uiOutput(ns("GENIE3_summary"))
         
       )
-    )
+    ),
+shiny::actionButton(ns("browser"), "backdoor"),
  
   )
 }
@@ -217,32 +216,75 @@ mod_network_inference_server <- function(input, output, session, r){
     }
     
   })
+  
   #   ____________________________________________________________________________
   #   summaries                                                               ####
   
   
-  
-  output$regulators_summary <- shiny::renderUI({
-    
-    if (is.null(r$regulators)) {
+  output$input_summary <- shiny::renderUI({
+    shiny::req(input$input_deg_genes_net, r$DEGs)
+    if (is.null(input$input_deg_genes_net)) {
       number_color = "orange"
-      number = "Please provide regulators"
+      number = "Please input genes"
       header = ""
       number_icon = "fa fa-times"
     }
     else{
       number_color = "olive"
-      number = length(unique(r$regulators))
+      number = length(r$DEGs[[input$input_deg_genes_net]])
       number_icon = "fa fa-check"
-      header = "regulators"
+      header = "input genes"
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
       number_color = number_color,
-      number_icon = number_icon,
-      header = header,
+      text = header,
+      right_border = TRUE
+    )
+  })
+  
+  output$regulators_intersect_summary <- shiny::renderUI({
+    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
+    
+    tfs <- intersect(r$DEGs[[input$input_deg_genes_net]], r$regulators)
+
+    shinydashboardPlus::descriptionBlock(
+      number = length(tfs),
+      number_color = "blue",
+      text = "Regulators among the input genes",
       right_border = FALSE
     )
+  })
+  
+  
+  
+#   ____________________________________________________________________________
+#   cores choice                                                            ####
+
+  output$n_cores_choice <- shiny::renderUI({
+    
+    # assigns either one core if detection fails,
+    # either the total number of cores minus one as max
+    cpus <- parallel::detectCores()
+    if(is.na(cpus)) cpus <- 1
+    else cpus <- max(cpus-1, 1)
+    
+    shinyWidgets::sliderTextInput(
+      inputId = ns("n_cores"),
+      label = "Number of cores available for 
+                            multithreaded inference :",
+      choices = seq(1, cpus),
+      grid = TRUE,
+      selected = cpus)
+    
+  })
+  
+  
+  
+  
+  
+  shiny::observeEvent(input$browser, {
+    browser()
   })
   
   
