@@ -19,14 +19,16 @@ mod_network_inference_ui <- function(id){
     ),
     
     shiny::h1("Network inference"),
-    col_3(
+    shiny::hr(),
+    
+    col_4(
       
       
 #   ____________________________________________________________________________
 #   inference settings                                                      ####
 
       boxPlus(
-        title = "Settings",
+        title = "Inference Settings",
         solidHeader = FALSE,
         status = "success",
         collapsible = TRUE,
@@ -37,7 +39,7 @@ mod_network_inference_ui <- function(id){
         
         col_2(shinyWidgets::dropdownButton(
           size = 'xs',
-          shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+          #shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
           circle = TRUE,
           status = "success",
           icon = shiny::icon("question"),
@@ -123,7 +125,61 @@ mod_network_inference_ui <- function(id){
         
       )
     ),
-shiny::actionButton(ns("browser"), "backdoor"),
+
+
+#   ____________________________________________________________________________
+#   thresholding options                                                    ####
+
+    col_6(boxPlus(
+      title = "Thresholding settings",
+      solidHeader = FALSE,
+      status = "success",
+      collapsible = TRUE,
+      closable = FALSE,
+      width = 12,
+      
+      shiny::fluidRow(col_10(shiny::h4("Matrix thresholding methods")),
+      
+      col_2(shinyWidgets::dropdownButton(
+        size = 'xs',
+        #shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+        circle = TRUE,
+        status = "success",
+        icon = shiny::icon("question"),
+        width = "600px",
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
+      ))),
+      
+      shiny::br(),
+      
+      shiny::uiOutput(ns("inference_summary")),
+      
+      shiny::hr(),
+      
+      
+      shiny::fluidRow(col_8(shiny::uiOutput(ns("n_edges_choice"))),
+      
+      
+        col_4(shinyWidgets::actionBttn(
+          ns("thr_btn"),
+          label = "Threshold",
+          color = "success",
+          style = 'bordered'
+        ))),
+      
+      shiny::hr(),
+      
+      shiny::uiOutput(ns("thr_summary")),
+      
+      visNetwork::visNetworkOutput(ns("net_preview"), height = "650px")
+      
+    ))
+
+
+  
+  ,shiny::actionButton(ns("browser"), "backdoor")
+
+
  
   )
 }
@@ -204,10 +260,7 @@ mod_network_inference_server <- function(input, output, session, r){
         r$regulators <- as.vector(d)
         
       }
-      #print(r$regulators)
-      #print(head(r$raw_counts))
-      #print(row.names(r$raw_counts))
-      print(sum(r$regulators %in% row.names(r$raw_counts)))
+
       if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
        
         shinyalert::shinyalert(
@@ -263,6 +316,55 @@ mod_network_inference_server <- function(input, output, session, r){
     )
   })
   
+  output$inference_summary <- shiny::renderUI({
+    
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
+
+    if (is.null(r$networks[[input$input_deg_genes_net]]$mat)) {
+      number_color = "orange"
+      number = "Inference not performed yet"
+      header = ""
+      number_icon = "fa fa-times"
+    }
+    else{
+      number_color = "olive"
+      number = "Inference successfully completed"
+      number_icon = "fa fa-check"
+      header = "You can nwo proceed to thresholding"
+    }
+    shinydashboardPlus::descriptionBlock(
+      number = number,
+      number_color = number_color,
+      text = header,
+      right_border = TRUE
+    )
+  })
+  
+  output$thr_summary <- shiny::renderUI({
+    
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
+    
+    number_color = "olive"
+    number = "Your network is ready"
+    number_icon = "fa fa-check"
+    header = "You can visualize it in the next tab"
+    
+    shinydashboardPlus::descriptionBlock(
+      number = number,
+      number_color = number_color,
+      text = header,
+      right_border = TRUE
+    )
+  })
+  
   
   
 #   ____________________________________________________________________________
@@ -288,6 +390,22 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   
+#   ____________________________________________________________________________
+#   thresholding settings                                                   ####
+  
+  
+  output$n_edges_choice <- shiny::renderUI({
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    proposition = 1.5*length(r$DEGs[[input$input_deg_genes_net]])
+    shiny::numericInput(ns("n_edges"), 
+                        label = "Number of edges :", 
+                        min = 1, value = proposition)
+  })
+  
+  
+  
+  
   
   
   shiny::observeEvent(input$browser, {
@@ -309,9 +427,42 @@ mod_network_inference_server <- function(input, output, session, r){
                       nCores = input$n_cores)
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
-    print(head(mat))
   })
   
+  
+  shiny::observeEvent((input$thr_btn), {
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
+    
+    r$networks[[input$input_deg_genes_net]]$graph <- network_thresholding(
+      r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
+    
+    data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
+                         r$regulators)
+    
+    r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
+    r$networks[[input$input_deg_genes_net]]$edges <- data$edges
+
+  })
+  
+  
+#   ____________________________________________________________________________
+#   preview                                                                 ####
+
+  
+  output$net_preview <- visNetwork::renderVisNetwork({
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
+    draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+                 edges = r$networks[[input$input_deg_genes_net]]$edges)
+  })
+ 
 }
     
 ## To be copied in the UI

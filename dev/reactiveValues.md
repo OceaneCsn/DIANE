@@ -23,10 +23,12 @@ r
 |   |    | membership (named vector)
 |   |    | conditions (vector)
 | networks
-|   | ref trt conds 
+|   | ref trt 
 |   |    | nodes
 |   |    | edges
 |   |    | membership clustering louvain(named vector)
+|   |    | conditions
+|   |    | graph
 ``` 
 
 Juste pour savoir ce qui est accessible à tout moment dans l'appli.

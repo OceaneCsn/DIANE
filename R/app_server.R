@@ -22,7 +22,8 @@ app_server <- function(input, output, session) {
     clusterings = list(),
     current_comparison = NULL,
     regulators = NULL,
-    use_demo = NULL
+    use_demo = NULL,
+    networks = list()
   )
   
 

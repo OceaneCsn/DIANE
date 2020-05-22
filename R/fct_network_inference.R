@@ -30,3 +30,54 @@ network_thresholding <- function(mat, n_edges){
   g <- igraph::graph_from_data_frame(links, directed = T)
   return(g)
 }
+
+
+#' Get data compatible with visNetwork from igraph object
+#'
+#' @param graph igraph object
+#' @param regulators list of regulators
+#'
+#' @return list of dataframes containing nodes and edges information
+
+network_data <- function(graph, regulators){
+  data <- visNetwork::toVisNetworkData(graph)
+  
+  degree <- igraph::degree(graph)
+  data$nodes$degree <- degree[match(data$nodes$id, names(degree))]
+  data$nodes$group <- ifelse(data$nodes$id %in% regulators, "Regulator", "Target Gene")
+
+  data$edges$value <- data$edges$weight
+  return(data)
+}
+
+
+#' Displays an interavtive network view
+#'
+#' @param nodes dataframe containing nodes
+#' @param edges dataframe containing edges
+#' 
+#' @import visNetwork
+draw_network <- function(nodes, edges){
+  visNetwork(nodes = nodes, edges = edges) %>%
+  visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
+    visPhysics(
+      solver = "forceAtlas2Based",
+      timestep = 0.6,
+      minVelocity = 12,
+      maxVelocity = 10,
+      stabilization = F
+    ) %>%
+    visEvents(click = "function(nodes){
+                  Shiny.onInputChange('click', nodes.nodes);
+                  ;}") %>%
+    visGroups(
+      groupname = "Regulator",
+      size = 28,
+      color = list("background" = "#49A346", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visGroups(groupname = "Target Gene",
+              color = list("background" = "#B6B3B3", hover = "grey",
+                           "border" = "#96E69A")) %>%
+    visNodes(borderWidth = 0.5, font = list("size" = 35))
+}
