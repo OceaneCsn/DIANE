@@ -253,7 +253,6 @@ mod_import_data_server <- function(input, output, session, r) {
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$raw_counts <- d
-    print("coucou2")
     d
   })
   

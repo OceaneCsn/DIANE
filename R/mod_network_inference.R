@@ -10,9 +10,14 @@
 mod_network_inference_ui <- function(id){
   ns <- NS(id)
   tagList(
+    shinyalert::useShinyalert(),
     shiny::h1("Network inference"),
-    
     col_3(
+      
+      
+#   ____________________________________________________________________________
+#   inference settings                                                      ####
+
       boxPlus(
         title = "Settings",
         solidHeader = FALSE,
@@ -42,6 +47,9 @@ mod_network_inference_ui <- function(id){
         
         shiny::hr(),
         
+#   ____________________________________________________________________________
+#   regulators input                                                        ####
+
         shinyWidgets::pickerInput(
           inputId = ns('regulators_picker'),
           label = "Available regulators lists :",
@@ -70,12 +78,31 @@ mod_network_inference_ui <- function(id){
           )
         ),
         
+        
+        shiny::fluidRow(
+          col_12(shinyWidgets::actionBttn(
+            ns("load_regulators_btn"),
+            label = "Load regulators",
+            color = "success",
+            style = 'bordered'
+          ))),
+        
+        
         shiny::uiOutput(ns("regulators_summary")),
         
         shiny::hr(),
         
-        shiny::numericInput(ns("n_cores"), label = "Number of cores available for multithreaded inference :", min = 1, value = 1),
-        shiny::numericInput(ns("n_trees"), label = "Number of trees for GENIE3 Random Forests :", min = 1, value = 1),
+#   ____________________________________________________________________________
+#   genie3 launch                                                           ####
+
+        shiny::numericInput(ns("n_cores"), 
+                            label = "Number of cores available for 
+                            multithreaded inference :", 
+                            min = 1, value = 1),
+        shiny::numericInput(ns("n_trees"), 
+                            label = "Number of trees for 
+                            GENIE3 Random Forests :", 
+                            min = 1, value = 1),
         
         shiny::fluidRow(
           col_12(shinyWidgets::actionBttn(
@@ -139,7 +166,7 @@ mod_network_inference_server <- function(input, output, session, r){
 #   ____________________________________________________________________________
 #   regulators setting                                                      ####
 
-  shiny::observe({
+  shiny::observeEvent(input$load_regulators_btn, {
     shiny::req(r$raw_counts)
     if (r$use_demo) {
       data("demo_data_At", package = "DIANE")
@@ -171,8 +198,11 @@ mod_network_inference_server <- function(input, output, session, r){
         r$regulators <- as.vector(d)
         
       }
-      
-      if (sum(r$regulator %in% length(r$raw_counts)) == 0){
+      #print(r$regulators)
+      #print(head(r$raw_counts))
+      #print(row.names(r$raw_counts))
+      print(sum(r$regulators %in% row.names(r$raw_counts)))
+      if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
        
         shinyalert::shinyalert(
           "Something is wrong with the chosen regulators :",
@@ -180,9 +210,12 @@ mod_network_inference_server <- function(input, output, session, r){
           type = "error"
         )
         r$regulators = NULL
+        print("done")
         stop()
       }
+      
     }
+    
   })
   #   ____________________________________________________________________________
   #   summaries                                                               ####
@@ -217,12 +250,12 @@ mod_network_inference_server <- function(input, output, session, r){
 #   bttn reactive                                                           ####
 
   
-  shiny::observeEvent((input$launch_genie3_btn), {
-    shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators)
-    
-    # sets r$networks$genes-conds$mat, 
-    
-  })
+  # shiny::observeEvent((input$launch_genie3_btn), {
+  #   shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators)
+  #   
+  #   # sets r$networks$genes-conds$mat, 
+  #   
+  # })
   
 }
     
