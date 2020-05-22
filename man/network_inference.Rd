@@ -6,6 +6,7 @@
 \usage{
 network_inference(
   normalized.count,
+  conds,
   regressors,
   targets,
   nTrees = 5000,
@@ -14,6 +15,8 @@ network_inference(
 }
 \arguments{
 \item{normalized.count}{normalized expression matrix containing the regressors and target genes}
+
+\item{conds}{condition names to be used in the inference}
 
 \item{regressors}{genes to be taken as regressors during the inference procedures (regulator genes)}
 

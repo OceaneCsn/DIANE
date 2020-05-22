@@ -2,6 +2,7 @@
 #' Genie3 regulatory importances estimation
 #'
 #' @param normalized.count normalized expression matrix containing the regressors and target genes
+#' @param conds condition names to be used in the inference
 #' @param regressors genes to be taken as regressors during the inference procedures (regulator genes)
 #' @param targets genes to be included in the inferred network. Regressors can also be in the targets
 #' @param nTrees Number of trees by Random Forest
@@ -9,7 +10,13 @@
 #'
 #' @return matrix object
 
-network_inference <- function(normalized.count, regressors, targets, nTrees=5000, nCores=1){
+network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, nCores=1){
+  
+  conditions <- unique(grep(paste(conds, collapse = "|"),
+                            colnames(data), value = TRUE))
+  
+  normalized.count[,conditions]
+  
   regressors <- intersect(rownames(normalized.count), regressors)
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
                 treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = nCores, verbose = T)

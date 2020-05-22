@@ -422,6 +422,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     targets <- r$DEGs[[input$input_deg_genes_net]]
     mat <- network_inference(r$normalized_counts, targets = targets, 
+                             conds = input$input_conditions_net,
                       regressors = intersect(targets, r$regulators),
                       nTrees = input$n_trees,
                       nCores = input$n_cores)
