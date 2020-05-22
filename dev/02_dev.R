@@ -32,13 +32,16 @@ usethis::use_package( "reshape2" )
 usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
 usethis::use_package( "edgeR" )
-usethis::use_package("dashboardthemes")
+usethis::use_package( "dashboardthemes" )
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "coseq" )
 usethis::use_package( "utils" )
 usethis::use_package( "shinyjs" )
 usethis::use_package( "parallel" )
+usethis::use_package( "GENIE3" )
+usethis::use_package( "igraph" )
+usethis::use_package( "visNetwork" )
 #usethis::use_package( "MASS" )
 
 
@@ -61,6 +64,8 @@ golem::add_fct( "normalisation")
 golem::add_fct( "dea")
 golem::add_fct( "coseq")
 golem::add_fct( "glm")
+golem::add_fct( "network_inference")
+
 
 #golem::add_utils( "helpers" )
 

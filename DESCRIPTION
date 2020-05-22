@@ -27,7 +27,10 @@ Imports:
     RColorBrewer,
     coseq,
     utils,
-    parallel
+    parallel,
+    GENIE3,
+    igraph,
+    visNetwork
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

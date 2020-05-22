@@ -11,6 +11,13 @@ mod_network_inference_ui <- function(id){
   ns <- NS(id)
   tagList(
     shinyalert::useShinyalert(),
+    
+    shinybusy::add_busy_spinner(
+      spin = "self-building-square",
+      position = 'top-left',
+      margins = c(70, 1200)
+    ),
+    
     shiny::h1("Network inference"),
     col_3(
       
@@ -292,12 +299,18 @@ mod_network_inference_server <- function(input, output, session, r){
 #   bttn reactive                                                           ####
 
   
-  # shiny::observeEvent((input$launch_genie3_btn), {
-  #   shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators)
-  #   
-  #   # sets r$networks$genes-conds$mat, 
-  #   
-  # })
+  shiny::observeEvent((input$launch_genie_btn), {
+    shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
+    
+    targets <- r$DEGs[[input$input_deg_genes_net]]
+    mat <- network_inference(r$normalized_counts, targets = targets, 
+                      regressors = intersect(targets, r$regulators),
+                      nTrees = input$n_trees,
+                      nCores = input$n_cores)
+    
+    r$networks[[input$input_deg_genes_net]]$mat <- mat
+    print(head(mat))
+  })
   
 }
     
