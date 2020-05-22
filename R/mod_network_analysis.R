@@ -18,7 +18,7 @@ mod_network_analysis_ui <- function(id){
 #' network_analysis Server Function
 #'
 #' @noRd 
-mod_network_analysis_server <- function(input, output, session){
+mod_network_analysis_server <- function(input, output, session, r){
   ns <- session$ns
  
 }

@@ -72,7 +72,10 @@ golem::add_fct( "glm")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data(demo_data_At, version = 3)
+usethis::use_data(demo_data_At, version = 3, overwrite = T)
+
+
+
 usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
 
 ## Tests ----

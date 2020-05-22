@@ -18,7 +18,7 @@ mod_module_analysis_ui <- function(id){
 #' module_analysis Server Function
 #'
 #' @noRd 
-mod_module_analysis_server <- function(input, output, session){
+mod_module_analysis_server <- function(input, output, session, r){
   ns <- session$ns
  
 }

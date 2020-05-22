@@ -11,6 +11,7 @@ r
 | tcc (TCC class object)
 | conditions (vector of the samples condition names)
 | design (dataframe : (conditionNames * factors))
+| regulators
 | DEGs
 |   | ref trt (vector of genes)
 | top_tags

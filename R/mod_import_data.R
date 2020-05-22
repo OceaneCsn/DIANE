@@ -201,6 +201,8 @@ mod_import_data_server <- function(input, output, session, r) {
     r$current_comparison = NULL
     r$top_tags = list()
     r$fit = NULL
+    r$regulators = NULL
+    r$use_demo = input$use_demo
   })
   
   #   ____________________________________________________________________________
@@ -210,13 +212,11 @@ mod_import_data_server <- function(input, output, session, r) {
   raw_data <- shiny::reactive({
     
     if (input$use_demo) {
+      r$use_demo = input$use_demo
       data("demo_data_At", package = "DIANE")
       d <- demo_data_At$raw_counts
     }
     else{
-      
-     
-      
       req(input$raw_data)
       path = input$raw_data$datapath
       
@@ -253,6 +253,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$raw_counts <- d
+    print("coucou2")
     d
   })
   
