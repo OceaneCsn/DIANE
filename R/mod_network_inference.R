@@ -39,7 +39,7 @@ mod_network_inference_ui <- function(id){
         
         col_2(shinyWidgets::dropdownButton(
           size = 'xs',
-          #shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+          shiny::includeMarkdown(system.file("extdata", "genie3.md", package = "DIANE")),
           circle = TRUE,
           status = "success",
           icon = shiny::icon("question"),
@@ -138,11 +138,11 @@ mod_network_inference_ui <- function(id){
       closable = FALSE,
       width = 12,
       
-      shiny::fluidRow(col_10(shiny::h4("Matrix thresholding methods")),
+      shiny::fluidRow(col_6(shiny::h4("Thresholding regulatory links?")),
       
-      col_2(shinyWidgets::dropdownButton(
+      col_6(shinyWidgets::dropdownButton(
         size = 'xs',
-        #shiny::includeMarkdown(system.file("extdata", "normalisation.md", package = "DIANE")),
+        shiny::includeMarkdown(system.file("extdata", "threshold.md", package = "DIANE")),
         circle = TRUE,
         status = "success",
         icon = shiny::icon("question"),
@@ -403,8 +403,11 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   output$n_edges_choice <- shiny::renderUI({
+    shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
     proposition = 1.5*length(r$DEGs[[input$input_deg_genes_net]])
     shiny::numericInput(ns("n_edges"), 
                         label = "Number of edges :", 
