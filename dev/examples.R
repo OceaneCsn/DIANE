@@ -63,8 +63,4 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 #######
-d <- read.csv("D:/These/QuantifFiles/CPK_N03.csv", h = T, check.names = F, sep = '\t', row.names = "Gene")
-genes <- rownames(d)
 
-
-d2 <- aggregate_splice_variants(d)

@@ -36,7 +36,7 @@ mod_clustering_ui <- function(id) {
           shinyWidgets::dropdownButton(
             size = 'xs',
             shiny::includeMarkdown(
-              system.file("extdata", "normalisation.md", package = "DIANE")
+              system.file("extdata", "coseq.md", package = "DIANE")
             ),
             circle = TRUE,
             status = "success",
