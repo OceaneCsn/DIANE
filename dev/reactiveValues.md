@@ -12,6 +12,7 @@ r
 | conditions (vector of the samples condition names)
 | design (dataframe : (conditionNames * factors))
 | regulators
+| splicing_aware (boolean)
 | DEGs
 |   | ref trt (vector of genes)
 | top_tags

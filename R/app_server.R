@@ -23,7 +23,8 @@ app_server <- function(input, output, session) {
     current_comparison = NULL,
     regulators = NULL,
     use_demo = NULL,
-    networks = list()
+    networks = list(),
+    splicing_aware = NULL
   )
   
 
