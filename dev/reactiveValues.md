@@ -11,6 +11,8 @@ r
 | tcc (TCC class object)
 | conditions (vector of the samples condition names)
 | design (dataframe : (conditionNames * factors))
+| regulators
+| splicing_aware (boolean)
 | DEGs
 |   | ref trt (vector of genes)
 | top_tags
@@ -22,10 +24,12 @@ r
 |   |    | membership (named vector)
 |   |    | conditions (vector)
 | networks
-|   | ref trt conds 
+|   | ref trt 
 |   |    | nodes
 |   |    | edges
 |   |    | membership clustering louvain(named vector)
+|   |    | conditions
+|   |    | graph
 ``` 
 
 Juste pour savoir ce qui est accessible à tout moment dans l'appli.

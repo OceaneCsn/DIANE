@@ -109,7 +109,10 @@ mod_import_data_ui <- function(id) {
       
       valueBoxOutput(ns("data_dim")),
       valueBoxOutput(ns("conditions")),
-      valueBoxOutput(ns("samples"))
+      valueBoxOutput(ns("samples")),
+      
+      
+      shiny::uiOutput(ns("variants_summary"))
     ),
     
     
@@ -201,6 +204,9 @@ mod_import_data_server <- function(input, output, session, r) {
     r$current_comparison = NULL
     r$top_tags = list()
     r$fit = NULL
+    r$regulators = NULL
+    r$use_demo = input$use_demo
+    r$splicing_aware = NULL
   })
   
   #   ____________________________________________________________________________
@@ -210,13 +216,11 @@ mod_import_data_server <- function(input, output, session, r) {
   raw_data <- shiny::reactive({
     
     if (input$use_demo) {
+      r$use_demo = input$use_demo
       data("demo_data_At", package = "DIANE")
       d <- demo_data_At$raw_counts
     }
     else{
-      
-     
-      
       req(input$raw_data)
       path = input$raw_data$datapath
       
@@ -252,11 +256,36 @@ mod_import_data_server <- function(input, output, session, r) {
     }
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
+    
+    r$splicing_aware <- are_splice_variants(row.names(d))
     r$raw_counts <- d
     d
   })
   
   # TODO problem window id wrong design
+  
+  
+#   ____________________________________________________________________________
+#   splicing summary                                                        ####
+  output$variants_summary <- shiny::renderUI({
+    shiny::req(!is.null(r$splicing_aware))
+    if (r$splicing_aware) {
+      number_color = "blue"
+      number = "Alternatifve splicing aware"
+      header = "gene identifiers"
+    }
+    else{
+      number_color = "blue"
+      number = "No alternatifve splicing information"
+      header = "in gene identifiers"
+    }
+    shinydashboardPlus::descriptionBlock(
+      number = number,
+      number_color = number_color,
+      text = header,
+      right_border = TRUE,
+    )
+  })
   
   
   #   ____________________________________________________________________________
@@ -312,6 +341,7 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ValueBoxes summaries                                                    ####
   
   output$data_dim <- renderValueBox({
+
     valueBox(
       value = dim(raw_data())[1],
       subtitle = "genes",

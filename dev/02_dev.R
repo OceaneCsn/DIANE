@@ -32,13 +32,16 @@ usethis::use_package( "reshape2" )
 usethis::use_package( "limma" )
 usethis::use_package( "markdown" )
 usethis::use_package( "edgeR" )
-usethis::use_package("dashboardthemes")
+usethis::use_package( "dashboardthemes" )
 usethis::use_package( "shinyalert" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "coseq" )
 usethis::use_package( "utils" )
 usethis::use_package( "shinyjs" )
-
+usethis::use_package( "parallel" )
+usethis::use_package( "GENIE3" )
+usethis::use_package( "igraph" )
+usethis::use_package( "visNetwork" )
 #usethis::use_package( "MASS" )
 
 
@@ -50,6 +53,9 @@ golem::add_module( name = "context" )
 golem::add_module( name = "normalisation" )
 golem::add_module( name = "clustering" )
 golem::add_module( name = "cluster_exploration" )
+golem::add_module( name = "network_inference" )
+golem::add_module( name = "network_analysis" )
+golem::add_module( name = "module_analysis" )
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
@@ -58,6 +64,8 @@ golem::add_fct( "normalisation")
 golem::add_fct( "dea")
 golem::add_fct( "coseq")
 golem::add_fct( "glm")
+golem::add_fct( "network_inference")
+
 
 #golem::add_utils( "helpers" )
 
@@ -69,7 +77,10 @@ golem::add_fct( "glm")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data(demo_data_At, version = 3)
+usethis::use_data(demo_data_At, version = 3, overwrite = T)
+
+
+
 usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
 
 ## Tests ----

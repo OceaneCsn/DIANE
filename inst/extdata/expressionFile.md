@@ -18,4 +18,3 @@ AT1G01020,416,285,289,349,364,370,226,513,502,561,461,407
 AT1G01030,31,15,19,29,36,28,12,47,34,47,18,40
 ```
 
-Please, for now, only comma seperated files are accepted.

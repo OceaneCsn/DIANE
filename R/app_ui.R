@@ -38,6 +38,11 @@ app_ui <- function(request) {
     # List the first level UI elements here
     shinydashboard::dashboardPage(
       shinydashboard::dashboardHeader(title = logo_diane),
+      
+      
+#   ____________________________________________________________________________
+#   sidebar                                                                 ####
+
       shinydashboard::dashboardSidebar(
         width = "300px",
         shinydashboard::sidebarMenu(
@@ -84,6 +89,11 @@ app_ui <- function(request) {
             )
           )
       ),
+
+
+#   ____________________________________________________________________________
+#   body                                                                    ####
+
       
       shinydashboard::dashboardBody(
         dashboardthemes::shinyDashboardThemes(theme = "grey_light"),
@@ -101,14 +111,32 @@ app_ui <- function(request) {
             mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")
           ),
           
+          
+          
+#   ____________________________________________________________________________
+#   clustering                                                              ####
+
           shinydashboard::tabItem(tabName = "clustering_tab",
                                   mod_clustering_ui("clustering_ui_1")),
           shinydashboard::tabItem(
             tabName = "cluster_exploration_sub_tab",
             mod_cluster_exploration_ui("cluster_exploration_ui_1")
+          ),
+          
+         
+          
+#   ____________________________________________________________________________
+#   network                                                                 ####
+
+          shinydashboard::tabItem(tabName = "network_inference_tab",
+                                  mod_network_inference_ui("network_inference_ui_1")),
+          shinydashboard::tabItem(tabName = "network_analysis_tab",
+                                  mod_network_analysis_ui("network_analysis_ui_1")
+          ),
+          shinydashboard::tabItem(tabName = "module_analysis_tab",
+                                  mod_module_analysis_ui("module_analysis_ui_1")
           )
-          
-          
+         
         )
         
       )

@@ -62,3 +62,48 @@ filter_low_counts <- function(tcc, thr){
   return(tcc)
 }
 
+
+#' Detects weather or not the data contains splice variants 
+#' instead of unique locus. Returns TRUE if all genes ids match 
+#' the regex for splice variants
+#'
+#' @param gene_ids gene vector to be tested
+#'
+#' @return boolean
+are_splice_variants <- function(gene_ids){
+  return(sum(stringr::str_detect( gene_ids, pattern = "\\.[[:digit:]]+$")) == length(gene_ids))
+}
+
+#' Merge all splice variants of an expression dataset into 
+#' unique locus, unaware of alternative splicing, by summing
+#' all variants for the same gene
+#'
+#' @param data dataframe : expression data with supposed splice variants as rownames
+#'
+#' @return dataframe
+aggregate_splice_variants <- function(data){
+  if(are_splice_variants(rownames(data))){
+    
+    locus <- stringr::str_replace_all(rownames(data), 
+                                      pattern = "\\.[[:digit:]]+$", "")
+    data$locus <- locus
+    data_locus <- aggregate(. ~ locus, data, sum)
+    rownames(data_locus) <- unique(locus)
+    return(data_locus[, colnames(data_locus) != "locus"])
+  }
+  else print("The input data did not contain splice variants.
+             Or at least not enterely.")
+}
+
+
+#' Get the locus ids from splice variants ids
+#'
+#' @param gene_ids list of gene ids with splice variants information
+#'
+#' @return character vector
+get_locus <- function(gene_ids){
+  return(unique(
+    stringr::str_replace_all(gene_ids, 
+                             pattern = "\\.[[:digit:]]+$", "")))
+}
+

@@ -42,6 +42,8 @@ library(DIANE)
 DIANE::run_app()
 ```
 
+DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/. 
+
 Author : Océane Cassan
 
 PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
