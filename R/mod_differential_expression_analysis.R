@@ -46,7 +46,7 @@ mod_differential_expression_analysis_ui <- function(id) {
             shinyWidgets::dropdownButton(
               size = 'xs',
               shiny::includeMarkdown(
-                system.file("extdata", "normalisation.md", package = "DIANE")
+                system.file("extdata", "edgeR.md", package = "DIANE")
               ),
               circle = TRUE,
               status = "success",
