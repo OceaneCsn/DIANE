@@ -66,16 +66,16 @@ mod_network_inference_ui <- function(id){
         ),
         
         shiny::h5("Or choose your own :"),
-        shiny::radioButtons(
-          ns('sep_reg'),
-          'Separator : ',
-          c(
-            Comma = ',',
-            Semicolon = ';',
-            Tab = '\t'
-          ),
-          inline = TRUE
-        ),
+        col_2(shinyWidgets::dropdownButton(
+          size = 'xs',
+          shiny::includeMarkdown(system.file("extdata", "regulatorsFile.md", package = "DIANE")),
+          circle = TRUE,
+          status = "success",
+          icon = shiny::icon("question"),
+          width = "600px",
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+        )),
+       
         shiny::fileInput(
           ns('TFs_list_input'),
           'Upload custom CSV/TXT regulators list',
@@ -251,14 +251,13 @@ mod_network_inference_server <- function(input, output, session, r){
         d <-
           read.csv(
             path,
-            sep = input$sep_reg,
             header = FALSE,
             stringsAsFactors = FALSE,
             check.names = FALSE
           )
         
-        r$regulators <- as.vector(d)
-        
+        r$regulators <- as.vector(d[,1])
+
       }
 
       if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
@@ -419,8 +418,18 @@ mod_network_inference_server <- function(input, output, session, r){
   
   shiny::observeEvent((input$launch_genie_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
-    
     targets <- r$DEGs[[input$input_deg_genes_net]]
+    if(length(intersect(targets, r$regulators)) < 2 ){
+      shinyalert::shinyalert(
+        "Not enough regulators provided",
+        "GENIE3 requires a minimum of 2 regulators among the input genes to run.
+        You coud maybe proceed to a less stringeant differential expression
+        analysis to increase the number of input genes.",
+        type = "error"
+      )
+    }
+    
+    shiny::req(length(intersect(targets, r$regulators)) >= 2)
     mat <- network_inference(r$normalized_counts, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = intersect(targets, r$regulators),
@@ -460,6 +469,7 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
     shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
     shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
+    
     draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
                  edges = r$networks[[input$input_deg_genes_net]]$edges)
   })
