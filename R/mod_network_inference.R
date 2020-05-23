@@ -259,18 +259,22 @@ mod_network_inference_server <- function(input, output, session, r){
         r$regulators <- as.vector(d[,1])
 
       }
+      
+      if(r$splicing_aware){
+        r$aggregated_normalized_counts <- 
+          aggregate_splice_variants(data.frame(r$normalized_counts))
+      }
 
-      if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
+      else if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
        
         shinyalert::shinyalert(
-          "Something is wrong with the chosen regulators :",
-          "No regulators were found in the expression data rownames",
+          "Something is wrong with the chosen regulators",
+          "No regulators were found in the rownames of the expression data",
           type = "error"
         )
         r$regulators = NULL
-        print("done")
-        stop()
       }
+      
       
     }
     
@@ -305,7 +309,12 @@ mod_network_inference_server <- function(input, output, session, r){
   output$regulators_intersect_summary <- shiny::renderUI({
     shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
     
-    tfs <- intersect(r$DEGs[[input$input_deg_genes_net]], r$regulators)
+    if(r$splicing_aware) 
+      genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+    else
+      genes <- r$DEGs[[input$input_deg_genes_net]]
+      
+    tfs <- intersect(genes, r$regulators)
 
     shinydashboardPlus::descriptionBlock(
       number = length(tfs),
@@ -316,7 +325,7 @@ mod_network_inference_server <- function(input, output, session, r){
   })
   
   output$inference_summary <- shiny::renderUI({
-    
+    shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
@@ -343,7 +352,7 @@ mod_network_inference_server <- function(input, output, session, r){
   })
   
   output$thr_summary <- shiny::renderUI({
-    
+    shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
@@ -418,7 +427,17 @@ mod_network_inference_server <- function(input, output, session, r){
   
   shiny::observeEvent((input$launch_genie_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
-    targets <- r$DEGs[[input$input_deg_genes_net]]
+    
+    if(r$splicing_aware) {
+      targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+      data <- r$aggregated_normalized_counts
+    }
+    else {
+      targets <- r$DEGs[[input$input_deg_genes_net]]
+      data <- r$normalized_counts
+    }
+    
+    
     if(length(intersect(targets, r$regulators)) < 2 ){
       shinyalert::shinyalert(
         "Not enough regulators provided",
@@ -430,7 +449,8 @@ mod_network_inference_server <- function(input, output, session, r){
     }
     
     shiny::req(length(intersect(targets, r$regulators)) >= 2)
-    mat <- network_inference(r$normalized_counts, targets = targets, 
+    
+    mat <- network_inference(data, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = intersect(targets, r$regulators),
                       nTrees = input$n_trees,
@@ -441,6 +461,7 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   shiny::observeEvent((input$thr_btn), {
+    shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
@@ -463,6 +484,7 @@ mod_network_inference_server <- function(input, output, session, r){
 
   
   output$net_preview <- visNetwork::renderVisNetwork({
+    shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])

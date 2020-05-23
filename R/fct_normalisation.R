@@ -88,6 +88,7 @@ aggregate_splice_variants <- function(data){
                                       pattern = "\\.[[:digit:]]+$", "")
     data$locus <- locus
     data_locus <- aggregate(. ~ locus, data, sum)
+    rownames(data_locus) <- unique(locus)
     return(data_locus[, colnames(data_locus) != "locus"])
   }
   else print("The input data did not contain splice variants.
@@ -95,4 +96,14 @@ aggregate_splice_variants <- function(data){
 }
 
 
+#' Get the locus ids from splice variants ids
+#'
+#' @param gene_ids list of gene ids with splice variants information
+#'
+#' @return character vector
+get_locus <- function(gene_ids){
+  return(unique(
+    stringr::str_replace_all(gene_ids, 
+                             pattern = "\\.[[:digit:]]+$", "")))
+}
 
