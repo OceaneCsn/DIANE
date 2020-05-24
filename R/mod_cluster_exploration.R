@@ -145,10 +145,18 @@ mod_cluster_exploration_server <-
     output$genes_to_explore <- DT::renderDataTable({
       req(r$top_tags, r$current_comparison, membership())
       
+      
       table <- r$top_tags[[r$current_comparison]]
+      
+      columns <- c("logFC", "logCPM", "FDR")
+      if (!is.null(r$gene_info)) {
+        columns <- c(colnames(r$gene_info), columns)
+        table[,colnames(r$gene_info)] <- r$gene_info[match(rownames(table), rownames(r$gene_info)),]
+      }
+      
       table[table$genes %in% get_genes_in_cluster(membership = membership(),
                                                   cluster = input$cluster_to_explore),
-            c("logFC", "logCPM", "FDR")]
+            columns]
     })
     
     

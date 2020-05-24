@@ -478,6 +478,12 @@ mod_network_inference_server <- function(input, output, session, r){
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators)
     
+    if(!is.null(r$gene_info)){
+      data$nodes[,colnames(r$gene_info)] <- 
+        r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
+    }
+      
+    
     r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
     r$networks[[input$input_deg_genes_net]]$edges <- data$edges
     

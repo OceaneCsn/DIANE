@@ -342,22 +342,20 @@ mod_import_data_server <- function(input, output, session, r) {
     if (input$use_demo) {
       data("demo_data_At", package = "DIANE")
       d <- demo_data_At$gene_info
-      print("demo in reactive")
     }
     else{
       if(!is.null(input$gene_info_input)){
-        print("in file upload")
         path = input$gene_info_input$datapath
         d <- read.csv(
           sep = input$sep_gene_info,
           path,
           header = TRUE,
           stringsAsFactors = FALSE,
-          row.names = "Gene"
+          row.names = "Gene",
+          quote = ""
         )
       }
       else{
-        print("in else")
         d <- NULL
       }
     }

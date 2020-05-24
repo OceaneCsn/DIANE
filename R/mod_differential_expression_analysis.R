@@ -363,14 +363,19 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
-      top <- r_dea$top_tags
+      
+      
+      top <- r_dea$top_tags 
       top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
+      
+      columns <- c("logFC", "logCPM", "FDR", "Regulation")
+      if (!is.null(r$gene_info)) {
+        columns <- c(colnames(r$gene_info), columns)
+        top[,colnames(r$gene_info)] <- r$gene_info[match(rownames(top), rownames(r$gene_info)),]
+      }
+      
       DT::formatStyle(
-        DT::datatable(top[, c("logFC", "logCPM", "FDR", "Regulation")],
-                      options(list(
-                        pageLength = 20,
-                        lengthMenu = c(10, 20)
-                      ))),
+        DT::datatable(top[, columns]),
         columns = c("Regulation"),
         target = c("cell", "row"),
         backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
