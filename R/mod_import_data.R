@@ -87,7 +87,7 @@ mod_import_data_ui <- function(id) {
       shinyWidgets::dropdownButton(
         size = 'xs',
         label = "Gene information file requirements",
-        shiny::includeMarkdown(system.file("extdata", "designFile.md", 
+        shiny::includeMarkdown(system.file("extdata", "infoFile.md", 
                                            package = "DIANE")),
         circle = TRUE,
         status = "primary",
@@ -95,9 +95,17 @@ mod_import_data_ui <- function(id) {
         width = "1200px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
+      shiny::radioButtons(
+        ns('sep_gene_info'),
+        'Separator : ',
+        c(
+          Tab = '\t'
+        ),
+        inline = TRUE
+      ),
       shiny::fileInput(
         ns('gene_info_input'),
-        'Choose CSV/TXT gene information file',
+        'Choose CSV/TXT gene information file (optional)',
         accept = c(
           'text/csv',
           'text/comma-separated-values,text/plain',
@@ -112,7 +120,8 @@ mod_import_data_ui <- function(id) {
       valueBoxOutput(ns("samples")),
       
       
-      shiny::uiOutput(ns("variants_summary"))
+      shiny::uiOutput(ns("variants_summary")),
+      shiny::uiOutput(ns("gene_info_summary"))
     ),
     
     
@@ -148,6 +157,7 @@ mod_import_data_ui <- function(id) {
           Semicolon = ';',
           Tab = '\t'
         ),
+        
         inline = TRUE
       ),
       shinyWidgets::dropdownButton(
@@ -208,6 +218,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$regulators = NULL
     r$use_demo = input$use_demo
     r$splicing_aware = NULL
+    r$gene_info = NULL
   })
   
   #   ____________________________________________________________________________
@@ -321,12 +332,42 @@ mod_import_data_server <- function(input, output, session, r) {
     }
     
     r$design <- d
+    d
+  })
+  
+  #   ____________________________________________________________________________
+  #   genes info                                                              ####
+  
+  gene_info <- shiny::reactive({
+    if (input$use_demo) {
+      data("demo_data_At", package = "DIANE")
+      d <- demo_data_At$gene_info
+      print("demo in reactive")
+    }
+    else{
+      if(!is.null(input$gene_info_input)){
+        print("in file upload")
+        path = input$gene_info_input$datapath
+        d <- read.csv(
+          sep = input$sep_gene_info,
+          path,
+          header = TRUE,
+          stringsAsFactors = FALSE,
+          row.names = "Gene"
+        )
+      }
+      else{
+        print("in else")
+        d <- NULL
+      }
+    }
+    d
   })
   
   ########### table view
   
   output$raw_data_preview <- DT::renderDataTable({
-    head(raw_data(), n = 8)
+    head(raw_data(), n = 6)
   })
   
   ########## matrix preview
@@ -361,6 +402,31 @@ mod_import_data_server <- function(input, output, session, r) {
     valueBox(value = length(colnames(raw_data())),
              subtitle = "samples",
              color = "olive")
+  })
+  
+  output$gene_info_summary <- shiny::renderUI({
+    r$gene_info <- gene_info()
+    
+    if (is.null(r$gene_info)) {
+      number_color = "orange"
+      number = "No additional gene data provided"
+      header = ""
+      number_icon = "fa fa-times"
+    }
+    else{
+      number_color = "olive"
+      number = "Additional gene data provided"
+      number_icon = "fa fa-check"
+      header = paste("Detected fields :", 
+                     paste(colnames(r$gene_info), collapse = ', '))
+    }
+    shinydashboardPlus::descriptionBlock(
+      number = number,
+      number_color = number_color,
+      number_icon = number_icon,
+      text = header,
+      right_border = FALSE
+    )
   })
   
   ######### render design
