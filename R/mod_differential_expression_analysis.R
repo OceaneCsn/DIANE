@@ -371,7 +371,10 @@ mod_differential_expression_analysis_server <-
       columns <- c("logFC", "logCPM", "FDR", "Regulation")
       if (!is.null(r$gene_info)) {
         columns <- c(colnames(r$gene_info), columns)
-        top[,colnames(r$gene_info)] <- r$gene_info[match(rownames(top), rownames(r$gene_info)),]
+        
+        if (r$splicing_aware) ids <- get_locus(rownames(top), unique = FALSE)
+        else ids <- rownames(top)
+        top[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
       }
       
       DT::formatStyle(

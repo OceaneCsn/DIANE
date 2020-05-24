@@ -262,7 +262,8 @@ mod_network_inference_server <- function(input, output, session, r){
       
       if(r$splicing_aware){
         r$aggregated_normalized_counts <- 
-          aggregate_splice_variants(data.frame(r$normalized_counts))
+          aggregate_splice_variants(data.frame(r$normalized_counts, 
+                                               check.names = FALSE))
       }
 
       else if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){

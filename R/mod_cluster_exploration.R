@@ -150,8 +150,12 @@ mod_cluster_exploration_server <-
       
       columns <- c("logFC", "logCPM", "FDR")
       if (!is.null(r$gene_info)) {
+        
+        if (r$splicing_aware) ids <- get_locus(rownames(table), unique = FALSE)
+        else ids <- rownames(table)
+        
         columns <- c(colnames(r$gene_info), columns)
-        table[,colnames(r$gene_info)] <- r$gene_info[match(rownames(table), rownames(r$gene_info)),]
+        table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
       }
       
       table[table$genes %in% get_genes_in_cluster(membership = membership(),

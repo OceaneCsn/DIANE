@@ -99,11 +99,18 @@ aggregate_splice_variants <- function(data){
 #' Get the locus ids from splice variants ids
 #'
 #' @param gene_ids list of gene ids with splice variants information
-#'
+#' @param Boolean, weather or not to return unique locus vector
 #' @return character vector
-get_locus <- function(gene_ids){
-  return(unique(
-    stringr::str_replace_all(gene_ids, 
-                             pattern = "\\.[[:digit:]]+$", "")))
+get_locus <- function(gene_ids, unique = TRUE){
+  if(unique){
+    return(unique(
+      stringr::str_replace_all(gene_ids, 
+                               pattern = "\\.[[:digit:]]+$", "")))
+  }
+  else{
+    return(
+      stringr::str_replace_all(gene_ids, 
+                               pattern = "\\.[[:digit:]]+$", ""))
+  }
 }
 
