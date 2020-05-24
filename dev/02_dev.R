@@ -65,7 +65,7 @@ golem::add_fct( "dea")
 golem::add_fct( "coseq")
 golem::add_fct( "glm")
 golem::add_fct( "network_inference")
-
+golem::add_fct( "network_analysis")
 
 #golem::add_utils( "helpers" )
 
