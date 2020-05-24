@@ -202,6 +202,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$tcc = NULL
     r$clusterings = list()
     r$current_comparison = NULL
+    r$current_network = NULL
     r$top_tags = list()
     r$fit = NULL
     r$regulators = NULL

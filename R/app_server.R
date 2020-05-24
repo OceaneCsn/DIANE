@@ -21,6 +21,7 @@ app_server <- function(input, output, session) {
     top_tags = list(),
     clusterings = list(),
     current_comparison = NULL,
+    current_network = NULL,
     regulators = NULL,
     use_demo = NULL,
     networks = list(),

@@ -42,6 +42,7 @@ usethis::use_package( "parallel" )
 usethis::use_package( "GENIE3" )
 usethis::use_package( "igraph" )
 usethis::use_package( "visNetwork" )
+usethis::use_package( "gridExtra" )
 #usethis::use_package( "MASS" )
 
 
@@ -65,7 +66,7 @@ golem::add_fct( "dea")
 golem::add_fct( "coseq")
 golem::add_fct( "glm")
 golem::add_fct( "network_inference")
-
+golem::add_fct( "network_analysis")
 
 #golem::add_utils( "helpers" )
 

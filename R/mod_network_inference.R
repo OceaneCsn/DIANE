@@ -91,7 +91,7 @@ mod_network_inference_ui <- function(id){
         shiny::fluidRow(
           col_12(shinyWidgets::actionBttn(
             ns("load_regulators_btn"),
-            label = "Load regulators",
+            label = "Find regulators in input genes",
             color = "success",
             style = 'bordered'
           ))),
@@ -460,6 +460,8 @@ mod_network_inference_server <- function(input, output, session, r){
                       nCores = input$n_cores)
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
+    
+    
   })
   
   
@@ -478,7 +480,9 @@ mod_network_inference_server <- function(input, output, session, r){
     
     r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
     r$networks[[input$input_deg_genes_net]]$edges <- data$edges
-
+    
+    r$current_network <- input$input_deg_genes_net
+    
   })
   
   

@@ -14,7 +14,7 @@ Then, the expected value of each gene is estimate using genewise generalized lin
 
 Likelihood ratio tests can then be conducted on the fitted model coefficients to determine weather or not they are satistically different from each other, and thus conclude on differential expression.
 
-In DIANE, the dispersion estimation and model fitting is done once, and statistical tests for differentially expressed genes can be done for different contrasts.
+In DIANE, the dispersion estimation and model fitting is done only once, and statistical tests for differentially expressed genes can be done for different contrasts.
 To do so, select the conditions that you want to compare for differential expression, and they will be the one tested againt one another via likelihood ratio tests.
 
 The results are presented in a dataframe, ordered by adjusted pvalues (FDR). The dataframe contains the log fold changes (logFC), the average expression (logCPM) for each genes which FDR is lower than the specified adjusted p-value threshold.

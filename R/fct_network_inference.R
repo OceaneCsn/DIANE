@@ -13,9 +13,9 @@
 network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, nCores=1){
   
   conditions <- unique(grep(paste(conds, collapse = "|"),
-                            colnames(data), value = TRUE))
+                            colnames(normalized.count), value = TRUE))
   
-  normalized.count[,conditions]
+  normalized.count <- normalized.count[,conditions]
   
   regressors <- intersect(rownames(normalized.count), regressors)
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
@@ -50,9 +50,17 @@ network_data <- function(graph, regulators){
   data <- visNetwork::toVisNetworkData(graph)
   
   degree <- igraph::degree(graph)
+  
+  # degree computaton
   data$nodes$degree <- degree[match(data$nodes$id, names(degree))]
+  
+  # modules computation
+  memberships <- community_structure(graph)
+  
+  data$nodes$community <- memberships[match(data$nodes$id, names(memberships))]
+  
   data$nodes$group <- ifelse(data$nodes$id %in% regulators, "Regulator", "Target Gene")
-
+  data$nodes$gene_type <- ifelse(data$nodes$id %in% regulators, "Regulator", "Target Gene")
   data$edges$value <- data$edges$weight
   return(data)
 }

@@ -1,6 +1,7 @@
 
 # Poisson mixture models for clustering
 
+---
 
 The [coseq package](https://www.bioconductor.org/packages/release/bioc/vignettes/coseq/inst/doc/coseq.html) performs clustering on genes depending on their expression profiles. 
 
