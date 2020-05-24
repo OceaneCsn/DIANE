@@ -13,9 +13,9 @@
 network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, nCores=1){
   
   conditions <- unique(grep(paste(conds, collapse = "|"),
-                            colnames(data), value = TRUE))
+                            colnames(normalized.count), value = TRUE))
   
-  normalized.count[,conditions]
+  normalized.count <- normalized.count[,conditions]
   
   regressors <- intersect(rownames(normalized.count), regressors)
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
