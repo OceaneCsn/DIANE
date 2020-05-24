@@ -30,7 +30,8 @@ Imports:
     parallel,
     GENIE3,
     igraph,
-    visNetwork
+    visNetwork,
+    gridExtra
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

@@ -42,6 +42,7 @@ usethis::use_package( "parallel" )
 usethis::use_package( "GENIE3" )
 usethis::use_package( "igraph" )
 usethis::use_package( "visNetwork" )
+usethis::use_package( "gridExtra" )
 #usethis::use_package( "MASS" )
 
 

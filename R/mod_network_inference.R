@@ -91,7 +91,7 @@ mod_network_inference_ui <- function(id){
         shiny::fluidRow(
           col_12(shinyWidgets::actionBttn(
             ns("load_regulators_btn"),
-            label = "Load regulators",
+            label = "Find regulators in input genes",
             color = "success",
             style = 'bordered'
           ))),
