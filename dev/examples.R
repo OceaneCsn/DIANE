@@ -64,8 +64,9 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 ############### network inference
-
-DIANE::
+regressors <- intersect(genes, demo_data_At$regulators)
+DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, targets = genes,
+                         regressors = regressors)
 
 
 ####### essais viseago
