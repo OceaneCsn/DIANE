@@ -160,7 +160,7 @@ mod_differential_expression_analysis_ui <- function(id) {
       )
       
     ),
-    shiny::actionButton(ns("browser"), "backdoor"),
+    shiny::actionButton(ns("browser"), "backdoor")
   )
 }
 # TODO place spinners correctly

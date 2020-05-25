@@ -33,7 +33,7 @@ mod_cluster_exploration_ui <- function(id) {
         width = 12,
         closable = FALSE,
         title = "Expression profiles",
-        shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
+        shiny::plotOutput(ns("profiles_to_explore"), height = "700px")
       )
     ),
     
