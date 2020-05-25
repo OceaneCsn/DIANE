@@ -80,7 +80,6 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' DEGs <- topTags$table
-
 estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
   contrast <-
     ifelse(colnames(fit$design) == reference,

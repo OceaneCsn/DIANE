@@ -34,6 +34,6 @@ genes <- convert_from_agi(topTags$table$genes)
 background <- convert_from_agi(rownames(normalized_counts))
 
 go <- enrich_go(genes, background)
-draw_enrich-go(go)
-draw_enrich-go(go, max_go = 20)
+draw_enrich_go(go)
+draw_enrich_go(go, max_go = 20)
 }

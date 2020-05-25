@@ -109,8 +109,8 @@ enrich_go <- function(genes, background,
 #' background <- convert_from_agi(rownames(normalized_counts))
 #' 
 #' go <- enrich_go(genes, background)
-#' draw_enrich-go(go)
-#' draw_enrich-go(go, max_go = 20)
+#' draw_enrich_go(go)
+#' draw_enrich_go(go, max_go = 20)
 draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
   
   go_data <- go_data[order(-go_data$p.adjust),]

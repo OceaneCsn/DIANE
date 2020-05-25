@@ -4,7 +4,12 @@
 \alias{enrich_go}
 \title{Computes enrich Gene Ontology terms in a set of genes}
 \usage{
-enrich_go(genes, background, org = org.At.tair.db, sim_cutoff = 0.85)
+enrich_go(
+  genes,
+  background,
+  org = org.At.tair.db::org.At.tair.db,
+  sim_cutoff = 0.85
+)
 }
 \arguments{
 \item{genes}{gene set of interest. MUST be entrez IDs.}
