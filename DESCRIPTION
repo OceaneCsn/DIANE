@@ -31,7 +31,11 @@ Imports:
     GENIE3,
     igraph,
     visNetwork,
-    gridExtra
+    gridExtra,
+    org.At.tair.db,
+    clusterProfiler,
+    plotly,
+    AnnotationDbi
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

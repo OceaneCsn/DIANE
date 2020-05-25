@@ -18,7 +18,11 @@ mod_cluster_exploration_ui <- function(id) {
     
     shiny::h1("Analyse the genes of a specific cluster"),
     shiny::hr(),
-    shiny::uiOutput(ns("cluster_to_explore_choice")),
+    shiny::fluidRow(col_8(shiny::uiOutput(ns("cluster_to_explore_choice"))),
+                    col_4(valueBoxOutput(ns(
+                      "gene_number_cluster"
+                    )))
+    ),
     shiny::hr(),
     
     #   ____________________________________________________________________________
@@ -27,6 +31,7 @@ mod_cluster_exploration_ui <- function(id) {
     col_6(
       boxPlus(
         width = 12,
+        closable = FALSE,
         title = "Expression profiles",
         shiny::plotOutput(ns("profiles_to_explore"), height = "700px")
       )
@@ -45,13 +50,40 @@ mod_cluster_exploration_ui <- function(id) {
         width = 12,
         shiny::tabPanel(
           title = "Genes table",
-          DT::dataTableOutput(ns("genes_to_explore")),
-          shiny::hr(),
-          shiny::fluidRow(valueBoxOutput(ns(
-            "gene_number_cluster"
-          )))
+          DT::dataTableOutput(ns("genes_to_explore"))
+          
         ),
-        shiny::tabPanel(title = "Ontologies enrichment"),
+        
+        
+#   ____________________________________________________________________________
+#   GO                                                                      ####
+
+        shiny::tabPanel(title = "Gene Ontologies enrichment",
+                        
+                        
+                        col_6(shinyWidgets::actionBttn(
+                          ns("go_enrich_btn"),
+                          label = "Start GO enrichment analysis",
+                          color = "success",
+                          style = 'bordered'
+                        )),
+                        
+                        col_6(shinyWidgets::switchInput(
+                          inputId = ns("draw_go"),
+                          value = TRUE,
+                          onLabel = "Plot",
+                          offLabel = "Data table",
+                          label = "Result type"
+                        )),
+                        
+                        shiny::hr(),
+                        
+                        shiny::fluidRow(col_12(shiny::uiOutput(ns("go_results"))))
+                        ),
+        
+#   ____________________________________________________________________________
+#   glm                                                                     ####
+
         shiny::tabPanel(title = "GLM for factors effect",
                         col_2(shinyWidgets::dropdownButton(
                           size = 'xs',
@@ -105,7 +137,7 @@ mod_cluster_exploration_server <-
       r$clusterings[[r$current_comparison]]$conditions
     })
     
-    
+    r_clust <- shiny::reactiveValues(go = NULL)
     
     #   ____________________________________________________________________________
     #   cluster to explore choice                                               ####
@@ -129,12 +161,16 @@ mod_cluster_exploration_server <-
     
     
     output$profiles_to_explore <- shiny::renderPlot({
+      # to reset the go analysis if new cluster
+      r_clust$go <- NULL
+      shiny::req(input$cluster_to_explore)
       draw_profiles(
         data = r$normalized_counts,
         membership = membership(),
         k = input$cluster_to_explore,
         conds = conditions()
       )
+     
     })
     
     
@@ -145,10 +181,22 @@ mod_cluster_exploration_server <-
     output$genes_to_explore <- DT::renderDataTable({
       req(r$top_tags, r$current_comparison, membership())
       
+      
       table <- r$top_tags[[r$current_comparison]]
+      
+      columns <- c("logFC", "logCPM", "FDR")
+      if (!is.null(r$gene_info)) {
+        
+        if (r$splicing_aware) ids <- get_locus(rownames(table), unique = FALSE)
+        else ids <- rownames(table)
+        
+        columns <- c(colnames(r$gene_info), columns)
+        table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
+      }
+      
       table[table$genes %in% get_genes_in_cluster(membership = membership(),
                                                   cluster = input$cluster_to_explore),
-            c("logFC", "logCPM", "FDR")]
+            columns]
     })
     
     
@@ -172,7 +220,7 @@ mod_cluster_exploration_server <-
 
     
     glm <- shiny::reactive({
-      req(r$design, r$normalized_counts, membership())
+      shiny::req(r$design, r$normalized_counts, membership())
       fit_glm(normalized_counts = r$normalized_counts,
               genes = get_genes_in_cluster(membership = membership(),
                                            cluster = input$cluster_to_explore),
@@ -188,6 +236,71 @@ mod_cluster_exploration_server <-
     })
     
     
+    
+    #   ____________________________________________________________________________
+    #   GO enrich                                                               ####
+    
+    
+    shiny::observeEvent((input$go_enrich_btn), {
+      shiny::req(r$normalized_counts)
+      shiny::req(membership())
+
+      
+      
+      # for now, other orgs will come hopefully
+      shiny::req(r$organism == "Arabidopsis thaliana")
+      
+      
+      genes <- get_genes_in_cluster(membership = membership(),
+                                    cluster = input$cluster_to_explore)
+      
+      background <- rownames(r$normalized_counts)
+      
+      if (r$splicing_aware){
+        genes <- get_locus(genes)
+        background <- get_locus(background)
+      }
+      
+      if (r$organism == "Arabidopsis thaliana") {
+        genes <- convert_from_agi(genes)
+        background <- convert_from_agi(background)
+        org = org.At.tair.db::org.At.tair.db
+      }
+      
+      # TODO add check if it is entrez with regular expression here
+      shiny::req(length(genes) > 0, length(background) > 0)
+      
+      r_clust$go <- enrich_go(genes, background, org = org)
+    })
+    
+    #   ____________________________________________________________________________
+    #   go results                                                              ####
+    
+    output$go_table <- DT::renderDataTable({
+      shiny::req(r_clust$go)
+      r_clust$go[,c("Description", "GeneRatio", "BgRatio", "p.adjust")]
+    })
+    
+    output$go_plot <- plotly::renderPlotly({
+      shiny::req(r_clust$go)
+      draw_enrich_go(r_clust$go)
+    })
+    
+    output$go_results <- shiny::renderUI({
+      
+      if(r$organism != "Arabidopsis thaliana")
+        shiny::h4("GO analysis is only supported for Arabidopsis (for now!)")
+      
+      shiny::req(r$organism == "Arabidopsis thaliana")
+      
+      shiny::req(r_clust$go)
+      if (!input$draw_go){
+        DT::dataTableOutput(ns("go_table"))
+      }
+      else{
+        plotly::plotlyOutput(ns("go_plot"), height = "700px")
+      }
+    })
   }
 
 ## To be copied in the UI

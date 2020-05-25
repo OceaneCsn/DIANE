@@ -148,7 +148,13 @@ mod_network_analysis_server <- function(input, output, session, r){
     shiny::req(r$networks[[r$current_network]]$nodes)
     
     data <- r$networks[[r$current_network]]$nodes
-    data[order(-data$degree),c("label", "gene_type", "degree", "community")]
+    
+    columns <- c("label", "gene_type", "degree", "community")
+    if (!is.null(r$gene_info)) {
+      columns <- unique(c(colnames(r$gene_info), columns))
+    }
+    
+    data[order(-data$degree), columns]
   })
   
   

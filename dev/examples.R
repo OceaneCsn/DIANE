@@ -42,7 +42,9 @@ topTags$table
 
 # visualize differential expression analysis
 tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
-DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
+DIANE::draw_DEGs(tags, fdr = 0.005, lfc = 1)
+
+
 
 # running clustering
 genes <- topTags$table$genes
@@ -62,5 +64,25 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 
-#######
+
+############### network inference
+
+
+
+regressors <- intersect(genes, demo_data_At$regulators)
+DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, targets = genes,
+                         regressors = regressors)
+
+
+
+####### go analysis
+
+genes <- convert_from_agi(topTags$table$genes)
+background <- convert_from_agi(rownames(normalized_counts))
+
+go <- enrich_go(genes, background)
+DIANE::draw_enrich_go(go, max_go = 30)
+
+
+
 

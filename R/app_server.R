@@ -25,7 +25,9 @@ app_server <- function(input, output, session) {
     regulators = NULL,
     use_demo = NULL,
     networks = list(),
-    splicing_aware = NULL
+    splicing_aware = NULL,
+    gene_info = NULL,
+    organism = NULL
   )
   
 

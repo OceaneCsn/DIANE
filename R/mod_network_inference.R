@@ -262,7 +262,8 @@ mod_network_inference_server <- function(input, output, session, r){
       
       if(r$splicing_aware){
         r$aggregated_normalized_counts <- 
-          aggregate_splice_variants(data.frame(r$normalized_counts))
+          aggregate_splice_variants(data.frame(r$normalized_counts, 
+                                               check.names = FALSE))
       }
 
       else if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
@@ -477,6 +478,12 @@ mod_network_inference_server <- function(input, output, session, r){
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators)
+    
+    if(!is.null(r$gene_info)){
+      data$nodes[,colnames(r$gene_info)] <- 
+        r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
+    }
+      
     
     r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
     r$networks[[input$input_deg_genes_net]]$edges <- data$edges
