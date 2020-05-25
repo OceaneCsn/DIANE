@@ -233,7 +233,6 @@ mod_differential_expression_analysis_server <-
                  input$reference,
                  input$perturbation)
       
-      print(input$reference == input$perturbation)
       if (input$reference == input$perturbation) {
         shinyalert::shinyalert("You tried to compare the same conditions! 
                                You may need some coffee...",
