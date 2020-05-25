@@ -35,7 +35,8 @@ Imports:
     org.At.tair.db,
     clusterProfiler,
     plotly,
-    AnnotationDbi
+    AnnotationDbi,
+    org.Hs.eg.db
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

@@ -47,7 +47,9 @@ mod_import_data_ui <- function(id) {
         col_8(shinyWidgets::pickerInput(
           inputId = ns('organism'),
           label = "Choose your organism if proposed :",
-          choices = c("Arabidopsis thaliana", "Other")
+          choices = c("Arabidopsis thaliana", 
+                      "Homo sapiens",
+                      "Other")
         ))
       ),
       
@@ -374,33 +376,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$design <- d
     d
   })
-  
-  #   ____________________________________________________________________________
-  #   genes info                                                              ####
-  
-  gene_info <- shiny::reactive({
-    if (input$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$gene_info
-    }
-    else{
-      if(!is.null(input$gene_info_input)){
-        path = input$gene_info_input$datapath
-        d <- read.csv(
-          sep = input$sep_gene_info,
-          path,
-          header = TRUE,
-          stringsAsFactors = FALSE,
-          row.names = "Gene",
-          quote = ""
-        )
-      }
-      else{
-        d <- NULL
-      }
-    }
-    d
-  })
+
   
   #   ____________________________________________________________________________
   #   organism                                                                ####
@@ -416,6 +392,32 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   
+  #   ____________________________________________________________________________
+  #   genes info                                                              ####
+  
+  gene_info <- shiny::reactive({
+    if (input$use_demo) {
+      data("demo_data_At", package = "DIANE")
+      d <- demo_data_At$gene_info
+    }
+    else{
+        if(!is.null(input$gene_info_input)){
+          path = input$gene_info_input$datapath
+          d <- read.csv(
+            sep = input$sep_gene_info,
+            path,
+            header = TRUE,
+            stringsAsFactors = FALSE,
+            row.names = "Gene",
+            quote = ""
+          )
+        }
+      else{
+        d <- NULL
+      }
+    }
+    d
+  })
   ########### table view
   
   output$raw_data_preview <- DT::renderDataTable({

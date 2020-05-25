@@ -46,6 +46,7 @@ usethis::use_package( "gridExtra" )
 usethis::use_package( "org.At.tair.db" )
 usethis::use_package( "clusterProfiler" )
 usethis::use_package( "plotly" )
+usethis::use_package( "org.Hs.eg.db" ) 
 #usethis::use_package( "MASS" )
 
 

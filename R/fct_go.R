@@ -2,7 +2,7 @@
 #' gene symbol or description
 #'
 #' @param ids vector of AGI gene IDs
-#' @param to value in c("entre", "symbol", "name)
+#' @param to value in c("entrez", "symbol", "name")
 #'
 #' @return named vector
 #' @export
@@ -24,6 +24,32 @@ convert_from_agi <- function(ids, to = "entrez"){
   mapped_genes <- AnnotationDbi::mappedkeys(x)
   xx <- as.list(x[mapped_genes])
   return(unlist(xx[as.vector(ids)]))
+}
+
+
+#' For Homo sapiens, converts ensembl IDs to entrez IDs, 
+#' symbol or name, 
+#'
+#' @param ids genes to convert, ensembl
+#' @param to value in c("entrez", "symbol", "name")
+#'
+#' @return named list
+convert_from_ensembl <- function(ids, to = "entrez"){
+  if(to == "entrez"){
+    xx <- as.list(org.Hs.eg.db::org.Hs.egENSEMBL2EG)
+    return(unlist(xx[ids]))
+  }
+  else{
+    entrez <- convert_from_ensembl(ids, to = "entrez")
+    if (to == "symbol")
+      x <- org.Hs.eg.db::org.Hs.egSYMBOL
+    if (to == "name")
+      x <- org.Hs.eg.db::org.Hs.egGENENAME
+    mapped_genes <- AnnotationDbi::mappedkeys(x)
+    xx <- as.list(x[mapped_genes])
+    return(unlist(xx[as.vector(entrez)]))
+  }
+  
 }
 
 

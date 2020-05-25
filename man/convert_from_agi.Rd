@@ -10,7 +10,7 @@ convert_from_agi(ids, to = "entrez")
 \arguments{
 \item{ids}{vector of AGI gene IDs}
 
-\item{to}{value in c("entre", "symbol", "name)}
+\item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
 named vector

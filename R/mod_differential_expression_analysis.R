@@ -457,7 +457,7 @@ mod_differential_expression_analysis_server <-
 
       
       # for now, other orgs will come hopefully
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
       
       
       genes <- r_dea$top_tags$genes
@@ -472,6 +472,12 @@ mod_differential_expression_analysis_server <-
         genes <- convert_from_agi(genes)
         background <- convert_from_agi(background)
         org = org.At.tair.db::org.At.tair.db
+      }
+      
+      if(r$organism == "Homo sapiens"){
+        genes <- convert_from_ensembl(genes)
+        background <- convert_from_ensembl(background)
+        org = org.Hs.eg.db::org.Hs.eg.db
       }
 
       # TODO add check if it is entrez with regular expression here
@@ -494,10 +500,10 @@ mod_differential_expression_analysis_server <-
     
     output$go_results <- shiny::renderUI({
       
-      if(r$organism != "Arabidopsis thaliana")
-        shiny::h4("GO analysis is only supported for Arabidopsis (for now!)")
+      if(!r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
+        shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
       
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
       
       shiny::req(r_dea$go)
       if (!input$draw_go){

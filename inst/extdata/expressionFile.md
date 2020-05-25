@@ -9,6 +9,10 @@ The other columns should be your sample names, noted as follow : conditionName_r
 Expression values should be zeros or positive integers.
 
 
+In order for your input to be compatible with the proposed organisms, it should contain gene IDs as follow :
+
++ For Arabidopsis : TAIR IDs (ex:AT1G01020) 
+
 Here is the head of an example file that would be accepted, from 12 Arabidopsis thaliana's samples :
 
 ```
