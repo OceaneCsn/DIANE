@@ -54,6 +54,7 @@ convert_from_agi <- function(ids, to = "entrez"){
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
 #' threshold = 10*length(demo_data_At$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' # interest and background gene sets as entrez ids
@@ -98,6 +99,7 @@ enrich_go <- function(genes, background,
 #' iteration = FALSE)
 #' threshold = 10*length(demo_data_At$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object,
 #'  conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", 
