@@ -64,29 +64,12 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 
-####### essais go analysis
+####### go analysis
 
-genes <- topTags$table$genes
-background <- rownames(normalized_counts)
-#Ensembl<-ViSEAGO::Ensembl2GO()
+genes <- convert_from_agi(topTags$table$genes)
+background <- convert_from_agi(rownames(normalized_counts))
 
-
-
-
-  
-  
-entrez <- convert_from_agi(genes)
-entre_bg <- convert_from_agi(background)
-
-library(clusterProfiler)
+go <- DIANE::enrich_go(genes, background)
+DIANE::draw_enrich_go(go, max_go = 30)
 
 
-
-
-library(ggplot2)
-library(plotly)
-
-
-
-
-draw_enrich_go(res, max_go = 30)
