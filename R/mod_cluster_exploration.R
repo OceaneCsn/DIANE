@@ -248,7 +248,7 @@ mod_cluster_exploration_server <-
       
       
       # for now, other orgs will come hopefully
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism != "Other")
       
       
       genes <- get_genes_in_cluster(membership = membership(),
@@ -265,6 +265,12 @@ mod_cluster_exploration_server <-
         genes <- convert_from_agi(genes)
         background <- convert_from_agi(background)
         org = org.At.tair.db::org.At.tair.db
+      }
+      
+      if(r$organism == "Homo sapiens"){
+        genes <- convert_from_ensembl(genes)
+        background <- convert_from_ensembl(background)
+        org = org.Hs.eg.db::org.Hs.eg.db
       }
       
       # TODO add check if it is entrez with regular expression here
@@ -288,10 +294,10 @@ mod_cluster_exploration_server <-
     
     output$go_results <- shiny::renderUI({
       
-      if(r$organism != "Arabidopsis thaliana")
-        shiny::h4("GO analysis is only supported for Arabidopsis (for now!)")
+      if(r$organism == "Other")
+        shiny::h4("GO analysis is only supported for Arabidopsis and human (for now!)")
       
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism != "Other")
       
       shiny::req(r_clust$go)
       if (!input$draw_go){

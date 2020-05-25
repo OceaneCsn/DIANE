@@ -457,7 +457,7 @@ mod_differential_expression_analysis_server <-
 
       
       # for now, other orgs will come hopefully
-      shiny::req(r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
+      shiny::req(r$organism != "Other")
       
       
       genes <- r_dea$top_tags$genes
@@ -500,10 +500,10 @@ mod_differential_expression_analysis_server <-
     
     output$go_results <- shiny::renderUI({
       
-      if(!r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
+      if(r$organism == "Other")
         shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
       
-      shiny::req(r$organism %in% c("Arabidopsis thaliana", "Homo sapiens"))
+      shiny::req(r$organism != "Other")
       
       shiny::req(r_dea$go)
       if (!input$draw_go){
