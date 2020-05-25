@@ -212,6 +212,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   # resets the global reactive variables that were maybe already created
   # when demo usage is toggled :
+
   shiny::observeEvent(input$use_demo,{
     r$raw_counts = NULL
     r$normalized_counts = NULL
@@ -246,6 +247,24 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       req(input$raw_data)
       path = input$raw_data$datapath
+      
+      r$raw_counts = NULL
+      r$normalized_counts = NULL
+      r$normalized_counts_pre_filter = NULL
+      r$conditions = NULL
+      r$design = NULL
+      r$DEGs = list()
+      r$tcc = NULL
+      r$clusterings = list()
+      r$current_comparison = NULL
+      r$current_network = NULL
+      r$top_tags = list()
+      r$fit = NULL
+      r$regulators = NULL
+      r$use_demo = input$use_demo
+      r$splicing_aware = NULL
+      r$gene_info = NULL
+      r$organism = NULL
       
       d <-
         read.csv(

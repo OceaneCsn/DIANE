@@ -121,7 +121,8 @@ mod_differential_expression_analysis_ui <- function(id) {
             inputId = ns("MA_vulcano_switch"),
             value = TRUE,
             onLabel = "MA",
-            offLabel = "Vulcano"
+            offLabel = "Vulcano",
+            onStatus = 'success'
           ),
           
           
@@ -257,6 +258,7 @@ mod_differential_expression_analysis_server <-
       r_dea$trt <- input$perturbation
       r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
       r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
+      r_dea$go <- NULL
       
     })
     
@@ -453,12 +455,20 @@ mod_differential_expression_analysis_server <-
       shiny::req(r_dea)
       shiny::req(r_dea$top_tags)
       
+
+      
+      # for now, other orgs will come hopefully
+      shiny::req(r$organism == "Arabidopsis thaliana")
+      
       
       genes <- r_dea$top_tags$genes
       background <- rownames(r$normalized_counts)
       
-      # for now, other orgs will come hopefully
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      if(r$splicing_aware){
+        genes <- get_locus(genes)
+        background <- get_locus(background)
+      }
+      
       if(r$organism == "Arabidopsis thaliana"){
         genes <- convert_from_agi(genes)
         background <- convert_from_agi(background)
@@ -466,7 +476,7 @@ mod_differential_expression_analysis_server <-
       }
 
       # TODO add check if it is entrez with regular expression here
-      
+      shiny::req(length(genes) > 0, length(background) > 0)
       r_dea$go <- enrich_go(genes, background, org = org)
     })
     
