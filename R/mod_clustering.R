@@ -285,6 +285,7 @@ mod_clustering_server <- function(input, output, session, r) {
     shiny::req(r$DEGs)
     shiny::req(r$clusterings, input$input_deg_genes)
     shiny::req(r$clusterings[[input$input_deg_genes]]$membership, r$DEGs)
+    shiny::req(input$clusters)
     draw_profiles(
       data = r$normalized_counts,
       conds = r$clusterings[[input$input_deg_genes]]$conditions,

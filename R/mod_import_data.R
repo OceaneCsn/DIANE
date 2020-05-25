@@ -30,18 +30,27 @@ mod_import_data_ui <- function(id) {
       status = "success",
       collapsible = TRUE,
       closable = FALSE,
-      shinyWidgets::prettyCheckbox(
-        ns("use_demo"),
-        "Use demo data",
-        value = TRUE,
-        fill = TRUE,
-        thick = TRUE,
-        status = "success",
-        animation = "smooth",
-        icon = NULL,
-        bigger = TRUE,
-        width = "200%"
+      
+      shiny::fluidRow(
+        col_4(shinyWidgets::prettyCheckbox(
+          ns("use_demo"),
+          "Use demo data",
+          value = TRUE,
+          fill = TRUE,
+          thick = TRUE,
+          status = "success",
+          animation = "smooth",
+          icon = NULL,
+          bigger = TRUE,
+          width = "200%"
+        )),
+        col_8(shinyWidgets::pickerInput(
+          inputId = ns('organism'),
+          label = "Choose your organism if proposed :",
+          choices = c("Arabidopsis thaliana", "Other")
+        ))
       ),
+      
       shiny::radioButtons(
         ns('sep'),
         
@@ -120,8 +129,9 @@ mod_import_data_ui <- function(id) {
       valueBoxOutput(ns("samples")),
       
       
-      shiny::uiOutput(ns("variants_summary")),
-      shiny::uiOutput(ns("gene_info_summary"))
+      col_4(shiny::uiOutput(ns("variants_summary"))),
+      col_4(shiny::uiOutput(ns("organism_summary"))),
+      col_4(shiny::uiOutput(ns("gene_info_summary")))
     ),
     
     
@@ -202,6 +212,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   # resets the global reactive variables that were maybe already created
   # when demo usage is toggled :
+
   shiny::observeEvent(input$use_demo,{
     r$raw_counts = NULL
     r$normalized_counts = NULL
@@ -219,6 +230,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$use_demo = input$use_demo
     r$splicing_aware = NULL
     r$gene_info = NULL
+    r$organism = NULL
   })
   
   #   ____________________________________________________________________________
@@ -235,6 +247,24 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       req(input$raw_data)
       path = input$raw_data$datapath
+      
+      r$raw_counts = NULL
+      r$normalized_counts = NULL
+      r$normalized_counts_pre_filter = NULL
+      r$conditions = NULL
+      r$design = NULL
+      r$DEGs = list()
+      r$tcc = NULL
+      r$clusterings = list()
+      r$current_comparison = NULL
+      r$current_network = NULL
+      r$top_tags = list()
+      r$fit = NULL
+      r$regulators = NULL
+      r$use_demo = input$use_demo
+      r$splicing_aware = NULL
+      r$gene_info = NULL
+      r$organism = NULL
       
       d <-
         read.csv(
@@ -362,6 +392,20 @@ mod_import_data_server <- function(input, output, session, r) {
     d
   })
   
+  #   ____________________________________________________________________________
+  #   organism                                                                ####
+  
+  organism <- shiny::reactive({
+    if (input$use_demo) {
+      d <- "Arabidopsis thaliana"
+    }
+    else{
+      d <- input$organism
+    }
+    d
+  })
+  
+  
   ########### table view
   
   output$raw_data_preview <- DT::renderDataTable({
@@ -403,6 +447,7 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$gene_info_summary <- shiny::renderUI({
+    ######## setting gene info here
     r$gene_info <- gene_info()
     
     if (is.null(r$gene_info)) {
@@ -423,6 +468,20 @@ mod_import_data_server <- function(input, output, session, r) {
       number_color = number_color,
       number_icon = number_icon,
       text = header,
+      right_border = FALSE
+    )
+  })
+  
+  output$organism_summary <- shiny::renderUI({
+    ######## setting organism here
+    r$organism <- organism()
+    
+    req(r$organism)
+    
+    shinydashboardPlus::descriptionBlock(
+      number = r$organism,
+      number_color = "teal",
+      text = "organism database",
       right_border = FALSE
     )
   })
