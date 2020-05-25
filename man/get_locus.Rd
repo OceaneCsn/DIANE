@@ -9,7 +9,7 @@ get_locus(gene_ids, unique = TRUE)
 \arguments{
 \item{gene_ids}{list of gene ids with splice variants information}
 
-\item{Boolean, }{weather or not to return unique locus vector}
+\item{unique}{boolean, weather or not to return unique locus vector}
 }
 \value{
 character vector
