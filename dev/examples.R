@@ -62,6 +62,12 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 
+
+############### network inference
+
+DIANE::
+
+
 ####### essais viseago
 
 genes <- topTags$table$genes
