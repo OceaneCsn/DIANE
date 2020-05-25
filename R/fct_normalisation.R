@@ -36,7 +36,7 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
   return(tcc)
 }
 
-
+# TODO check that column names are unique!
 
 
 #' Remove low count genes
