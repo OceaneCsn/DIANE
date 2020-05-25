@@ -288,7 +288,7 @@ mod_import_data_server <- function(input, output, session, r) {
       else{
         #bug here
         shinyalert::shinyalert(
-          "Invalid input data...",
+          "Invalid input data",
           "Did you correctly set the separator?
                                Does your data contains a column named \"Gene\"?",
           type = "error"
@@ -296,6 +296,16 @@ mod_import_data_server <- function(input, output, session, r) {
         stop()
       }
     }
+    
+    if (length(unique(colnames(d))) < length(colnames(d))) {
+      shinyalert::shinyalert(
+        "Invalid rownames",
+        "Please specify unique rownames, in the form condition_replicateNumber",
+        type = "error"
+      )
+      stop()
+    }
+    
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     
