@@ -132,8 +132,28 @@ mod_differential_expression_analysis_ui <- function(id) {
           title = "Heatmap",
           shiny::uiOutput(ns("heatmap_conditions_choice")),
           shiny::plotOutput(ns("heatmap"), height = "700px")
+        ),
+        shiny::tabPanel(title = "Gene Ontology enrichment",
+                        
+                        col_6(shinyWidgets::actionBttn(
+                          ns("go_enrich_btn"),
+                          label = "Start GO enrichment analysis",
+                          color = "success",
+                          style = 'bordered'
+                        )),
+                        
+                        col_6(shinyWidgets::switchInput(
+                          inputId = ns("draw_go"),
+                          value = TRUE,
+                          onLabel = "Plot",
+                          offLabel = "Data table",
+                          label = "Result type"
+                        )),
+                        
+                        shiny::hr(),
+                        
+                        shiny::fluidRow(col_12(shiny::uiOutput(ns("go_results"))))
         )
-        #shiny::tabPanel(title = "EdgeR summary",
         #shiny::verbatimTextOutput(ns("edgeR_summary")),
         
       )
@@ -240,12 +260,7 @@ mod_differential_expression_analysis_server <-
       
     })
     
-    # output$edgeR_summary <- shiny::renderPrint({
-    #   shiny::req(r_dea$fit)
-    #   print(r_dea$fit$coefficients)
-    # })
-    #
-    #
+
     #   ____________________________________________________________________________
     #   Summaries                                                               ####
     
@@ -426,6 +441,64 @@ mod_differential_expression_analysis_server <-
         MA = input$MA_vulcano_switch
       )
     })
+    
+    
+
+#   ____________________________________________________________________________
+#   GO enrich                                                               ####
+
+    
+    shiny::observeEvent((input$go_enrich_btn), {
+      shiny::req(r$normalized_counts)
+      shiny::req(r_dea)
+      shiny::req(r_dea$top_tags)
+      
+      
+      genes <- r_dea$top_tags$genes
+      background <- rownames(r$normalized_counts)
+      
+      # for now, other orgs will come hopefully
+      shiny::req(r$organism == "Arabidopsis thaliana")
+      if(r$organism == "Arabidopsis thaliana"){
+        genes <- convert_from_agi(genes)
+        background <- convert_from_agi(background)
+        org = org.At.tair.db::org.At.tair.db
+      }
+
+      # TODO add check if it is entrez with regular expression here
+      
+      r_dea$go <- enrich_go(genes, background, org = org)
+    })
+    
+#   ____________________________________________________________________________
+#   go results                                                              ####
+
+    output$go_table <- DT::renderDataTable({
+      shiny::req(r_dea$go)
+      r_dea$go[,c("Description", "GeneRatio", "BgRatio", "p.adjust")]
+    })
+    
+    output$go_plot <- plotly::renderPlotly({
+      shiny::req(r_dea$go)
+      draw_enrich_go(r_dea$go)
+    })
+    
+    output$go_results <- shiny::renderUI({
+      
+      if(r$organism != "Arabidopsis thaliana")
+        shiny::h4("GO analysis is only supported for Arabidopsis (for now!)")
+      
+      shiny::req(r$organism == "Arabidopsis thaliana")
+      
+      shiny::req(r_dea$go)
+      if (!input$draw_go){
+        DT::dataTableOutput(ns("go_table"))
+      }
+      else{
+        plotly::plotlyOutput(ns("go_plot"), height = "800px")
+      }
+    })
+    
     
     shiny::observeEvent(input$browser, {
       browser()

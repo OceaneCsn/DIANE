@@ -69,7 +69,7 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 genes <- convert_from_agi(topTags$table$genes)
 background <- convert_from_agi(rownames(normalized_counts))
 
-go <- DIANE::enrich_go(genes, background)
+go <- enrich_go(genes, background)
 DIANE::draw_enrich_go(go, max_go = 30)
 
 

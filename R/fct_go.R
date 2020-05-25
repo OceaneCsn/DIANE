@@ -65,10 +65,10 @@ enrich_go <- function(genes, background,
                       org = org.At.tair.db,
                       sim_cutoff = 0.85){
   
-  ego <- clusterProfiler::enrichGO(gene = entrez,
+  ego <- clusterProfiler::enrichGO(gene = genes,
                                    OrgDb = org,
                                    ont = "BP",
-                                   universe = entre_bg,
+                                   universe = background,
                                    pAdjustMethod = "BH",
                                    pvalueCutoff  = 0.01,
                                    qvalueCutoff  = 0.05,
