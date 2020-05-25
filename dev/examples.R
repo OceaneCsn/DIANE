@@ -42,7 +42,9 @@ topTags$table
 
 # visualize differential expression analysis
 tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
-DIANE::plotDEGs(tags, fdr = 0.01, lfc = 1)
+DIANE::draw_DEGs(tags, fdr = 0.005, lfc = 1)
+
+
 
 # running clustering
 genes <- topTags$table$genes
@@ -62,68 +64,29 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 
-####### essais viseago
+####### essais go analysis
 
 genes <- topTags$table$genes
 background <- rownames(normalized_counts)
 #Ensembl<-ViSEAGO::Ensembl2GO()
 
-Bioconductor<-ViSEAGO::Bioconductor2GO()
-#ViSEAGO::available_organisms(Bioconductor, )
-
-myGENE2GO<-ViSEAGO::annotate(
-  "org.At.tair.db",
-  Bioconductor
-)
 
 
-convert_from_agi <- function(ids, to = "entrez"){
-  if(to =="entrez")
-    x <- org.At.tair.db::org.At.tairENTREZID
-  if(to =="symbol")
-    x <- org.At.tair.db::org.At.tairSYMBOL
-  if(to =="name")
-    x <- org.At.tair.db::org.At.tairGENENAME
-  mapped_genes <- AnnotationDbi::mappedkeys(x)
-  xx <- as.list(x[mapped_genes])
-  return(unlist(xx[as.vector(ids)]))
-}
+
   
   
 entrez <- convert_from_agi(genes)
 entre_bg <- convert_from_agi(background)
 
-
-s <- convert_from_agi(genes, to = "symbol")
-head(s)
-
-BP<-ViSEAGO::create_topGOdata(
-  geneSel=entrez,
-  allGenes=entre_bg,
-  gene2GO=myGENE2GO, 
-  ont="BP",
-  nodeSize=5
-)
-
-classic<-topGO::runTest(
-  BP,
-  algorithm ="classic",
-  statistic = "fisher"
-)
-
-classic@score
-classic@geneData
-
-debug("GOcount")
-
-body(ViSEAGO::GOcount)
+library(clusterProfiler)
 
 
-standardGeneric
 
-(BP_sResults)
 
-if(length(xx) > 0) {# Get the Entrez gene IDs for the first five genes
-  xx[1:5]# Get the first one
-  xx[[1]]
-}
+library(ggplot2)
+library(plotly)
+
+
+
+
+draw_enrich_go(res, max_go = 30)
