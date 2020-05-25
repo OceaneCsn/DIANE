@@ -63,7 +63,7 @@ convert_from_agi <- function(ids, to = "entrez"){
 #' 
 #' go <- enrich_go(genes, background)
 enrich_go <- function(genes, background,
-                      org = org.At.tair.db,
+                      org = org.At.tair.db::org.At.tair.db,
                       sim_cutoff = 0.85){
   
   ego <- clusterProfiler::enrichGO(gene = genes,
