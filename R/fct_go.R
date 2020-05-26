@@ -34,6 +34,7 @@ convert_from_agi <- function(ids, to = "entrez"){
 #' @param to value in c("entrez", "symbol", "name")
 #'
 #' @return named list
+#' @export
 convert_from_ensembl <- function(ids, to = "entrez"){
   if(to == "entrez"){
     xx <- as.list(org.Hs.eg.db::org.Hs.egENSEMBL2EG)
@@ -141,6 +142,8 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
   
   go_data <- go_data[order(-go_data$p.adjust),]
   res <- go_data[1:min(dim(go_data)[1],max_go),]
+  
+  res$Description <- substr(res$Description, 1,60)
   
   plotly::ggplotly(
     ggplot2::ggplot(data = res, ggplot2::aes(x = Count, y = Description, color = p.adjust)) +

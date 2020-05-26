@@ -62,7 +62,8 @@ mod_network_inference_ui <- function(id){
         shinyWidgets::pickerInput(
           inputId = ns('regulators_picker'),
           label = "Available regulators lists :",
-          choices = c("Arabidopsis thaliana - 2192 regulators" = "At"),
+          choices = c("Arabidopsis thaliana - 2192 regulators" = "At",
+                      "Homo sapiens - "),
         ),
         
         shiny::h5("Or choose your own :"),

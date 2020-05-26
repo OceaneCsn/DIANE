@@ -11,7 +11,8 @@ Expression values should be zeros or positive integers.
 
 In order for your input to be compatible with the proposed organisms, it should contain gene IDs as follow :
 
-+ For Arabidopsis : TAIR IDs (ex:AT1G01020) 
++ For Arabidopsis thaliana : TAIR IDs (ex: AT1G01020, or AT1G01020.1) 
++ For Human : ensembl IDs (ex: ENSG00000005513) 
 
 Here is the head of an example file that would be accepted, from 12 Arabidopsis thaliana's samples :
 

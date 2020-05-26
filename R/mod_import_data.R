@@ -13,6 +13,11 @@ mod_import_data_ui <- function(id) {
   ns <- NS(id)
   tagList(
     shinyalert::useShinyalert(),
+    shinybusy::add_busy_spinner(
+      spin = "self-building-square",
+      position = 'top-left',
+      margins = c(70, 1100)
+    ),
     
     ######################### Title and text
     

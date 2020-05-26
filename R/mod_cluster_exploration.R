@@ -61,20 +61,21 @@ mod_cluster_exploration_ui <- function(id) {
         shiny::tabPanel(title = "Gene Ontologies enrichment",
                         
                         
-                        col_6(shinyWidgets::actionBttn(
+                        col_4(shinyWidgets::actionBttn(
                           ns("go_enrich_btn"),
                           label = "Start GO enrichment analysis",
                           color = "success",
                           style = 'bordered'
                         )),
                         
-                        col_6(shinyWidgets::switchInput(
+                        col_4(shinyWidgets::switchInput(
                           inputId = ns("draw_go"),
                           value = TRUE,
                           onLabel = "Plot",
                           offLabel = "Data table",
                           label = "Result type"
                         )),
+                        col_4(shiny::uiOutput(ns("max_go_choice"))),
                         
                         shiny::hr(),
                         
@@ -287,9 +288,17 @@ mod_cluster_exploration_server <-
       r_clust$go[,c("Description", "GeneRatio", "BgRatio", "p.adjust")]
     })
     
+    output$max_go_choice <- shiny::renderUI({
+      shiny::req(r_clust$go)
+      shiny::numericInput(ns("n_go_terms"), 
+                          label = "Top number of GO terms to plot :", 
+                          min = 1, value = dim(r_clust$go)[1])
+    })
+    
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_clust$go)
-      draw_enrich_go(r_clust$go)
+      shiny::req(input$n_go_terms)
+      draw_enrich_go(r_clust$go, max_go = input$n_go_terms)
     })
     
     output$go_results <- shiny::renderUI({
