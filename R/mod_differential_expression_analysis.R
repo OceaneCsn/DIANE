@@ -499,6 +499,7 @@ mod_differential_expression_analysis_server <-
     
     output$max_go_choice <- shiny::renderUI({
       shiny::req(r_dea$go)
+      
      shiny::numericInput(ns("n_go_terms"), 
                                 label = "Top number of GO terms to plot :", 
                                 min = 1, value = dim(r_dea$go)[1])
@@ -506,8 +507,9 @@ mod_differential_expression_analysis_server <-
     
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_dea$go)
-      shiny::req(input$n_go_terms)
-      draw_enrich_go(r_dea$go, max_go = input$n_go_terms)
+      #shiny::req(input$n_go_terms)
+      max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
+      draw_enrich_go(r_dea$go, max_go = max)
     })
     
     output$go_results <- shiny::renderUI({

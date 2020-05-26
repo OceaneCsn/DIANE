@@ -140,7 +140,7 @@ enrich_go <- function(genes, background,
 #' draw_enrich_go(go, max_go = 20)
 draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
   
-  go_data <- go_data[order(-go_data$p.adjust),]
+  go_data <- go_data[order(go_data$p.adjust),]
   res <- go_data[1:min(dim(go_data)[1],max_go),]
   
   res$Description <- substr(res$Description, 1,60)

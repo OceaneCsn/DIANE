@@ -59,12 +59,7 @@ mod_network_inference_ui <- function(id){
 #   ____________________________________________________________________________
 #   regulators input                                                        ####
 
-        shinyWidgets::pickerInput(
-          inputId = ns('regulators_picker'),
-          label = "Available regulators lists :",
-          choices = c("Arabidopsis thaliana - 2192 regulators" = "At",
-                      "Homo sapiens - "),
-        ),
+        shiny::uiOutput(ns("reuglators_choice")),
         
         shiny::h5("Or choose your own :"),
         col_2(shinyWidgets::dropdownButton(
@@ -228,24 +223,29 @@ mod_network_inference_server <- function(input, output, session, r){
   
 #   ____________________________________________________________________________
 #   regulators setting                                                      ####
+  
+  
+  output$reuglators_choice <- shiny::renderUI({
+    print("in picker reg")
+    shiny::req(r$organism != "Other")
+    print("in picker reg")
+    tagList(shinyWidgets::pickerInput(
+    inputId = ns('regulators_picker'),
+    label = "Available regulators lists :",
+    choices = c("Arabidopsis thaliana - 2192 regulators" = "Arabidopsis thaliana",
+                "Homo sapiens - 1636 transcription factors" = "Homo sapiens"),
+    selected = r$organism))
+  })
 
   shiny::observeEvent(input$load_regulators_btn, {
-    shiny::req(r$raw_counts)
-    if (r$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      r$regulators <- demo_data_At$regulators
+    shiny::req(r$raw_counts, r$organism)
+    if (r$organism != "Other") {
+      data("regulators_per_organism", package = "DIANE")
+      r$regulators <- regulators_per_organism[[r$organism]]
     }
     else{
       
-      if(is.null(input$TFs_list_input)){
-        
-        organism <- input$regulators_picker
-        if(organism == "At"){
-          r$regulators <- demo_data_At$regulators
-        }
-        # else, gérer les autres organismes ici
-      }
-      else{
+     
         shiny::req(input$TFs_list_input)
         path = input$TFs_list_input$datapath
         
@@ -259,7 +259,7 @@ mod_network_inference_server <- function(input, output, session, r){
         
         r$regulators <- as.vector(d[,1])
 
-      }
+    }
       
       if(r$splicing_aware){
         r$aggregated_normalized_counts <- 
@@ -267,7 +267,7 @@ mod_network_inference_server <- function(input, output, session, r){
                                                check.names = FALSE))
       }
 
-      else if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
+      else {if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
        
         shinyalert::shinyalert(
           "Something is wrong with the chosen regulators",
@@ -276,11 +276,10 @@ mod_network_inference_server <- function(input, output, session, r){
         )
         r$regulators = NULL
       }
+      }
       
       
-    }
-    
-  })
+    })
   
   #   ____________________________________________________________________________
   #   summaries                                                               ####
@@ -309,7 +308,9 @@ mod_network_inference_server <- function(input, output, session, r){
   })
   
   output$regulators_intersect_summary <- shiny::renderUI({
-    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
+    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs,
+               r$networks)
+    shiny::req()
     
     if(r$splicing_aware) 
       genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
