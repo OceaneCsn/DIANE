@@ -82,9 +82,6 @@ draw_network <- function(nodes, edges){
       maxVelocity = 10,
       stabilization = F
     ) %>%
-    visEvents(click = "function(nodes){
-                  Shiny.onInputChange('click', nodes.nodes);
-                  ;}") %>%
     visGroups(
       groupname = "Regulator",
       size = 28,
