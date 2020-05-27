@@ -49,6 +49,8 @@ usethis::use_package( "plotly" )
 usethis::use_package( "org.Hs.eg.db" ) 
 usethis::use_package( "foreach" ) 
 usethis::use_package( "doParallel" ) 
+usethis::use_package( "doRNG" ) 
+
 #usethis::use_package( "MASS" )
 
 
