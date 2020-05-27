@@ -36,7 +36,8 @@ Imports:
     clusterProfiler,
     plotly,
     AnnotationDbi,
-    org.Hs.eg.db
+    org.Hs.eg.db,
+    foreach
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
