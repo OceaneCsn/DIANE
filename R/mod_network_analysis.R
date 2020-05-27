@@ -65,7 +65,7 @@ mod_network_analysis_ui <- function(id){
       ),
       shiny::tabPanel(
         title = "Per module expression profiles",
-        shiny::h5("Topolocical clusters expression profiles :"),
+        shiny::h4("Topolocical clusters correspond to the network structural communitities"),
         shiny::plotOutput(ns("profiles"), height = "750px")
         
       )

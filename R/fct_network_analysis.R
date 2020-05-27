@@ -1,9 +1,3 @@
-
-
-
-
-
-
 #' Returns modules-communities memberships
 #'
 #' @param graph igraph object, directed

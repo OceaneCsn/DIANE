@@ -504,6 +504,10 @@ mod_network_inference_server <- function(input, output, session, r){
         r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
     }
       
+    membership <- data$nodes$community
+    names(membership) <- data$nodes$id
+    
+    r$networks[[input$input_deg_genes_net]]$membership <- membership
     
     r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
     r$networks[[input$input_deg_genes_net]]$edges <- data$edges
