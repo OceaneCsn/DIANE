@@ -11,7 +11,7 @@
 #' genes <- c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 #' entrez_ids <- convert_from_agi(genes)
 #' print(entrez_ids)
-#' symbolss <- convert_from_agi(genes, to = "symbol")
+#' symbols <- convert_from_agi(genes, to = "symbol")
 #' print(symbols)
 
 convert_from_agi <- function(ids, to = "entrez"){
@@ -35,6 +35,9 @@ convert_from_agi <- function(ids, to = "entrez"){
 #'
 #' @return named list
 #' @export
+#' genes <- c("ENSG00000000003", "ENSG00000003989", "ENSG00000005884", "ENSG00000007168")
+#' convert_from_ensembl(genes)
+#' convert_from_ensembl(genes, to = "symbol")
 convert_from_ensembl <- function(ids, to = "entrez"){
   if(to == "entrez"){
     xx <- as.list(org.Hs.eg.db::org.Hs.egENSEMBL2EG)
@@ -151,4 +154,45 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
       ggplot2::ylab("") + ggplot2::ggtitle("Enriched ontologies and their gene count") +
       ggplot2::scale_color_gradient(low="#114223", high="#92D9A2"), 
       tooltip = c("x", "y"))
+}
+
+
+
+
+
+#' Gives gene information (common name and description) for a specific organism
+#'
+#' @param genes vector of genes, AGI for Arabidopsis and ensembl for Human
+#' @param organism value in c("Arabidopsis thaliana", "Homo sapiens")
+#'
+#' @return a dataframe with input genes as rownames, and columns label and desciption
+#' @export
+#'
+#' @examples 
+#' genes <-  c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
+#' get_gene_information(genes, organism = "Arabidopsis thaliana")
+#' 
+get_gene_information <- function(ids, organism){
+  if(organism == "Arabidopsis thaliana"){
+   data("demo_data_At", package = "DIANE")
+    d <- demo_data_At$gene_info[match(ids, rownames(demo_data_At$gene_info)),]
+  }
+  if (organism == "Homo sapiens"){
+    # handling missing values in entrez ids
+    entrez <- convert_from_ensembl(ids)
+    entrez <- entrez[match(ids, names(entrez))]
+    
+    label <- convert_from_ensembl(ids, to = "symbol")
+    label <- label[match(entrez, names(label))]
+    
+    description = convert_from_ensembl(ids, to = "name")
+    description = description[match(entrez, names(description))]
+    
+    d <- data.frame(genes = ids, label = label,
+                   description = description)
+    
+    rownames(d) <- d$genes
+  }
+  
+  return(d[,c("label", "description")])
 }

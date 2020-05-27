@@ -154,7 +154,7 @@ mod_import_data_ui <- function(id) {
       collapsible = TRUE,
       closable = FALSE,
       shiny::plotOutput(ns("heatmap_preview"), height = 550),
-      footer = "This might help you visualize the different sequencing depths 
+      footer = "This might help you visualize the general aspect of the data and different sequencing depths 
       of your conditions."
     ),
     
@@ -190,7 +190,7 @@ mod_import_data_ui <- function(id) {
       ),
       shiny::fileInput(
         ns('design'),
-        'Choose CSV/TXT design file',
+        'Choose CSV/TXT design file (optional)',
         accept = c(
           'text/csv',
           'text/comma-separated-values,text/plain',
@@ -401,9 +401,9 @@ mod_import_data_server <- function(input, output, session, r) {
   #   genes info                                                              ####
   
   gene_info <- shiny::reactive({
-    if (input$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$gene_info
+    req(r$raw_counts)
+    if (r$organism != "Other") {
+      d <- get_gene_information(rownames(r$raw_counts), r$organism)
     }
     else{
         if(!is.null(input$gene_info_input)){
@@ -475,10 +475,9 @@ mod_import_data_server <- function(input, output, session, r) {
     }
     else{
       number_color = "olive"
-      number = "Additional gene data provided"
+      number = "Additional gene data available"
       number_icon = "fa fa-check"
-      header = paste("Detected fields :", 
-                     paste(colnames(r$gene_info), collapse = ', '))
+      header = paste(colnames(r$gene_info), collapse = ', ')
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
@@ -493,7 +492,7 @@ mod_import_data_server <- function(input, output, session, r) {
     ######## setting organism here
     r$organism <- organism()
     
-    req(r$organism)
+    shiny::req(r$organism)
     
     shinydashboardPlus::descriptionBlock(
       number = r$organism,

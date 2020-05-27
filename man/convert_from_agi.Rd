@@ -23,6 +23,6 @@ gene symbol or description
 genes <- c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 entrez_ids <- convert_from_agi(genes)
 print(entrez_ids)
-symbolss <- convert_from_agi(genes, to = "symbol")
+symbols <- convert_from_agi(genes, to = "symbol")
 print(symbols)
 }
