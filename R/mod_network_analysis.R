@@ -62,6 +62,12 @@ mod_network_analysis_ui <- function(id){
         title = "Degree distributions",
         shiny::plotOutput(ns("distributions"), height = "700px")
         
+      ),
+      shiny::tabPanel(
+        title = "Per module expression profiles",
+        shiny::h5("Topolocical clusters expression profiles :"),
+        shiny::plotOutput(ns("profiles"), height = "750px")
+        
       )
       
     )
@@ -169,6 +175,17 @@ mod_network_analysis_server <- function(input, output, session, r){
     
     draw_network_degrees(nodes = r$networks[[r$current_network]]$nodes,
                          graph = r$networks[[r$current_network]]$graph)
+  })
+  
+  
+  output$profiles <- shiny::renderPlot({
+    shiny::req(r$normalized_counts, r$networks)
+    shiny::req(r$networks[[r$current_network]]$membership)
+    shiny::req(r$networks[[r$current_network]]$conditions)
+    
+    draw_profiles(data = r$normalized_counts,
+                  membership = r$networks[[r$current_network]]$membership,
+                  conds = r$networks[[r$current_network]]$conditions)
   })
 
 }
