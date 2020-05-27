@@ -37,7 +37,8 @@ Imports:
     plotly,
     AnnotationDbi,
     org.Hs.eg.db,
-    foreach
+    foreach,
+    doParallel
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
