@@ -35,6 +35,7 @@ convert_from_agi <- function(ids, to = "entrez"){
 #'
 #' @return named list
 #' @export
+#' @examples
 #' genes <- c("ENSG00000000003", "ENSG00000003989", "ENSG00000005884", "ENSG00000007168")
 #' convert_from_ensembl(genes)
 #' convert_from_ensembl(genes, to = "symbol")
@@ -90,8 +91,8 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' # interest and background gene sets as entrez ids
 #' genes <- convert_from_agi(topTags$table$genes)
 #' background <- convert_from_agi(rownames(normalized_counts))
-#' 
 #' go <- enrich_go(genes, background)
+#' head(go)
 enrich_go <- function(genes, background,
                       org = org.At.tair.db::org.At.tair.db,
                       sim_cutoff = 0.85){
@@ -167,11 +168,10 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 #'
 #' @return a dataframe with input genes as rownames, and columns label and desciption
 #' @export
-#'
+#' 
 #' @examples 
 #' genes <-  c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 #' get_gene_information(genes, organism = "Arabidopsis thaliana")
-#' 
 get_gene_information <- function(ids, organism){
   if(organism == "Arabidopsis thaliana"){
    data("demo_data_At", package = "DIANE")

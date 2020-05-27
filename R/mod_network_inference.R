@@ -220,7 +220,7 @@ mod_network_inference_server <- function(input, output, session, r){
 
   regulators <- shiny::reactive({
     shiny::req(r$raw_counts, r$organism)
-    
+    d <- NULL
     if (r$organism != "Other") {
       data("regulators_per_organism", package = "DIANE")
       d <- regulators_per_organism[[r$organism]]
@@ -250,9 +250,12 @@ mod_network_inference_server <- function(input, output, session, r){
         aggregate_splice_variants(data.frame(r$normalized_counts, 
                                              check.names = FALSE))
     }
-
-    else {if (sum(d %in% row.names(r$raw_counts)) == 0){
-     
+    
+      else {
+        if(!is.null(d)){
+          
+        if (sum(d %in% row.names(r$raw_counts)) == 0){
+        
         shinyalert::shinyalert(
           "Something is wrong with the chosen regulators",
           "No regulators were found in the rownames of the expression data",
@@ -261,6 +264,9 @@ mod_network_inference_server <- function(input, output, session, r){
         d = NULL
       }
       }
+    }
+
+    
     d
     })
   
@@ -405,7 +411,7 @@ mod_network_inference_server <- function(input, output, session, r){
     # either the total number of cores minus one as max
     cpus <- parallel::detectCores()
     if(is.na(cpus)) cpus <- 1
-    else cpus <- max(cpus-1, 1)
+    
     
     shinyWidgets::sliderTextInput(
       inputId = ns("n_cores"),
@@ -413,7 +419,7 @@ mod_network_inference_server <- function(input, output, session, r){
                             multithreaded inference :",
       choices = seq(1, cpus),
       grid = TRUE,
-      selected = cpus)
+      selected = max(1,cpus-1))
     
   })
   

@@ -48,6 +48,6 @@ topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.v
 # interest and background gene sets as entrez ids
 genes <- convert_from_agi(topTags$table$genes)
 background <- convert_from_agi(rownames(normalized_counts))
-
 go <- enrich_go(genes, background)
+head(go)
 }

@@ -203,23 +203,23 @@ themselves.</p>
 #&gt; [1] "Log-like diff: 13.992219216283"
 #&gt; [1] "Log-like diff: 17.1009464677972"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.278067337668776"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0469732341073055"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0160307238038966"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00449461122679562"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00135304200780872"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 4.31980671625493"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.744151240183358"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.133200338110998"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.033433630003147"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 0.00852953589036876"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 146.370285499767"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.19442753947416"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.581354155369221"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.358276221962332"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.233443789817207"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
+#&gt; <span class='message'>[1] "Log-like diff: 245.458189634214"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 1145.02102849025"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 195.17372969099"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 606.935232810743"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 903.506017716648"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
 #&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 3.28789536868446"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.930758150992422"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.07079815105465"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.922957424227423"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.579147871833758"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+#&gt; <span class='message'>[1] "Log-like diff: 765.182066569017"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 714.183263824645"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 680.391819816497"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 695.018670156004"</span>
+#&gt; <span class='message'>[1] "Log-like diff: 668.305261835549"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
 <span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -227,22 +227,22 @@ themselves.</p>
 #&gt; 
 #&gt; Deviance Residuals: 
 #&gt;    Min      1Q  Median      3Q     Max  
-#&gt; -68.58  -39.14  -27.35   -7.64  505.47  
+#&gt; -57.56  -36.54  -21.83    1.08  497.41  
 #&gt; 
 #&gt; Coefficients:
-#&gt;                Estimate Std. Error z value Pr(&gt;|z|)    
-#&gt; (Intercept)   7.7921932  0.0008338 9345.60   &lt;2e-16 ***
-#&gt; Nitrate      -0.5478611  0.0013775 -397.72   &lt;2e-16 ***
-#&gt; Iron         -1.3496343  0.0018373 -734.58   &lt;2e-16 ***
-#&gt; Nitrate:Iron  0.1225181  0.0029460   41.59   &lt;2e-16 ***
+#&gt;                Estimate Std. Error  z value Pr(&gt;|z|)    
+#&gt; (Intercept)   7.0923156  0.0007067 10036.26   &lt;2e-16 ***
+#&gt; Nitrate       0.3440752  0.0009238   372.46   &lt;2e-16 ***
+#&gt; Iron          0.0740408  0.0009814    75.44   &lt;2e-16 ***
+#&gt; Nitrate:Iron -0.4329006  0.0013505  -320.54   &lt;2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 
 #&gt; (Dispersion parameter for poisson family taken to be 1)
 #&gt; 
-#&gt;     Null deviance: 8251186  on 2375  degrees of freedom
-#&gt; Residual deviance: 7052896  on 2372  degrees of freedom
-#&gt; AIC: 7069494
+#&gt;     Null deviance: 15411190  on 6659  degrees of freedom
+#&gt; Residual deviance: 15207833  on 6656  degrees of freedom
+#&gt; AIC: 15262068
 #&gt; 
 #&gt; Number of Fisher Scoring iterations: 6
 #&gt; </div></pre>

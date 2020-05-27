@@ -1,6 +1,15 @@
 
 #' Genie3 regulatory importances estimation
-#'
+#' 
+#' @description GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+#' Among those genes, some must be considered as potential regulators. 
+#' GENIE3 can determine the influence if every regulators over each input genes, 
+#' using their respective expression profiles. You can specify which conditions 
+#' you want to be consired for those profiles during the network inference.
+#' For each target gene, the methods uses Random Forests to provide a ranking of all 
+#' regulators based on their influence on the target expression. This ranking is then merged 
+#' across all targets, giving a global regulatory links ranking stored in the result matrix.
+#' 
 #' @param normalized.count normalized expression matrix containing the regressors and target genes
 #' @param conds condition names to be used in the inference
 #' @param regressors genes to be taken as regressors during the inference procedures (regulator genes)
@@ -9,8 +18,24 @@
 #' @param nCores Number of CPU cores to use during the procedure
 #'
 #' @return matrix object
+#' @export
+#' @examples
+#' data("demo_data_At")
+#' data("regulators_per_organism")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' genes <- topTags$table$genes
+#' 
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+#' targets = genes, regressors = regressors)
 
-network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, nCores=1){
+network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, 
+                              nCores=ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores()-1, 1))){
   
   conditions <- unique(grep(paste(conds, collapse = "|"),
                             colnames(normalized.count), value = TRUE))
@@ -19,19 +44,41 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
   
   regressors <- intersect(rownames(normalized.count), regressors)
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
-                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = nCores, verbose = T)
+                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = nCores, verbose = FALSE)
   
   return(mat)
 }
 
 
 #' Thresholds a non sparse adjascency matrix to return the strongest weights only
+#' 
+#' @description 
+#' Without thresholding, we would obtain a fully connected weighted 
+#' graph from GENIE3, with far too many links to be interpretable.
+#' In order build a meaningful network, this weighted adjacency matrix between 
+#' regulators and targets has to be sparsified, and we have to determine the regulatory 
+#' weights that we consider significant.
 #'
 #' @param mat matrix containing the importance values for each target and regulator
-#' @param n_edges number of edges to keep in the final network
+#' @param n_edges number of edges top edges (based on their weight) to keep in the final network
 #'
 #' @return igraph object
-
+#' @export
+#' @examples
+#' data("demo_data_At")
+#' data("regulators_per_organism")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' genes <- topTags$table$genes
+#' 
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+#' targets = genes, regressors = regressors)
+#' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 network_thresholding <- function(mat, n_edges){
   links <- GENIE3::getLinkList(mat, reportMax = n_edges)
   g <- igraph::graph_from_data_frame(links, directed = T)
@@ -39,13 +86,35 @@ network_thresholding <- function(mat, n_edges){
 }
 
 
-#' Get data compatible with visNetwork from igraph object
+#' Creates data compatible with visNetwork from an igraph object
+#' 
+#' @description Creates dataframe that describe the network.
+#' The degree and community of each node are computed.
+#' Communities are defined by the louvain algorithm, that 
+#' maximizes local modularity. The gene type is asssigned to
+#' eacg gene, either a regulator or a target gene.
 #'
 #' @param graph igraph object
 #' @param regulators list of regulators
 #'
 #' @return list of dataframes containing nodes and edges information
-
+#' @export
+#' @examples
+#' data("demo_data_At")
+#' data("regulators_per_organism")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' genes <- topTags$table$genes
+#' 
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+#' targets = genes, regressors = regressors)
+#' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+#' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 network_data <- function(graph, regulators){
   data <- visNetwork::toVisNetworkData(graph)
   
@@ -66,12 +135,32 @@ network_data <- function(graph, regulators){
 }
 
 
-#' Displays an interavtive network view
+#' Displays an interactive network view, with regulators as green sqaure nodes.
 #'
 #' @param nodes dataframe containing nodes
 #' @param edges dataframe containing edges
 #' 
 #' @import visNetwork
+#' @export
+#' @examples 
+#' data("demo_data_At")
+#' data("regulators_per_organism")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' genes <- topTags$table$genes
+#' 
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+#' targets = genes, regressors = regressors)
+#' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+#' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+#' # adding common names as label for network visualisation
+#' data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
+#' DIANE::draw_network(data$nodes, data$edges)
 draw_network <- function(nodes, edges){
   visNetwork(nodes = nodes, edges = edges) %>%
   visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%

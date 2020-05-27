@@ -12,8 +12,10 @@ A named list with the following elements:
 }
 }
 \source{
-For Arabidopsis thaliana : http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH
-For Human : http://humantfs.ccbr.utoronto.ca/download.php
+\describe{
+ \item{For Arabidopsis thaliana} {http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH}
+ \item{For Human}{http://humantfs.ccbr.utoronto.ca/download.php}
+ }
 }
 \usage{
 regulators_per_organism
@@ -23,8 +25,8 @@ List of regulator genes for a number of model organisms
 }
 \examples{
 {
- head(regulators_per_organism[["Arabidopsis thaliana"]])
- head(regulators_per_organism[["Homo sapiens"]])
+ print(head(regulators_per_organism[["Arabidopsis thaliana"]]))
+ print(head(regulators_per_organism[["Homo sapiens"]]))
 }
 }
 \keyword{datasets}

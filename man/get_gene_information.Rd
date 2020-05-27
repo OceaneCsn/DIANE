@@ -20,5 +20,4 @@ Gives gene information (common name and description) for a specific organism
 \examples{
 genes <-  c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 get_gene_information(genes, organism = "Arabidopsis thaliana")
-
 }

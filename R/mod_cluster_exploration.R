@@ -297,7 +297,7 @@ mod_cluster_exploration_server <-
     
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_clust$go)
-      max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
+      max = ifelse(is.na(input$n_go_terms), dim(r_clust$go)[1],input$n_go_terms )
       draw_enrich_go(r_clust$go, max_go = max)
     })
     

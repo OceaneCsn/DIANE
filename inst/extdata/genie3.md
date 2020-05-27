@@ -7,9 +7,9 @@ The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journa
 
 GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. Among those genes, some must be considered as potential regulators. 
 
-GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be consired foor those profiles during the network inference.
+GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be consired for those profiles during the network inference.
 
-For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged accross all targets, giving a global regulatory links ranking.
+For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
 
 The idea is then to keep the strongest links to build the gene regulatory network. The way of choosing this minimal importance value needed to be included in the network will be described the "thresholding" box.
 

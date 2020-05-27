@@ -185,7 +185,7 @@ mod_import_data_ui <- function(id) {
         circle = TRUE,
         status = "primary",
         icon = shiny::icon("question"),
-        width = "600px",
+        width = "550px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
       shiny::fileInput(
@@ -370,8 +370,9 @@ mod_import_data_server <- function(input, output, session, r) {
       if (sum(rownames(d) %in% r$conditions) < dim(d)[1]) {
         shinyalert::shinyalert(
           "Invalid design rownames...",
-          "The conditions in your design file are not all present
-          in the conditions of your expression matrix.",
+          paste("The conditions in your design file should be the experimental 
+                conditions:", 
+                paste(r$conditions, collapse = ', ')),
           type = "error"
         )
         stop()
