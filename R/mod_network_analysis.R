@@ -102,7 +102,13 @@ mod_network_analysis_server <- function(input, output, session, r){
     
     
     draw_network(nodes = nodes,
-                 edges = r$networks[[r$current_network]]$edges)
+                 edges = r$networks[[r$current_network]]$edges) %>% 
+      visNetwork::visOptions(
+                   selectedBy = "group",
+                   highlightNearest = TRUE,
+                   nodesIdSelection  = TRUE,
+                   collapse = F
+                 ) 
   })
   
   
