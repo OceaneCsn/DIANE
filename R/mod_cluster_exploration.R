@@ -246,7 +246,13 @@ mod_cluster_exploration_server <-
       shiny::req(r$normalized_counts)
       shiny::req(membership())
 
-      
+      if (r$organism == "Other") {
+        shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported for GO analysis", 
+                               "Did you correctly set your organism in the 
+                               Data import tab?",
+                               type = "error")
+      }
       
       # for now, other orgs will come hopefully
       shiny::req(r$organism != "Other")

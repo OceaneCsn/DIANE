@@ -290,7 +290,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         number_icon = "fa fa-check"
         header = paste(dim(r$normalized_counts)[1],
                        " genes after filtering")
-        toDownload <<- r$normalized_counts
+        toDownload <<- round(r$normalized_counts, 2)
       }
     }
     shinydashboardPlus::descriptionBlock(

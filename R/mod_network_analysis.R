@@ -305,10 +305,25 @@ mod_network_analysis_server <- function(input, output, session, r){
     shiny::req(r$normalized_counts)
     shiny::req(r$networks[[r$current_network]]$membership)
     
+    if (r$organism == "Other") {
+      shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported for GO analysis", 
+                             "Did you correctly set your organism in the 
+                               Data import tab?",
+                             type = "error")
+    }
+    shiny::req(r$organism != "Other")
+    
+    
+    if (input$cluster_to_explore == "All") {
+      shinyalert::shinyalert("Please specify a module to perform the analysis on", 
+                            type = "error")
+    }
+    shiny::req(r$organism != "Other")
+    
     shiny::req(input$cluster_to_explore != "All")
     
     
-    shiny::req(r$organism != "Other")
     
     
     genes <- get_genes_in_cluster(membership = 
