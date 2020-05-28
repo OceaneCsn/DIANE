@@ -267,7 +267,7 @@ mod_normalisation_server <- function(input, output, session, r) {
     print(r$tcc)
   })
   
-  toDownload <- shiny::reactiveVal()
+ # toDownload <- shiny::reactiveVal()
   
   
   output$filtering_summary <- shiny::renderUI({
@@ -290,7 +290,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         number_icon = "fa fa-check"
         header = paste(dim(r$normalized_counts)[1],
                        " genes after filtering")
-        toDownload <<- round(r$normalized_counts, 2)
+        #toDownload <<- round(r$normalized_counts, 2)
       }
     }
     shinydashboardPlus::descriptionBlock(
@@ -336,6 +336,7 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   output$dl_bttns <- shiny::renderUI({
     shiny::req(r$normalized_counts)
+    tagList(
     shiny::fluidRow(
       shinyWidgets::downloadBttn(
         outputId = ns("download_normalized_counts_csv"),
@@ -351,6 +352,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         color = "default"
       )
     )
+    )
     
   })
   
@@ -359,7 +361,7 @@ mod_normalisation_server <- function(input, output, session, r) {
       paste("normalized_counts.RData")
     },
     content = function(file) {
-      save(toDownload, file = file)
+      save(round(r$normalized_counts, 2), file = file)
     }
   )
   
@@ -368,7 +370,7 @@ mod_normalisation_server <- function(input, output, session, r) {
       paste("normalized_counts.csv")
     },
     content = function(file) {
-      write.csv(toDownload, file = file, quote = FALSE)
+      write.csv(round(r$normalized_counts, 2), file = file, quote = FALSE)
     }
   )
 }

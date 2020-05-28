@@ -182,22 +182,18 @@ mod_cluster_exploration_server <-
     output$genes_to_explore <- DT::renderDataTable({
       req(r$top_tags, r$current_comparison, membership())
       
-      
-      table <- r$top_tags[[r$current_comparison]]
-      
-      columns <- c("logFC", "logCPM", "FDR")
+      genes <- get_genes_in_cluster(membership = membership(),
+                                    cluster = input$cluster_to_explore)
+      table <- data.frame(Genes = genes)
+
       if (!is.null(r$gene_info)) {
         
-        if (r$splicing_aware) ids <- get_locus(rownames(table), unique = FALSE)
-        else ids <- rownames(table)
-        
-        columns <- c(colnames(r$gene_info), columns)
+        if (r$splicing_aware) ids <- get_locus(genes, unique = FALSE)
+        else ids <- genes
         table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
       }
       
-      table[table$genes %in% get_genes_in_cluster(membership = membership(),
-                                                  cluster = input$cluster_to_explore),
-            columns]
+      table
     })
     
     
@@ -225,7 +221,7 @@ mod_cluster_exploration_server <-
       fit_glm(normalized_counts = r$normalized_counts,
               genes = get_genes_in_cluster(membership = membership(),
                                            cluster = input$cluster_to_explore),
-              design = r$design)
+              design = r$design, factors = get_factors_from_conditions(conditions(), r$design))
     })
     
     output$glm_summary <- shiny::renderPrint({
