@@ -187,7 +187,7 @@ genes <- topTags$table$genes
 regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
 
 mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, targets = genes,
-                         regressors = regressors, nCores = 6)
+                         regressors = regressors)
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
