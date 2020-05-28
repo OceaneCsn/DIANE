@@ -225,7 +225,7 @@ mod_cluster_exploration_server <-
       fit_glm(normalized_counts = r$normalized_counts,
               genes = get_genes_in_cluster(membership = membership(),
                                            cluster = input$cluster_to_explore),
-              design = r$design)
+              design = r$design, factors = get_factors_from_conditions(conditions(), r$design))
     })
     
     output$glm_summary <- shiny::renderPrint({

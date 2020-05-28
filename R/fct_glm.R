@@ -1,5 +1,29 @@
 
+is.unique <- function(vector){
+  if (length(unique(vector))==1) return(TRUE)
+  return(FALSE)
+}
 
+#' Returns the factors that 
+#' don't stay at the same level between 
+#' between the specified conditions
+#'
+#' @param conditions character vetcor of conditions (must be in design rownames)
+#' @param design design dataframe
+#'
+#' @return character vector of "active", or "perturbated" factors
+get_factors_from_conditions <- function(conditions, design){
+  if (is.null(design)) return(conditions)
+  
+  factors <- colnames(design)
+  
+  uniques <- mapply(design[conditions, ], FUN = is.unique)
+  
+  undesired <- names(uniques[uniques == TRUE])
+  
+  
+  return(factors[!factors %in% undesired])
+}
 
 #' Fits a Poisson generalized linear model to a set of genes
 #'
