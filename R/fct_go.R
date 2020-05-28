@@ -163,7 +163,7 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 
 #' Gives gene information (common name and description) for a specific organism
 #'
-#' @param genes vector of genes, AGI for Arabidopsis and ensembl for Human
+#' @param ids vector of genes, AGI for Arabidopsis and ensembl for Human
 #' @param organism value in c("Arabidopsis thaliana", "Homo sapiens")
 #'
 #' @return a dataframe with input genes as rownames, and columns label and desciption

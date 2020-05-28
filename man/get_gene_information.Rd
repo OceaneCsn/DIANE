@@ -7,9 +7,9 @@
 get_gene_information(ids, organism)
 }
 \arguments{
-\item{organism}{value in c("Arabidopsis thaliana", "Homo sapiens")}
+\item{ids}{vector of genes, AGI for Arabidopsis and ensembl for Human}
 
-\item{genes}{vector of genes, AGI for Arabidopsis and ensembl for Human}
+\item{organism}{value in c("Arabidopsis thaliana", "Homo sapiens")}
 }
 \value{
 a dataframe with input genes as rownames, and columns label and desciption
