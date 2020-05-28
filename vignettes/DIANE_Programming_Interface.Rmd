@@ -194,7 +194,7 @@ network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 
 # adding common names as label for network visualisation
-data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
+#data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
 
 knitr::kable(head(data$nodes))
 
