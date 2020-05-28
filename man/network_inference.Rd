@@ -41,6 +41,7 @@ regulators based on their influence on the target expression. This ranking is th
 across all targets, giving a global regulatory links ranking stored in the result matrix.
 }
 \examples{
+\dontrun{
 data("demo_data_At")
 data("regulators_per_organism")
 tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -54,4 +55,5 @@ genes <- topTags$table$genes
 regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
 mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
 targets = genes, regressors = regressors)
+}
 }
