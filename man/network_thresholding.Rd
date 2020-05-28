@@ -9,11 +9,33 @@ network_thresholding(mat, n_edges)
 \arguments{
 \item{mat}{matrix containing the importance values for each target and regulator}
 
-\item{n_edges}{number of edges to keep in the final network}
+\item{n_edges}{number of edges top edges (based on their weight) to keep in the final network}
 }
 \value{
 igraph object
 }
 \description{
-Thresholds a non sparse adjascency matrix to return the strongest weights only
+Without thresholding, we would obtain a fully connected weighted 
+graph from GENIE3, with far too many links to be interpretable.
+In order build a meaningful network, this weighted adjacency matrix between 
+regulators and targets has to be sparsified, and we have to determine the regulatory 
+weights that we consider significant.
+}
+\examples{
+\dontrun{
+data("demo_data_At")
+data("regulators_per_organism")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+genes <- topTags$table$genes
+
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+targets = genes, regressors = regressors)
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+}
 }

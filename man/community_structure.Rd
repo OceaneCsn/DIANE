@@ -15,7 +15,3 @@ community_structure(graph)
 \description{
 Returns modules-communities memberships
 }
-\examples{
-g <- igraph::sample_pa(1000, directed = TRUE)
-head(community_structure(g))
-}

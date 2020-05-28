@@ -6,7 +6,8 @@ cache: packages
 
 r:
   - bioc-release
-  
+
+
 script:
   - R CMD build .
   - R CMD check *tar.gz

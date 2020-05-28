@@ -18,6 +18,7 @@ demo_data_At <- list(raw_counts = raw_counts_At, conditions = conditions_At, des
 
 library(DIANE)
 data("demo_data_At")
+data("regulators_per_organism")
 
 # visualize data before normalizing and filtering :
 DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = F)
@@ -69,16 +70,32 @@ DIANE::fit_glm(normalized_counts, genes_cluster, demo_data_At$design)
 
 
 
-regressors <- intersect(genes, demo_data_At$regulators)
-DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, targets = genes,
+genes <- topTags$table$genes
+
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+
+mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, targets = genes,
                          regressors = regressors)
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+
+# adding common names as label for network visualisation
+data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
+
+DIANE::draw_network(data$nodes, data$edges)
 
 
+DIANE::draw_network_degrees(data$nodes, network)
+
+head(mat)
 
 ####### go analysis
 
 genes <- convert_from_agi(topTags$table$genes)
 background <- convert_from_agi(rownames(normalized_counts))
+
+
 
 go <- enrich_go(genes, background)
 DIANE::draw_enrich_go(go, max_go = 30)

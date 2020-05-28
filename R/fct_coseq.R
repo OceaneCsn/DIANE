@@ -13,6 +13,7 @@
 #' for each gene as "membership"
 #' @export
 #' @examples
+#' \dontrun{
 #' data("demo_data_At")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
 #' threshold = 10*length(demo_data_At$conditions)
@@ -23,6 +24,7 @@
 #' genes <- topTags$table$genes
 #' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
 #' data = normalized_counts, genes = genes, K = 6:9)
+#' }
 run_coseq <- function(conds, genes, data, K = 6:12) {
   conditions <- unique(grep(paste(conds, collapse = "|"),
                             colnames(data), value = TRUE))
@@ -58,6 +60,7 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 #' @importFrom coseq plot
 #' @export
 #' @examples
+#' \dontrun{
 #' data("demo_data_At")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
 #' threshold = 10*length(demo_data_At$conditions)
@@ -70,6 +73,7 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 #' data = normalized_counts, genes = genes, K = 6:9)
 #' DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 #' DIANE::draw_coseq_run(clustering$model, plot = "ICL")
+#' }
 draw_coseq_run <- function(run_pois, plot = "ICL") {
   if (plot == "ICL")
     p <- coseq::plot(run_pois, graphs = c("ICL"))

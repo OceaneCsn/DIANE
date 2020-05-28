@@ -13,6 +13,11 @@ mod_import_data_ui <- function(id) {
   ns <- NS(id)
   tagList(
     shinyalert::useShinyalert(),
+    shinybusy::add_busy_spinner(
+      spin = "self-building-square",
+      position = 'top-left',
+      margins = c(70, 1100)
+    ),
     
     ######################### Title and text
     
@@ -47,7 +52,9 @@ mod_import_data_ui <- function(id) {
         col_8(shinyWidgets::pickerInput(
           inputId = ns('organism'),
           label = "Choose your organism if proposed :",
-          choices = c("Arabidopsis thaliana", "Other")
+          choices = c("Arabidopsis thaliana", 
+                      "Homo sapiens",
+                      "Other")
         ))
       ),
       
@@ -147,7 +154,7 @@ mod_import_data_ui <- function(id) {
       collapsible = TRUE,
       closable = FALSE,
       shiny::plotOutput(ns("heatmap_preview"), height = 550),
-      footer = "This might help you visualize the different sequencing depths 
+      footer = "This might help you visualize the general aspect of the data and different sequencing depths 
       of your conditions."
     ),
     
@@ -178,12 +185,12 @@ mod_import_data_ui <- function(id) {
         circle = TRUE,
         status = "primary",
         icon = shiny::icon("question"),
-        width = "600px",
+        width = "550px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
       shiny::fileInput(
         ns('design'),
-        'Choose CSV/TXT design file',
+        'Choose CSV/TXT design file (optional)',
         accept = c(
           'text/csv',
           'text/comma-separated-values,text/plain',
@@ -288,7 +295,7 @@ mod_import_data_server <- function(input, output, session, r) {
       else{
         #bug here
         shinyalert::shinyalert(
-          "Invalid input data...",
+          "Invalid input data",
           "Did you correctly set the separator?
                                Does your data contains a column named \"Gene\"?",
           type = "error"
@@ -296,6 +303,16 @@ mod_import_data_server <- function(input, output, session, r) {
         stop()
       }
     }
+    
+    if (length(unique(colnames(d))) < length(colnames(d))) {
+      shinyalert::shinyalert(
+        "Invalid rownames",
+        "Please specify unique rownames, in the form condition_replicateNumber",
+        type = "error"
+      )
+      stop()
+    }
+    
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     
@@ -353,8 +370,9 @@ mod_import_data_server <- function(input, output, session, r) {
       if (sum(rownames(d) %in% r$conditions) < dim(d)[1]) {
         shinyalert::shinyalert(
           "Invalid design rownames...",
-          "The conditions in your design file are not all present
-          in the conditions of your expression matrix.",
+          paste("The conditions in your design file should be the experimental 
+                conditions:", 
+                paste(r$conditions, collapse = ', ')),
           type = "error"
         )
         stop()
@@ -364,33 +382,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$design <- d
     d
   })
-  
-  #   ____________________________________________________________________________
-  #   genes info                                                              ####
-  
-  gene_info <- shiny::reactive({
-    if (input$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$gene_info
-    }
-    else{
-      if(!is.null(input$gene_info_input)){
-        path = input$gene_info_input$datapath
-        d <- read.csv(
-          sep = input$sep_gene_info,
-          path,
-          header = TRUE,
-          stringsAsFactors = FALSE,
-          row.names = "Gene",
-          quote = ""
-        )
-      }
-      else{
-        d <- NULL
-      }
-    }
-    d
-  })
+
   
   #   ____________________________________________________________________________
   #   organism                                                                ####
@@ -406,6 +398,32 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   
+  #   ____________________________________________________________________________
+  #   genes info                                                              ####
+  
+  gene_info <- shiny::reactive({
+    req(r$raw_counts)
+    if (r$organism != "Other") {
+      d <- get_gene_information(rownames(r$raw_counts), r$organism)
+    }
+    else{
+        if(!is.null(input$gene_info_input)){
+          path = input$gene_info_input$datapath
+          d <- read.csv(
+            sep = input$sep_gene_info,
+            path,
+            header = TRUE,
+            stringsAsFactors = FALSE,
+            row.names = "Gene",
+            quote = ""
+          )
+        }
+      else{
+        d <- NULL
+      }
+    }
+    d
+  })
   ########### table view
   
   output$raw_data_preview <- DT::renderDataTable({
@@ -458,10 +476,9 @@ mod_import_data_server <- function(input, output, session, r) {
     }
     else{
       number_color = "olive"
-      number = "Additional gene data provided"
+      number = "Additional gene data available"
       number_icon = "fa fa-check"
-      header = paste("Detected fields :", 
-                     paste(colnames(r$gene_info), collapse = ', '))
+      header = paste(colnames(r$gene_info), collapse = ', ')
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
@@ -476,7 +493,7 @@ mod_import_data_server <- function(input, output, session, r) {
     ######## setting organism here
     r$organism <- organism()
     
-    req(r$organism)
+    shiny::req(r$organism)
     
     shinydashboardPlus::descriptionBlock(
       number = r$organism,

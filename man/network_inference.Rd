@@ -10,7 +10,8 @@ network_inference(
   regressors,
   targets,
   nTrees = 5000,
-  nCores = 1
+  nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1,
+    1))
 )
 }
 \arguments{
@@ -30,5 +31,29 @@ network_inference(
 matrix object
 }
 \description{
-Genie3 regulatory importances estimation
+GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+Among those genes, some must be considered as potential regulators. 
+GENIE3 can determine the influence if every regulators over each input genes, 
+using their respective expression profiles. You can specify which conditions 
+you want to be consired for those profiles during the network inference.
+For each target gene, the methods uses Random Forests to provide a ranking of all 
+regulators based on their influence on the target expression. This ranking is then merged 
+across all targets, giving a global regulatory links ranking stored in the result matrix.
+}
+\examples{
+\dontrun{
+data("demo_data_At")
+data("regulators_per_organism")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+genes <- topTags$table$genes
+
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+targets = genes, regressors = regressors)
+}
 }

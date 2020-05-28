@@ -59,11 +59,7 @@ mod_network_inference_ui <- function(id){
 #   ____________________________________________________________________________
 #   regulators input                                                        ####
 
-        shinyWidgets::pickerInput(
-          inputId = ns('regulators_picker'),
-          label = "Available regulators lists :",
-          choices = c("Arabidopsis thaliana - 2192 regulators" = "At"),
-        ),
+        shiny::uiOutput(ns("reuglators_organism_summary")),
         
         shiny::h5("Or choose your own :"),
         col_2(shinyWidgets::dropdownButton(
@@ -86,16 +82,7 @@ mod_network_inference_ui <- function(id){
             '.txt'
           )
         ),
-        
-        
-        shiny::fluidRow(
-          col_12(shinyWidgets::actionBttn(
-            ns("load_regulators_btn"),
-            label = "Find regulators in input genes",
-            color = "success",
-            style = 'bordered'
-          ))),
-        
+      
         
         shiny::fluidRow(col_4(shiny::uiOutput(ns("input_summary"))),
         col_8(shiny::uiOutput(ns("regulators_intersect_summary")))),
@@ -227,59 +214,61 @@ mod_network_inference_server <- function(input, output, session, r){
   
 #   ____________________________________________________________________________
 #   regulators setting                                                      ####
+  
+  
+ 
 
-  shiny::observeEvent(input$load_regulators_btn, {
-    shiny::req(r$raw_counts)
-    if (r$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      r$regulators <- demo_data_At$regulators
+  regulators <- shiny::reactive({
+    shiny::req(r$raw_counts, r$organism)
+    d <- NULL
+    if (r$organism != "Other") {
+      data("regulators_per_organism", package = "DIANE")
+      d <- regulators_per_organism[[r$organism]]
+      print(d)
+      print(r$organism)
     }
-    else{
-      
-      if(is.null(input$TFs_list_input)){
-        
-        organism <- input$regulators_picker
-        if(organism == "At"){
-          r$regulators <- demo_data_At$regulators
-        }
-        # else, gérer les autres organismes ici
-      }
-      else{
-        shiny::req(input$TFs_list_input)
-        path = input$TFs_list_input$datapath
-        
-        d <-
-          read.csv(
-            path,
-            header = FALSE,
-            stringsAsFactors = FALSE,
-            check.names = FALSE
-          )
-        
-        r$regulators <- as.vector(d[,1])
+    
 
-      }
+    if(!is.null(input$TFs_list_input)){
+      path = input$TFs_list_input$datapath
       
-      if(r$splicing_aware){
-        r$aggregated_normalized_counts <- 
-          aggregate_splice_variants(data.frame(r$normalized_counts, 
-                                               check.names = FALSE))
-      }
+      d <-
+        read.csv(
+          path,
+          header = FALSE,
+          stringsAsFactors = FALSE,
+          check.names = FALSE
+        )
+      
+      d <- as.vector(d[,1])
+    }
+    
 
-      else if (sum(r$regulators %in% row.names(r$raw_counts)) == 0){
-       
+
+    if(r$splicing_aware){
+      r$aggregated_normalized_counts <- 
+        aggregate_splice_variants(data.frame(r$normalized_counts, 
+                                             check.names = FALSE))
+    }
+    
+      else {
+        if(!is.null(d)){
+          
+        if (sum(d %in% row.names(r$raw_counts)) == 0){
+        
         shinyalert::shinyalert(
           "Something is wrong with the chosen regulators",
           "No regulators were found in the rownames of the expression data",
           type = "error"
         )
-        r$regulators = NULL
+        d = NULL
       }
-      
-      
+      }
     }
+
     
-  })
+    d
+    })
   
   #   ____________________________________________________________________________
   #   summaries                                                               ####
@@ -307,8 +296,45 @@ mod_network_inference_server <- function(input, output, session, r){
     )
   })
   
+  
+  output$reuglators_organism_summary <- shiny::renderUI({
+
+    r$regulators <- regulators()
+    
+    if(is.null(r$regulators)){
+      number_color = "orange"
+      number = "Please provide a regulators list"
+      number_icon = "fa fa-check"
+      header = ""
+    }
+    else{
+      if (r$organism != "Other"){
+        number_color = "teal"
+        number = length(r$regulators)
+        number_icon = "fa fa-check"
+        header = paste("regulators provided for", r$organism)
+      }
+      else{
+        number_color = "teal"
+        number = length(r$regulators)
+        number_icon = "fa fa-check"
+        header = "Custom regulators provided"
+      }
+      
+    }
+    tagList(shinydashboardPlus::descriptionBlock(
+      number = number,
+      number_color = number_color,
+      text = header,
+      right_border = FALSE
+    ))
+    
+  })
+  
   output$regulators_intersect_summary <- shiny::renderUI({
-    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
+    shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs,
+               r$networks)
+    shiny::req(r$regulators)
     
     if(r$splicing_aware) 
       genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
@@ -342,7 +368,7 @@ mod_network_inference_server <- function(input, output, session, r){
       number_color = "olive"
       number = "Inference successfully completed"
       number_icon = "fa fa-check"
-      header = "You can nwo proceed to thresholding"
+      header = "You can now proceed to thresholding"
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
@@ -364,7 +390,7 @@ mod_network_inference_server <- function(input, output, session, r){
     number_color = "olive"
     number = "Your network is ready"
     number_icon = "fa fa-check"
-    header = "You can visualize it in the next tab"
+    header = "You can explore it in the next tab"
     
     shinydashboardPlus::descriptionBlock(
       number = number,
@@ -385,7 +411,7 @@ mod_network_inference_server <- function(input, output, session, r){
     # either the total number of cores minus one as max
     cpus <- parallel::detectCores()
     if(is.na(cpus)) cpus <- 1
-    else cpus <- max(cpus-1, 1)
+    
     
     shinyWidgets::sliderTextInput(
       inputId = ns("n_cores"),
@@ -393,7 +419,7 @@ mod_network_inference_server <- function(input, output, session, r){
                             multithreaded inference :",
       choices = seq(1, cpus),
       grid = TRUE,
-      selected = cpus)
+      selected = max(1,cpus-1))
     
   })
   
@@ -484,9 +510,16 @@ mod_network_inference_server <- function(input, output, session, r){
         r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
     }
       
+    membership <- data$nodes$community
+    names(membership) <- data$nodes$id
+    
+    r$networks[[input$input_deg_genes_net]]$membership <- membership
     
     r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
     r$networks[[input$input_deg_genes_net]]$edges <- data$edges
+    
+    r$networks[[input$input_deg_genes_net]]$conditions <- 
+      input$input_conditions_net
     
     r$current_network <- input$input_deg_genes_net
     

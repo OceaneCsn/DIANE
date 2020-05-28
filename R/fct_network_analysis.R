@@ -1,34 +1,40 @@
-
-
-
-
-
-
 #' Returns modules-communities memberships
 #'
 #' @param graph igraph object, directed
 #'
 #' @return (named) vector
-#' @export
-#'
-#' @examples
-#' g <- igraph::sample_pa(1000, directed = TRUE)
-#' head(community_structure(g))
 community_structure <- function(graph) {
   g <- igraph::as.undirected(graph, mode = "collapse")
-  
   return(igraph::membership(igraph::cluster_louvain(g)))
 }
 
 
 
 #' Plots the histogram of in and out degrees, betweeness of 
-#' regultors and target genes when relevant
+#' regultors and target genes.
 #'
 #' @param nodes dataframe containing the nodes information
 #' @param graph igraph object
 #'
 #' @export
+#' @examples 
+#' data("demo_data_At")
+#' data("regulators_per_organism")
+#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10*length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' genes <- topTags$table$genes
+#' 
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+#' targets = genes, regressors = regressors)
+#' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+#' 
+#' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+#' DIANE::draw_network_degrees(data$nodes, network)
 draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
   TFs <- nodes[nodes$gene_type == "Regulator", "id"]

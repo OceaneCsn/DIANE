@@ -31,7 +31,21 @@ reference:
   - get_genes_in_cluster
   - fit_glm
   
-
+- title: Gene ontologies and annotations
+- contents:
+  - enrich_go
+  - starts_with("convert_from")
+  - get_gene_information
+ 
+- title: Gene regulatory network inference
+- contents:
+  - starts_with("network_")
+ 
 - title: Visualization functions
 - contents:
   - starts_with("draw_")
+  
+- title: Data
+- contents:
+  - regulators_per_organism
+  - demo_data_At

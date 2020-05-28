@@ -136,20 +136,24 @@ mod_differential_expression_analysis_ui <- function(id) {
         ),
         shiny::tabPanel(title = "Gene Ontology enrichment",
                         
-                        col_6(shinyWidgets::actionBttn(
+                        col_4(shinyWidgets::actionBttn(
                           ns("go_enrich_btn"),
                           label = "Start GO enrichment analysis",
                           color = "success",
                           style = 'bordered'
                         )),
                         
-                        col_6(shinyWidgets::switchInput(
+                        col_4(shinyWidgets::switchInput(
                           inputId = ns("draw_go"),
                           value = TRUE,
                           onLabel = "Plot",
                           offLabel = "Data table",
                           label = "Result type"
                         )),
+                        
+                        col_4(shiny::uiOutput(ns("max_go_choice"))),
+                        
+                        
                         
                         shiny::hr(),
                         
@@ -457,7 +461,7 @@ mod_differential_expression_analysis_server <-
 
       
       # for now, other orgs will come hopefully
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism != "Other")
       
       
       genes <- r_dea$top_tags$genes
@@ -473,6 +477,12 @@ mod_differential_expression_analysis_server <-
         background <- convert_from_agi(background)
         org = org.At.tair.db::org.At.tair.db
       }
+      
+      if(r$organism == "Homo sapiens"){
+        genes <- convert_from_ensembl(genes)
+        background <- convert_from_ensembl(background)
+        org = org.Hs.eg.db::org.Hs.eg.db
+      }
 
       # TODO add check if it is entrez with regular expression here
       shiny::req(length(genes) > 0, length(background) > 0)
@@ -487,17 +497,27 @@ mod_differential_expression_analysis_server <-
       r_dea$go[,c("Description", "GeneRatio", "BgRatio", "p.adjust")]
     })
     
+    output$max_go_choice <- shiny::renderUI({
+      shiny::req(r_dea$go)
+      
+     shiny::numericInput(ns("n_go_terms"), 
+                                label = "Top number of GO terms to plot :", 
+                                min = 1, value = dim(r_dea$go)[1])
+    })
+    
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_dea$go)
-      draw_enrich_go(r_dea$go)
+      #shiny::req(input$n_go_terms)
+      max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
+      draw_enrich_go(r_dea$go, max_go = max)
     })
     
     output$go_results <- shiny::renderUI({
       
-      if(r$organism != "Arabidopsis thaliana")
-        shiny::h4("GO analysis is only supported for Arabidopsis (for now!)")
+      if(r$organism == "Other")
+        shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
       
-      shiny::req(r$organism == "Arabidopsis thaliana")
+      shiny::req(r$organism != "Other")
       
       shiny::req(r_dea$go)
       if (!input$draw_go){

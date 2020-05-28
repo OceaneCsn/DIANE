@@ -46,6 +46,11 @@ usethis::use_package( "gridExtra" )
 usethis::use_package( "org.At.tair.db" )
 usethis::use_package( "clusterProfiler" )
 usethis::use_package( "plotly" )
+usethis::use_package( "org.Hs.eg.db" ) 
+usethis::use_package( "foreach" ) 
+usethis::use_package( "doParallel" ) 
+usethis::use_package( "doRNG" ) 
+
 #usethis::use_package( "MASS" )
 
 
@@ -82,7 +87,7 @@ golem::add_fct( "go")
 ## Add internal datasets ----
 ## If you have data in your package
 usethis::use_data(demo_data_At, version = 3, overwrite = T)
-
+usethis::use_data(regulators_per_organism , version = 3, overwrite = T)
 
 
 usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_network_inference.R
 \name{draw_network}
 \alias{draw_network}
-\title{Displays an interavtive network view}
+\title{Displays an interactive network view, with regulators as green sqaure nodes.}
 \usage{
 draw_network(nodes, edges)
 }
@@ -12,5 +12,25 @@ draw_network(nodes, edges)
 \item{edges}{dataframe containing edges}
 }
 \description{
-Displays an interavtive network view
+Displays an interactive network view, with regulators as green sqaure nodes.
+}
+\examples{
+data("demo_data_At")
+data("regulators_per_organism")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+genes <- topTags$table$genes
+
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+targets = genes, regressors = regressors)
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+# adding common names as label for network visualisation
+data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
+DIANE::draw_network(data$nodes, data$edges)
 }

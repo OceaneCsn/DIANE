@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_network_inference.R
 \name{network_data}
 \alias{network_data}
-\title{Get data compatible with visNetwork from igraph object}
+\title{Creates data compatible with visNetwork from an igraph object}
 \usage{
 network_data(graph, regulators)
 }
@@ -15,5 +15,28 @@ network_data(graph, regulators)
 list of dataframes containing nodes and edges information
 }
 \description{
-Get data compatible with visNetwork from igraph object
+Creates dataframe that describe the network.
+The degree and community of each node are computed.
+Communities are defined by the louvain algorithm, that 
+maximizes local modularity. The gene type is asssigned to
+eacg gene, either a regulator or a target gene.
+}
+\examples{
+\dontrun{
+data("demo_data_At")
+data("regulators_per_organism")
+tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+threshold = 10*length(demo_data_At$conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+genes <- topTags$table$genes
+
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+targets = genes, regressors = regressors)
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+}
 }

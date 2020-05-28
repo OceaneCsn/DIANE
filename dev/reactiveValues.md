@@ -1,6 +1,6 @@
 
 # Reactive values in DIANE shared accross modules
-
+---
 
 Variable reactive globale **r** :
 ```
@@ -36,3 +36,12 @@ r
 Juste pour savoir ce qui est accessible à tout moment dans l'appli.
 
 Peut être aussi pour être stockée dans une session et reloadé direct.
+
+
+Organism specific :
+
++ GO analysis, change id to entrez
+
++ gene info
+
++ TF list for network inference
