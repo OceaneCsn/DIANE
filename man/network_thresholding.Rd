@@ -22,6 +22,7 @@ regulators and targets has to be sparsified, and we have to determine the regula
 weights that we consider significant.
 }
 \examples{
+\dontrun{
 data("demo_data_At")
 data("regulators_per_organism")
 tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -36,4 +37,5 @@ regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]]
 mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
 targets = genes, regressors = regressors)
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+}
 }

@@ -13,7 +13,7 @@ A named list with the following elements:
 }
 \source{
 \describe{
- \item{For Arabidopsis thaliana} {http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH}
+ \item{For Arabidopsis thaliana}{http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH}
  \item{For Human}{http://humantfs.ccbr.utoronto.ca/download.php}
  }
 }

@@ -22,6 +22,7 @@ maximizes local modularity. The gene type is asssigned to
 eacg gene, either a regulator or a target gene.
 }
 \examples{
+\dontrun{
 data("demo_data_At")
 data("regulators_per_organism")
 tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -37,4 +38,5 @@ mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditio
 targets = genes, regressors = regressors)
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+}
 }

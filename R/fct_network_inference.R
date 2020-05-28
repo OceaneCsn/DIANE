@@ -65,6 +65,7 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
 #' @return igraph object
 #' @export
 #' @examples
+#' \dontrun{
 #' data("demo_data_At")
 #' data("regulators_per_organism")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -79,6 +80,7 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
 #' mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
 #' targets = genes, regressors = regressors)
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+#' }
 network_thresholding <- function(mat, n_edges){
   links <- GENIE3::getLinkList(mat, reportMax = n_edges)
   g <- igraph::graph_from_data_frame(links, directed = T)
@@ -100,6 +102,7 @@ network_thresholding <- function(mat, n_edges){
 #' @return list of dataframes containing nodes and edges information
 #' @export
 #' @examples
+#' \dontrun{
 #' data("demo_data_At")
 #' data("regulators_per_organism")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -115,6 +118,7 @@ network_thresholding <- function(mat, n_edges){
 #' targets = genes, regressors = regressors)
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 #' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+#' }
 network_data <- function(graph, regulators){
   data <- visNetwork::toVisNetworkData(graph)
   
