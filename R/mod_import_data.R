@@ -404,7 +404,11 @@ mod_import_data_server <- function(input, output, session, r) {
   gene_info <- shiny::reactive({
     req(r$raw_counts)
     if (r$organism != "Other") {
-      d <- get_gene_information(rownames(r$raw_counts), r$organism)
+      ids <- rownames(r$raw_counts)
+      if(r$splicing_aware){
+        ids <- get_locus(rownames(r$raw_counts))
+      }
+      d <- get_gene_information(ids, r$organism)
     }
     else{
         if(!is.null(input$gene_info_input)){
@@ -434,6 +438,7 @@ mod_import_data_server <- function(input, output, session, r) {
   output$heatmap_preview <- shiny::renderPlot({
     shiny::req(r$raw_counts)
     d <- raw_data()[rowSums(raw_data()) > 0,]
+    
     draw_heatmap(d)
   })
   
