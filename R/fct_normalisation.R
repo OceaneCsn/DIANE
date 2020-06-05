@@ -81,6 +81,7 @@ are_splice_variants <- function(gene_ids){
 #' @param data dataframe : expression data with supposed splice variants as rownames
 #'
 #' @return dataframe
+#' @export
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
     
@@ -101,6 +102,7 @@ aggregate_splice_variants <- function(data){
 #' @param gene_ids list of gene ids with splice variants information
 #' @param unique boolean, weather or not to return unique locus vector
 #' @return character vector
+#' @export
 get_locus <- function(gene_ids, unique = TRUE){
   if(unique){
     return(unique(
