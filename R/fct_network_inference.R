@@ -38,15 +38,14 @@
 
 network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, 
                               nCores=ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores()-1, 1))){
-  
-  conditions <- unique(grep(paste(conds, collapse = "|"),
-                            colnames(normalized.count), value = TRUE))
+
+  conditions <- colnames(normalized.count)[str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
   
   normalized.count <- normalized.count[,conditions]
   
   regressors <- intersect(rownames(normalized.count), regressors)
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
-                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = nCores, verbose = FALSE)
+                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = 2, verbose = FALSE)
   
   return(mat)
 }

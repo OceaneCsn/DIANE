@@ -26,8 +26,8 @@
 #' data = normalized_counts, genes = genes, K = 6:9)
 #' }
 run_coseq <- function(conds, genes, data, K = 6:12) {
-  conditions <- unique(grep(paste(conds, collapse = "|"),
-                            colnames(data), value = TRUE))
+
+  conditions <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
   
   groups <- str_split_fixed(conditions, '_', 2)[, 1]
   dataC <- round(data[genes, conditions], 0)
@@ -133,8 +133,7 @@ draw_profiles <-
            nrow = 3) {
     clusters <- membership
     
-    conditions <- unique(grep(paste(conds, collapse = "|"),
-                              colnames(data), value = TRUE))
+    conditions <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
     
     
     data <- data[names(clusters), conditions]

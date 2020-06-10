@@ -39,9 +39,8 @@ draw_heatmap <-
     if (is.null(conditions))
       conds <- colnames(data)
     else
-      conds <- unique(grep(paste(conditions, collapse = "|"),
-                           colnames(data), value = TRUE))
-    
+      conds <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conditions]
+      
     if (log)
       data <- log(data + 1)
     if (profiles)
