@@ -282,13 +282,21 @@ mod_network_analysis_server <- function(input, output, session, r){
     shiny::req(r$networks[[r$current_network]]$conditions)
     shiny::req(input$cluster_to_explore)
     
+    if(r$splicing_aware) {
+      data <- r$aggregated_normalized_counts
+    }
+    else{
+      data <- r$normalized_counts
+    }
+    
     if(input$cluster_to_explore == "All"){
-      draw_profiles(data = r$normalized_counts,
+   
+      draw_profiles(data = data,
                     membership = r$networks[[r$current_network]]$membership,
                     conds = r$networks[[r$current_network]]$conditions)
     }
     else{
-      draw_profiles(data = r$normalized_counts,
+      draw_profiles(data = data,
                     membership = r$networks[[r$current_network]]$membership,
                     conds = r$networks[[r$current_network]]$conditions, 
                     k = input$cluster_to_explore)
