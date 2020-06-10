@@ -132,10 +132,10 @@ app_ui <- function(request) {
                                   mod_network_inference_ui("network_inference_ui_1")),
           shinydashboard::tabItem(tabName = "network_analysis_tab",
                                   mod_network_analysis_ui("network_analysis_ui_1")
-          ),
-          shinydashboard::tabItem(tabName = "module_analysis_tab",
-                                  mod_module_analysis_ui("module_analysis_ui_1")
           )
+          # shinydashboard::tabItem(tabName = "module_analysis_tab",
+          #                         mod_module_analysis_ui("module_analysis_ui_1")
+          # )
          
         )
         

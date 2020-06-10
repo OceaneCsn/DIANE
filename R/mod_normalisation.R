@@ -342,14 +342,14 @@ mod_normalisation_server <- function(input, output, session, r) {
         outputId = ns("download_normalized_counts_csv"),
         label = "Download normalized counts as .csv",
         style = "bordered",
-        color = "default"
+        color = "success"
       ),
       
       shinyWidgets::downloadBttn(
         outputId = ns("download_normalized_counts_RData"),
         label = "Download normalized counts as .RData",
         style = "bordered",
-        color = "default"
+        color = "success"
       )
     )
     )

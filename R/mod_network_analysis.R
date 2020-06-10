@@ -60,23 +60,23 @@ mod_network_analysis_ui <- function(id){
       
       
       shiny::tabPanel(
-        title = "Gene ranking",
+        title = "Degree-ranked gene list",
         DT::dataTableOutput(ns("gene_ranking"))
         
       ),
       shiny::tabPanel(
-        title = "Degree distributions",
+        title = "In-Out degree distributions",
         shiny::plotOutput(ns("distributions"), height = "700px")
         
       ),
       shiny::tabPanel(
-        title = "Per module expression profiles",
+        title = "Modules expression profiles",
         shiny::h4("Topolocical clusters correspond to the network structural communitities"),
         shiny::plotOutput(ns("profiles"), height = "750px")
         
       ),
       shiny::tabPanel(
-        title = "Per module GO enrichment",
+        title = "Modules GO enrichment",
         col_4(shinyWidgets::actionBttn(
           ns("go_enrich_btn"),
           label = "Start GO enrichment analysis for this gene community",
