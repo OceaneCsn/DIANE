@@ -168,3 +168,108 @@ draw_MDS <- function(normalized.count, conditions = NULL) {
     axis.title = ggplot2::element_blank()
   )
 }
+
+
+
+#' Draw variables along principal PCA components
+#'
+#' @param data normalized expression data
+#'
+#' @export
+#' @import ggplot2
+#'
+#' @examples
+#' data("demo_data_At")
+#' tcc_object <-
+#' DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+#' threshold = 10 * length(demo_data_At$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' normalized_counts <- TCC::getNormalizedData(tcc_object)
+#' draw_PCA(normalized_counts)
+draw_PCA <- function(data) {
+  # PCA computation
+  data <- log(data + 2)
+  data <- data / rowMeans(data)
+  acp <-
+    ade4::dudi.pca(
+      data,
+      center = TRUE,
+      scale = TRUE,
+      scannf = FALSE,
+      nf = 4
+    )
+  
+  acp$co$condition = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 1]
+  
+  scree <-
+    data.frame(
+      component = seq(1:length(acp$eig)),
+      eigen.values = acp$eig,
+      explained.variance = round(acp$eig / sum(acp$eig) *
+                                   100, 2)
+    )
+  scree <- scree[1:min(nrow(scree), 4), ]
+  
+  # Plots
+  g1_2 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp1,
+             y = Comp2,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "none") +
+    ggtitle("Principal components 1 and 2") +  
+    xlab(paste("x-axis : Comp1 ", scree[1, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp2 ", scree[2, "explained.variance"], "%"))
+  
+  g2_3 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp2,
+             y = Comp3,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "none") +
+    ggtitle("Principal components 2 and 3") + 
+    xlab(paste("x-axis : Comp2 ", scree[2, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp3 ", scree[3, "explained.variance"], "%"))
+  
+  g3_4 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp3,
+             y = Comp4,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "bottom",
+          legend.text = ggplot2::element_text(size = 18),
+          legend.text.align = 1) +
+    ggtitle("Principal components 3 and 4") + 
+    xlab(paste("x-axis : Comp3 ", scree[3, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp4 ", scree[4, "explained.variance"], "%"))
+  
+  screeplot <- ggplot(scree,
+                      aes(
+                        y = explained.variance,
+                        x = component,
+                        fill = component,
+                        label = paste(round(explained.variance, 1), '%')
+                      )) +
+    geom_bar(stat = "identity") + geom_text(size = 6,
+                                            vjust = 1.6,
+                                            color = "white") +
+    ggtitle("PCA Screeplot") + theme(legend.position = "none")
+  
+  
+  gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
+}
