@@ -105,11 +105,14 @@ enrich_go <- function(genes, background,
                                    pvalueCutoff  = 0.01,
                                    qvalueCutoff  = 0.05,
                                    readable = TRUE)
+  if(!is.null(ego)){
+    simpOnt <- clusterProfiler::simplify(ego, cutoff=sim_cutoff, 
+                                         by="p.adjust", select_fun=min)
+    res <- simpOnt@result[order(-simpOnt@result$Count),]
+    return(res)
+  }
+  else{return(NULL)}
   
-  simpOnt <- clusterProfiler::simplify(ego, cutoff=sim_cutoff, 
-                                       by="p.adjust", select_fun=min)
-  res <- simpOnt@result[order(-simpOnt@result$Count),]
-  return(res)
 }
 
 

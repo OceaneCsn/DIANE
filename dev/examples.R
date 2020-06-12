@@ -144,13 +144,21 @@ DIANE::draw_enrich_go(go, max_go = 30)
 
 ########### tests ACP
 
-
-
-library(ade4)
-
-library(gridExtra)
-
 draw_pca(normalized_counts)
+
+
+## demo 
+
+raw_counts <- read.csv("D:/These/DIANE_inputs/demo_counts.csv", sep = ',', h = T, row.names = "Gene")
+
+design <- read.csv("D:/These/DIANE_inputs/abiotic_stresses_design.csv", sep = ',', h = T, row.names = "Condition")
+
+library(DIANE)
+data("demo_data_At")
+annotation_At <- demo_data_At$gene_info
+
+conditions <- stringr::str_split_fixed(colnames(raw_counts), '_', 2)[,1]
+
 
 
 

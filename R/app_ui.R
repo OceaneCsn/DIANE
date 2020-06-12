@@ -83,9 +83,7 @@ app_ui <- function(request) {
             shinydashboard::menuSubItem(tabName = "network_inference_tab",
                                         text = "Network inference"),
             shinydashboard::menuSubItem(tabName = "network_analysis_tab",
-                                        text = "Network analysis"),
-            shinydashboard::menuSubItem(tabName = "module_analysis_tab",
-                                        text = "Explore communities")
+                                        text = "Network analysis")
             )
           )
       ),
