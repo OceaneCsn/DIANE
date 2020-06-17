@@ -155,10 +155,14 @@ design <- read.csv("D:/These/DIANE_inputs/abiotic_stresses_design.csv", sep = ',
 
 library(DIANE)
 data("demo_data_At")
-annotation_At <- demo_data_At$gene_info
+
+
+gene_annotations <- list("Arabidopsis thaliana" = demo_data_At$gene_info)
 
 conditions <- stringr::str_split_fixed(colnames(raw_counts), '_', 2)[,1]
+demo_data_At
 
 
+abiotic_stresses <- list(raw_counts = raw_counts, design = design, conditions = conditions)
 
 

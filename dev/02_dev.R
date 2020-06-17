@@ -87,11 +87,12 @@ golem::add_fct( "go")
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data(demo_data_At, version = 3, overwrite = T)
+usethis::use_data(abiotic_stresses, version = 3, overwrite = T)
+usethis::use_data(gene_annotations , version = 3, overwrite = T)
 usethis::use_data(regulators_per_organism , version = 3, overwrite = T)
 
 
-usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
+#usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 
 
 ## Tests ----
 ## Add one line by test you want to create

@@ -15,6 +15,7 @@ draw_network(nodes, edges)
 Displays an interactive network view, with regulators as green sqaure nodes.
 }
 \examples{
+\dontrun{
 data("demo_data_At")
 data("regulators_per_organism")
 tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -32,5 +33,5 @@ network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 # adding common names as label for network visualisation
 data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
-DIANE::draw_network(data$nodes, data$edges)
+DIANE::draw_network(data$nodes, data$edges)}
 }

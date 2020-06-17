@@ -147,7 +147,7 @@ network_data <- function(graph, regulators){
 #' 
 #' @import visNetwork
 #' @export
-#' @examples 
+#' @examples \dontrun{
 #' data("demo_data_At")
 #' data("regulators_per_organism")
 #' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
@@ -165,7 +165,7 @@ network_data <- function(graph, regulators){
 #' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 #' # adding common names as label for network visualisation
 #' data$nodes$label <- demo_data_At$gene_info[match(data$nodes$id, rownames(demo_data_At$gene_info)), "label"]
-#' DIANE::draw_network(data$nodes, data$edges)
+#' DIANE::draw_network(data$nodes, data$edges)}
 draw_network <- function(nodes, edges){
   visNetwork(nodes = nodes, edges = edges) %>%
   visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
