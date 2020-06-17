@@ -68,9 +68,11 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' @param fit edgeR glmFit
 #' @param reference condition being considered as teh reference for differential analysis
 #' @param perturbation condition we compared to the reference for differential analysis
-#' @param p.value numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or lower than specified are returned
-#'
-#' @return topTags object, which table element contains DEGs dataframe
+#' @param p.value numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
+#' lower than specified are returned
+#' @param lfc minimal absolute log fold change required for a gene to be considered as 
+#' differnetially expressed.
+#' @return topTags object, which table element contains DEGs dataframe.
 #' @export
 #' @examples
 #' data("demo_data_At")
@@ -80,13 +82,14 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
 #' DEGs <- topTags$table
-estimateDEGs <- function(fit, reference, perturbation, p.value = 1) {
+estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   contrast <-
     ifelse(colnames(fit$design) == reference,
            -1,
            ifelse(colnames(fit$design) == perturbation, 1, 0))
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
   top <- edgeR::topTags(lrt, p.value = p.value, n = Inf)
+  top$table <- top$table[abs(top$table$logFC) > lfc,]
   return(top)
 }
 

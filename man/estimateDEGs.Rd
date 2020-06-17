@@ -4,7 +4,7 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation, p.value = 1)
+estimateDEGs(fit, reference, perturbation, p.value = 1, lfc = 0)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
@@ -13,10 +13,14 @@ estimateDEGs(fit, reference, perturbation, p.value = 1)
 
 \item{perturbation}{condition we compared to the reference for differential analysis}
 
-\item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or lower than specified are returned}
+\item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
+lower than specified are returned}
+
+\item{lfc}{minimal absolute log fold change required for a gene to be considered as 
+differnetially expressed.}
 }
 \value{
-topTags object, which table element contains DEGs dataframe
+topTags object, which table element contains DEGs dataframe.
 }
 \description{
 Given a glmFit, performs a log ratio test using edgeR function glmLRT and

@@ -85,6 +85,8 @@ are_splice_variants <- function(gene_ids){
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
     
+    data <- data.frame(data)
+    
     locus <- stringr::str_replace_all(rownames(data), 
                                       pattern = "\\.[[:digit:]]+$", "")
     data$locus <- locus
