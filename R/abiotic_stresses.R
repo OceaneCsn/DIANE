@@ -28,11 +28,19 @@
 #'  \item{design}{Dataframe. Describes for each condition, the level of each factor.}
 #'  \item{conditions}{Character vector. Gives the condition corresponding to each 
 #'  column of the raw_counts element}
+#'  \item{heat_DEGs}{Character vector. 692 genes detected as differentially expressed between control and heat stress, 
+#'  with adjusted pavlue of 0.01 and absolute log fold change of 2.}
+#'  \item{heat_DEGs_coseq_membership}{Named character vector. Cluster of the 692 genes detected as 
+#'  differentially expressed between control and heat stress, 
+#'  This membership was obtained after running coseq expression based clustering on those genes, 
+#'  on all the dataset conditions, and resulted in 9 clusters.}
+#'  \item{heat_DEGs_regulatory_links}{Character vector. 692 genes detected as differentially expressed between control and heat stress, 
+#'  with adjusted pavlue of 0.01 and absolute log fold change of 2.}
 #' }
 #' @examples
 #' {
-#'  head(abiotic_stresses$raw_counts)
-#'  abiotic_stresses$design
-#'  abiotic_stresses$conditions
+#'  print(head(abiotic_stresses$raw_counts))
+#'  print(abiotic_stresses$design)
+#'  print(abiotic_stresses$conditions)
 #' }
 "abiotic_stresses"

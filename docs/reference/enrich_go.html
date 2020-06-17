@@ -191,9 +191,37 @@ org.xx.xx.db)</p></td>
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_locus.html'>get_locus</a></span>(<span class='no'>genes</span>)
 <span class='no'>background</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_locus.html'>get_locus</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>))
 
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>convert_from</span>-<span class='fu'>agi</span>(<span class='no'>genes</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'convert_from' not found</span></div><div class='input'><span class='no'>background</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_from_agi.html'>convert_from_agi</a></span>(<span class='no'>background</span>)
+<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_from_agi.html'>convert_from_agi</a></span>(<span class='no'>genes</span>)
+<span class='no'>background</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_from_agi.html'>convert_from_agi</a></span>(<span class='no'>background</span>)
 
-<span class='no'>go</span> <span class='kw'>&lt;-</span> <span class='fu'>enrich_go</span>(<span class='no'>genes</span>, <span class='no'>background</span>)</div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>--&gt; No gene can be mapped....</span></div><div class='output co'>#&gt; <span class='message'>--&gt; Expected input gene ID: 821972,822493,832453,831436,841165,841684</span></div><div class='output co'>#&gt; <span class='message'>--&gt; return NULL...</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>go</span>)</div><div class='output co'>#&gt; NULL</div></pre>
+<span class='no'>go</span> <span class='kw'>&lt;-</span> <span class='fu'>enrich_go</span>(<span class='no'>genes</span>, <span class='no'>background</span>)</div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>go</span>)</div><div class='output co'>#&gt;                    ID                  Description GeneRatio   BgRatio
+#&gt; GO:0009408 GO:0009408             response to heat    52/498 211/15722
+#&gt; GO:0006457 GO:0006457              protein folding    37/498 170/15722
+#&gt; GO:0042493 GO:0042493             response to drug    36/498 423/15722
+#&gt; GO:0006970 GO:0006970   response to osmotic stress    36/498 490/15722
+#&gt; GO:0006979 GO:0006979 response to oxidative stress    30/498 405/15722
+#&gt; GO:0071456 GO:0071456 cellular response to hypoxia    25/498 223/15722
+#&gt;                  pvalue     p.adjust       qvalue
+#&gt; GO:0009408 7.669228e-32 9.548189e-29 9.404896e-29
+#&gt; GO:0006457 6.570526e-21 4.090152e-18 4.028770e-18
+#&gt; GO:0042493 7.451098e-08 6.184411e-06 6.091599e-06
+#&gt; GO:0006970 2.555805e-06 1.272791e-04 1.253690e-04
+#&gt; GO:0006979 1.512732e-05 6.975376e-04 6.870693e-04
+#&gt; GO:0071456 4.362043e-08 4.525620e-06 4.457702e-06
+#&gt;                                                                                                                                                                                                                                                                                                                                                                     geneID
+#&gt; GO:0009408 Hop3/ATFKBP65/NA/NA/ATHSFA2/ATHS83/ATHSP101/ATMBF1C/NA/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/NA/NA/HLP1/ATFKBP62/CLPB-M/ATERDJ3A/ATHSP70/HSP17.6II/NA/CPN10/AtHsp90.5/AT-HSFB2B/HSP60/HSC70-5/NA/AT-P5C1/NA/SES1/Fes1A/AtHsp90.2/HSA32/BIP1/BIP/AR192/DREB2/AtGolS1/ATHSP22.0/PUB48/HSP21/HSP18.2/Hsp70b/AT-HSFA3/AT-HSFB2A/HTT1/DREB2/AtPARK13/AtERF53/NA/BIP3
+#&gt; GO:0006457                                                                                                             ATFKBP65/NA/NA/NA/ATHS83/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/NA/NA/ATFKBP62/DNAJ/CLPB-M/NA/ATHSP70/HSP17.6II/NA/CPN10/AtHsp90.5/HSP60/HSC70-5/AtHsp90-6/NA/NA/SES1/AtHsp90.2/ATCNX1/BIP1/BIP/AR192/Cpn60beta2/CYP40/ATHSP22.0/HSP18.2/Hsp70b/BIP3
+#&gt; GO:0042493                                                                                                                 NA/NA/ATHSFA2/ATHSP17.4/AT-HSP17.6A/NA/NA/HSP17.6II/NA/AT-HSFB2B/NA/NA/DREB2/ATHSP22.0/ATWRKY54/NA/PCC1/HSP18.2/ATUPS1/AT-HSFA3/AT-HSFB2A/ANAC092/ATWRKY38/LURP1/NA/ARR7/AtERF98/ATWRKY30/AtRLP52/ATFER1/NA/AtERF014/ZAT11/AtSWEET15/AtCAPE9/NA
+#&gt; GO:0006970                                                                                                           NA/NA/ATGRP7/ATHSP17.4/AT-HSP17.6A/NA/NA/ATFKBP62/HSP17.6II/NA/AtHsp90.5/NA/PIP2;3/AT-P5C1/NA/Fes1A/AtHsp90.2/ABX45/AtGolS1/ATHSP22.0/ATWRKY54/HSP18.2/RAP2.4/NA/ANAC092/AtLtpI-11/CCX2/5PTASE11/AtERF53/AtLEA3/FAR5/AtRLP30/NA/ERD7/AtSWEET15/ATTSPO
+#&gt; GO:0006979                                                                                                                                                                                 NA/NA/ATHSFA2/ATHSP17.4/AT-HSP17.6A/NA/NA/HSP17.6II/NA/NA/NA/NA/DREB2/AtGolS1/ATHSP22.0/NA/APX1B/ATWRKY54/AtGolS3/HSP18.2/NA/NA/ANAC092/PRX40/ATFER3/PRX9/ATWRKY30/ATFER1/NA/NA
+#&gt; GO:0071456                                                                                                                                                                                                                  ATHSFA2/ATHSP101/ATMBF1C/ATHSP17.4/AT-HSP17.6A/NA/NA/HLP1/HSP17.6II/AT-HSFB2B/NA/NA/ETR2/DREB2/NA/MPSR1/ATHSP22.0/NA/NA/NA/NA/CYP81F2/NA/NA/NA
+#&gt;            Count
+#&gt; GO:0009408    52
+#&gt; GO:0006457    37
+#&gt; GO:0042493    36
+#&gt; GO:0006970    36
+#&gt; GO:0006979    30
+#&gt; GO:0071456    25</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

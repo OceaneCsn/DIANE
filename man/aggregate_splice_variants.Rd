@@ -21,5 +21,5 @@ all variants for the same gene
 }
 \examples{
 data("abiotic_stresses")
-aggregate_splice_variants(abiotic_stress$normalized_counts)
+aggregate_splice_variants(abiotic_stresses$normalized_counts)
 }
