@@ -29,11 +29,11 @@ between the reference and perturbation conditions.
 log ratios are expressed as log(perturbation/reference)
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+threshold = 10*length(abiotic_stresses$conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 DEGs <- topTags$table
 }

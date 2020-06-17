@@ -1,9 +1,3 @@
-library(pheatmap)
-library(stringr)
-library(ggplot2)
-library(reshape2)
-library(limma)
-
 #' Draw heatmap
 #'
 #' @param data data to plot
@@ -18,10 +12,10 @@ library(limma)
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
 #' @export
-#' @return plot of the heatmap
 #' @examples
-#' data("demo_data_At")
-#' DIANE::draw_heatmap(demo_data_At$raw_counts)
+#' data("abiotic_stresses")
+#' DIANE::draw_heatmap(abiotic_stresses$normalized_counts, subset = abiotic_stresses$heat_DEGs,
+#' title = "Log expression for DE genes under heat stress")
 draw_heatmap <-
   function(data,
            subset = NULL,
@@ -71,8 +65,8 @@ draw_heatmap <-
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
+#' data("abiotic_stresses")
+#' DIANE::draw_distributions(abiotic_stresses$normalized_counts, boxplot = FALSE)
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
@@ -119,7 +113,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
   g
 }
 
-#' draw_MDS
+#' Multi-dimensional scaling plot
 #'
 #' @param normalized.count data to plot for MDS
 #' 
@@ -127,15 +121,10 @@ draw_distributions <- function(data, boxplot = TRUE) {
 #' else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
 #' columns names of the expression matrix used to build the tcc object.
 #' @importFrom limma plotMDS
-#' @return MDS plot
 #' @export
 #' @examples 
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' DIANE::draw_MDS(normalized.count = normalized_counts)
+#' data("abiotic_stresses")
+#' DIANE::draw_MDS(abiotic_stresses$normalized_counts)
 
 draw_MDS <- function(normalized.count, conditions = NULL) {
   mds <- limma::plotMDS(normalized.count, plot = FALSE)
@@ -179,13 +168,8 @@ draw_MDS <- function(normalized.count, conditions = NULL) {
 #' @import ggplot2
 #'
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <-
-#' DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10 * length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' draw_PCA(normalized_counts)
+#' data("abiotic_stresses")
+#' draw_PCA(abiotic_stresses$normalized_counts)
 draw_PCA <- function(data) {
   # PCA computation
   data <- log(data + 2)

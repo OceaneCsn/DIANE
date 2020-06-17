@@ -31,8 +31,8 @@
 #' }
 #' @examples
 #' {
-#'  print(head(abiotic_stresses$raw_counts))
-#'  print(abiotic_stress$design))
-#'  print(abiotic_stress$conditions)
+#'  head(abiotic_stresses$raw_counts)
+#'  abiotic_stresses$design
+#'  abiotic_stresses$conditions
 #' }
 "abiotic_stresses"

@@ -1,4 +1,4 @@
-#' Gene annotations for supported organisms in DAINE
+#' Gene annotations for supported organisms in DIANE
 #'
 #' For each gene identifier, are provided its common name and description.
 #'

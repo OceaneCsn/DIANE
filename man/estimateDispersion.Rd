@@ -34,10 +34,10 @@ DIANE::estimateDEGs()
 }
 
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+threshold = 10*length(abiotic_stresses$conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
 
 }

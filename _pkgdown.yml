@@ -48,4 +48,5 @@ reference:
 - title: Data
 - contents:
   - regulators_per_organism
-  - demo_data_At
+  - abiotic_stresses
+  - gene_annotations

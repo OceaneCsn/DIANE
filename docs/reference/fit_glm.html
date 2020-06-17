@@ -182,69 +182,39 @@ profiles accros conditions, else we would have to introduce a new variable relat
 themselves.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DIANE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)
-<span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>raw_counts</span>, <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='no'>threshold</span> <span class='kw'>=</span> <span class='fl'>10</span>*<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)
-<span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span>(<span class='no'>tcc_object</span>, <span class='no'>threshold</span>)
-<span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
-#&gt; coseq analysis: Poisson approach &amp; none transformation
-#&gt; K = 6 to 9 
-#&gt; Use set.seed() prior to running coseq for reproducible results.
-#&gt; ****************************************
-#&gt; Running K = 6 ...
-#&gt; [1] "Initialization: 1"
-#&gt; [1] "Log-like diff: 14.1847548994142"
-#&gt; [1] "Log-like diff: 10.0310272898039"
-#&gt; [1] "Log-like diff: 10.298485186429"
-#&gt; [1] "Log-like diff: 13.992219216283"
-#&gt; [1] "Log-like diff: 17.1009464677972"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 4.31980671625493"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.744151240183358"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.133200338110998"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.033433630003147"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00852953589036876"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 245.458189634214"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1145.02102849025"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 195.17372969099"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 606.935232810743"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 903.506017716648"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 765.182066569017"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 714.183263824645"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 680.391819816497"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 695.018670156004"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 668.305261835549"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
+<span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(
+<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>fit_glm</span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>,
+<span class='no'>abiotic_stresses</span>$<span class='no'>design</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>glm</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; glm(formula = formula, family = poisson(link = "log"), data = glmData)
 #&gt; 
 #&gt; Deviance Residuals: 
 #&gt;    Min      1Q  Median      3Q     Max  
-#&gt; -57.56  -36.54  -21.83    1.08  497.41  
+#&gt; -97.07  -50.28  -31.80   -8.94  328.17  
 #&gt; 
 #&gt; Coefficients:
-#&gt;                Estimate Std. Error  z value Pr(&gt;|z|)    
-#&gt; (Intercept)   7.0923156  0.0007067 10036.26   &lt;2e-16 ***
-#&gt; Nitrate       0.3440752  0.0009238   372.46   &lt;2e-16 ***
-#&gt; Iron          0.0740408  0.0009814    75.44   &lt;2e-16 ***
-#&gt; Nitrate:Iron -0.4329006  0.0013505  -320.54   &lt;2e-16 ***
+#&gt;                    Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept)         3.68888    0.02282  161.64   &lt;2e-16 ***
+#&gt; Salt                2.65639    0.02361  112.52   &lt;2e-16 ***
+#&gt; Mannitol            2.27679    0.02396   95.01   &lt;2e-16 ***
+#&gt; Heat                3.31508    0.02323  142.69   &lt;2e-16 ***
+#&gt; Salt:Mannitol      -1.44706    0.02504  -57.80   &lt;2e-16 ***
+#&gt; Salt:Heat          -2.20259    0.02426  -90.81   &lt;2e-16 ***
+#&gt; Mannitol:Heat      -1.49167    0.02453  -60.80   &lt;2e-16 ***
+#&gt; Salt:Mannitol:Heat  1.69578    0.02590   65.48   &lt;2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #&gt; 
 #&gt; (Dispersion parameter for poisson family taken to be 1)
 #&gt; 
-#&gt;     Null deviance: 15411190  on 6659  degrees of freedom
-#&gt; Residual deviance: 15207833  on 6656  degrees of freedom
-#&gt; AIC: 15262068
+#&gt;     Null deviance: 2301824  on 383  degrees of freedom
+#&gt; Residual deviance: 1825288  on 376  degrees of freedom
+#&gt; AIC: 1827659
 #&gt; 
-#&gt; Number of Fisher Scoring iterations: 6
+#&gt; Number of Fisher Scoring iterations: 7
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

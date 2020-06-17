@@ -9,13 +9,17 @@ all variants for the same gene}
 aggregate_splice_variants(data)
 }
 \arguments{
-\item{data}{dataframe : expression data with supposed splice variants as rownames}
+\item{data}{dataframe : expression data with splice variants as rownames}
 }
 \value{
-dataframe
+dataframe with agregated rows
 }
 \description{
 Merge all splice variants of an expression dataset into 
 unique locus, unaware of alternative splicing, by summing
 all variants for the same gene
+}
+\examples{
+data("abiotic_stresses")
+aggregate_splice_variants(abiotic_stress$normalized_counts)
 }

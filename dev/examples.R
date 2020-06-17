@@ -167,4 +167,17 @@ tail(gene_annotations[["Arabidopsis thaliana"]])
 abiotic_stresses <- list(raw_counts = raw_counts, design = design, conditions = conditions)
 
 
+data("abiotic_stresses")
+genes_cluster <- DIANE::get_genes_in_cluster(
+  abiotic_stresses$heat_DEGs_coseq_membership, cluster = 3)
 
+genes_cluster <- DIANE::get_genes_in_cluster(
+  clustering$membership, cluster = 3)
+glm <- DIANE::fit_glm(normalized_counts = abiotic_stresses$normalized_counts,
+                      genes = genes_cluster, design = abiotic_stresses$design)
+summary(glm)
+
+
+
+glm <- DIANE::fit_glm(abiotic_stresses$normalized_counts, genes_cluster,
+                      abiotic_stresses$design)

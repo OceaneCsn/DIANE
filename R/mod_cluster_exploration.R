@@ -101,7 +101,7 @@ mod_cluster_exploration_ui <- function(id) {
                            driving the profiles in a specific cluster. The genes in this cluster are potentially
                            involved in the response to that factor.
                            
-                           The sign of a coefficient gives information about the way it imapcts expression.
+                           The sign of a coefficient gives information about the way it impacts expression.
                            If it is positive it increases the expression when the facot is in its perturbation
                            level. If negative, it decreases it.")
                       )

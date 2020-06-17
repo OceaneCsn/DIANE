@@ -3,7 +3,7 @@
 \docType{data}
 \name{gene_annotations}
 \alias{gene_annotations}
-\title{Gene annotations for supported organisms in DAINE}
+\title{Gene annotations for supported organisms in DIANE}
 \format{
 A named list with the following elements:
 \describe{

@@ -15,6 +15,6 @@ draw_distributions(data, boxplot = TRUE)
 draw_distributions of count data
 }
 \examples{
-data("demo_data_At")
-DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
+data("abiotic_stresses")
+DIANE::draw_distributions(abiotic_stresses$normalized_counts, boxplot = FALSE)
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw profiles of a clustering — draw_profiles • DIANE</title>
+<title>Gene annotations for supported organisms in DIANE — gene_annotations • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Draw profiles of a clustering — draw_profiles" />
-<meta property="og:description" content="Draw profiles of a clustering" />
+<meta property="og:title" content="Gene annotations for supported organisms in DIANE — gene_annotations" />
+<meta property="og:description" content="For each gene identifier, are provided its common name and description." />
 
 
 
@@ -123,61 +123,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw profiles of a clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_coseq.R'><code>R/fct_coseq.R</code></a></small>
-    <div class="hidden name"><code>draw_profiles.Rd</code></div>
+    <h1>Gene annotations for supported organisms in DIANE</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/gene_annotations.R'><code>R/gene_annotations.R</code></a></small>
+    <div class="hidden name"><code>gene_annotations.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Draw profiles of a clustering</p>
+    <p>For each gene identifier, are provided its common name and description.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_profiles</span>(
-  <span class='no'>data</span>,
-  <span class='no'>membership</span>,
-  <span class='no'>conds</span>,
-  <span class='kw'>expression</span> <span class='kw'>=</span> <span class='st'>"profiles"</span>,
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>3</span>
-)</pre>
+    <pre class="usage"><span class='no'>gene_annotations</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>data</th>
-      <td><p>normalized counts</p></td>
-    </tr>
-    <tr>
-      <th>membership</th>
-      <td><p>membership item of the coseq object returned by run_coseq object</p></td>
-    </tr>
-    <tr>
-      <th>conds</th>
-      <td><p>conditions on which to perform clustering, ingoring the others</p></td>
-    </tr>
-    <tr>
-      <th>expression</th>
-      <td><p>if it is set to "profiles" (default), plots expression/sum(expression). if "counts", plots log(Counts+1)</p></td>
-    </tr>
-    <tr>
-      <th>k</th>
-      <td><p>if NULL (default), plot all the clusters. Else, plot the clusters in the vetcor k.</p></td>
-    </tr>
-    <tr>
-      <th>nrow</th>
-      <td><p>on how many rows display the cluster profiles if k is NULL</p></td>
-    </tr>
-    </table>
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A named list with the following elements:</p><dl'>
+ <dt>Arabidopsis thaliana</dt><dd><p>Dataframe with AGI terms as rownames, and columns two columns :
+ description and name.</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    
+<dl'>
+ <dt>For Arabidopsis thaliana</dt><dd><p><a href='http://bioconductor.org/packages/release/data/annotation/html/org.At.tair.db.html'>http://bioconductor.org/packages/release/data/annotation/html/org.At.tair.db.html</a>
+ TAIR10 via the bioconductor package org.At.tair.db</p></dd>
+ 
+</dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_profiles</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>,
-<span class='kw'>membership</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>,
-<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>))</div><div class='output co'>#&gt; <span class='message'>Using gene as id variables</span></div><div class='img'><img src='draw_profiles-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_profiles</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>,
-<span class='kw'>membership</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>,
-<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='message'>Using gene as id variables</span></div><div class='img'><img src='draw_profiles-2.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'>{
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>gene_annotations</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]]))
+}</div><div class='output co'>#&gt;           label                                                 description
+#&gt; AT3G53400                                          peptide upstream protein
+#&gt; AT4G30540       Class I glutamine amidotransferase-like superfamily protein
+#&gt; AT2G28580                          transmembrane protein, putative (DUF247)
+#&gt; AT5G35240                                         transposable_element_gene
+#&gt; AT2G15640                                              F-box family protein
+#&gt; AT4G10470                                              hypothetical protein</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

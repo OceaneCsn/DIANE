@@ -48,6 +48,7 @@ You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
 tcc being the result of DIANE::normalize or DIANE::filter_low_counts
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+abiotic_stresses$conditions, iteration = FALSE)
 }

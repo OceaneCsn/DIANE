@@ -17,3 +17,7 @@ character vector
 \description{
 Get the locus ids from splice variants ids
 }
+\examples{
+splice_variants <- rownmaes(abiotic_stress$normalized_counts)[1:20]
+get_locus(splice_variants)
+}

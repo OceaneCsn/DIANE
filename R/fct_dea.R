@@ -25,11 +25,11 @@
 #' DIANE::estimateDEGs()
 #' 
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+#' threshold = 10*length(abiotic_stresses$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
 #' 
 estimateDispersion <- function(tcc, conditions = NULL) {
   if (is.null(conditions)) {
@@ -75,12 +75,12 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' @return topTags object, which table element contains DEGs dataframe.
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+#' threshold = 10*length(abiotic_stresses$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 #' DEGs <- topTags$table
 estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   contrast <-
@@ -102,11 +102,12 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
 #' @param lfc absolute log fold change threshold for differentially expressed genes, default is 0.
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(demo_data_At$conditions))
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, 
+#' iteration = FALSE)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(abiotic_stresses$conditions))
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+#' tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
 #' DIANE::draw_DEGs(tags, fdr = 0.01, lfc = 1)
 draw_DEGs <- function(tags,
                      fdr = 0.01,

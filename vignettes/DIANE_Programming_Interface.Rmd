@@ -191,14 +191,33 @@ The second principal axis, is more correlated to osmotic stress, as conditions w
 
 Let's say we want to preform differential expression analysis between the conditions C and H, to get genes responding to a simple heat stress :
 
-```{r dea, fig.width=8, fig.height=5}
+```{r dea, fig.width=8, fig.height=7}
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
 topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01, lfc = 2)
-knitr::kable(head(topTags$table))
 
+# adding annotations
+DEgenes <- topTags$table
+DEgenes[,c("name", "description")] <- gene_annotations$`Arabidopsis thaliana`[
+  match(get_locus(DEgenes$genes, unique = FALSE), rownames(gene_annotations$`Arabidopsis thaliana`)),
+  c("label", "description")]
+
+knitr::kable(head(DEgenes, n = 30))
+
+# plots
 tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
 DIANE::draw_DEGs(tags)
 DIANE::draw_DEGs(tags, MA = FALSE)
+
+genes <- topTags$table$genes
+
+DIANE::draw_heatmap(normalized_counts, subset = genes, 
+                    title = "Log expression for DE genes under heat stress")
+
+# if we only want the conditions used for differential expression analysis :
+DIANE::draw_heatmap(normalized_counts, subset = genes, 
+                    title = "Log expression for DE genes under heat stress",
+                    conditions = c("C", "H"))
+
 ```
 
 
@@ -285,6 +304,36 @@ The named vector membership give you, for each gene, its cluster :
 ```{r membership, fig.width=10, fig.height=8}
 head(clustering$membership, n = 40)
 ```
+
+## Generalized Poisson regression on a cluster of genes
+
+The idea is to extract the importance and effect of each factor.
+To do so, the expression of each gene is modeled by a Poisson distribution.
+The log of its parameter (the expected value) is approximated by a linear
+combination of the factors in the experiment. The coefficients associated to 
+each factors are estimated to fit gene expression, and can be insightful to
+characterize genes behavior in a particular cluster.
+The model with interactions is considered. If your design in not a
+complete corssed design, the interaction term will be null.
+
+The absolute value of a coefficient gives information about the intensity of
+its effect on gene expression. The highest coefficient(s) thus are the one(s) 
+driving the profiles in a specific cluster. The genes in this cluster are potentially
+involved in the response to that factor.
+                           
+The sign of a coefficient gives information about the way it impacts expression.
+If it is positive it increases the expression when the factor is in its perturbation
+level. If negative, it decreases it.
+
+```{r glm, fig.width=8, fig.height=6}
+genes_cluster <- DIANE::get_genes_in_cluster(
+clustering$membership, cluster = 3)
+glm <- DIANE::fit_glm(normalized_counts, genes_cluster, abiotic_stresses$design)
+summary(glm)
+
+draw_glm(glm)
+```
+
 
 # Network inference
 

@@ -13,18 +13,10 @@
 #' for each gene as "membership"
 #' @export
 #' @examples
-#' \dontrun{
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-#' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
-#' data = normalized_counts, genes = genes, K = 6:9)
-#' }
+#' data("abiotic_stresses")
+#' genes <- abiotic_stresses$heat_DEGs
+#' clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), 
+#' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 run_coseq <- function(conds, genes, data, K = 6:12) {
 
   conditions <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
@@ -60,20 +52,12 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 #' @importFrom coseq plot
 #' @export
 #' @examples
-#' \dontrun{
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-#' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
-#' data = normalized_counts, genes = genes, K = 6:9)
+#' data("abiotic_stresses")
+#' genes <- abiotic_stresses$heat_DEGs
+#' clustering <- DIANE::run_coseq(conds = c("C", "H", "SH", "MH", "SMH"), 
+#' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 #' DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 #' DIANE::draw_coseq_run(clustering$model, plot = "ICL")
-#' }
 draw_coseq_run <- function(run_pois, plot = "ICL") {
   if (plot == "ICL")
     p <- coseq::plot(run_pois, graphs = c("ICL"))
@@ -91,7 +75,9 @@ draw_coseq_run <- function(run_pois, plot = "ICL") {
 #'
 #' @return genes belonging to the desired cluster
 #' @export
-#'
+#' @examples 
+#'data("abiotic_stresses")
+#'get_genes_in_cluster(abiotic_stresses$heat_DEGs_coseq_membership, 3)
 get_genes_in_cluster <- function(membership, cluster) {
   return(names(membership[membership == cluster]))
 }
@@ -110,20 +96,13 @@ get_genes_in_cluster <- function(membership, cluster) {
 #' @importFrom stringr str_split_fixed
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-#' genes <- topTags$table$genes
-#' clustering <- DIANE::run_coseq(conds = unique(demo_data_At$conditions), 
-#' data = normalized_counts, genes = genes, K = 6:9)
-#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
-#' conds = unique(demo_data_At$conditions)) 
-#' DIANE::draw_profiles(data = normalized_counts, clustering$membership, 
-#' conds = unique(demo_data_At$conditions), k = 3) 
+#' data("abiotic_stresses")
+#' DIANE::draw_profiles(data = abiotic_stresses$normalized_counts, 
+#' membership = abiotic_stresses$heat_DEGs_coseq_membership,
+#' conds = unique(abiotic_stresses$conditions)) 
+#' DIANE::draw_profiles(data = abiotic_stresses$normalized_counts, 
+#' membership = abiotic_stresses$heat_DEGs_coseq_membership, 
+#' conds = unique(abiotic_stresses$conditions), k = 3) 
 draw_profiles <-
   function(data,
            membership,

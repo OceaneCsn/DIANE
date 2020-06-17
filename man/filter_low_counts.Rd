@@ -20,9 +20,10 @@ inferior to the specified threshold. It returns un aupdated TCC object,
 which count element contains the filtered expression matrix.
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+abiotic_stresses$conditions, iteration = FALSE)
+threshold = 10*length(abiotic_stresses$conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 normalized_counts <- TCC::getNormalizedData(tcc_object)
 }

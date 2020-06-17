@@ -29,13 +29,11 @@ draw_heatmap(
 
 \item{conditions}{if NULL, shows all the conditions, else if character vector, shows only the required ones}
 }
-\value{
-plot of the heatmap
-}
 \description{
 Draw heatmap
 }
 \examples{
-data("demo_data_At")
-DIANE::draw_heatmap(demo_data_At$raw_counts)
+data("abiotic_stresses")
+DIANE::draw_heatmap(abiotic_stresses$normalized_counts, subset = abiotic_stresses$heat_DEGs,
+title = "Log expression for DE genes under heat stress")
 }

@@ -13,11 +13,6 @@ draw_PCA(data)
 Draw variables along principal PCA components
 }
 \examples{
-data("demo_data_At")
-tcc_object <-
-DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10 * length(demo_data_At$conditions)
-tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-normalized_counts <- TCC::getNormalizedData(tcc_object)
-draw_PCA(normalized_counts)
+data("abiotic_stresses")
+draw_PCA(abiotic_stresses$normalized_counts)
 }
