@@ -105,7 +105,7 @@ aggregate_splice_variants <- function(data){
 #' @return character vector
 #' @export
 #' @examples 
-#' splice_variants <- rownmaes(abiotic_stress$normalized_counts)[1:20]
+#' splice_variants <- rownames(abiotic_stresses$normalized_counts)[1:20]
 #' get_locus(splice_variants)
 get_locus <- function(gene_ids, unique = TRUE){
   if(unique){

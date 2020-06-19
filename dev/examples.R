@@ -167,17 +167,25 @@ tail(gene_annotations[["Arabidopsis thaliana"]])
 abiotic_stresses <- list(raw_counts = raw_counts, design = design, conditions = conditions)
 
 
-data("abiotic_stresses")
-genes_cluster <- DIANE::get_genes_in_cluster(
-  abiotic_stresses$heat_DEGs_coseq_membership, cluster = 3)
-
-genes_cluster <- DIANE::get_genes_in_cluster(
-  clustering$membership, cluster = 3)
-glm <- DIANE::fit_glm(normalized_counts = abiotic_stresses$normalized_counts,
-                      genes = genes_cluster, design = abiotic_stresses$design)
-summary(glm)
 
 
+################# tests rfPermute
 
-glm <- DIANE::fit_glm(abiotic_stresses$normalized_counts, genes_cluster,
-                      abiotic_stresses$design)
+library(rfPermute)
+
+
+data(symb.metab)
+
+# Create the randomForest model with 1000 permutations. 
+metab.rf <- rfPermute(type ~ ., data = symb.metab, ntree = 1000, sampsize = rep(8, 4), replace = FALSE, proximity = TRUE, nrep = 100)
+metab.rf
+class(metab.rf)
+
+names(metab.rf)
+
+imp <- rp.importance(metab.rf)
+head(imp)
+plotNull(metab.rf, preds = "Unidentified.Metabolite.43")
+
+plot(imp, type = "MeanDecreaseAccuracy")
+impHeatmap(metab.rf, n = 30)
