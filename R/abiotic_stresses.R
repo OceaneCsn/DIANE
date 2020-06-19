@@ -17,14 +17,14 @@
 #'  {\href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206}{GEO accession}}
 #'  \item{Publication :  }
 #'  {\href{https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392}{Molecular 
-#'  plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes}}
-#' }
-#' 
+#'  plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes}}}
 #' @format A named list with the following elements:
 #' \describe{
 #'  \item{raw_counts}{Dataframe of positive values. Raw transcript aboundances 
 #'  as obtained after mapping and quantifying RNASeq reads. Rows are transcripts, and
 #'  columns are experimental triplicate conditions}
+#'  \item{normalized_counts}{Dataframe of positive values. Normalized transcript aboundances 
+#'  Rows are transcripts, and columns are experimental triplicate conditions}
 #'  \item{design}{Dataframe. Describes for each condition, the level of each factor.}
 #'  \item{conditions}{Character vector. Gives the condition corresponding to each 
 #'  column of the raw_counts element}
@@ -34,8 +34,8 @@
 #'  differentially expressed between control and heat stress, 
 #'  This membership was obtained after running coseq expression based clustering on those genes, 
 #'  on all the dataset conditions, and resulted in 9 clusters.}
-#'  \item{heat_DEGs_regulatory_links}{Character vector. 692 genes detected as differentially expressed between control and heat stress, 
-#'  with adjusted pavlue of 0.01 and absolute log fold change of 2.}
+#'  \item{heat_DEGs_regulatory_links}{Matrix of size N_regulatprs*692 genes. Those gens are the ones detected as 
+#'  differentially expressed between control and heat stress. It was inferred by the GENIE3 function.}
 #' }
 #' @examples
 #' {

@@ -21,7 +21,7 @@ data("abiotic_stresses")
 data("regulators_per_organism")
 
 mat <- abiotic_stresses$heat_DEGs_regulatory_links
-network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+network <- DIANE::network_thresholding(mat, n_edges = length(abiotic_stresses$heat_DEGs))
 
 data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 DIANE::draw_network_degrees(data$nodes, network)

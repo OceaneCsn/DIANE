@@ -248,8 +248,8 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (input$use_demo) {
       r$use_demo = input$use_demo
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$raw_counts
+      data("abiotic_stresses", package = "DIANE")
+      d <- abiotic_stresses$raw_counts
     }
     else{
       req(input$raw_data)
@@ -353,8 +353,8 @@ mod_import_data_server <- function(input, output, session, r) {
   design <- shiny::reactive({
     
     if (input$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$design
+      data("abiotic_stresses", package = "DIANE")
+      d <- abiotic_stresses$design
     }
     else{
       req(r$conditions)
