@@ -8,8 +8,6 @@ community_structure <- function(graph) {
   return(igraph::membership(igraph::cluster_louvain(g)))
 }
 
-
-
 #' Plots the histogram of in and out degrees, betweeness of 
 #' regultors and target genes.
 #'

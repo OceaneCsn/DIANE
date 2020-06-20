@@ -60,7 +60,8 @@ group_regressors <- function(normalized.count, genes, regressors, corr_thr = 0.9
   d$edges$value <- d$edges$cor
   d$edges$label <- round(d$edges$cor,3)
   d$nodes$group <- groups[match(d$nodes$id, names(groups))]
-  graph_plot <- visNetwork::visNetwork(d$nodes, d$edges)
+  
+  graph_plot <- d
 
   other_tfs <- regressors[!regressors %in% names(groups)]
   
