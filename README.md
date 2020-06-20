@@ -1,5 +1,3 @@
-<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Atest-coverage" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/test-coverage/badge.svg)</a>
-<a href="https://github.com/OceaneCsn/DIANE/actions" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/R-CMD-check/badge.svg)</a>
 [![Travis build status](https://travis-ci.com/OceaneCsn/DIANE.svg?branch=master)](https://travis-ci.com/OceaneCsn/DIANE)
 
 
@@ -44,6 +42,6 @@ DIANE::run_app()
 
 DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/. 
 
-Author : Océane Cassan
+Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
 
 PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
