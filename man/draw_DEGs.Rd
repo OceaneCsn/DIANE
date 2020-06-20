@@ -19,10 +19,11 @@ draw_DEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 MA or volcano plot for Differential expression
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(demo_data_At$conditions))
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-tags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 1)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, 
+iteration = FALSE)
+tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(abiotic_stresses$conditions))
+fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
 DIANE::draw_DEGs(tags, fdr = 0.01, lfc = 1)
 }

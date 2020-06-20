@@ -248,8 +248,8 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (input$use_demo) {
       r$use_demo = input$use_demo
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$raw_counts
+      data("abiotic_stresses", package = "DIANE")
+      d <- abiotic_stresses$raw_counts
     }
     else{
       req(input$raw_data)
@@ -353,8 +353,8 @@ mod_import_data_server <- function(input, output, session, r) {
   design <- shiny::reactive({
     
     if (input$use_demo) {
-      data("demo_data_At", package = "DIANE")
-      d <- demo_data_At$design
+      data("abiotic_stresses", package = "DIANE")
+      d <- abiotic_stresses$design
     }
     else{
       req(r$conditions)
@@ -404,7 +404,11 @@ mod_import_data_server <- function(input, output, session, r) {
   gene_info <- shiny::reactive({
     req(r$raw_counts)
     if (r$organism != "Other") {
-      d <- get_gene_information(rownames(r$raw_counts), r$organism)
+      ids <- rownames(r$raw_counts)
+      if(r$splicing_aware){
+        ids <- get_locus(rownames(r$raw_counts))
+      }
+      d <- get_gene_information(ids, r$organism)
     }
     else{
         if(!is.null(input$gene_info_input)){
@@ -434,6 +438,7 @@ mod_import_data_server <- function(input, output, session, r) {
   output$heatmap_preview <- shiny::renderPlot({
     shiny::req(r$raw_counts)
     d <- raw_data()[rowSums(raw_data()) > 0,]
+    
     draw_heatmap(d)
   })
   

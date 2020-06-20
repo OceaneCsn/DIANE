@@ -1,9 +1,3 @@
-library(pheatmap)
-library(stringr)
-library(ggplot2)
-library(reshape2)
-library(limma)
-
 #' Draw heatmap
 #'
 #' @param data data to plot
@@ -18,10 +12,10 @@ library(limma)
 #' @importFrom pheatmap pheatmap
 #' @importFrom stringr str_split_fixed
 #' @export
-#' @return plot of the heatmap
 #' @examples
-#' data("demo_data_At")
-#' DIANE::draw_heatmap(demo_data_At$raw_counts)
+#' data("abiotic_stresses")
+#' DIANE::draw_heatmap(abiotic_stresses$normalized_counts, subset = abiotic_stresses$heat_DEGs,
+#' title = "Log expression for DE genes under heat stress")
 draw_heatmap <-
   function(data,
            subset = NULL,
@@ -39,9 +33,8 @@ draw_heatmap <-
     if (is.null(conditions))
       conds <- colnames(data)
     else
-      conds <- unique(grep(paste(conditions, collapse = "|"),
-                           colnames(data), value = TRUE))
-    
+      conds <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conditions]
+      
     if (log)
       data <- log(data + 1)
     if (profiles)
@@ -72,8 +65,8 @@ draw_heatmap <-
 #' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' DIANE::draw_distributions(demo_data_At$raw_counts, boxplot = FALSE)
+#' data("abiotic_stresses")
+#' DIANE::draw_distributions(abiotic_stresses$normalized_counts, boxplot = FALSE)
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
@@ -120,7 +113,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
   g
 }
 
-#' draw_MDS
+#' Multi-dimensional scaling plot
 #'
 #' @param normalized.count data to plot for MDS
 #' 
@@ -128,15 +121,10 @@ draw_distributions <- function(data, boxplot = TRUE) {
 #' else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
 #' columns names of the expression matrix used to build the tcc object.
 #' @importFrom limma plotMDS
-#' @return MDS plot
 #' @export
 #' @examples 
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' DIANE::draw_MDS(normalized.count = normalized_counts)
+#' data("abiotic_stresses")
+#' DIANE::draw_MDS(abiotic_stresses$normalized_counts)
 
 draw_MDS <- function(normalized.count, conditions = NULL) {
   mds <- limma::plotMDS(normalized.count, plot = FALSE)
@@ -168,4 +156,104 @@ draw_MDS <- function(normalized.count, conditions = NULL) {
     legend.text.align = 1,
     axis.title = ggplot2::element_blank()
   )
+}
+
+
+
+#' Draw variables along principal PCA components
+#'
+#' @param data normalized expression data
+#'
+#' @export
+#' @import ggplot2
+#'
+#' @examples
+#' data("abiotic_stresses")
+#' draw_PCA(abiotic_stresses$normalized_counts)
+draw_PCA <- function(data) {
+  # PCA computation
+  data <- log(data + 2)
+  data <- data / rowMeans(data)
+  acp <-
+    ade4::dudi.pca(
+      data,
+      center = TRUE,
+      scale = TRUE,
+      scannf = FALSE,
+      nf = 4
+    )
+  
+  acp$co$condition = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 1]
+  
+  scree <-
+    data.frame(
+      component = seq(1:length(acp$eig)),
+      eigen.values = acp$eig,
+      explained.variance = round(acp$eig / sum(acp$eig) *
+                                   100, 2)
+    )
+  scree <- scree[1:min(nrow(scree), 4), ]
+  
+  # Plots
+  g1_2 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp1,
+             y = Comp2,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "none") +
+    ggtitle("Principal components 1 and 2") +  
+    xlab(paste("x-axis : Comp1 ", scree[1, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp2 ", scree[2, "explained.variance"], "%"))
+  
+  g2_3 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp2,
+             y = Comp3,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "none") +
+    ggtitle("Principal components 2 and 3") + 
+    xlab(paste("x-axis : Comp2 ", scree[2, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp3 ", scree[3, "explained.variance"], "%"))
+  
+  g3_4 <-
+    ggplot(data = acp$co,
+           aes(
+             x = Comp3,
+             y = Comp4,
+             color = condition,
+             label = condition
+           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+    theme(legend.position = "bottom",
+          legend.text = ggplot2::element_text(size = 18),
+          legend.text.align = 1) +
+    ggtitle("Principal components 3 and 4") + 
+    xlab(paste("x-axis : Comp3 ", scree[3, "explained.variance"], "%")) +
+    ylab(paste("y-axis : Comp4 ", scree[4, "explained.variance"], "%"))
+  
+  screeplot <- ggplot(scree,
+                      aes(
+                        y = explained.variance,
+                        x = component,
+                        fill = component,
+                        label = paste(round(explained.variance, 1), '%')
+                      )) +
+    geom_bar(stat = "identity") + geom_text(size = 6,
+                                            vjust = 1.6,
+                                            color = "white") +
+    ggtitle("PCA Screeplot") + theme(legend.position = "none")
+  
+  
+  gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
 }

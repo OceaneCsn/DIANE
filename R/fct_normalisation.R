@@ -24,10 +24,9 @@
 #' @return a TCC-Class object
 #' @export
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-
-
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+#' abiotic_stresses$conditions, iteration = FALSE)
 normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
                       iteration = TRUE){
   tcc <- TCC::TCC(count =  data, group = conditions)
@@ -35,9 +34,6 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
                               iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
   return(tcc)
 }
-
-# TODO check that column names are unique!
-
 
 #' Remove low count genes
 #' 
@@ -51,12 +47,12 @@ normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR
 #' @export
 #' @return a TCC-Class object
 #' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+#' abiotic_stresses$conditions, iteration = FALSE)
+#' threshold = 10*length(abiotic_stresses$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 #' normalized_counts <- TCC::getNormalizedData(tcc_object)
-
 filter_low_counts <- function(tcc, thr){
   tcc <- TCC::filterLowCountGenes(tcc, low.count = thr)
   return(tcc)
@@ -78,11 +74,17 @@ are_splice_variants <- function(gene_ids){
 #' unique locus, unaware of alternative splicing, by summing
 #' all variants for the same gene
 #'
-#' @param data dataframe : expression data with supposed splice variants as rownames
+#' @param data dataframe : expression data with splice variants as rownames
 #'
-#' @return dataframe
+#' @return dataframe with agregated rows
+#' @export
+#' @examples 
+#' data("abiotic_stresses")
+#' aggregate_splice_variants(abiotic_stresses$normalized_counts)
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
+    
+    data <- data.frame(data)
     
     locus <- stringr::str_replace_all(rownames(data), 
                                       pattern = "\\.[[:digit:]]+$", "")
@@ -101,6 +103,10 @@ aggregate_splice_variants <- function(data){
 #' @param gene_ids list of gene ids with splice variants information
 #' @param unique boolean, weather or not to return unique locus vector
 #' @return character vector
+#' @export
+#' @examples 
+#' splice_variants <- rownames(abiotic_stresses$normalized_counts)[1:20]
+#' get_locus(splice_variants)
 get_locus <- function(gene_ids, unique = TRUE){
   if(unique){
     return(unique(

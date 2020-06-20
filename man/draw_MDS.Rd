@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_heatmap.R
 \name{draw_MDS}
 \alias{draw_MDS}
-\title{draw_MDS}
+\title{Multi-dimensional scaling plot}
 \usage{
 draw_MDS(normalized.count, conditions = NULL)
 }
@@ -13,17 +13,10 @@ draw_MDS(normalized.count, conditions = NULL)
 else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
 columns names of the expression matrix used to build the tcc object.}
 }
-\value{
-MDS plot
-}
 \description{
-draw_MDS
+Multi-dimensional scaling plot
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
-tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-normalized_counts <- TCC::getNormalizedData(tcc_object)
-DIANE::draw_MDS(normalized.count = normalized_counts)
+data("abiotic_stresses")
+DIANE::draw_MDS(abiotic_stresses$normalized_counts)
 }

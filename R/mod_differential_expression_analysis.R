@@ -360,7 +360,7 @@ mod_differential_expression_analysis_server <-
           outputId = ns("download_table_csv"),
           label = "Download result table as .csv",
           style = "bordered",
-          color = "default"
+          color = "success"
         )
       )
       

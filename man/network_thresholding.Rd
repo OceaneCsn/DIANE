@@ -23,19 +23,11 @@ weights that we consider significant.
 }
 \examples{
 \dontrun{
-data("demo_data_At")
+data("abiotic_stresses")
 data("regulators_per_organism")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
-tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-normalized_counts <- TCC::getNormalizedData(tcc_object)
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-genes <- topTags$table$genes
 
-regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
-mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
-targets = genes, regressors = regressors)
+# mat was inferred using the function network_inference
+mat <- abiotic_stresses$heat_DEGs_regulatory_links
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 }
 }

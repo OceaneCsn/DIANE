@@ -480,11 +480,12 @@ mod_network_inference_server <- function(input, output, session, r){
     
     shiny::req(length(intersect(targets, r$regulators)) >= 2)
     
-    mat <- network_inference(data, targets = targets, 
+    mat <- network_inference(normalized.count = data, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = intersect(targets, r$regulators),
                       nTrees = input$n_trees,
                       nCores = input$n_cores)
+    
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
     

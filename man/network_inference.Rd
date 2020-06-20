@@ -42,18 +42,15 @@ across all targets, giving a global regulatory links ranking stored in the resul
 }
 \examples{
 \dontrun{
-data("demo_data_At")
+data("abiotic_stresses")
 data("regulators_per_organism")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
-tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-normalized_counts <- TCC::getNormalizedData(tcc_object)
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-genes <- topTags$table$genes
 
+aggregated_data <- aggregate_splice_variants(data = abiotic_stresses$normalized_counts)
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
 regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
-mat <- DIANE::network_inference(normalized_counts, conds = demo_data_At$conditions, 
+
+mat <- network_inference(aggregated_data, conds = abiotic_stresses$conditions, 
 targets = genes, regressors = regressors)
 }
 }

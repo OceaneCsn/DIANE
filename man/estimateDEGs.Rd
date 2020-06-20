@@ -4,7 +4,7 @@
 \alias{estimateDEGs}
 \title{estimateDEGs}
 \usage{
-estimateDEGs(fit, reference, perturbation, p.value = 1)
+estimateDEGs(fit, reference, perturbation, p.value = 1, lfc = 0)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
@@ -13,10 +13,14 @@ estimateDEGs(fit, reference, perturbation, p.value = 1)
 
 \item{perturbation}{condition we compared to the reference for differential analysis}
 
-\item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or lower than specified are returned}
+\item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
+lower than specified are returned}
+
+\item{lfc}{minimal absolute log fold change required for a gene to be considered as 
+differnetially expressed.}
 }
 \value{
-topTags object, which table element contains DEGs dataframe
+topTags object, which table element contains DEGs dataframe.
 }
 \description{
 Given a glmFit, performs a log ratio test using edgeR function glmLRT and
@@ -25,11 +29,13 @@ between the reference and perturbation conditions.
 log ratios are expressed as log(perturbation/reference)
 }
 \examples{
-data("demo_data_At")
-tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-threshold = 10*length(demo_data_At$conditions)
+data("abiotic_stresses")
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+abiotic_stresses$conditions, iteration = FALSE)
+threshold = 10*length(abiotic_stresses$conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
+fit <- DIANE::estimateDispersion(tcc = tcc_object, 
+conditions = abiotic_stresses$conditions)
+topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 DEGs <- topTags$table
 }

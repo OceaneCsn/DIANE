@@ -17,3 +17,7 @@ genes belonging to the desired cluster
 \description{
 get_genes_in_cluster
 }
+\examples{
+data("abiotic_stresses")
+get_genes_in_cluster(abiotic_stresses$heat_DEGs_coseq_membership, 3)
+}

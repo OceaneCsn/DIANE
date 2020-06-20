@@ -83,9 +83,7 @@ app_ui <- function(request) {
             shinydashboard::menuSubItem(tabName = "network_inference_tab",
                                         text = "Network inference"),
             shinydashboard::menuSubItem(tabName = "network_analysis_tab",
-                                        text = "Network analysis"),
-            shinydashboard::menuSubItem(tabName = "module_analysis_tab",
-                                        text = "Explore communities")
+                                        text = "Network analysis")
             )
           )
       ),
@@ -132,10 +130,10 @@ app_ui <- function(request) {
                                   mod_network_inference_ui("network_inference_ui_1")),
           shinydashboard::tabItem(tabName = "network_analysis_tab",
                                   mod_network_analysis_ui("network_analysis_ui_1")
-          ),
-          shinydashboard::tabItem(tabName = "module_analysis_tab",
-                                  mod_module_analysis_ui("module_analysis_ui_1")
           )
+          # shinydashboard::tabItem(tabName = "module_analysis_tab",
+          #                         mod_module_analysis_ui("module_analysis_ui_1")
+          # )
          
         )
         

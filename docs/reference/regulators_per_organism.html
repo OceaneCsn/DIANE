@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="List of regulator genes for a number of model organisms — regulators_per_organism" />
-<meta property="og:description" content="List of regulator genes for a number of model organisms" />
+<meta property="og:description" content="Those particular genes are known to be transcriptionnal actors,
+and are needed to infer gene regulatory networks in DIANE." />
 
 
 
@@ -129,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>List of regulator genes for a number of model organisms</p>
+    <p>Those particular genes are known to be transcriptionnal actors,
+and are needed to infer gene regulatory networks in DIANE.</p>
     </div>
 
     <pre class="usage"><span class='no'>regulators_per_organism</span></pre>
@@ -138,21 +140,27 @@
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
     <p>A named list with the following elements:</p><dl'>
- <dt>Arabidopsis thaliana</dt><dd><p>character vector of the known regulators in Arabidopsis thaliana</p></dd>
- <dt>Homo sapiens</dt><dd><p>character vector of the known transcription factors in Human</p></dd>
+ <dt>Arabidopsis thaliana</dt><dd><p>Character vector of the known regulators in Arabidopsis thaliana</p></dd>
+ <dt>Homo sapiens</dt><dd><p>Character vector of the known transcription factors in Human</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
-    <p>For Arabidopsis thaliana : http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH
-For Human : http://humantfs.ccbr.utoronto.ca/download.php</p>
+    
+<dl'>
+ <dt>For Arabidopsis thaliana</dt><dd><p><a href='http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH'>http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH</a></p></dd>
+ <dt>For Human</dt><dd><p><a href='http://humantfs.ccbr.utoronto.ca/download.php'>http://humantfs.ccbr.utoronto.ca/download.php</a></p></dd>
+ 
+</dl>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>{
- <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]])
- <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Homo sapiens"</span>]])
-}</div><div class='output co'>#&gt; [1] "ENSG00000004848" "ENSG00000005073" "ENSG00000005102" "ENSG00000005513"
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]]))
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Homo sapiens"</span>]]))
+}</div><div class='output co'>#&gt; [1] "AT1G04880" "AT1G20910" "AT1G55650" "AT1G76110" "AT1G76510" "AT2G17410"
+#&gt; [1] "ENSG00000004848" "ENSG00000005073" "ENSG00000005102" "ENSG00000005513"
 #&gt; [5] "ENSG00000005801" "ENSG00000005889"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

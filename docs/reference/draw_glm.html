@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plots the value of a Poisson generalized linear model — draw_glm • DIANE</title>
+<title>Plots the value of a Poisson generalized linear model coefficients — draw_glm • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plots the value of a Poisson generalized linear model — draw_glm" />
-<meta property="og:description" content="Plots the value of a Poisson generalized linear model" />
+<meta property="og:title" content="Plots the value of a Poisson generalized linear model coefficients — draw_glm" />
+<meta property="og:description" content="Plots the value of a Poisson generalized linear model coefficients" />
 
 
 
@@ -123,13 +123,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plots the value of a Poisson generalized linear model</h1>
+    <h1>Plots the value of a Poisson generalized linear model coefficients</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_glm.R'><code>R/fct_glm.R</code></a></small>
     <div class="hidden name"><code>draw_glm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plots the value of a Poisson generalized linear model</p>
+    <p>Plots the value of a Poisson generalized linear model coefficients</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</pre>
@@ -145,45 +145,11 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>DIANE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"demo_data_At"</span>)
-<span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>raw_counts</span>, <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>, <span class='kw'>iteration</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='no'>threshold</span> <span class='kw'>=</span> <span class='fl'>10</span>*<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)
-<span class='no'>tcc_object</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span>(<span class='no'>tcc_object</span>, <span class='no'>threshold</span>)
-<span class='no'>normalized_counts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>TCC</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/TCC/man/getNormalizedData.html'>getNormalizedData</a></span>(<span class='no'>tcc_object</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span>(<span class='kw'>tcc</span> <span class='kw'>=</span> <span class='no'>tcc_object</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='no'>demo_data_At</span>$<span class='no'>conditions</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='no'>topTags</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span>(<span class='no'>fit</span>, <span class='kw'>reference</span> <span class='kw'>=</span> <span class='st'>"cNF"</span>, <span class='kw'>perturbation</span> <span class='kw'>=</span> <span class='st'>"cnF"</span>, <span class='kw'>p.value</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>topTags</span>$<span class='no'>table</span>$<span class='no'>genes</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>demo_data_At</span>$<span class='no'>conditions</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
-#&gt; coseq analysis: Poisson approach &amp; none transformation
-#&gt; K = 6 to 9 
-#&gt; Use set.seed() prior to running coseq for reproducible results.
-#&gt; ****************************************
-#&gt; Running K = 6 ...
-#&gt; [1] "Initialization: 1"
-#&gt; [1] "Log-like diff: 9.83259654335987"
-#&gt; [1] "Log-like diff: 14.1699216327095"
-#&gt; [1] "Log-like diff: 10.0395316306507"
-#&gt; [1] "Log-like diff: 10.336858994218"
-#&gt; [1] "Log-like diff: 14.052428610394"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 7.3246165969451"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 2.11611919456799"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.471904423879472"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.162978539012355"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0142180237622025"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 8.60001504695557"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 4.2734981136007"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.89907296325277"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.650340839029622"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0525996246844302"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 3.28789536868446"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.930758150992422"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.07079815105465"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.922957424227423"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.579147871833758"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(<span class='no'>clustering</span>$<span class='no'>membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span>(<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>, <span class='no'>demo_data_At</span>$<span class='no'>design</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
+<span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(
+<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
+<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>,
+<span class='no'>abiotic_stresses</span>$<span class='no'>design</span>)
 <span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</div><div class='img'><img src='draw_glm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

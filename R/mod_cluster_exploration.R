@@ -94,14 +94,14 @@ mod_cluster_exploration_ui <- function(id) {
                           width = "600px",
                           label = "Glm summary")
                         ),
-                        shiny::plotOutput(ns("glm_plot")),
+                        shiny::plotOutput(ns("glm_plot"), height = "700px"),
                         shiny::hr(),
                         shiny::h5("The absolute value of a coefficient gives information about the intensity of
                            its effect on gene expression. The highest coefficient(s) thus are the one(s) 
                            driving the profiles in a specific cluster. The genes in this cluster are potentially
                            involved in the response to that factor.
                            
-                           The sign of a coefficient gives information about the way it imapcts expression.
+                           The sign of a coefficient gives information about the way it impacts expression.
                            If it is positive it increases the expression when the facot is in its perturbation
                            level. If negative, it decreases it.")
                       )

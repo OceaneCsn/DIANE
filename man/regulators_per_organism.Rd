@@ -7,21 +7,22 @@
 \format{
 A named list with the following elements:
 \describe{
- \item{Arabidopsis thaliana}{character vector of the known regulators in Arabidopsis thaliana}
- \item{Homo sapiens}{character vector of the known transcription factors in Human}
+ \item{Arabidopsis thaliana}{Character vector of the known regulators in Arabidopsis thaliana}
+ \item{Homo sapiens}{Character vector of the known transcription factors in Human}
 }
 }
 \source{
 \describe{
- \item{For Arabidopsis thaliana}{http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH}
- \item{For Human}{http://humantfs.ccbr.utoronto.ca/download.php}
+ \item{For Arabidopsis thaliana}{\url{http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH}}
+ \item{For Human}{\url{http://humantfs.ccbr.utoronto.ca/download.php}}
  }
 }
 \usage{
 regulators_per_organism
 }
 \description{
-List of regulator genes for a number of model organisms
+Those particular genes are known to be transcriptionnal actors,
+and are needed to infer gene regulatory networks in DIANE.
 }
 \examples{
 {

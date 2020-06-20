@@ -39,7 +39,8 @@ Imports:
     org.Hs.eg.db,
     foreach,
     doParallel,
-    doRNG
+    doRNG,
+    ade4
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

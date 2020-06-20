@@ -13,7 +13,6 @@
 #' print(entrez_ids)
 #' symbols <- convert_from_agi(genes, to = "symbol")
 #' print(symbols)
-
 convert_from_agi <- function(ids, to = "entrez"){
   if (to == "entrez")
     x <- org.At.tair.db::org.At.tairENTREZID
@@ -54,7 +53,6 @@ convert_from_ensembl <- function(ids, to = "entrez"){
     xx <- as.list(x[mapped_genes])
     return(unlist(xx[as.vector(entrez)]))
   }
-  
 }
 
 
@@ -81,16 +79,15 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' @return data.frame
 #' @export
 #' @examples 
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", perturbation = "cnF", p.value = 0.01)
-#' # interest and background gene sets as entrez ids
-#' genes <- convert_from_agi(topTags$table$genes)
-#' background <- convert_from_agi(rownames(normalized_counts))
+#' data("abiotic_stresses")
+#' genes <- abiotic_stresses$heat_DEGs
+#' 
+#' genes <- get_locus(genes)
+#' background <- get_locus(rownames(abiotic_stresses$normalized_counts))
+#' 
+#' genes <- convert_from_agi(genes)
+#' background <- convert_from_agi(background)
+#' 
 #' go <- enrich_go(genes, background)
 #' head(go)
 enrich_go <- function(genes, background,
@@ -105,11 +102,14 @@ enrich_go <- function(genes, background,
                                    pvalueCutoff  = 0.01,
                                    qvalueCutoff  = 0.05,
                                    readable = TRUE)
+  if(!is.null(ego)){
+    simpOnt <- clusterProfiler::simplify(ego, cutoff=sim_cutoff, 
+                                         by="p.adjust", select_fun=min)
+    res <- simpOnt@result[order(-simpOnt@result$Count),]
+    return(res)
+  }
+  else{return(NULL)}
   
-  simpOnt <- clusterProfiler::simplify(ego, cutoff=sim_cutoff, 
-                                       by="p.adjust", select_fun=min)
-  res <- simpOnt@result[order(-simpOnt@result$Count),]
-  return(res)
 }
 
 
@@ -124,24 +124,20 @@ enrich_go <- function(genes, background,
 #' to reduce that number
 #' @export
 #'
-#' @examples
-#' data("demo_data_At")
-#' tcc_object <- DIANE::normalize(demo_data_At$raw_counts, demo_data_At$conditions, 
-#' iteration = FALSE)
-#' threshold = 10*length(demo_data_At$conditions)
-#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' normalized_counts <- TCC::getNormalizedData(tcc_object)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object,
-#'  conditions = demo_data_At$conditions)
-#' topTags <- DIANE::estimateDEGs(fit, reference = "cNF", 
-#' perturbation = "cnF", p.value = 0.01)
-#' # interest and background gene sets as entrez ids
-#' genes <- convert_from_agi(topTags$table$genes)
-#' background <- convert_from_agi(rownames(normalized_counts))
+#' @examples \dontrun{
+#' data("abiotic_stresses")
+#' genes <- abiotic_stresses$heat_DEGs
 #' 
+#' genes <- get_locus(genes)
+#' background <- get_locus(rownames(abiotic_stresses$normalized_counts))
+#' 
+#' genes <- convert_from_agi(genes)
+#' background <- convert_from_agi(background)
 #' go <- enrich_go(genes, background)
 #' draw_enrich_go(go)
 #' draw_enrich_go(go, max_go = 20)
+#' }
+
 draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
   
   go_data <- go_data[order(go_data$p.adjust),]
@@ -174,8 +170,9 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 #' get_gene_information(genes, organism = "Arabidopsis thaliana")
 get_gene_information <- function(ids, organism){
   if(organism == "Arabidopsis thaliana"){
-   data("demo_data_At", package = "DIANE")
-    d <- demo_data_At$gene_info[match(ids, rownames(demo_data_At$gene_info)),]
+   data("gene_annotations", package = "DIANE")
+    d <- gene_annotations$`Arabidopsis thaliana`[
+      match(ids, rownames(gene_annotations$`Arabidopsis thaliana`)),]
   }
   if (organism == "Homo sapiens"){
     # handling missing values in entrez ids

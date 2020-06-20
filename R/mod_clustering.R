@@ -49,11 +49,11 @@ mod_clustering_ui <- function(id) {
         
         shiny::br(),
         shiny::hr(),
-        col_6(shiny::uiOutput(
+        col_12(shiny::uiOutput(
           ns("input_genes")
         )),
         
-        col_6(shiny::uiOutput(
+        col_12(shiny::uiOutput(
           ns("input_conditions_choice")
         )),
         
@@ -250,7 +250,7 @@ mod_clustering_server <- function(input, output, session, r) {
     print(input_genes_conditions())
     
     genes_conditions <- unique(as.vector(str_split_fixed(input$input_deg_genes, ' ',2)))
-    
+    print("genes conditions :")
     print(genes_conditions)
     
     if (!genes_conditions %in% input$input_conditions) {
@@ -263,9 +263,6 @@ mod_clustering_server <- function(input, output, session, r) {
         type = "error"
       )
     }
-    
-    print(genes_conditions %in% input$input_conditions)
-    
 
     shiny::req(genes_conditions %in% input$input_conditions)
     # union of all the input comparisons
@@ -302,8 +299,8 @@ mod_clustering_server <- function(input, output, session, r) {
   output$plot_coseq_icl <- shiny::renderPlot({
     shiny::req(r$DEGs)
     shiny::req(r$clusterings)
-    shiny::req(r$clusterings[[input_genes_conditions()]]$model, r$DEGs)
-    draw_coseq_run(r$clusterings[[input$input_deg_genes]]$model, plot = "ICL")
+    shiny::req(r$clusterings[[input_genes_conditions()]]$model)
+    draw_coseq_run(r$clusterings[[input_genes_conditions()]]$model, plot = "ICL")
   })
   
   output$plot_coseq_barplots <- shiny::renderPlot({
