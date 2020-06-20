@@ -115,8 +115,10 @@ network_data <- function(graph, regulators){
   
   data$nodes$community <- memberships[match(data$nodes$id, names(memberships))]
   
-  data$nodes$group <- ifelse(data$nodes$id %in% regulators, "Regulator", "Target Gene")
-  data$nodes$gene_type <- ifelse(data$nodes$id %in% regulators, "Regulator", "Target Gene")
+  data$nodes$group <- ifelse(data$nodes$id %in% regulators, "Regulator", 
+                             ifelse(grepl("mean_", data$nodes$id), 
+                                    "Grouped Regulators", "Target Gene"))
+  data$nodes$gene_type <- data$nodes$group
   data$edges$value <- data$edges$weight
   return(data)
 }
@@ -151,6 +153,12 @@ draw_network <- function(nodes, edges){
       groupname = "Regulator",
       size = 28,
       color = list("background" = "#49A346", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visGroups(
+      groupname = "Grouped Regulators",
+      size = 45,
+      color = list("background" = "#1C5435", "border" = "#FFFFCC"),
       shape = "square"
     ) %>%
     visGroups(groupname = "Target Gene",
