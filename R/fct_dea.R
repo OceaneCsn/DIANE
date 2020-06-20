@@ -26,7 +26,8 @@
 #' 
 #' @examples
 #' data("abiotic_stresses")
-#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+#' abiotic_stresses$conditions, iteration = FALSE)
 #' threshold = 10*length(abiotic_stresses$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
@@ -76,10 +77,12 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' @export
 #' @examples
 #' data("abiotic_stresses")
-#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+#' abiotic_stresses$conditions, iteration = FALSE)
 #' threshold = 10*length(abiotic_stresses$conditions)
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
-#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, 
+#' conditions = abiotic_stresses$conditions)
 #' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 #' DEGs <- topTags$table
 estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {

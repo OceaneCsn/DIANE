@@ -27,10 +27,8 @@ A named list with the following elements:
 }
 \source{
 \describe{
- \item{Data download : }
- {\href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206}{GEO accession}}
- \item{Publication :  }
- {\href{https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392}{Molecular 
+ \item{Data download : }{\href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206}{GEO accession}}
+ \item{Publication :  }{\href{https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392}{Molecular 
  plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes}}}
 }
 \usage{
