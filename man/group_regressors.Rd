@@ -36,3 +36,11 @@ are formed with a community detection algorithm. Each group is then averaged in 
 Strongly negatively correlated regressors are added to the group it is correlated to, but their expression
 is not taken into account in the summary profile.
 }
+\examples{
+data(abiotic_stresses)
+aggregated_data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
+print(names(grouping))
+}

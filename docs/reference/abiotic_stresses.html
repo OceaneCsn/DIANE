@@ -153,9 +153,19 @@ the stress level.</p>
  <dt>raw_counts</dt><dd><p>Dataframe of positive values. Raw transcript aboundances 
  as obtained after mapping and quantifying RNASeq reads. Rows are transcripts, and
  columns are experimental triplicate conditions</p></dd>
+ <dt>normalized_counts</dt><dd><p>Dataframe of positive values. Normalized transcript aboundances 
+ Rows are transcripts, and columns are experimental triplicate conditions</p></dd>
  <dt>design</dt><dd><p>Dataframe. Describes for each condition, the level of each factor.</p></dd>
  <dt>conditions</dt><dd><p>Character vector. Gives the condition corresponding to each 
  column of the raw_counts element</p></dd>
+ <dt>heat_DEGs</dt><dd><p>Character vector. 692 genes detected as differentially expressed between control and heat stress, 
+ with adjusted pavlue of 0.01 and absolute log fold change of 2.</p></dd>
+ <dt>heat_DEGs_coseq_membership</dt><dd><p>Named character vector. Cluster of the 692 genes detected as 
+ differentially expressed between control and heat stress, 
+ This membership was obtained after running coseq expression based clustering on those genes, 
+ on all the dataset conditions, and resulted in 9 clusters.</p></dd>
+ <dt>heat_DEGs_regulatory_links</dt><dd><p>Matrix of size N_regulatprs*692 genes. Those gens are the ones detected as 
+ differentially expressed between control and heat stress. It was inferred by the GENIE3 function.</p></dd>
 
 </dl>
 
@@ -163,19 +173,48 @@ the stress level.</p>
 
     
 <dl'>
- <dt>Data download : </dt><dd><p></p></dd> <a href='https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206'>GEO accession</a>
- <dt>Publication :  </dt><dd><p></p></dd> <a href='https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392'>Molecular 
- plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes</a>
-
+ <dt>Data download : </dt><dd><p><a href='https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206'>GEO accession</a></p></dd>
+ <dt>Publication :  </dt><dd><p><a href='https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392'>Molecular 
+ plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes</a></p></dd>
 </dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>{
- <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>raw_counts</span>)
- <span class='no'>abiotic_stresses</span>$<span class='no'>design</span>
- <span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>
-}</div><div class='output co'>#&gt;  [1] "C"   "C"   "C"   "S"   "S"   "S"   "M"   "M"   "M"   "H"   "H"   "H"  
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>raw_counts</span>))
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>design</span>)
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>)
+}</div><div class='output co'>#&gt;               C_1   C_2   C_3   S_1   S_2   S_3   M_1   M_2   M_3   H_1   H_2
+#&gt; AT1G01010.1 127.0  67.9  65.5  94.0  88.1  95.9  65.1 100.3 126.8  95.4 135.0
+#&gt; AT1G01020.1 207.9 220.8 186.8 192.5 225.1 197.8 234.2 196.9 179.4 312.9 366.0
+#&gt; AT1G01030.1  32.7  34.4  55.8  33.6  15.9  31.3  21.4  29.8  33.5  47.7  39.0
+#&gt; AT1G01040.2 859.3 978.8 988.6 897.6 837.9 948.6 948.8 903.2 990.1 798.3 701.1
+#&gt; AT1G01050.1 846.8 840.2 837.2 836.1 818.8 792.2 802.0 761.4 719.9 922.2 969.3
+#&gt; AT1G01060.1 658.2 698.8 636.5 532.7 411.0 519.7 741.6 782.2 877.7  36.7  20.8
+#&gt;               H_3  SM_1  SM_2  SM_3  SH_1  SH_2  SH_3  MH_1  MH_2  MH_3 SMH_1
+#&gt; AT1G01010.1 117.2  96.7 104.4  98.1  94.7  96.1 101.3  82.8 107.4  97.1 100.1
+#&gt; AT1G01020.1 318.0 169.0 179.6 186.5 340.8 352.6 345.0 331.2 315.8 327.5 267.7
+#&gt; AT1G01030.1  51.1  25.2  31.2  34.4  61.0  65.5  61.2  45.0  36.2  55.9  46.0
+#&gt; AT1G01040.2 902.9 894.6 880.3 837.2 782.6 776.4 698.0 843.3 810.2 777.7 807.2
+#&gt; AT1G01050.1 930.8 866.9 805.2 840.1 895.2 783.2 849.5 690.0 702.8 717.8 835.8
+#&gt; AT1G01060.1  20.5 857.6 853.0 878.4  29.5  39.6  19.1  33.7  39.9  16.7  49.0
+#&gt;             SMH_2 SMH_3
+#&gt; AT1G01010.1  96.7 121.8
+#&gt; AT1G01020.1 313.7 319.3
+#&gt; AT1G01030.1  42.7  56.8
+#&gt; AT1G01040.2 786.0 853.7
+#&gt; AT1G01050.1 969.3 837.2
+#&gt; AT1G01060.1  33.7  26.0
+#&gt;     Salt Mannitol Heat
+#&gt; C      0        0    0
+#&gt; H      0        0    1
+#&gt; S      1        0    0
+#&gt; M      0        1    0
+#&gt; SM     1        1    0
+#&gt; SH     1        0    1
+#&gt; MH     0        1    1
+#&gt; SMH    1        1    1
+#&gt;  [1] "C"   "C"   "C"   "S"   "S"   "S"   "M"   "M"   "M"   "H"   "H"   "H"  
 #&gt; [13] "SM"  "SM"  "SM"  "SH"  "SH"  "SH"  "MH"  "MH"  "MH"  "SMH" "SMH" "SMH"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

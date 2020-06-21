@@ -1,7 +1,6 @@
 #' Returns modules-communities memberships
 #'
 #' @param graph igraph object, directed
-#'
 #' @return (named) vector
 community_structure <- function(graph) {
   g <- igraph::as.undirected(graph, mode = "collapse")

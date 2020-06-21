@@ -41,6 +41,12 @@ get_correlation <- function(pair, normalized.count){
 #' @export
 #'
 #' @examples
+#' data(abiotic_stresses)
+#' aggregated_data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
+#' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
+#' grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
+#' print(names(grouping))
 group_regressors <- function(normalized.count, genes, regressors, corr_thr = 0.9){
   #calculating correlations for each TF pairs
   pairs <- data.frame(t(combn(regressors, 2)))

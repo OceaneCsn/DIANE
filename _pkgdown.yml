@@ -20,6 +20,8 @@ reference:
 - contents:
   - normalize
   - filter_low_counts
+  - aggregate_splice_variants
+  - get_locus
 
 - title: Differential expression analysis
 - contents:
@@ -40,6 +42,7 @@ reference:
 - title: Gene regulatory network inference
 - contents:
   - starts_with("network_")
+  - group_regressors
  
 - title: Visualization functions
 - contents:

@@ -68,7 +68,7 @@ mod_network_analysis_ui <- function(id){
         shiny::h5("The super nodes (dark green squares) of the network are detailed here.
         Each edge represents a correlation above the specified threshold between
         the regulators. The community detection in this graph was used to group
-        highly correlated variables before network inference with GENIE3"),
+        highly correlated variables before network inference with GENIE3."),
         visNetwork::visNetworkOutput(ns("cor_tfs_network"), height = "700px")
         
       ),
@@ -79,7 +79,9 @@ mod_network_analysis_ui <- function(id){
       ),
       shiny::tabPanel(
         title = "Modules expression profiles",
-        shiny::h4("Topolocical clusters correspond to the network structural communitities"),
+        shiny::h4("Topolocical clusters correspond to the network structural communitities."),
+        shiny::h5("The expression profiles of genes within a community can be positively correlated,
+                  but also, unlike with expression based clustering, negatively correlated."),
         shiny::plotOutput(ns("profiles"), height = "750px")
         
       ),

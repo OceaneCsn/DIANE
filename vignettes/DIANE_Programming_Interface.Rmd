@@ -366,9 +366,7 @@ For each gene, we sum all its transcripts to have its final expression levels.
 aggregated_data <- aggregate_splice_variants(data = normalized_counts)
 ```
 
-## Grouping highly correlated regulators
 
-soon
 
 ## Example of inference
 
@@ -383,10 +381,7 @@ mat <- DIANE::network_inference(aggregated_data, conds = abiotic_stresses$condit
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
-data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
-
-# adding common names as label for network visualisation
-#data$nodes$label <- abiotic_stresses$gene_info[match(data$nodes$id, rownames(abiotic_stresses$gene_info)), "label"]
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
 
 knitr::kable(head(data$nodes))
 
@@ -414,5 +409,42 @@ draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_
 ```
 
 Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes. If there is too few genes, GO enrichment tests may not be significant.
+
+
+## Grouping highly correlated regulators
+
+This step is optional, but recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" edges from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
+
+The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
+
+
+The dark green nodes represent the highly correlated grouped regulators.
+
+
+```{r grouping, fig.width=8, fig.height=6}
+
+grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
+
+visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
+                       grouping$correlated_regressors_graph$edges)
+
+grouped_couts <- grouping$counts
+
+grouped_targets <- grouping$grouped_genes
+
+grouped_regressors <- grouping$grouped_regressors
+
+mat <- DIANE::network_inference(grouped_couts, conds = abiotic_stresses$conditions, targets = grouped_targets,
+                         regressors = grouped_regressors)
+
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+
+knitr::kable(head(data$nodes))
+
+DIANE::draw_network(data$nodes, data$edges)
+
+```
 
 

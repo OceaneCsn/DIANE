@@ -20,9 +20,13 @@ As several interactive tools already offer those kind of service, we try to go f
 
 As many biologists feel more comfortable with user interfaces rather than code, all of the features in DIANE are accessible via a signle page shiny application that can be locally launched.
 
+<img src="man/figures/UI_teasing.PNG" align="center" alt="" width="700" />
+
 For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts. 
 
 Fore more information, please find full documentation and examples in the github page  https://oceanecsn.github.io/DIANE.
+
+
 
 **DIANE is in an early stage of development**.
 
