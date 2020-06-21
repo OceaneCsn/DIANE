@@ -319,6 +319,11 @@ mod_network_analysis_server <- function(input, output, session, r){
       data <- r$normalized_counts
     }
     
+    if(sum(grepl("mean_", 
+      r$networks[[r$current_network]]$nodes$id)) > 0){
+      data <- r$grouped_normalized_counts
+    }
+    
     if(input$cluster_to_explore == "All"){
    
       draw_profiles(data = data,
