@@ -26,7 +26,7 @@ community_structure <- function(graph) {
 #' DIANE::draw_network_degrees(data$nodes, network)
 draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
-  TFs <- nodes[nodes$gene_type == "Regulator", "id"]
+  TFs <- nodes[nodes$gene_type == "Regulator" | nodes$gene_type == "Grouped Regulators", "id"]
   
   
   degree_in_targets <-

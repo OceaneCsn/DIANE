@@ -555,7 +555,7 @@ mod_network_inference_server <- function(input, output, session, r){
       r$grouped_normalized_counts = results$counts
       r$grouped_genes = results$grouped_genes
       r$grouped_regressors = results$grouped_regressors
-      r$cor_network <- results$graph_plot
+      r$cor_network <- results$correlated_regressors_graph
       
       
       data <- r$grouped_normalized_counts
@@ -601,12 +601,15 @@ mod_network_inference_server <- function(input, output, session, r){
       r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
-                         r$regulators)
+                         r$regulators, r$gene_info)
     
-    if(!is.null(r$gene_info)){
-      data$nodes[,colnames(r$gene_info)] <- 
-        r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
-    }
+    # 
+    # if(!is.null(r$gene_info)){
+    #   data$nodes[,colnames(r$gene_info)] <- 
+    #     r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
+    # }
+    
+    print(data$nodes[1:10,])
       
     membership <- data$nodes$community
     names(membership) <- data$nodes$id

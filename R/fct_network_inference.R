@@ -89,6 +89,8 @@ network_thresholding <- function(mat, n_edges){
 #' @param graph igraph object
 #' @param regulators list of regulators, so they can be marked
 #' as special nodes in the network
+#' @param gene_info dataframe with gene IDs as rownames, containing
+#' additional info on genes, in columns named label and description
 #'
 #' @return list of dataframes containing nodes and edges information
 #' @export
@@ -102,7 +104,7 @@ network_thresholding <- function(mat, n_edges){
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 #' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 #' }
-network_data <- function(graph, regulators){
+network_data <- function(graph, regulators, gene_info = NULL){
   data <- visNetwork::toVisNetworkData(graph)
   
   degree <- igraph::degree(graph)
@@ -120,6 +122,27 @@ network_data <- function(graph, regulators){
                                     "Grouped Regulators", "Target Gene"))
   data$nodes$gene_type <- data$nodes$group
   data$edges$value <- data$edges$weight
+  
+  # adding additional infos
+  if(!is.null(gene_info)){
+    data$nodes[,colnames(gene_info)] <- 
+      gene_info[match(data$nodes$id, rownames(gene_info)), ]
+    
+    # for grouped nodes, concatenates their labels
+    if("label" %in% colnames(gene_info)){
+      for(id in data$nodes$id){
+        if(grepl("mean_", id)){
+          print("doing it")
+          ids <- stringr::str_split_fixed(id, '_', 2)[,2]
+          ids <- unlist(strsplit(ids, '-'))
+          labels <- paste0("mean_", paste(gene_info[match(ids, rownames(gene_info)), "label"], collapse = '-'))
+          data$nodes$label[data$nodes$id == id] <- labels
+        }
+      }
+    }
+  }
+  
+  print(data$nodes[1:5,])
   return(data)
 }
 
