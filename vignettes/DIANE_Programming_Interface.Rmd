@@ -81,7 +81,7 @@ The design file is thus a matrix with condition names as rownames, and factor na
 
 
 ```{r design}
-kable(head(abiotic_stresses$design))
+kable(abiotic_stresses$design)
 ```
 
 
@@ -201,7 +201,7 @@ DEgenes[,c("name", "description")] <- gene_annotations$`Arabidopsis thaliana`[
   match(get_locus(DEgenes$genes, unique = FALSE), rownames(gene_annotations$`Arabidopsis thaliana`)),
   c("label", "description")]
 
-knitr::kable(head(DEgenes, n = 30))
+knitr::kable(head(DEgenes, n = 10))
 
 # plots
 tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
@@ -349,6 +349,7 @@ For each target gene, the methods uses Random Forests to provide a ranking of al
 The idea is then to keep the strongest links to build the gene regulatory network. The way of choosing this minimal importance value needed to be included in the network will be described the "thresholding" box.
 
 GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
+
 ## Regulators for your organism
 
 A list of regulators are provided in DIANE for human and Arabidopsis :
@@ -365,21 +366,9 @@ For each gene, we sum all its transcripts to have its final expression levels.
 aggregated_data <- aggregate_splice_variants(data = normalized_counts)
 ```
 
+
+
 ## Example of inference
-
-
-GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be considered for those profiles during the network inference.
-
-For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
-
-The idea is then to keep the strongest links to build the gene regulatory network. A first approach is hard thresholding on a desired number of links. If we want a network with 1000 edges, then we choose the 1000 strongest interactions. Usually, gene networks have have a number of edges comparable to their number of nodes, or a little but more. As a first and naive solution, we propose to threshold the network to a number of edges being the number of nodes.
-Of course, you can modify the value to use your own threshold.
-
-A more sophisticated method turning regulatory links into pvalues and allowing for significance testing on those links is currently being implemented and will be proposed soon.
-
-GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
-
-
 
 
 ```{r genie3, fig.width=10, fig.height=8}
@@ -392,10 +381,7 @@ mat <- DIANE::network_inference(aggregated_data, conds = abiotic_stresses$condit
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
-data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
-
-# adding common names as label for network visualisation
-#data$nodes$label <- abiotic_stresses$gene_info[match(data$nodes$id, rownames(abiotic_stresses$gene_info)), "label"]
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
 
 knitr::kable(head(data$nodes))
 
@@ -423,5 +409,42 @@ draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_
 ```
 
 Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes. If there is too few genes, GO enrichment tests may not be significant.
+
+
+## Grouping highly correlated regulators
+
+This step is optional, but recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" edges from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
+
+The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
+
+
+The dark green nodes represent the highly correlated grouped regulators.
+
+
+```{r grouping, fig.width=8, fig.height=6}
+
+grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
+
+visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
+                       grouping$correlated_regressors_graph$edges)
+
+grouped_couts <- grouping$counts
+
+grouped_targets <- grouping$grouped_genes
+
+grouped_regressors <- grouping$grouped_regressors
+
+mat <- DIANE::network_inference(grouped_couts, conds = abiotic_stresses$conditions, targets = grouped_targets,
+                         regressors = grouped_regressors)
+
+network <- DIANE::network_thresholding(mat, n_edges = length(genes))
+
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+
+knitr::kable(head(data$nodes))
+
+DIANE::draw_network(data$nodes, data$edges)
+
+```
 
 

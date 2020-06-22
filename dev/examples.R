@@ -154,7 +154,8 @@ raw_counts <- read.csv("D:/These/DIANE_inputs/demo_counts.csv", sep = ',', h = T
 design <- read.csv("D:/These/DIANE_inputs/abiotic_stresses_design.csv", sep = ',', h = T, row.names = "Condition")
 
 library(DIANE)
-data("demo_data_At")
+data("abiotic_stresses")
+data("regulators_per_organism")
 data("gene_annotations")
 
 
@@ -167,25 +168,31 @@ tail(gene_annotations[["Arabidopsis thaliana"]])
 abiotic_stresses <- list(raw_counts = raw_counts, design = design, conditions = conditions)
 
 
+############ tests group tfs
 
 
-################# tests rfPermute
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, regulators_per_organism$`Arabidopsis thaliana`)
 
-library(rfPermute)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+head(data)
 
 
-data(symb.metab)
 
-# Create the randomForest model with 1000 permutations. 
-metab.rf <- rfPermute(type ~ ., data = symb.metab, ntree = 1000, sampsize = rep(8, 4), replace = FALSE, proximity = TRUE, nrep = 100)
-metab.rf
-class(metab.rf)
+r <- DIANE::group_regressors(data, genes, regressors)
+tail(r$counts)
 
-names(metab.rf)
 
-imp <- rp.importance(metab.rf)
-head(imp)
-plotNull(metab.rf, preds = "Unidentified.Metabolite.43")
+r$correlated_regressors_graph
 
-plot(imp, type = "MeanDecreaseAccuracy")
-impHeatmap(metab.rf, n = 30)
+
+mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
+                                 regressors = r$grouped_regressors)
+
+network <- DIANE::network_thresholding(mat, n_edges = 500)
+
+d_GENIE3 <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+
+DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges)
+DIANE::draw_network_degrees(d_GENIE3$nodes, network)

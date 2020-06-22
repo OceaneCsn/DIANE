@@ -89,6 +89,49 @@ mod_network_inference_ui <- function(id){
 
         shiny::hr(),
         
+
+
+#   ____________________________________________________________________________
+#   tf grouping                                                             ####
+
+
+      shinyWidgets::dropdownButton(
+        size = 'xs',
+        shiny::includeMarkdown(system.file("extdata", "regulatorsFile.md", package = "DIANE")),
+        circle = TRUE,
+        status = "success",
+        icon = shiny::icon("question"),
+        width = "600px",
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
+      ),
+
+shiny::fluidRow(
+      col_8(shiny::numericInput(ns("cor_thr"), 
+                    label = "Recommended : group regulators correlated over ( %)", 
+                    min = 70, max = 100, value = 90)),
+
+      # shiny::fluidRow(
+      #   col_2(shinyWidgets::actionBttn(
+      #     ns("launch_grouping_btn"),
+      #     label = "Group",
+      #     color = "success",
+      #     style = 'bordered'
+      #   ))),
+      
+      col_4(
+        shinyWidgets::switchInput(
+          inputId = ns("grouping"),
+          value = TRUE,
+          onLabel = "ON",
+          offLabel = "OFF",
+          inline = TRUE,
+          onStatus = "success"
+        )
+      )
+      ),
+
+shiny::hr(),
+
 #   ____________________________________________________________________________
 #   genie3 launch                                                           ####
         shiny::uiOutput(ns("n_cores_choice")),
@@ -452,11 +495,46 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
 #   ____________________________________________________________________________
-#   bttn reactive                                                           ####
+#   bttn reactives                                                          ####
+  
+  
+  # 
+  # 
+  # shiny::observeEvent((input$launch_grouping_btn), {
+  #   
+  #   shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
+  #   shiny::req(input$grouping)
+  #   
+  #   if(r$splicing_aware) {
+  #     targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+  #     data <- r$aggregated_normalized_counts
+  #   }
+  #   else {
+  #     targets <- r$DEGs[[input$input_deg_genes_net]]
+  #     data <- r$normalized_counts
+  #   }
+  #   
+  #   regressors = intersect(targets, r$regulators)
+  #   
+  #   if( sum(regressors %in% rownames(data)) == 0 ){
+  #     shinyalert::shinyalert(
+  #       "No regulators found in the expression data rownames",
+  #       type = "error"
+  #     )
+  #   }
+  #   
+  #   shiny::req(sum(regressors %in% rownames(data)) > 0 )
+  #   
+  #   
+  #   
+  #   
+  #   
+  # })
 
   
   shiny::observeEvent((input$launch_genie_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
+    
     
     if(r$splicing_aware) {
       targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
@@ -466,32 +544,51 @@ mod_network_inference_server <- function(input, output, session, r){
       targets <- r$DEGs[[input$input_deg_genes_net]]
       data <- r$normalized_counts
     }
+    regressors = intersect(targets, r$regulators)
+    
+    if(input$grouping){
+      
+      results <- group_regressors(data, genes = targets, regressors = regressors,
+                                  corr_thr = input$cor_thr/100.0)
+      
+      
+      r$grouped_normalized_counts = results$counts
+      r$grouped_genes = results$grouped_genes
+      r$grouped_regressors = results$grouped_regressors
+      r$cor_network <- results$correlated_regressors_graph
+      
+      
+      data <- r$grouped_normalized_counts
+      targets <- r$grouped_genes
+      regressors <- r$grouped_regressors
+    }
+
     
     
-    if(length(intersect(targets, r$regulators)) < 2 ){
+    
+    if(length(regressors) < 2 ){
       shinyalert::shinyalert(
         "Not enough regulators provided",
         "GENIE3 requires a minimum of 2 regulators among the input genes to run.
         You coud maybe proceed to a less stringeant differential expression
-        analysis to increase the number of input genes.",
+        analysis to increase the number of input genes. Maybe something
+        also went wrong in the grouping if eneabled.",
         type = "error"
       )
     }
     
-    shiny::req(length(intersect(targets, r$regulators)) >= 2)
+    shiny::req(length(regressors) >= 2)
     
     mat <- network_inference(normalized.count = data, targets = targets, 
                              conds = input$input_conditions_net,
-                      regressors = intersect(targets, r$regulators),
+                      regressors = regressors,
                       nTrees = input$n_trees,
                       nCores = input$n_cores)
-    
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
     
     
   })
-  
   
   shiny::observeEvent((input$thr_btn), {
     shiny::req(r$normalized_counts)
@@ -504,12 +601,15 @@ mod_network_inference_server <- function(input, output, session, r){
       r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
-                         r$regulators)
+                         r$regulators, r$gene_info)
     
-    if(!is.null(r$gene_info)){
-      data$nodes[,colnames(r$gene_info)] <- 
-        r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
-    }
+    # 
+    # if(!is.null(r$gene_info)){
+    #   data$nodes[,colnames(r$gene_info)] <- 
+    #     r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
+    # }
+    
+    print(data$nodes[1:10,])
       
     membership <- data$nodes$community
     names(membership) <- data$nodes$id

@@ -4,13 +4,16 @@
 \alias{network_data}
 \title{Creates data compatible with visNetwork from an igraph object}
 \usage{
-network_data(graph, regulators)
+network_data(graph, regulators, gene_info = NULL)
 }
 \arguments{
 \item{graph}{igraph object}
 
 \item{regulators}{list of regulators, so they can be marked
 as special nodes in the network}
+
+\item{gene_info}{dataframe with gene IDs as rownames, containing
+additional info on genes, in columns named label and description}
 }
 \value{
 list of dataframes containing nodes and edges information

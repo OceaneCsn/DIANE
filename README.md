@@ -1,5 +1,3 @@
-<a href="https://github.com/OceaneCsn/DIANE/actions?query=workflow%3Atest-coverage" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/test-coverage/badge.svg)</a>
-<a href="https://github.com/OceaneCsn/DIANE/actions" rel="cove">![test-coverage](https://github.com/OceaneCsn/DIANE/workflows/R-CMD-check/badge.svg)</a>
 [![Travis build status](https://travis-ci.com/OceaneCsn/DIANE.svg?branch=master)](https://travis-ci.com/OceaneCsn/DIANE)
 
 
@@ -22,9 +20,13 @@ As several interactive tools already offer those kind of service, we try to go f
 
 As many biologists feel more comfortable with user interfaces rather than code, all of the features in DIANE are accessible via a signle page shiny application that can be locally launched.
 
+<img src="man/figures/UI_teasing.PNG" align="center" alt="" width="700" />
+
 For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts. 
 
 Fore more information, please find full documentation and examples in the github page  https://oceanecsn.github.io/DIANE.
+
+
 
 **DIANE is in an early stage of development**.
 
@@ -44,6 +46,6 @@ DIANE::run_app()
 
 DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/. 
 
-Author : Océane Cassan
+Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
 
 PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.

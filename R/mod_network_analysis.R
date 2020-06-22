@@ -55,7 +55,6 @@ mod_network_analysis_ui <- function(id){
 
   column(width = 7,
     shinydashboard::tabBox(
-      title = "Network informations",
       width = 12,
       
       
@@ -65,13 +64,24 @@ mod_network_analysis_ui <- function(id){
         
       ),
       shiny::tabPanel(
+        title = "Correlated regulators network",
+        shiny::h5("The super nodes (dark green squares) of the network are detailed here.
+        Each edge represents a correlation above the specified threshold between
+        the regulators. The community detection in this graph was used to group
+        highly correlated variables before network inference with GENIE3."),
+        visNetwork::visNetworkOutput(ns("cor_tfs_network"), height = "700px")
+        
+      ),
+      shiny::tabPanel(
         title = "In-Out degree distributions",
         shiny::plotOutput(ns("distributions"), height = "700px")
         
       ),
       shiny::tabPanel(
         title = "Modules expression profiles",
-        shiny::h4("Topolocical clusters correspond to the network structural communitities"),
+        shiny::h4("Topolocical clusters correspond to the network structural communitities."),
+        shiny::h5("The expression profiles of genes within a community can be positively correlated,
+                  but also, unlike with expression based clustering, negatively correlated."),
         shiny::plotOutput(ns("profiles"), height = "750px")
         
       ),
@@ -258,6 +268,28 @@ mod_network_analysis_server <- function(input, output, session, r){
   })
   
   
+#   ____________________________________________________________________________
+#   TFs network                                                             ####
+
+  
+  output$cor_tfs_network <- visNetwork::renderVisNetwork({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    shiny::req(r$networks[[r$current_network]]$edges)
+    shiny::req(r$cor_network)
+    
+    nodes <- r$cor_network$nodes
+    nodes$label <- r$gene_info[match(nodes$id, rownames(r$gene_info)), "label"]
+    
+    visNetwork::visNetwork(nodes, r$cor_network$edges)%>% 
+      visNodes(font = list("size" = 35))
+  })
+  
+  output$module <- shiny::renderPrint({
+    print(paste(input$click, input$select))
+  })
+  
 
 #   ____________________________________________________________________________
 #   densities                                                               ####
@@ -287,6 +319,11 @@ mod_network_analysis_server <- function(input, output, session, r){
     }
     else{
       data <- r$normalized_counts
+    }
+    
+    if(sum(grepl("mean_", 
+      r$networks[[r$current_network]]$nodes$id)) > 0){
+      data <- r$grouped_normalized_counts
     }
     
     if(input$cluster_to_explore == "All"){
@@ -339,6 +376,19 @@ mod_network_analysis_server <- function(input, output, session, r){
                                   cluster = input$cluster_to_explore)
     
     background <- rownames(r$normalized_counts)
+    
+    # spreads the grouped regulators
+    if(sum(grepl("mean_", genes)) > 0){
+      individuals <- genes[!grepl("means_", genes)]
+      groups <- setdiff(genes, individuals)
+      for(group in groups){
+        individuals <- c(individuals, 
+                         strsplit(stringr::str_split_fixed(group, "_", 2)[,2]), '-')
+      }
+      genes <- individuals
+    }
+    
+    
     
     if (r$splicing_aware){
       genes <- get_locus(genes)

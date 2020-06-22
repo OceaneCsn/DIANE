@@ -1,14 +1,11 @@
 #' Returns modules-communities memberships
 #'
 #' @param graph igraph object, directed
-#'
 #' @return (named) vector
 community_structure <- function(graph) {
   g <- igraph::as.undirected(graph, mode = "collapse")
   return(igraph::membership(igraph::cluster_louvain(g)))
 }
-
-
 
 #' Plots the histogram of in and out degrees, betweeness of 
 #' regultors and target genes.
@@ -28,7 +25,7 @@ community_structure <- function(graph) {
 #' DIANE::draw_network_degrees(data$nodes, network)
 draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
-  TFs <- nodes[nodes$gene_type == "Regulator", "id"]
+  TFs <- nodes[nodes$gene_type == "Regulator" | nodes$gene_type == "Grouped Regulators", "id"]
   
   
   degree_in_targets <-

@@ -80,7 +80,7 @@ are_splice_variants <- function(gene_ids){
 #' @export
 #' @examples 
 #' data("abiotic_stresses")
-#' aggregate_splice_variants(abiotic_stresses$normalized_counts)
+#' d <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
     

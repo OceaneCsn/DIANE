@@ -77,6 +77,7 @@ golem::add_fct( "glm")
 golem::add_fct( "network_inference")
 golem::add_fct( "network_analysis")
 golem::add_fct( "go")
+golem::add_fct( "regressors_grouping")
 #golem::add_utils( "helpers" )
 
 ## External resources
