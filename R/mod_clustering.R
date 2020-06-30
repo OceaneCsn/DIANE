@@ -124,7 +124,8 @@ mod_clustering_ui <- function(id) {
           )
         )
       )
-    )
+    ),
+    shiny::actionButton(ns("browser"), "backdoor")
   )
 }
 
@@ -253,18 +254,19 @@ mod_clustering_server <- function(input, output, session, r) {
     print("genes conditions :")
     print(genes_conditions)
     
-    if (!genes_conditions %in% input$input_conditions) {
+    if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
       shinyalert::shinyalert(
-        paste0(
-          "The conditions used for clustering should contain the conditions
-          used to compute the input differentially expressed genes. In that case : ",
-          paste(input$input_deg_genes, collapse = ', ')
+        paste0( "Please select at least the conditions ",
+          
+          paste0(input$input_deg_genes, collapse = ', ')
         ),
+        "The conditions for clustering should contain the conditions
+          used to compute the input differentially expressed genes.",
         type = "error"
       )
     }
 
-    shiny::req(genes_conditions %in% input$input_conditions)
+    shiny::req(sum(genes_conditions %in% input$input_conditions) == length(genes_conditions))
     # union of all the input comparisons
     genes <- unique(unlist(r$DEGs[input$input_deg_genes]))
     
@@ -321,6 +323,10 @@ mod_clustering_server <- function(input, output, session, r) {
       membership = r$clusterings[[input_genes_conditions()]]$membership,
       k = input$clusters
     )
+  })
+  
+  shiny::observeEvent(input$browser, {
+    browser()
   })
   
 }
