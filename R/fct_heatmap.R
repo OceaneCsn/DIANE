@@ -257,3 +257,49 @@ draw_PCA <- function(data) {
   
   gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
 }
+
+
+#' Draw gene expression levels
+#' 
+#' The normalized counts of the required genes in the required conditions are 
+#' shown. Please limit the number of input genes for readability reasons (up to 10 genes).
+#'
+#' @param data normalized expression dataframe, with genes as rownames and 
+#' conditions as colnames.
+#' @param genes character vector of genes to be plotted (must be contained in
+#' the rownames of data, entierly or as a substring)
+#' @param conds conditions to be shown on expression levels (must be contained in 
+#' the column names of data before the _rep suffix). Default : all conditions.
+#'
+#' @export
+#'
+#' @examples
+#' genes <- sample(abiotic_stresses$heat_DEGs, 4)
+#' conditions <- c("C", "M", 'H', 'SH')
+#' draw_expression_levels(abiotic_stresses$normalized_counts, 
+#' genes = genes, conds = conditions)
+draw_expression_levels <- function(data, genes, conds = colnames(data)){
+  
+  if(sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0){
+    stop("The required genes were not found in expression data rownames")
+  }
+  
+  conditions <- colnames(data)[stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
+  
+  if(length(conditions) == 0){
+    stop("The required conditions were not found in the expression data")
+  }
+  
+  data$gene <- rownames(data)
+  
+  d <- reshape2::melt(as.data.frame(data[stringr::str_detect(rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
+  d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[,1]
+  d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[,2]
+  ggplot(d, aes(x = condition, y = value, color = condition, shape = replicate)) + 
+    geom_point(size = 4, alpha = 0.8) + facet_wrap(~gene, scales = "free") + 
+    ggtitle("Normalized expression levels") + 
+    theme(plot.title = element_text(size = 20, face = "bold"), strip.text.x = element_text(size = 12),
+          legend.title = element_text(size = 17), axis.title.y = element_text(size = 15), 
+          axis.text.x = element_text(size = 12, angle = 320)) + xlab("") + ylab("Normalized counts")
+}
+

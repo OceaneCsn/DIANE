@@ -196,3 +196,13 @@ d_GENIE3 <- network_data(network, regulators_per_organism[["Arabidopsis thaliana
 
 DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges)
 DIANE::draw_network_degrees(d_GENIE3$nodes, network)
+
+
+################# gene expression plot
+library(ggplot2)
+
+
+
+
+
+
