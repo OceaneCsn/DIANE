@@ -66,6 +66,8 @@ golem::add_module( name = "cluster_exploration" )
 golem::add_module( name = "network_inference" )
 golem::add_module( name = "network_analysis" )
 golem::add_module( name = "module_analysis" )
+golem::add_module( name = "module_levels" )
+
 
 ## Add helper functions ----
 ## Creates ftc_* and utils_*

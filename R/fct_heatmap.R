@@ -30,16 +30,24 @@ draw_heatmap <-
     else
       sample_subset <- subset
     
+    if (sum(stringr::str_detect(rownames(data), paste0(sample_subset, collapse = '|'))) == 0) {
+      stop("The required subset of genes was not found in expression data rownames")
+    }
+    
     if (is.null(conditions))
       conds <- colnames(data)
     else
-      conds <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conditions]
-      
+      conds <-
+        colnames(data)[str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
+    
     if (log)
       data <- log(data + 1)
     if (profiles)
       data <- data / rowMeans(data)
     
+    if (length(conds) == 0) {
+      stop("The required conditions were not found in the expression data")
+    }
     
     mat <- data[sample_subset, conds]
     
@@ -48,8 +56,7 @@ draw_heatmap <-
     
     pheatmap::pheatmap(
       mat,
-      color = grDevices::colorRampPalette(
-        RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
+      color = grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
       annotation_col = samples,
       show_rownames = show_rownames,
       main = title,
@@ -71,13 +78,14 @@ draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
                                    replace = FALSE,
-                                   size = round(dim(data)[1] / 4, 0)),] + 1))
+                                   size = round(dim(data)[1] / 4, 0)), ] + 1))
   
   colnames(d)[c(length(colnames(d)) - 1, length(colnames(d)))] <-
     c("sample", "logCount")
   
   d$condition <- str_split_fixed(d$sample, "_", 2)[, 1]
-  g <- ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
+  g <-
+    ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
   
   if (boxplot) {
     g <-
@@ -90,7 +98,9 @@ draw_distributions <- function(data, boxplot = TRUE) {
       )
   } else{
     g <-
-      g + ggplot2::geom_violin(alpha = 0.5, lwd = 1, ggplot2::aes(fill = condition))
+      g + ggplot2::geom_violin(alpha = 0.5,
+                               lwd = 1,
+                               ggplot2::aes(fill = condition))
   }
   
   g <-
@@ -116,17 +126,13 @@ draw_distributions <- function(data, boxplot = TRUE) {
 #' Multi-dimensional scaling plot
 #'
 #' @param normalized.count data to plot for MDS
-#' 
-#' @param conditions if NULL (default, takes the split before the character '_' as condition names)
-#' else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
-#' columns names of the expression matrix used to build the tcc object.
 #' @importFrom limma plotMDS
 #' @export
-#' @examples 
+#' @examples
 #' data("abiotic_stresses")
 #' DIANE::draw_MDS(abiotic_stresses$normalized_counts)
 
-draw_MDS <- function(normalized.count, conditions = NULL) {
+draw_MDS <- function(normalized.count) {
   mds <- limma::plotMDS(normalized.count, plot = FALSE)
   d <-
     data.frame(
@@ -136,7 +142,7 @@ draw_MDS <- function(normalized.count, conditions = NULL) {
       condition = str_split_fixed(names(mds$x), '_', 2)[, 1]
     )
   g <-
-    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition)) + 
+    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition)) +
     ggplot2::geom_point(size = 6)
   
   g <- g + ggplot2::ggtitle("Multi Dimensional Scaling plot")
@@ -192,7 +198,7 @@ draw_PCA <- function(data) {
       explained.variance = round(acp$eig / sum(acp$eig) *
                                    100, 2)
     )
-  scree <- scree[1:min(nrow(scree), 4), ]
+  scree <- scree[1:min(nrow(scree), 4),]
   
   # Plots
   g1_2 <-
@@ -202,11 +208,17 @@ draw_PCA <- function(data) {
              y = Comp2,
              color = condition,
              label = condition
-           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+           )) + geom_text(
+             color = "black",
+             size = 6,
+             alpha = 0.5,
+             nudge_x = 0.07,
+             nudge_y = 0.07
+           ) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
     theme(legend.position = "none") +
-    ggtitle("Principal components 1 and 2") +  
+    ggtitle("Principal components 1 and 2") +
     xlab(paste("x-axis : Comp1 ", scree[1, "explained.variance"], "%")) +
     ylab(paste("y-axis : Comp2 ", scree[2, "explained.variance"], "%"))
   
@@ -217,11 +229,17 @@ draw_PCA <- function(data) {
              y = Comp3,
              color = condition,
              label = condition
-           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
+           )) + geom_text(
+             color = "black",
+             size = 6,
+             alpha = 0.5,
+             nudge_x = 0.07,
+             nudge_y = 0.07
+           ) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
     theme(legend.position = "none") +
-    ggtitle("Principal components 2 and 3") + 
+    ggtitle("Principal components 2 and 3") +
     xlab(paste("x-axis : Comp2 ", scree[2, "explained.variance"], "%")) +
     ylab(paste("y-axis : Comp3 ", scree[3, "explained.variance"], "%"))
   
@@ -232,13 +250,21 @@ draw_PCA <- function(data) {
              y = Comp4,
              color = condition,
              label = condition
-           )) + geom_text(color = "black", size = 6, alpha = 0.5, nudge_x = 0.07,  nudge_y = 0.07) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) + 
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) + 
-    theme(legend.position = "bottom",
-          legend.text = ggplot2::element_text(size = 18),
-          legend.text.align = 1) +
-    ggtitle("Principal components 3 and 4") + 
+           )) + geom_text(
+             color = "black",
+             size = 6,
+             alpha = 0.5,
+             nudge_x = 0.07,
+             nudge_y = 0.07
+           ) +
+    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
+    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+    theme(
+      legend.position = "bottom",
+      legend.text = ggplot2::element_text(size = 18),
+      legend.text.align = 1
+    ) +
+    ggtitle("Principal components 3 and 4") +
     xlab(paste("x-axis : Comp3 ", scree[3, "explained.variance"], "%")) +
     ylab(paste("y-axis : Comp4 ", scree[4, "explained.variance"], "%"))
   
@@ -257,3 +283,68 @@ draw_PCA <- function(data) {
   
   gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
 }
+
+
+#' Draw gene expression levels
+#'
+#' The normalized counts of the required genes in the required conditions are
+#' shown. Please limit the number of input genes for readability reasons (up to 10 genes).
+#'
+#' @param data normalized expression dataframe, with genes as rownames and
+#' conditions as colnames.
+#' @param genes character vector of genes to be plotted (must be contained in
+#' the rownames of data, entierly or as a substring)
+#' @param conds conditions to be shown on expression levels (must be contained in
+#' the column names of data before the _rep suffix). Default : all conditions.
+#' @param gene.name.size size of the facet plot title font for each gene. Default : 12 
+#' 
+#' @import ggplot2
+#'
+#' @export
+#'
+#' @examples
+#' genes <- sample(abiotic_stresses$heat_DEGs, 4)
+#' conditions <- c("C", "M", 'H', 'SH')
+#' DIANE::draw_expression_levels(abiotic_stresses$normalized_counts,
+#' genes = genes, conds = conditions)
+draw_expression_levels <-
+  function(data,
+           genes,
+           conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[,1]),
+           gene.name.size = 12) {
+    if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0) {
+      stop("The required genes were not found in expression data rownames")
+    }
+    
+    conditions <-
+      colnames(data)[stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conds]
+    if (length(conditions) == 0) {
+      stop("The required conditions were not found in the expression data")
+    }
+    
+    data$gene <- rownames(data)
+    
+    d <-
+      reshape2::melt(as.data.frame(data[stringr::str_detect(
+        rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
+    d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
+    d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
+    ggplot(d,
+           aes(
+             x = condition,
+             y = value,
+             color = condition,
+             shape = replicate
+           )) +
+      geom_point(size = 4, alpha = 0.8) + facet_wrap( ~ gene, scales = "free") +
+      ggtitle("Normalized expression levels") +
+      theme(
+        plot.title = element_text(size = 22, face = "bold"),
+        strip.text.x = element_text(size = gene.name.size),
+        legend.title = element_text(size = 20),
+        legend.text = element_text(size = 18),
+        axis.text.y = element_text(size = 22, angle = 320),
+        axis.title.y = element_text(size = 20),
+        axis.text.x = element_text(size = 19, angle = 320)
+      ) + xlab("") + ylab("Normalized counts")
+  }

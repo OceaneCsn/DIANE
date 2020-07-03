@@ -132,7 +132,7 @@
     <p>Multi-dimensional scaling plot</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_MDS</span>(<span class='no'>normalized.count</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>draw_MDS</span>(<span class='no'>normalized.count</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -140,12 +140,6 @@
     <tr>
       <th>normalized.count</th>
       <td><p>data to plot for MDS</p></td>
-    </tr>
-    <tr>
-      <th>conditions</th>
-      <td><p>if NULL (default, takes the split before the character '_' as condition names)
-else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
-columns names of the expression matrix used to build the tcc object.</p></td>
     </tr>
     </table>
 

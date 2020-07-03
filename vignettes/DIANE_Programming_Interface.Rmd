@@ -151,6 +151,11 @@ pre_process <- DIANE::draw_distributions(abiotic_stresses$raw_counts, boxplot = 
 post_process <- DIANE::draw_distributions(normalized_counts, boxplot = FALSE)+ ggtitle("After normalisation and filtering")
 
 gridExtra::grid.arrange(pre_process, post_process, ncol = 1)
+
+
+
+genes <- sample(abiotic_stresses$heat_DEGs, 4)
+DIANE::draw_expression_levels(abiotic_stresses$normalized_counts, genes = genes)
 ```
 
 ## Sample homogeneity and global analysis

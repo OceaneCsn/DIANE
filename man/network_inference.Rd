@@ -9,7 +9,7 @@ network_inference(
   conds,
   regressors,
   targets,
-  nTrees = 5000,
+  nTrees = 1000,
   nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1,
     1))
 )
@@ -25,7 +25,8 @@ network_inference(
 
 \item{nTrees}{Number of trees by Random Forest}
 
-\item{nCores}{Number of CPU cores to use during the procedure}
+\item{nCores}{Number of CPU cores to use during the procedure. Default is the detected number of cores
+minus one.}
 }
 \value{
 matrix object

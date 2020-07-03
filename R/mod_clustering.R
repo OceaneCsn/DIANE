@@ -70,6 +70,7 @@ mod_clustering_ui <- function(id) {
             to_max = 15
           )
         )),
+        
         shiny::br(),
         
         shiny::fluidRow(col_12(
@@ -166,7 +167,6 @@ mod_clustering_server <- function(input, output, session, r) {
   
   input_genes_conditions <- shiny::reactive({
     req(input$input_deg_genes)
-    print(paste(input$input_deg_genes, collapse = ' + '))
     return(paste(input$input_deg_genes, collapse = ' + '))
   })
   
@@ -248,17 +248,15 @@ mod_clustering_server <- function(input, output, session, r) {
   
   shiny::observeEvent((input$launch_coseq_btn), {
     shiny::req(r$normalized_counts, r$conditions, input_genes_conditions())
-    print(input_genes_conditions())
+
     
     genes_conditions <- unique(as.vector(str_split_fixed(input$input_deg_genes, ' ',2)))
-    print("genes conditions :")
-    print(genes_conditions)
     
     if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
       shinyalert::shinyalert(
         paste0( "Please select at least the conditions ",
           
-          paste0(input$input_deg_genes, collapse = ', ')
+          paste0(genes_conditions, collapse = ', ')
         ),
         "The conditions for clustering should contain the conditions
           used to compute the input differentially expressed genes.",
@@ -270,7 +268,6 @@ mod_clustering_server <- function(input, output, session, r) {
     # union of all the input comparisons
     genes <- unique(unlist(r$DEGs[input$input_deg_genes]))
     
-    print(head(genes))
     run <-
       run_coseq(
         data = r$normalized_counts,
