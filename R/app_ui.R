@@ -62,6 +62,11 @@ app_ui <- function(request) {
             icon = shiny::icon("table")
           ),
           shinydashboard::menuItem(
+            "Gene expression levels",
+            tabName = "levels_tab",
+            icon = shiny::icon("chart-line")
+          ),
+          shinydashboard::menuItem(
             "Differential Expression",
             tabName = "dea_tab",
             icon = shiny::icon("greater-than-equal")
@@ -105,9 +110,14 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName = "normalisation_tab",
                                   mod_normalisation_ui("normalisation_ui_1")),
           shinydashboard::tabItem(
+            tabName = "levels_tab",
+            mod_module_levels_ui("module_levels_ui_1")
+          ),
+          shinydashboard::tabItem(
             tabName = "dea_tab",
             mod_differential_expression_analysis_ui("differential_expression_analysis_ui_1")
           ),
+          
           
           
           

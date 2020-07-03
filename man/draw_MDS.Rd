@@ -4,14 +4,10 @@
 \alias{draw_MDS}
 \title{Multi-dimensional scaling plot}
 \usage{
-draw_MDS(normalized.count, conditions = NULL)
+draw_MDS(normalized.count)
 }
 \arguments{
 \item{normalized.count}{data to plot for MDS}
-
-\item{conditions}{if NULL (default, takes the split before the character '_' as condition names)
-else, enter the conditions regardless of biological replicates, as a character vector. Its order should match the 
-columns names of the expression matrix used to build the tcc object.}
 }
 \description{
 Multi-dimensional scaling plot

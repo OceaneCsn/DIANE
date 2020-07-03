@@ -15,7 +15,8 @@
 #' @param regressors genes to be taken as regressors during the inference procedures (regulator genes)
 #' @param targets genes to be included in the inferred network. Regressors can also be in the targets
 #' @param nTrees Number of trees by Random Forest
-#' @param nCores Number of CPU cores to use during the procedure
+#' @param nCores Number of CPU cores to use during the procedure. Default is the detected number of cores
+#' minus one.
 #'
 #' @return matrix object
 #' @export
@@ -33,14 +34,28 @@
 #' targets = genes, regressors = regressors)
 #' }
 
-network_inference <- function(normalized.count, conds, regressors, targets, nTrees=5000, 
+network_inference <- function(normalized.count, conds, regressors, targets, nTrees=1000, 
                               nCores=ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores()-1, 1))){
 
   conditions <- colnames(normalized.count)[str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
   
+  
+  if (length(conditions) == 0) {
+    stop("The required conditions were not found in the expression data")
+  }
+  
+  if (sum(targets %in% rownames(normalized.count)) == 0) {
+    stop("The required target genes were not found in the expression data")
+  }
+  
   normalized.count <- normalized.count[,conditions]
   
   regressors <- intersect(rownames(normalized.count), regressors)
+  
+  if (length(regressors) == 0) {
+    stop("No regressors were found among the targets")
+  }
+  
   mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
                 treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = 2, verbose = FALSE)
   

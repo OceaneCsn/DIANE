@@ -151,7 +151,7 @@ across all targets, giving a global regulatory links ranking stored in the resul
   <span class='no'>conds</span>,
   <span class='no'>regressors</span>,
   <span class='no'>targets</span>,
-  <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>5000</span>,
+  <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>()), <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>,
     <span class='fl'>1</span>))
 )</pre>
@@ -181,7 +181,8 @@ across all targets, giving a global regulatory links ranking stored in the resul
     </tr>
     <tr>
       <th>nCores</th>
-      <td><p>Number of CPU cores to use during the procedure</p></td>
+      <td><p>Number of CPU cores to use during the procedure. Default is the detected number of cores
+minus one.</p></td>
     </tr>
     </table>
 
