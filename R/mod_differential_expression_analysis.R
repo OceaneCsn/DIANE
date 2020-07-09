@@ -143,13 +143,19 @@ mod_differential_expression_analysis_ui <- function(id) {
                           style = 'bordered'
                         )),
                         
-                        col_4(shinyWidgets::switchInput(
-                          inputId = ns("draw_go"),
-                          value = TRUE,
-                          onLabel = "Plot",
-                          offLabel = "Data table",
-                          label = "Result type"
-                        )),
+                        col_4(
+                          
+                          
+                          shinyWidgets::radioGroupButtons(ns("draw_go"), 
+                                       choices = c("Dot plot", "Enrichment map", "Data table"), 
+                                       selected = "Dot plot",
+                                       justified = TRUE,
+                                       direction = "vertical",
+                                       checkIcon = list(
+                                         yes = icon("ok", 
+                                                    lib = "glyphicon")))
+                          
+                        ),
                         
                         col_4(shiny::uiOutput(ns("max_go_choice"))),
                         
@@ -505,7 +511,7 @@ mod_differential_expression_analysis_server <-
     
     output$max_go_choice <- shiny::renderUI({
       shiny::req(r_dea$go)
-      
+      shiny::req(input$draw_go =="Dot plot")
      shiny::numericInput(ns("n_go_terms"), 
                                 label = "Top number of GO terms to plot :", 
                                 min = 1, value = dim(r_dea$go)[1])
@@ -513,9 +519,13 @@ mod_differential_expression_analysis_server <-
     
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_dea$go)
-      #shiny::req(input$n_go_terms)
       max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
       draw_enrich_go(r_dea$go, max_go = max)
+    })
+    
+    output$go_map_plot <- shiny::renderPlot({
+      shiny::req(r_dea$go)
+      draw_enrich_go_map(r_dea$go)
     })
     
     output$go_results <- shiny::renderUI({
@@ -524,13 +534,19 @@ mod_differential_expression_analysis_server <-
         shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
       
       shiny::req(r$organism != "Other")
-      
       shiny::req(r_dea$go)
-      if (!input$draw_go){
+      
+      if (input$draw_go == "Data table"){
         DT::dataTableOutput(ns("go_table"))
       }
       else{
-        plotly::plotlyOutput(ns("go_plot"), height = "800px")
+        if (input$draw_go == "Enrichment map"){
+          shiny::plotOutput(ns("go_map_plot"), height = "800px"),
+          h5("In this graph, GO terms are linked depending on the genes they share
+             among the gene set of interest.")
+        }
+        else
+          plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
     })
     
