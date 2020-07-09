@@ -51,6 +51,7 @@ usethis::use_package( "foreach" )
 usethis::use_package( "doParallel" ) 
 usethis::use_package( "doRNG" ) 
 usethis::use_package( "ade4" ) 
+usethis::use_package( "ggraph" ) 
 
 #usethis::use_package( "MASS" )
 

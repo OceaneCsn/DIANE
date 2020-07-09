@@ -99,7 +99,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         shiny::uiOutput(ns("deg_number_summary")),
         
         shiny::hr(),
-        shiny::uiOutput(ns("dl_bttns"))
+        shiny::fluidRow(shiny::uiOutput(ns("dl_bttns")))
         
         
       )

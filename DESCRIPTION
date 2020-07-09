@@ -40,7 +40,8 @@ Imports:
     foreach,
     doParallel,
     doRNG,
-    ade4
+    ade4,
+    ggraph
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
