@@ -541,9 +541,7 @@ mod_differential_expression_analysis_server <-
       }
       else{
         if (input$draw_go == "Enrichment map"){
-          shiny::plotOutput(ns("go_map_plot"), height = "800px"),
-          h5("In this graph, GO terms are linked depending on the genes they share
-             among the gene set of interest.")
+          shiny::plotOutput(ns("go_map_plot"), height = "800px")
         }
         else
           plotly::plotlyOutput(ns("go_plot"), height = "800px")
@@ -554,8 +552,6 @@ mod_differential_expression_analysis_server <-
     shiny::observeEvent(input$browser, {
       browser()
     })
-    
-    
   }
 
 ## To be copied in the UI
