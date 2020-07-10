@@ -143,9 +143,11 @@ mod_differential_expression_analysis_ui <- function(id) {
                           style = 'bordered'
                         )),
                         
+                        
+                        
+        
+                        
                         col_4(
-                          
-                          
                           shinyWidgets::radioGroupButtons(ns("draw_go"), 
                                        choices = c("Dot plot", "Enrichment map", "Data table"), 
                                        selected = "Dot plot",
@@ -157,7 +159,16 @@ mod_differential_expression_analysis_ui <- function(id) {
                           
                         ),
                         
-                        col_4(shiny::uiOutput(ns("max_go_choice"))),
+                        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                                              choiceValues = c("BP", "CC", "MF"),
+                                                              selected = "BP",
+                                                              justified = TRUE,
+                                                              direction = "vertical",
+                                                              checkIcon = list(
+                                                                yes = icon("ok", 
+                                                                           lib = "glyphicon"))),
+                              shiny::uiOutput(ns("max_go_choice"))),
                         
                         
                         
@@ -498,7 +509,8 @@ mod_differential_expression_analysis_server <-
 
       # TODO add check if it is entrez with regular expression here
       shiny::req(length(genes) > 0, length(background) > 0)
-      r_dea$go <- enrich_go(genes, background, org = org)
+      print(input$go_type)
+      r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
     })
     
 #   ____________________________________________________________________________

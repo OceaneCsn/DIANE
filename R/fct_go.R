@@ -75,7 +75,9 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' @param org organism, in the format of bioconductor organisms databases (e.g 
 #' org.xx.xx.db)
 #' @param sim_cutoff similarity cutoff to use for pooling similar GO terms
-#'
+#' @param GO_type character between BP (Biological Process), CC(Cellular Component) 
+#' or MF (Molecular Function), depending on the GO subtype
+#' to use in the analysis
 #' @return data.frame
 #' @export
 #' @examples 
@@ -92,11 +94,15 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' head(go)
 enrich_go <- function(genes, background,
                       org = org.At.tair.db::org.At.tair.db,
-                      sim_cutoff = 0.85){
+                      sim_cutoff = 0.85, GO_type = "BP"){
+  
+  if(!GO_type %in% c("BP", "CC", "MF")){
+    stop("GO_type must be either BP, CC or MF.")
+  }
   
   ego <- clusterProfiler::enrichGO(gene = genes,
                                    OrgDb = org,
-                                   ont = "BP",
+                                   ont = GO_type,
                                    universe = background,
                                    pAdjustMethod = "BH",
                                    pvalueCutoff  = 0.01,
@@ -233,13 +239,13 @@ interGO <- function(go_pair, go_table){
 #' draw_enrich_go_map(go)
 draw_enrich_go_map <- function(go){
   gos <- go$ID
-  pairs <- data.frame(t(combn(gos, 2)))
+  pairs <- data.frame(t(utils::combn(gos, 2)))
   
   pairs$common_genes <- sapply(paste(pairs[,1], pairs[,2]), interGO, go_table = go)
   pairs <- pairs[pairs$common_genes > 0,]
   graph <- igraph::graph_from_data_frame(pairs)
   
-  layout <- create_layout(graph, layout = 'kk')
+  layout <- ggraph::create_layout(graph, layout = 'kk')
   layout$GeneCount <- go[match(layout$name, go$ID),"Count"]
   layout$adj.p.value <- go[match(layout$name, go$ID),"p.adjust"]
   layout$label <- go[match(layout$name, go$ID),"Description"]
