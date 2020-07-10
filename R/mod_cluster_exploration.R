@@ -76,7 +76,16 @@ mod_cluster_exploration_ui <- function(id) {
                                                               checkIcon = list(
                                                                 yes = icon("ok", 
                                                                            lib = "glyphicon")))),
-                        col_4(shiny::uiOutput(ns("max_go_choice"))),
+                        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                                              choiceValues = c("BP", "CC", "MF"),
+                                                              selected = "BP",
+                                                              justified = TRUE,
+                                                              direction = "vertical",
+                                                              checkIcon = list(
+                                                                yes = icon("ok", 
+                                                                           lib = "glyphicon"))),
+                              shiny::uiOutput(ns("max_go_choice"))),
                         
                         shiny::hr(),
                         
@@ -280,7 +289,7 @@ mod_cluster_exploration_server <-
       # TODO add check if it is entrez with regular expression here
       shiny::req(length(genes) > 0, length(background) > 0)
       
-      r_clust$go <- enrich_go(genes, background, org = org)
+      r_clust$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
     })
     
     #   ____________________________________________________________________________
@@ -316,6 +325,13 @@ mod_cluster_exploration_server <-
       
       shiny::req(r$organism != "Other")
       shiny::req(r_clust$go)
+      
+      if(nrow(r_clust$go) == 0){
+        shinyalert::shinyalert("No enriched GO terms were found",
+                               "It can happen if input gene list is not big enough",
+                               type = "error")
+      }
+      shiny::req(nrow(r_clust$go) > 0)
       
       if (input$draw_go == "Data table"){
         DT::dataTableOutput(ns("go_table"))

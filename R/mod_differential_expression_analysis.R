@@ -548,6 +548,15 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$organism != "Other")
       shiny::req(r_dea$go)
       
+      
+      if(nrow(r_dea$go) == 0){
+        shinyalert::shinyalert("No enriched GO terms were found",
+                               "It can happen if input gene list is not big enough",
+                               type = "error")
+      }
+      
+      shiny::req(nrow(r_dea$go) > 0)
+      
       if (input$draw_go == "Data table"){
         DT::dataTableOutput(ns("go_table"))
       }

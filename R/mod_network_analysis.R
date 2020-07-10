@@ -94,14 +94,24 @@ mod_network_analysis_ui <- function(id){
           style = 'bordered'
         )),
         
-        col_4(shinyWidgets::switchInput(
-          inputId = ns("draw_go"),
-          value = TRUE,
-          onLabel = "Plot",
-          offLabel = "Data table",
-          label = "Result type"
-        )),
-        col_4(shiny::uiOutput(ns("max_go_choice"))),
+        col_4(shinyWidgets::radioGroupButtons(ns("draw_go"), 
+                                              choices = c("Dot plot", "Enrichment map", "Data table"), 
+                                              selected = "Dot plot",
+                                              justified = TRUE,
+                                              direction = "vertical",
+                                              checkIcon = list(
+                                                yes = icon("ok", 
+                                                           lib = "glyphicon")))),
+        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                              choiceValues = c("BP", "CC", "MF"),
+                                              selected = "BP",
+                                              justified = TRUE,
+                                              direction = "vertical",
+                                              checkIcon = list(
+                                                yes = icon("ok", 
+                                                           lib = "glyphicon"))),
+              shiny::uiOutput(ns("max_go_choice"))),
         
         shiny::hr(),
         
@@ -111,8 +121,6 @@ mod_network_analysis_ui <- function(id){
       
     )
   )
-
- 
   )
 }
     
@@ -410,7 +418,7 @@ mod_network_analysis_server <- function(input, output, session, r){
     # TODO add check if it is entrez with regular expression here
     shiny::req(length(genes) > 0, length(background) > 0)
     
-    r_mod$go <- enrich_go(genes, background, org = org)
+    r_mod$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
   })
   
   #   ____________________________________________________________________________
@@ -434,6 +442,11 @@ mod_network_analysis_server <- function(input, output, session, r){
     draw_enrich_go(r_mod$go, max_go = max)
   })
   
+  output$go_map_plot <- shiny::renderPlot({
+    shiny::req(r_mod$go)
+    draw_enrich_go_map(r_mod$go)
+  })
+  
   output$go_results <- shiny::renderUI({
     
     if(r$organism == "Other")
@@ -442,11 +455,24 @@ mod_network_analysis_server <- function(input, output, session, r){
     shiny::req(r$organism != "Other")
     
     shiny::req(r_mod$go)
-    if (!input$draw_go){
+    if(nrow(r_mod$go) == 0){
+      shinyalert::shinyalert("No enriched GO terms were found",
+                             "It can happen if input gene list is not big enough",
+                             type = "error")
+    }
+    
+    shiny::req(nrow(r_mod$go) > 0)
+    
+    
+    if (input$draw_go == "Data table"){
       DT::dataTableOutput(ns("go_table"))
     }
     else{
-      plotly::plotlyOutput(ns("go_plot"), height = "700px")
+      if (input$draw_go == "Enrichment map"){
+        shiny::plotOutput(ns("go_map_plot"), height = "800px")
+      }
+      else
+        plotly::plotlyOutput(ns("go_plot"), height = "800px")
     }
   })
 
