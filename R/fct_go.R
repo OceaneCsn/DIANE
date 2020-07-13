@@ -56,7 +56,7 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 }
 
 
-#' Computes enrich Gene Ontology terms in a set of genes
+#' Enriched Gene Ontology terms in a set of genes
 #' 
 #' @description This function returns the enriched biological processes
 #' in a set of genes, as compared to a background set of genes.
@@ -118,7 +118,30 @@ enrich_go <- function(genes, background,
   
 }
 
-
+#' Enriched custom Gene Ontology terms in a set of genes
+#'
+#' @param genes list of gene IDs, as present in the first column od genes_to_GO
+#' @param universe list of gene IDs as background, default is set to all the genes 
+#' contained in genesto_GO
+#' @param genes_to_GO dataframe with gene IDs as first column, and GO IDs as second column
+#' @param qvalue qvalue cutoff for enriched GO terms, default to 0.1
+#' @param pvalue qvalue cutoff for enriched GO terms, default to 0.05
+#'
+#' @return dataframe containing enriched go terms and their description
+#' @export
+enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qvalue = 0.1, pvalue = 0.05){
+  
+  go <- clusterProfiler::enricher(gene = genes, universe = universe, 
+                                  TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
+  go <- go@result
+  go <- go[go$qvalue < qvalue & go$p.adjust < pvalue,]
+  
+  xx <- as.list(GO.db::GOTERM)
+  goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
+  
+  go$Description <- goTerms[match(go$ID, names(goTerms))]
+  return(go)
+}
 
 #' Plot the enriched go terms of an enrich_go result
 #'

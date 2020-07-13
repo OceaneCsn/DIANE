@@ -75,11 +75,29 @@ DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges)
 DIANE::draw_network_degrees(d_GENIE3$nodes, network)
 
 
-################# gene expression plot
-library(ggplot2)
+################# custom GO
+
+library(clusterProfiler)
+
+data <- read.csv("D:/These/DIANE_inputs/lupin_gene_count_matrix.csv", header = TRUE, row.names = "Gene")
+
+tcc <- DIANE::normalize(data, conditions = str_split_fixed(colnames(data), '_', 2)[,1])
+tcc <- DIANE::filter_low_counts(tcc, 10*ncol(data))
+
+normalized_counts <- TCC::getNormalizedData(tcc)
+DIANE::draw_distributions(normalized_counts)
 
 
+fit <- DIANE::estimateDispersion(tcc )
+
+degs <- DIANE::estimateDEGs(fit, reference = "S0", perturbation = "S6", p.value = 0.01, lfc = 3)
+genes <- degs$table$genes
+
+GOs <- read.table("D:/These/DIANE_inputs/lupin_golist.txt", header = TRUE, sep = '\t')
+
+universe <- intersect(rownames(normalized_counts), GOs[,1])
+
+go <- enrich_go_custom(genes, universe, GOs)
 
 
-
-
+DIANE::draw_enrich_go_map(go)
