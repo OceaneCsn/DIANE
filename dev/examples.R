@@ -93,7 +93,7 @@ fit <- DIANE::estimateDispersion(tcc )
 degs <- DIANE::estimateDEGs(fit, reference = "S0", perturbation = "S6", p.value = 0.01, lfc = 3)
 genes <- degs$table$genes
 
-GOs <- read.table("D:/These/DIANE_inputs/lupin_golist.txt", header = TRUE, sep = '\t')
+GOs <- read.table("D:/These/DIANE_inputs/lupin_golist.txt", header = TRUE, sep = ',')
 
 universe <- intersect(rownames(normalized_counts), GOs[,1])
 

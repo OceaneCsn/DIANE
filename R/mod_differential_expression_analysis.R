@@ -549,16 +549,18 @@ mod_differential_expression_analysis_server <-
           header = TRUE,
           stringsAsFactors = FALSE
         )
-        # if (length(intersect(rownames(r$normalized_counts), d[,1])) == 0) {
-        #   shinyalert::shinyalert(
-        #     "Invalid file",
-        #     "It must contain two columns, the first one doesn't contain gene IDs as in your expression data. 
-        #     Did you set correctly the separator?",
-        #     type = "error"
-        #   )
-        #   stop()
-        # }
+        print(ncol(d))
+        if (ncol(d) != 2) {
+          shinyalert::shinyalert(
+            "Invalid file",
+            "It must contain two columns as described.
+            Did you correctly set the separator?",
+            type = "error"
+          )
+        }
         
+        shiny::req(ncol(d) == 2)
+
         r$custom_go <- d
         
         if(is.null(r$custom_go)){
