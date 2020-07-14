@@ -238,6 +238,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$splicing_aware = NULL
     r$gene_info = NULL
     r$organism = NULL
+    r$custom_go = NULL
   })
   
   #   ____________________________________________________________________________
@@ -272,6 +273,7 @@ mod_import_data_server <- function(input, output, session, r) {
       r$splicing_aware = NULL
       r$gene_info = NULL
       r$organism = NULL
+      r$custom_go = NULL
       
       d <-
         read.csv(

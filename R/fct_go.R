@@ -131,6 +131,18 @@ enrich_go <- function(genes, background,
 #' @export
 enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qvalue = 0.1, pvalue = 0.05){
   
+  if (length(genes) == 0) {
+    stop("Empty list of genes")
+  }
+  
+  if (length(universe) == 0) {
+    stop("Empty universe")
+  }
+   
+  if (length(intersect(genes, genes_to_GO[,1])) == 0) {
+    stop("The genes are not in the first column of the custom dataframe")
+  }
+  
   go <- clusterProfiler::enricher(gene = genes, universe = universe, 
                                   TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
   go <- go@result

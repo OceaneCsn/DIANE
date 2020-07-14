@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_go.R
 \name{enrich_go}
 \alias{enrich_go}
-\title{Computes enrich Gene Ontology terms in a set of genes}
+\title{Enriched Gene Ontology terms in a set of genes}
 \usage{
 enrich_go(
   genes,

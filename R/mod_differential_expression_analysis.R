@@ -160,7 +160,9 @@ mod_differential_expression_analysis_ui <- function(id) {
                         ),
                         
                         col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
-                                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                                              choiceNames = c("Biological process", 
+                                                                              "Cellular component", 
+                                                                              "Molecular function"),
                                                               choiceValues = c("BP", "CC", "MF"),
                                                               selected = "BP",
                                                               justified = TRUE,
@@ -170,7 +172,7 @@ mod_differential_expression_analysis_ui <- function(id) {
                                                                            lib = "glyphicon"))),
                               shiny::uiOutput(ns("max_go_choice"))),
                         
-                        
+                        shiny::uiOutput(ns("custom_data_go")),
                         
                         shiny::hr(),
                         
@@ -237,9 +239,63 @@ mod_differential_expression_analysis_server <-
         )
       )
     })
+    
+    
+    
+#   ____________________________________________________________________________
+#   custom go                                                               ####
+
+    output$custom_data_go <- shiny::renderUI({
+      shiny::req(r$organism == "Other")
+      shiny::req(is.null(r$custom_go))
+      
+      
+      tagList(
+      col_10(shiny::h4("Your organism is not known to DIANE, but you can provide a matching between 
+         gene IDs and GO IDs.")),
+      col_2(
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          shiny::includeMarkdown(
+            system.file("extdata", "custom_go.md", package = "DIANE")
+          ),
+          circle = TRUE,
+          status = "success",
+          icon = shiny::icon("question"),
+          width = "600px",
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+        )
+      ),
+      
+      col_6(shiny::radioButtons(
+        ns('sep'),
+        
+        'Separator : ',
+        c(
+          Comma = ',',
+          Semicolon = ';',
+          Tab = '\t'
+        ),
+        inline = TRUE
+      )),
+      
+      col_6(shiny::fileInput(
+        ns('go_data'),
+        'Choose CSV/TXT expression file',
+        accept = c(
+          'text/csv',
+          'text/comma-separated-values,text/plain',
+          '.csv',
+          '.txt'
+        )
+      ))
+      )
+      
+    })
 
     #   ____________________________________________________________________________
     #   Buttons reactives                                                       ####
+    
     
     
     shiny::observeEvent((input$estimate_disp_btn), {
@@ -470,6 +526,13 @@ mod_differential_expression_analysis_server <-
 #   GO enrich                                                               ####
 
     
+    # go_data <- shiny::reactive({
+    # 
+    #   
+    # })
+    
+    
+    
     shiny::observeEvent((input$go_enrich_btn), {
       shiny::req(r$normalized_counts)
       shiny::req(r_dea)
@@ -477,40 +540,73 @@ mod_differential_expression_analysis_server <-
       
       
       if (r$organism == "Other") {
-        shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
-        Homo sapiens are supported for GO analysis", 
-                               "Did you correctly set your organism in the 
-                               Data import tab?",
-                               type = "error")
+
+        req(input$go_data)
+        pathName = input$go_data$datapath
+        d <- read.csv(
+          sep = input$sep,
+          file = pathName,
+          header = TRUE,
+          stringsAsFactors = FALSE
+        )
+        # if (length(intersect(rownames(r$normalized_counts), d[,1])) == 0) {
+        #   shinyalert::shinyalert(
+        #     "Invalid file",
+        #     "It must contain two columns, the first one doesn't contain gene IDs as in your expression data. 
+        #     Did you set correctly the separator?",
+        #     type = "error"
+        #   )
+        #   stop()
+        # }
+        
+        r$custom_go <- d
+        
+        if(is.null(r$custom_go)){
+          shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported, but you can input your own gene - GO terms matching.", 
+                                 "Did you respect the input format for custom GO terms matching?",
+                                 type = "error")
+        }
+        else{
+          GOs <- r$custom_go
+          genes <- r_dea$top_tags$genes
+          universe <- intersect(rownames(r$normalized_counts), GOs[,1])
+          
+          r_dea$go <- enrich_go_custom(genes, universe, GOs)
+          
+        }
+        
       }
       # for now, other orgs will come hopefully
-      shiny::req(r$organism != "Other")
-      
-      
-      genes <- r_dea$top_tags$genes
-      background <- rownames(r$normalized_counts)
-      
-      if(r$splicing_aware){
-        genes <- get_locus(genes)
-        background <- get_locus(background)
+      else{
+        
+        genes <- r_dea$top_tags$genes
+        background <- rownames(r$normalized_counts)
+        
+        if(r$splicing_aware){
+          genes <- get_locus(genes)
+          background <- get_locus(background)
+        }
+        
+        if(r$organism == "Arabidopsis thaliana"){
+          genes <- convert_from_agi(genes)
+          background <- convert_from_agi(background)
+          org = org.At.tair.db::org.At.tair.db
+        }
+        
+        if(r$organism == "Homo sapiens"){
+          genes <- convert_from_ensembl(genes)
+          background <- convert_from_ensembl(background)
+          org = org.Hs.eg.db::org.Hs.eg.db
+        }
+        
+        # TODO add check if it is entrez with regular expression here
+        shiny::req(length(genes) > 0, length(background) > 0)
+        r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
       }
       
-      if(r$organism == "Arabidopsis thaliana"){
-        genes <- convert_from_agi(genes)
-        background <- convert_from_agi(background)
-        org = org.At.tair.db::org.At.tair.db
-      }
       
-      if(r$organism == "Homo sapiens"){
-        genes <- convert_from_ensembl(genes)
-        background <- convert_from_ensembl(background)
-        org = org.Hs.eg.db::org.Hs.eg.db
-      }
-
-      # TODO add check if it is entrez with regular expression here
-      shiny::req(length(genes) > 0, length(background) > 0)
-      print(input$go_type)
-      r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
+      
     })
     
 #   ____________________________________________________________________________
@@ -542,10 +638,6 @@ mod_differential_expression_analysis_server <-
     
     output$go_results <- shiny::renderUI({
       
-      if(r$organism == "Other")
-        shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
-      
-      shiny::req(r$organism != "Other")
       shiny::req(r_dea$go)
       
       
