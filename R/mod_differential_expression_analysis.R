@@ -248,24 +248,24 @@ mod_differential_expression_analysis_server <-
     output$custom_data_go <- shiny::renderUI({
       shiny::req(r$organism == "Other")
       shiny::req(is.null(r$custom_go))
-      
-      
+
       tagList(
+        col_2(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            shiny::includeMarkdown(
+              system.file("extdata", "custom_go.md", package = "DIANE")
+            ),
+            circle = TRUE,
+            status = "success",
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        ),
       col_10(shiny::h4("Your organism is not known to DIANE, but you can provide a matching between 
          gene IDs and GO IDs.")),
-      col_2(
-        shinyWidgets::dropdownButton(
-          size = 'xs',
-          shiny::includeMarkdown(
-            system.file("extdata", "custom_go.md", package = "DIANE")
-          ),
-          circle = TRUE,
-          status = "success",
-          icon = shiny::icon("question"),
-          width = "600px",
-          tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        )
-      ),
+      
       
       col_6(shiny::radioButtons(
         ns('sep'),
@@ -281,7 +281,7 @@ mod_differential_expression_analysis_server <-
       
       col_6(shiny::fileInput(
         ns('go_data'),
-        'Choose CSV/TXT expression file',
+        'Choose CSV/TXT GO terms file',
         accept = c(
           'text/csv',
           'text/comma-separated-values,text/plain',
@@ -524,14 +524,6 @@ mod_differential_expression_analysis_server <-
 
 #   ____________________________________________________________________________
 #   GO enrich                                                               ####
-
-    
-    # go_data <- shiny::reactive({
-    # 
-    #   
-    # })
-    
-    
     
     shiny::observeEvent((input$go_enrich_btn), {
       shiny::req(r$normalized_counts)
@@ -540,47 +532,45 @@ mod_differential_expression_analysis_server <-
       
       
       if (r$organism == "Other") {
-
-        req(input$go_data)
-        pathName = input$go_data$datapath
-        d <- read.csv(
-          sep = input$sep,
-          file = pathName,
-          header = TRUE,
-          stringsAsFactors = FALSE
-        )
-        print(ncol(d))
-        if (ncol(d) != 2) {
-          shinyalert::shinyalert(
-            "Invalid file",
-            "It must contain two columns as described.
-            Did you correctly set the separator?",
-            type = "error"
-          )
-        }
-        
-        shiny::req(ncol(d) == 2)
-
-        r$custom_go <- d
         
         if(is.null(r$custom_go)){
-          shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
-        Homo sapiens are supported, but you can input your own gene - GO terms matching.", 
-                                 "Did you respect the input format for custom GO terms matching?",
-                                 type = "error")
+          if(!is.null(input$go_data)){
+            pathName = input$go_data$datapath
+            d <- read.csv(
+              sep = input$sep,
+              file = pathName,
+              header = TRUE,
+              stringsAsFactors = FALSE
+            )
+            print(ncol(d))
+            r$custom_go <- d
+          }
+          else{
+            shinyalert::shinyalert("Please input Gene to GO term file. ", 
+                                   "For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                   type = "error")
+          }
         }
-        else{
+        shiny::req(r$custom_go)
+          if (ncol(r$custom_go) != 2) {
+            r$custom_go <- NULL
+            shinyalert::shinyalert(
+              "Invalid file",
+              "It must contain two columns as described.
+            Did you correctly set the separator?",
+              type = "error"
+            )
+          }
+          
+          shiny::req(ncol(r$custom_go) == 2)
+
           GOs <- r$custom_go
           genes <- r_dea$top_tags$genes
           universe <- intersect(rownames(r$normalized_counts), GOs[,1])
           
           r_dea$go <- enrich_go_custom(genes, universe, GOs)
-          
-        }
-        
-      }
-      # for now, other orgs will come hopefully
-      else{
+      }else{
         
         genes <- r_dea$top_tags$genes
         background <- rownames(r$normalized_counts)
@@ -606,8 +596,6 @@ mod_differential_expression_analysis_server <-
         shiny::req(length(genes) > 0, length(background) > 0)
         r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
       }
-      
-      
       
     })
     
