@@ -42,7 +42,8 @@ Imports:
     doRNG,
     ade4,
     ggraph,
-    GO.db
+    GO.db,
+    ggridges
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

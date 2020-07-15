@@ -53,6 +53,8 @@ usethis::use_package( "doRNG" )
 usethis::use_package( "ade4" ) 
 usethis::use_package( "ggraph" ) 
 usethis::use_package( "GO.db" ) 
+usethis::use_package( "ggridges" ) 
+
 #usethis::use_package( "MASS" )
 
 

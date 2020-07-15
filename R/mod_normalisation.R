@@ -174,11 +174,11 @@ mod_normalisation_ui <- function(id) {
               inputId = ns("violin_preview"),
               value = TRUE,
               onLabel = "Boxplots",
-              offLabel = "Violin",
+              offLabel = "Distributions",
               onStatus = "success"
             )
           ),
-          shiny::plotOutput(ns('heatmap_preview_norm'), height = "600px")
+          shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
         ),
         shiny::tabPanel(title = "PCA",
                         shiny::plotOutput(ns('pca_plot'), height = "700px")),
