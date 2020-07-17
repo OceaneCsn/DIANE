@@ -97,7 +97,7 @@ mod_network_inference_ui <- function(id){
 
       shinyWidgets::dropdownButton(
         size = 'xs',
-        shiny::includeMarkdown(system.file("extdata", "regulatorsFile.md", package = "DIANE")),
+        shiny::includeMarkdown(system.file("extdata", "tf_grouping.md", package = "DIANE")),
         circle = TRUE,
         status = "success",
         icon = shiny::icon("question"),
@@ -109,14 +109,6 @@ shiny::fluidRow(
       col_8(shiny::numericInput(ns("cor_thr"), 
                     label = "Recommended : group regulators correlated over ( %)", 
                     min = 70, max = 100, value = 90)),
-
-      # shiny::fluidRow(
-      #   col_2(shinyWidgets::actionBttn(
-      #     ns("launch_grouping_btn"),
-      #     label = "Group",
-      #     color = "success",
-      #     style = 'bordered'
-      #   ))),
       
       col_4(
         shinyWidgets::switchInput(
@@ -134,6 +126,7 @@ shiny::hr(),
 
 #   ____________________________________________________________________________
 #   genie3 launch                                                           ####
+
         shiny::uiOutput(ns("n_cores_choice")),
        
         shiny::numericInput(ns("n_trees"), 
@@ -258,17 +251,12 @@ mod_network_inference_server <- function(input, output, session, r){
 #   ____________________________________________________________________________
 #   regulators setting                                                      ####
   
-  
- 
-
   regulators <- shiny::reactive({
     shiny::req(r$raw_counts, r$organism)
     d <- NULL
     if (r$organism != "Other") {
       data("regulators_per_organism", package = "DIANE")
       d <- regulators_per_organism[[r$organism]]
-      print(d)
-      print(r$organism)
     }
     
 
@@ -602,15 +590,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators, r$gene_info)
-    
-    # 
-    # if(!is.null(r$gene_info)){
-    #   data$nodes[,colnames(r$gene_info)] <- 
-    #     r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
-    # }
-    
-    print(data$nodes[1:10,])
-      
+
     membership <- data$nodes$community
     names(membership) <- data$nodes$id
     

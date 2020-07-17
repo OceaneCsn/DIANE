@@ -247,9 +247,19 @@ mod_clustering_server <- function(input, output, session, r) {
   #   Bttn reactive                                                           ####
   
   shiny::observeEvent((input$launch_coseq_btn), {
-    shiny::req(r$normalized_counts, r$conditions, input_genes_conditions())
-
+    shiny::req(r$normalized_counts, r$conditions)
     
+    print(input$input_deg_genes)
+    
+    if(is.null(input$input_deg_genes)){
+      shinyalert::shinyalert(
+        "Please select an input gene list in the menu above",
+        type = "error"
+      )
+    }
+    
+    shiny::req(input$input_deg_genes)
+
     genes_conditions <- unique(as.vector(str_split_fixed(input$input_deg_genes, ' ',2)))
     
     if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
