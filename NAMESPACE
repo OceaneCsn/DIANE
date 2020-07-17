@@ -3,6 +3,7 @@
 export(aggregate_splice_variants)
 export(convert_from_agi)
 export(convert_from_ensembl)
+export(describe_node)
 export(draw_DEGs)
 export(draw_MDS)
 export(draw_PCA)

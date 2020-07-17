@@ -91,3 +91,18 @@ draw_network_degrees <- function(nodes, graph) {
                                  deg_in_tfs, deg_out_tfs, bet, nrow = 2))
   
 }
+
+#' Targets and regulators of a gene in a network
+#'
+#' @param graph igraph object
+#' @param node gene to describe
+#'
+#' @return list with targets and regulators attributes
+#' @export
+describe_node <- function(graph, node){
+  
+  targets <- igraph::neighborhood(graph, nodes = node, mode = "out")[[1]]$name
+  regulators <- igraph::neighborhood(graph, nodes = node, mode = "in")[[1]]$name
+  
+  return(list(targets = targets, regulators = regulators))
+}

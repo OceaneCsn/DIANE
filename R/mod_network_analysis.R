@@ -163,9 +163,20 @@ mod_network_analysis_server <- function(input, output, session, r){
   })
   
   observeEvent(input$click, {
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$graph
+    
+    
+    nodes <- describe_node(r$networks[[r$current_network]]$graph, input$click)
     showModal(modalDialog(
-      title = "gene info here",
-      "Coucou!",easyClose = TRUE,
+      title = "Gene description",
+      h3("Targets :"),
+      h3("Regulators :"),
+      
+      
+      easyClose = TRUE,
       footer = NULL
     ))
   })
@@ -241,19 +252,19 @@ mod_network_analysis_server <- function(input, output, session, r){
           number = n_genes,
           numberColor = "primary",
           text = "Genes",
-          right_border = TRUE
+          rightBorder = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_tfs,
           numberColor = "green",
           text = "Regulators",
-          right_border = TRUE
+          rightBorder = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_edges,
           numberColor = "navy",
           text = "Edges",
-          right_border = FALSE
+          rightBorder = FALSE
         )
       ))
     )

@@ -135,3 +135,6 @@ edgeToJSON_igraph = function(graph){
 
 graph.json <- edgeToJSON_igraph(ig)
 write(graph.json, file = "~/Documents/graph.json")
+
+
+
