@@ -162,6 +162,14 @@ mod_network_analysis_server <- function(input, output, session, r){
     print(paste(input$click, input$select))
   })
   
+  observeEvent(input$click, {
+    showModal(modalDialog(
+      title = "gene info here",
+      "Coucou!",easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+  
   
   
 #   ____________________________________________________________________________
@@ -231,19 +239,19 @@ mod_network_analysis_server <- function(input, output, session, r){
       shiny::fluidRow(
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_genes,
-          number_color = "primary",
+          numberColor = "primary",
           text = "Genes",
           right_border = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_tfs,
-          number_color = "green",
+          numberColor = "green",
           text = "Regulators",
           right_border = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_edges,
-          number_color = "navy",
+          numberColor = "navy",
           text = "Edges",
           right_border = FALSE
         )

@@ -344,54 +344,54 @@ mod_differential_expression_analysis_server <-
     
     output$disp_estimate_summary <- shiny::renderUI({
       if (is.null(r$fit)) {
-        number_color = "orange"
+        numberColor = "orange"
         number = "Needed"
         header = ""
-        number_icon = "fa fa-times"
+        numberIcon = "fa fa-times"
       }
       else{
-        number_color = "olive"
+        numberColor = "olive"
         number = "Done"
-        number_icon = "fa fa-check"
+        numberIcon = "fa fa-check"
         header = "See EdgeR summary tab for more details"
       }
       shinydashboardPlus::descriptionBlock(
         number = number,
-        number_color = number_color,
-        number_icon = number_icon,
+        numberColor = numberColor,
+        numberIcon = numberIcon,
         header = header,
-        right_border = FALSE
+        rightBorder = FALSE
       )
     })
     
     
     output$deg_test_summary <- shiny::renderUI({
       if (is.null(r$fit)) {
-        number_color = "red"
+        numberColor = "red"
         number = "Dispersion estimation needed"
         header = ""
-        number_icon = "fa fa-times"
+        numberIcon = "fa fa-times"
       }
       else{
         if (is.null(r_dea$top_tags)) {
-          number_color = "orange"
+          numberColor = "orange"
           number = "Test can be performed"
           header = ""
-          number_icon = "fa fa-times"
+          numberIcon = "fa fa-times"
         }
         else{
-          number_color = "olive"
+          numberColor = "olive"
           number = "Done"
-          number_icon = "fa fa-check"
+          numberIcon = "fa fa-check"
           header = "See plots and tables for more details"
         }
       }
       shinydashboardPlus::descriptionBlock(
         number = number,
-        number_color = number_color,
-        number_icon = number_icon,
+        numberColor = numberColor,
+        numberIcon = numberIcon,
         header = header,
-        right_border = FALSE
+        rightBorder = FALSE
       )
     })
     
@@ -403,19 +403,19 @@ mod_differential_expression_analysis_server <-
         shiny::fluidRow(
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
-            number_color = "olive",
-            number_icon = "fa fa-caret-up",
+            numberColor = "olive",
+            numberIcon = "fa fa-caret-up",
             header = "up regulated",
             text = "genes",
-            right_border = TRUE
+            rightBorder = TRUE
           ),
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC < 0),
-            number_color = "red",
-            number_icon = "fa fa-caret-down",
+            numberColor = "red",
+            numberIcon = "fa fa-caret-down",
             header = "down-regulated",
             text = "genes",
-            right_border = FALSE
+            rightBorder = FALSE
           )
         )
       )

@@ -101,3 +101,37 @@ go <- enrich_go_custom(genes, universe, GOs)
 
 
 DIANE::draw_enrich_go_map(go)
+
+
+########## R to cytoscape
+
+load("~/Documents/network_CO2genes12Conds.RData")
+ig <- igraph::graph_from_data_frame(net_data$edges, directed=TRUE, vertices = net_data$nodes)
+igraph::plot.igraph(ig, vertex.size = 2, vertex.cex = 2)
+RCy3::createNetworkFromIgraph(ig,"myIgraph")
+
+
+edgeToJSON_igraph = function(graph){
+  df <- igraph::get.data.frame(graph,what="both")
+  vertices <- df$vertices
+  edges <- df$edges
+  # if the vertex names are unspecified, number them
+  if(is.null(df$vertices$name)){
+    vertices$name = as.character(sort(unique(unlist(edges))))
+  }
+  imports <- NULL
+  # get all attributes if defined in vertices of the igraph
+  output <- apply(
+    vertices,MARGIN=1,function(vtx){
+      name <- vtx[["name"]]
+      if(any(edges[,1]==name)) imports = as.vector(edges[edges[,1]==name,2])
+      c(vtx,imports=list(imports))
+    }
+  )
+  output <- unname(output)
+  rjson::toJSON(output)
+}
+
+
+graph.json <- edgeToJSON_igraph(ig)
+write(graph.json, file = "~/Documents/graph.json")
