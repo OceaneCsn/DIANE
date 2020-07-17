@@ -147,7 +147,6 @@ network_data <- function(graph, regulators, gene_info = NULL){
     if("label" %in% colnames(gene_info)){
       for(id in data$nodes$id){
         if(grepl("mean_", id)){
-          print("doing it")
           ids <- stringr::str_split_fixed(id, '_', 2)[,2]
           ids <- unlist(strsplit(ids, '-'))
           labels <- paste0("mean_", paste(gene_info[match(ids, rownames(gene_info)), "label"], collapse = '-'))
@@ -157,7 +156,6 @@ network_data <- function(graph, regulators, gene_info = NULL){
     }
   }
   
-  print(data$nodes[1:5,])
   return(data)
 }
 
