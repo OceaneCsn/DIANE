@@ -310,8 +310,14 @@ draw_expression_levels <-
            genes,
            conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[,1]),
            gene.name.size = 12) {
+    
+    
     if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0) {
       stop("The required genes were not found in expression data rownames")
+    }
+    
+    if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) > 10) {
+      stop("Please specify less than 10 genes, for readability reasons.")
     }
     
     conditions <-

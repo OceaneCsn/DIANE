@@ -104,5 +104,6 @@ describe_node <- function(graph, node){
   targets <- igraph::neighborhood(graph, nodes = node, mode = "out")[[1]]$name
   regulators <- igraph::neighborhood(graph, nodes = node, mode = "in")[[1]]$name
   
-  return(list(targets = targets, regulators = regulators))
+  return(list(targets = setdiff(targets, node), 
+              regulators = setdiff(regulators, node)))
 }

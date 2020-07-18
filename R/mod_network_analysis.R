@@ -162,25 +162,103 @@ mod_network_analysis_server <- function(input, output, session, r){
     print(paste(input$click, input$select))
   })
   
-  observeEvent(input$click, {
+  
+  
+#   ____________________________________________________________________________
+#   Node description                                                        ####
+
+  shiny::observeEvent(input$click, {
     
     shiny::req(r$current_network, r$networks)
     shiny::req(r$networks[[r$current_network]]$nodes)
     data <- r$networks[[r$current_network]]$graph
     
-    
-    nodes <- describe_node(r$networks[[r$current_network]]$graph, input$click)
-    showModal(modalDialog(
+    shiny::showModal(shiny::modalDialog(
       title = "Gene description",
-      h3("Targets :"),
-      h3("Regulators :"),
+      size = 'l',
+      shiny::htmlOutput(ns("node_details")),
       
+      shiny::hr(),
+      
+      shiny::h3("Regulators :"),
+      
+      DT::dataTableOutput(ns("node_regulators")),
+      
+      shiny::hr(),
+      
+      shiny::h3("Targets :"),
+      
+      DT::dataTableOutput(ns("node_targets")),
       
       easyClose = TRUE,
       footer = NULL
     ))
   })
   
+  output$node_regulators <- DT::renderDataTable({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    columns <- c("label", "gene_type", "degree", "community")
+    if (!is.null(r$gene_info)) {
+      columns <- unique(c(colnames(r$gene_info), columns))
+    }
+    regulators <- describe_node(r$networks[[r$current_network]]$graph, input$click)$regulators
+    data[regulators, columns]
+
+  })
+  
+  output$node_targets <- DT::renderDataTable({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    columns <- c("label", "gene_type", "degree", "community")
+    if (!is.null(r$gene_info)) {
+      columns <- unique(c(colnames(r$gene_info), columns))
+    }
+    targets <- describe_node(r$networks[[r$current_network]]$graph, input$click)$targets
+    data[targets, columns]
+  })
+  
+  output$node_details <- shiny::renderText({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    if("label" %in% colnames(data))
+      label <- data[input$click, "label"]
+    else
+      label <- "-"
+    
+    if("description" %in% colnames(data)){
+      if(stringr::str_detect(input$click, "mean_")){
+        tfs <- unlist(strsplit(stringr::str_remove(input$click, 'mean_'), '-'))
+        if(!is.null(r$gene_info) & "description" %in% colnames(r$gene_info)){
+          description <- ""
+          for(tf in tfs){
+            description <- paste(description, '<br>', tf, ':', r$gene_info[tf, "description"] )
+          }
+        }
+        else
+          description <- "-"
+      }
+      else{
+        description <- data[input$click, "description"]
+      }
+    }
+    else
+      description <- "-"
+    
+    descr <- paste("<b> AGI : </b>", input$click, '<br>', 
+                   "<b> Common name : </b>", label, '<br>',
+                   "<b> Description : </b>", description)
+    descr
+  })
   
   
 #   ____________________________________________________________________________
