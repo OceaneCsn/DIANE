@@ -238,7 +238,7 @@ get_gene_information <- function(ids, organism){
 
 #' Number of shared genes between Two GO terms
 #'
-#' @param go_pair 
+#' @param go_pair pair of go terms
 #' @param go_table go as returned by enrich_go
 #'
 #' @return integer
