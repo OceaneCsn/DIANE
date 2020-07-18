@@ -68,14 +68,25 @@ mod_cluster_exploration_ui <- function(id) {
                           style = 'bordered'
                         )),
                         
-                        col_4(shinyWidgets::switchInput(
-                          inputId = ns("draw_go"),
-                          value = TRUE,
-                          onLabel = "Plot",
-                          offLabel = "Data table",
-                          label = "Result type"
-                        )),
-                        col_4(shiny::uiOutput(ns("max_go_choice"))),
+                        col_4(shinyWidgets::radioGroupButtons(ns("draw_go"), 
+                                                              choices = c("Dot plot", "Enrichment map", "Data table"), 
+                                                              selected = "Dot plot",
+                                                              justified = TRUE,
+                                                              direction = "vertical",
+                                                              checkIcon = list(
+                                                                yes = icon("ok", 
+                                                                           lib = "glyphicon")))),
+                        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                                              choiceValues = c("BP", "CC", "MF"),
+                                                              selected = "BP",
+                                                              justified = TRUE,
+                                                              direction = "vertical",
+                                                              checkIcon = list(
+                                                                yes = icon("ok", 
+                                                                           lib = "glyphicon"))),
+                              shiny::uiOutput(ns("max_go_choice"))),
+                        shiny::uiOutput(ns("custom_data_go")),
                         
                         shiny::hr(),
                         
@@ -231,6 +242,56 @@ mod_cluster_exploration_server <-
     output$glm_plot <- shiny::renderPlot({
       draw_glm(glm())
     })
+    #   ____________________________________________________________________________
+    #   custom go                                                               ####
+    
+    output$custom_data_go <- shiny::renderUI({
+      shiny::req(r$organism == "Other")
+      shiny::req(is.null(r$custom_go))
+      
+      tagList(
+        col_2(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            shiny::includeMarkdown(
+              system.file("extdata", "custom_go.md", package = "DIANE")
+            ),
+            circle = TRUE,
+            status = "success",
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        ),
+        col_10(shiny::h4("Your organism is not known to DIANE, but you can provide a matching between 
+         gene IDs and GO IDs.")),
+        
+        
+        col_6(shiny::radioButtons(
+          ns('sep'),
+          
+          'Separator : ',
+          c(
+            Comma = ',',
+            Semicolon = ';',
+            Tab = '\t'
+          ),
+          inline = TRUE
+        )),
+        
+        col_6(shiny::fileInput(
+          ns('go_data'),
+          'Choose CSV/TXT GO terms file',
+          accept = c(
+            'text/csv',
+            'text/comma-separated-values,text/plain',
+            '.csv',
+            '.txt'
+          )
+        ))
+      )
+      
+    })
     
     
     
@@ -243,17 +304,46 @@ mod_cluster_exploration_server <-
       shiny::req(membership())
 
       if (r$organism == "Other") {
-        shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
-        Homo sapiens are supported for GO analysis", 
-                               "Did you correctly set your organism in the 
-                               Data import tab?",
-                               type = "error")
-      }
-      
-      # for now, other orgs will come hopefully
-      shiny::req(r$organism != "Other")
-      
-      
+        
+        if(is.null(r$custom_go)){
+          if(!is.null(input$go_data)){
+            pathName = input$go_data$datapath
+            d <- read.csv(
+              sep = input$sep,
+              file = pathName,
+              header = TRUE,
+              stringsAsFactors = FALSE
+            )
+            print(ncol(d))
+            r$custom_go <- d
+          }
+          else{
+            shinyalert::shinyalert("Please input Gene to GO term file. ", 
+                                   "For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                   type = "error")
+          }
+        }
+        shiny::req(r$custom_go)
+        if (ncol(r$custom_go) != 2) {
+          r$custom_go <- NULL
+          shinyalert::shinyalert(
+            "Invalid file",
+            "It must contain two columns as described.
+            Did you correctly set the separator?",
+            type = "error"
+          )
+        }
+        
+        shiny::req(ncol(r$custom_go) == 2)
+        
+        GOs <- r$custom_go
+        genes <- get_genes_in_cluster(membership = membership(),
+                                      cluster = input$cluster_to_explore)
+        universe <- intersect(rownames(r$normalized_counts), GOs[,1])
+        
+        r_clust$go <- enrich_go_custom(genes, universe, GOs)
+      }else{
       genes <- get_genes_in_cluster(membership = membership(),
                                     cluster = input$cluster_to_explore)
       
@@ -279,7 +369,8 @@ mod_cluster_exploration_server <-
       # TODO add check if it is entrez with regular expression here
       shiny::req(length(genes) > 0, length(background) > 0)
       
-      r_clust$go <- enrich_go(genes, background, org = org)
+      r_clust$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
+      }
     })
     
     #   ____________________________________________________________________________
@@ -303,22 +394,37 @@ mod_cluster_exploration_server <-
       draw_enrich_go(r_clust$go, max_go = max)
     })
     
-    output$go_results <- shiny::renderUI({
-      
-      if(r$organism == "Other")
-        shiny::h4("GO analysis is only supported for Arabidopsis and human (for now!)")
-      
-      shiny::req(r$organism != "Other")
-      
+    output$go_map_plot <- shiny::renderPlot({
       shiny::req(r_clust$go)
-      if (!input$draw_go){
+      draw_enrich_go_map(r_clust$go)
+    })
+    
+    output$go_results <- shiny::renderUI({
+
+      shiny::req(r_clust$go)
+      
+      if(nrow(r_clust$go) == 0){
+        shinyalert::shinyalert("No enriched GO terms were found",
+                               "It can happen if input gene list is not big enough",
+                               type = "error")
+      }
+      shiny::req(nrow(r_clust$go) > 0)
+      
+      if (input$draw_go == "Data table"){
         DT::dataTableOutput(ns("go_table"))
       }
+      
       else{
-        plotly::plotlyOutput(ns("go_plot"), height = "700px")
+        if (input$draw_go == "Enrichment map"){
+          shiny::plotOutput(ns("go_map_plot"), height = "800px")
+        }
+        else
+          plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
     })
   }
+    
+  
 
 ## To be copied in the UI
 # mod_cluster_exploration_ui("cluster_exploration_ui_1")

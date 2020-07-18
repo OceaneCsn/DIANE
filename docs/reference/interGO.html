@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>draw_coseq_run : displays the indications of clustering — draw_coseq_run • DIANE</title>
+<title>Number of shared genes between Two GO terms — interGO • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="draw_coseq_run : displays the indications of clustering — draw_coseq_run" />
-<meta property="og:description" content="draw_coseq_run : displays the indications of clustering" />
+<meta property="og:title" content="Number of shared genes between Two GO terms — interGO" />
+<meta property="og:description" content="Number of shared genes between Two GO terms" />
 
 
 
@@ -123,65 +123,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>draw_coseq_run : displays the indications of clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_coseq.R'><code>R/fct_coseq.R</code></a></small>
-    <div class="hidden name"><code>draw_coseq_run.Rd</code></div>
+    <h1>Number of shared genes between Two GO terms</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
+    <div class="hidden name"><code>interGO.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>draw_coseq_run : displays the indications of clustering</p>
+    <p>Number of shared genes between Two GO terms</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_coseq_run</span>(<span class='no'>run_pois</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</pre>
+    <pre class="usage"><span class='fu'>interGO</span>(<span class='no'>go_pair</span>, <span class='no'>go_table</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>run_pois</th>
-      <td><p>result of a coseq run</p></td>
+      <th>go_pair</th>
+      <td></td>
     </tr>
     <tr>
-      <th>plot</th>
-      <td><p>plot to display, eather integrated Complete Likelihood, or barplots
-of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".</p></td>
+      <th>go_table</th>
+      <td><p>go as returned by enrich_go</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>plot describing the quality of the clustering process</p>
+    <p>integer</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"H"</span>, <span class='st'>"SH"</span>, <span class='st'>"MH"</span>, <span class='st'>"SMH"</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
-#&gt; coseq analysis: Poisson approach &amp; none transformation
-#&gt; K = 6 to 9 
-#&gt; Use set.seed() prior to running coseq for reproducible results.
-#&gt; ****************************************
-#&gt; Running K = 6 ...
-#&gt; [1] "Initialization: 1"
-#&gt; [1] "Log-like diff: 0.0412174002696979"
-#&gt; [1] "Log-like diff: 0.00816919578990039"
-#&gt; [1] "Log-like diff: 0.00192461009646205"
-#&gt; [1] "Log-like diff: 0.000456460812024773"
-#&gt; [1] "Log-like diff: 0.00010861241324811"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.89804837624763e-07"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0307493691764824"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0104514531179802"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00355980838886261"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00120726908370816"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000418455384801675"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0454845681210276"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.164164859006294"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.159060640574263"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.139891102252712"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.120298416206444"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"barplots"</span>)</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

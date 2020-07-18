@@ -2,13 +2,14 @@
 % Please edit documentation in R/fct_go.R
 \name{enrich_go}
 \alias{enrich_go}
-\title{Computes enrich Gene Ontology terms in a set of genes}
+\title{Enriched Gene Ontology terms in a set of genes}
 \usage{
 enrich_go(
   genes,
   background,
   org = org.At.tair.db::org.At.tair.db,
-  sim_cutoff = 0.85
+  sim_cutoff = 0.85,
+  GO_type = "BP"
 )
 }
 \arguments{
@@ -21,6 +22,10 @@ the tests. MUST be entrez IDS.}
 org.xx.xx.db)}
 
 \item{sim_cutoff}{similarity cutoff to use for pooling similar GO terms}
+
+\item{GO_type}{character between BP (Biological Process), CC(Cellular Component) 
+or MF (Molecular Function), depending on the GO subtype
+to use in the analysis}
 }
 \value{
 data.frame

@@ -56,7 +56,7 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 }
 
 
-#' Computes enrich Gene Ontology terms in a set of genes
+#' Enriched Gene Ontology terms in a set of genes
 #' 
 #' @description This function returns the enriched biological processes
 #' in a set of genes, as compared to a background set of genes.
@@ -75,7 +75,9 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' @param org organism, in the format of bioconductor organisms databases (e.g 
 #' org.xx.xx.db)
 #' @param sim_cutoff similarity cutoff to use for pooling similar GO terms
-#'
+#' @param GO_type character between BP (Biological Process), CC(Cellular Component) 
+#' or MF (Molecular Function), depending on the GO subtype
+#' to use in the analysis
 #' @return data.frame
 #' @export
 #' @examples 
@@ -92,11 +94,15 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' head(go)
 enrich_go <- function(genes, background,
                       org = org.At.tair.db::org.At.tair.db,
-                      sim_cutoff = 0.85){
+                      sim_cutoff = 0.85, GO_type = "BP"){
+  
+  if(!GO_type %in% c("BP", "CC", "MF")){
+    stop("GO_type must be either BP, CC or MF.")
+  }
   
   ego <- clusterProfiler::enrichGO(gene = genes,
                                    OrgDb = org,
-                                   ont = "BP",
+                                   ont = GO_type,
                                    universe = background,
                                    pAdjustMethod = "BH",
                                    pvalueCutoff  = 0.01,
@@ -112,7 +118,42 @@ enrich_go <- function(genes, background,
   
 }
 
-
+#' Enriched custom Gene Ontology terms in a set of genes
+#'
+#' @param genes list of gene IDs, as present in the first column od genes_to_GO
+#' @param universe list of gene IDs as background, default is set to all the genes 
+#' contained in genesto_GO
+#' @param genes_to_GO dataframe with gene IDs as first column, and GO IDs as second column
+#' @param qvalue qvalue cutoff for enriched GO terms, default to 0.1
+#' @param pvalue qvalue cutoff for enriched GO terms, default to 0.05
+#'
+#' @return dataframe containing enriched go terms and their description
+#' @export
+enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qvalue = 0.1, pvalue = 0.05){
+  
+  if (length(genes) == 0) {
+    stop("Empty list of genes")
+  }
+  
+  if (length(universe) == 0) {
+    stop("Empty universe")
+  }
+   
+  if (length(intersect(genes, genes_to_GO[,1])) == 0) {
+    stop("The genes are not in the first column of the custom dataframe")
+  }
+  
+  go <- clusterProfiler::enricher(gene = genes, universe = universe, 
+                                  TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
+  go <- go@result
+  go <- go[go$qvalue < qvalue & go$p.adjust < pvalue,]
+  
+  xx <- as.list(GO.db::GOTERM)
+  goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
+  
+  go$Description <- goTerms[match(go$ID, names(goTerms))]
+  return(go)
+}
 
 #' Plot the enriched go terms of an enrich_go result
 #'
@@ -192,4 +233,62 @@ get_gene_information <- function(ids, organism){
   }
   
   return(d[,c("label", "description")])
+}
+
+
+#' Number of shared genes between Two GO terms
+#'
+#' @param go_pair pair of go terms
+#' @param go_table go as returned by enrich_go
+#'
+#' @return integer
+interGO <- function(go_pair, go_table){
+  go1 <- unlist(strsplit(go_pair, ' '))[1]
+  go2 <- unlist(strsplit(go_pair, ' '))[2]
+  g1 <- unlist(strsplit(go_table[go_table$ID == go1, "geneID"], '/'))
+  g1 <- g1[g1 != "NA"]
+  g2 <- unlist(strsplit(go_table[go_table$ID == go2, "geneID"], '/'))
+  g2 <- g2[g2 != "NA"]
+  
+  return(length(intersect(g1, g2)))
+}
+
+#' Draw GO enrichment map
+#' 
+#' This plots each enriched GO term, with its pvalue and gene count 
+#' as color and size aesthetics.
+#' Two GO terms are linked by an edges if they share common genes
+#' in the input gene list given for enrichment analysis. The width 
+#' of the edge is proportionnal to that number of shared genes.
+#'
+#' @param go dataframe as returned by \code{DIANE::enrich_go()} function.
+#'
+#' @export
+#'
+#' @examples
+#' data("abiotic_stresses")
+#' data("gene_annotations")
+#' genes <- convert_from_agi(get_locus(abiotic_stresses$heat_DEGs))
+#' background <- convert_from_agi(get_locus(rownames(abiotic_stresses$normalized_counts)))
+#' go <- enrich_go(genes, background)
+#' draw_enrich_go_map(go)
+draw_enrich_go_map <- function(go){
+  gos <- go$ID
+  pairs <- data.frame(t(utils::combn(gos, 2)))
+  
+  pairs$common_genes <- sapply(paste(pairs[,1], pairs[,2]), interGO, go_table = go)
+  pairs <- pairs[pairs$common_genes > 0,]
+  graph <- igraph::graph_from_data_frame(pairs)
+  
+  layout <- ggraph::create_layout(graph, layout = 'kk')
+  layout$GeneCount <- go[match(layout$name, go$ID),"Count"]
+  layout$adj.p.value <- go[match(layout$name, go$ID),"p.adjust"]
+  layout$label <- go[match(layout$name, go$ID),"Description"]
+  
+  ggraph::ggraph(layout) + 
+    ggraph::geom_edge_link(aes(width = common_genes), alpha=0.1) + 
+    ggraph::geom_node_point(aes(size = GeneCount, color=adj.p.value)) +
+    ggraph::geom_node_label(aes(label = label), repel = TRUE, alpha = 0.75)+
+    ggtitle("Gene Ontology enrichment map") + theme(plot.title = element_text(size = 20, face = "bold") ) +
+    ggplot2::scale_color_gradient(low="#114223", high="#92D9A2")
 }

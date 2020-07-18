@@ -99,7 +99,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         shiny::uiOutput(ns("deg_number_summary")),
         
         shiny::hr(),
-        shiny::uiOutput(ns("dl_bttns"))
+        shiny::fluidRow(shiny::uiOutput(ns("dl_bttns")))
         
         
       )
@@ -143,17 +143,36 @@ mod_differential_expression_analysis_ui <- function(id) {
                           style = 'bordered'
                         )),
                         
-                        col_4(shinyWidgets::switchInput(
-                          inputId = ns("draw_go"),
-                          value = TRUE,
-                          onLabel = "Plot",
-                          offLabel = "Data table",
-                          label = "Result type"
-                        )),
-                        
-                        col_4(shiny::uiOutput(ns("max_go_choice"))),
                         
                         
+        
+                        
+                        col_4(
+                          shinyWidgets::radioGroupButtons(ns("draw_go"), 
+                                       choices = c("Dot plot", "Enrichment map", "Data table"), 
+                                       selected = "Dot plot",
+                                       justified = TRUE,
+                                       direction = "vertical",
+                                       checkIcon = list(
+                                         yes = icon("ok", 
+                                                    lib = "glyphicon")))
+                          
+                        ),
+                        
+                        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                                              choiceNames = c("Biological process", 
+                                                                              "Cellular component", 
+                                                                              "Molecular function"),
+                                                              choiceValues = c("BP", "CC", "MF"),
+                                                              selected = "BP",
+                                                              justified = TRUE,
+                                                              direction = "vertical",
+                                                              checkIcon = list(
+                                                                yes = icon("ok", 
+                                                                           lib = "glyphicon"))),
+                              shiny::uiOutput(ns("max_go_choice"))),
+                        
+                        shiny::uiOutput(ns("custom_data_go")),
                         
                         shiny::hr(),
                         
@@ -220,9 +239,63 @@ mod_differential_expression_analysis_server <-
         )
       )
     })
+    
+    
+    
+#   ____________________________________________________________________________
+#   custom go                                                               ####
+
+    output$custom_data_go <- shiny::renderUI({
+      shiny::req(r$organism == "Other")
+      shiny::req(is.null(r$custom_go))
+
+      tagList(
+        col_2(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            shiny::includeMarkdown(
+              system.file("extdata", "custom_go.md", package = "DIANE")
+            ),
+            circle = TRUE,
+            status = "success",
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        ),
+      col_10(shiny::h4("Your organism is not known to DIANE, but you can provide a matching between 
+         gene IDs and GO IDs.")),
+      
+      
+      col_6(shiny::radioButtons(
+        ns('sep'),
+        
+        'Separator : ',
+        c(
+          Comma = ',',
+          Semicolon = ';',
+          Tab = '\t'
+        ),
+        inline = TRUE
+      )),
+      
+      col_6(shiny::fileInput(
+        ns('go_data'),
+        'Choose CSV/TXT GO terms file',
+        accept = c(
+          'text/csv',
+          'text/comma-separated-values,text/plain',
+          '.csv',
+          '.txt'
+        )
+      ))
+      )
+      
+    })
 
     #   ____________________________________________________________________________
     #   Buttons reactives                                                       ####
+    
     
     
     shiny::observeEvent((input$estimate_disp_btn), {
@@ -271,54 +344,54 @@ mod_differential_expression_analysis_server <-
     
     output$disp_estimate_summary <- shiny::renderUI({
       if (is.null(r$fit)) {
-        number_color = "orange"
+        numberColor = "orange"
         number = "Needed"
         header = ""
-        number_icon = "fa fa-times"
+        numberIcon = "fa fa-times"
       }
       else{
-        number_color = "olive"
+        numberColor = "olive"
         number = "Done"
-        number_icon = "fa fa-check"
+        numberIcon = "fa fa-check"
         header = "See EdgeR summary tab for more details"
       }
       shinydashboardPlus::descriptionBlock(
         number = number,
-        number_color = number_color,
-        number_icon = number_icon,
+        numberColor = numberColor,
+        numberIcon = numberIcon,
         header = header,
-        right_border = FALSE
+        rightBorder = FALSE
       )
     })
     
     
     output$deg_test_summary <- shiny::renderUI({
       if (is.null(r$fit)) {
-        number_color = "red"
+        numberColor = "red"
         number = "Dispersion estimation needed"
         header = ""
-        number_icon = "fa fa-times"
+        numberIcon = "fa fa-times"
       }
       else{
         if (is.null(r_dea$top_tags)) {
-          number_color = "orange"
+          numberColor = "orange"
           number = "Test can be performed"
           header = ""
-          number_icon = "fa fa-times"
+          numberIcon = "fa fa-times"
         }
         else{
-          number_color = "olive"
+          numberColor = "olive"
           number = "Done"
-          number_icon = "fa fa-check"
+          numberIcon = "fa fa-check"
           header = "See plots and tables for more details"
         }
       }
       shinydashboardPlus::descriptionBlock(
         number = number,
-        number_color = number_color,
-        number_icon = number_icon,
+        numberColor = numberColor,
+        numberIcon = numberIcon,
         header = header,
-        right_border = FALSE
+        rightBorder = FALSE
       )
     })
     
@@ -330,19 +403,19 @@ mod_differential_expression_analysis_server <-
         shiny::fluidRow(
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
-            number_color = "olive",
-            number_icon = "fa fa-caret-up",
+            numberColor = "olive",
+            numberIcon = "fa fa-caret-up",
             header = "up regulated",
             text = "genes",
-            right_border = TRUE
+            rightBorder = TRUE
           ),
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC < 0),
-            number_color = "red",
-            number_icon = "fa fa-caret-down",
+            numberColor = "red",
+            numberIcon = "fa fa-caret-down",
             header = "down-regulated",
             text = "genes",
-            right_border = FALSE
+            rightBorder = FALSE
           )
         )
       )
@@ -451,7 +524,6 @@ mod_differential_expression_analysis_server <-
 
 #   ____________________________________________________________________________
 #   GO enrich                                                               ####
-
     
     shiny::observeEvent((input$go_enrich_btn), {
       shiny::req(r$normalized_counts)
@@ -460,39 +532,71 @@ mod_differential_expression_analysis_server <-
       
       
       if (r$organism == "Other") {
-        shinyalert::shinyalert("For now, only Arabidopsis thaliana and 
-        Homo sapiens are supported for GO analysis", 
-                               "Did you correctly set your organism in the 
-                               Data import tab?",
-                               type = "error")
-      }
-      # for now, other orgs will come hopefully
-      shiny::req(r$organism != "Other")
-      
-      
-      genes <- r_dea$top_tags$genes
-      background <- rownames(r$normalized_counts)
-      
-      if(r$splicing_aware){
-        genes <- get_locus(genes)
-        background <- get_locus(background)
-      }
-      
-      if(r$organism == "Arabidopsis thaliana"){
-        genes <- convert_from_agi(genes)
-        background <- convert_from_agi(background)
-        org = org.At.tair.db::org.At.tair.db
-      }
-      
-      if(r$organism == "Homo sapiens"){
-        genes <- convert_from_ensembl(genes)
-        background <- convert_from_ensembl(background)
-        org = org.Hs.eg.db::org.Hs.eg.db
-      }
+        
+        if(is.null(r$custom_go)){
+          if(!is.null(input$go_data)){
+            pathName = input$go_data$datapath
+            d <- read.csv(
+              sep = input$sep,
+              file = pathName,
+              header = TRUE,
+              stringsAsFactors = FALSE
+            )
+            print(ncol(d))
+            r$custom_go <- d
+          }
+          else{
+            shinyalert::shinyalert("Please input Gene to GO term file. ", 
+                                   "For now, only Arabidopsis thaliana and 
+        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                   type = "error")
+          }
+        }
+        shiny::req(r$custom_go)
+          if (ncol(r$custom_go) != 2) {
+            r$custom_go <- NULL
+            shinyalert::shinyalert(
+              "Invalid file",
+              "It must contain two columns as described.
+            Did you correctly set the separator?",
+              type = "error"
+            )
+          }
+          
+          shiny::req(ncol(r$custom_go) == 2)
 
-      # TODO add check if it is entrez with regular expression here
-      shiny::req(length(genes) > 0, length(background) > 0)
-      r_dea$go <- enrich_go(genes, background, org = org)
+          GOs <- r$custom_go
+          genes <- r_dea$top_tags$genes
+          universe <- intersect(rownames(r$normalized_counts), GOs[,1])
+          
+          r_dea$go <- enrich_go_custom(genes, universe, GOs)
+      }else{
+        
+        genes <- r_dea$top_tags$genes
+        background <- rownames(r$normalized_counts)
+        
+        if(r$splicing_aware){
+          genes <- get_locus(genes)
+          background <- get_locus(background)
+        }
+        
+        if(r$organism == "Arabidopsis thaliana"){
+          genes <- convert_from_agi(genes)
+          background <- convert_from_agi(background)
+          org = org.At.tair.db::org.At.tair.db
+        }
+        
+        if(r$organism == "Homo sapiens"){
+          genes <- convert_from_ensembl(genes)
+          background <- convert_from_ensembl(background)
+          org = org.Hs.eg.db::org.Hs.eg.db
+        }
+        
+        # TODO add check if it is entrez with regular expression here
+        shiny::req(length(genes) > 0, length(background) > 0)
+        r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
+      }
+      
     })
     
 #   ____________________________________________________________________________
@@ -505,7 +609,7 @@ mod_differential_expression_analysis_server <-
     
     output$max_go_choice <- shiny::renderUI({
       shiny::req(r_dea$go)
-      
+      shiny::req(input$draw_go =="Dot plot")
      shiny::numericInput(ns("n_go_terms"), 
                                 label = "Top number of GO terms to plot :", 
                                 min = 1, value = dim(r_dea$go)[1])
@@ -513,24 +617,37 @@ mod_differential_expression_analysis_server <-
     
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_dea$go)
-      #shiny::req(input$n_go_terms)
       max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
       draw_enrich_go(r_dea$go, max_go = max)
     })
     
+    output$go_map_plot <- shiny::renderPlot({
+      shiny::req(r_dea$go)
+      draw_enrich_go_map(r_dea$go)
+    })
+    
     output$go_results <- shiny::renderUI({
       
-      if(r$organism == "Other")
-        shiny::h4("GO analysis is only supported for Arabidopsis and Human (for now!)")
-      
-      shiny::req(r$organism != "Other")
-      
       shiny::req(r_dea$go)
-      if (!input$draw_go){
+      
+      
+      if(nrow(r_dea$go) == 0){
+        shinyalert::shinyalert("No enriched GO terms were found",
+                               "It can happen if input gene list is not big enough",
+                               type = "error")
+      }
+      
+      shiny::req(nrow(r_dea$go) > 0)
+      
+      if (input$draw_go == "Data table"){
         DT::dataTableOutput(ns("go_table"))
       }
       else{
-        plotly::plotlyOutput(ns("go_plot"), height = "800px")
+        if (input$draw_go == "Enrichment map"){
+          shiny::plotOutput(ns("go_map_plot"), height = "800px")
+        }
+        else
+          plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
     })
     
@@ -538,8 +655,6 @@ mod_differential_expression_analysis_server <-
     shiny::observeEvent(input$browser, {
       browser()
     })
-    
-    
   }
 
 ## To be copied in the UI

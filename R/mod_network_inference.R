@@ -97,7 +97,7 @@ mod_network_inference_ui <- function(id){
 
       shinyWidgets::dropdownButton(
         size = 'xs',
-        shiny::includeMarkdown(system.file("extdata", "regulatorsFile.md", package = "DIANE")),
+        shiny::includeMarkdown(system.file("extdata", "tf_grouping.md", package = "DIANE")),
         circle = TRUE,
         status = "success",
         icon = shiny::icon("question"),
@@ -109,14 +109,6 @@ shiny::fluidRow(
       col_8(shiny::numericInput(ns("cor_thr"), 
                     label = "Recommended : group regulators correlated over ( %)", 
                     min = 70, max = 100, value = 90)),
-
-      # shiny::fluidRow(
-      #   col_2(shinyWidgets::actionBttn(
-      #     ns("launch_grouping_btn"),
-      #     label = "Group",
-      #     color = "success",
-      #     style = 'bordered'
-      #   ))),
       
       col_4(
         shinyWidgets::switchInput(
@@ -134,6 +126,7 @@ shiny::hr(),
 
 #   ____________________________________________________________________________
 #   genie3 launch                                                           ####
+
         shiny::uiOutput(ns("n_cores_choice")),
        
         shiny::numericInput(ns("n_trees"), 
@@ -258,17 +251,12 @@ mod_network_inference_server <- function(input, output, session, r){
 #   ____________________________________________________________________________
 #   regulators setting                                                      ####
   
-  
- 
-
   regulators <- shiny::reactive({
     shiny::req(r$raw_counts, r$organism)
     d <- NULL
     if (r$organism != "Other") {
       data("regulators_per_organism", package = "DIANE")
       d <- regulators_per_organism[[r$organism]]
-      print(d)
-      print(r$organism)
     }
     
 
@@ -320,22 +308,22 @@ mod_network_inference_server <- function(input, output, session, r){
   output$input_summary <- shiny::renderUI({
     shiny::req(input$input_deg_genes_net, r$DEGs)
     if (is.null(input$input_deg_genes_net)) {
-      number_color = "orange"
+      numberColor = "orange"
       number = "Please input genes"
       header = ""
-      number_icon = "fa fa-times"
+      numberIcon = "fa fa-times"
     }
     else{
-      number_color = "olive"
+      numberColor = "olive"
       number = length(r$DEGs[[input$input_deg_genes_net]])
-      number_icon = "fa fa-check"
+      numberIcon = "fa fa-check"
       header = "input genes"
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
+      numberColor = numberColor,
       text = header,
-      right_border = TRUE
+      rightBorder = TRUE
     )
   })
   
@@ -345,31 +333,31 @@ mod_network_inference_server <- function(input, output, session, r){
     r$regulators <- regulators()
     
     if(is.null(r$regulators)){
-      number_color = "orange"
+      numberColor = "orange"
       number = "Please provide a regulators list"
-      number_icon = "fa fa-check"
+      numberIcon = "fa fa-check"
       header = ""
     }
     else{
       if (r$organism != "Other"){
-        number_color = "teal"
+        numberColor = "teal"
         number = length(r$regulators)
-        number_icon = "fa fa-check"
+        numberIcon = "fa fa-check"
         header = paste("regulators provided for", r$organism)
       }
       else{
-        number_color = "teal"
+        numberColor = "teal"
         number = length(r$regulators)
-        number_icon = "fa fa-check"
+        numberIcon = "fa fa-check"
         header = "Custom regulators provided"
       }
       
     }
     tagList(shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
+      numberColor = numberColor,
       text = header,
-      right_border = FALSE
+      rightBorder = FALSE
     ))
     
   })
@@ -388,9 +376,9 @@ mod_network_inference_server <- function(input, output, session, r){
 
     shinydashboardPlus::descriptionBlock(
       number = length(tfs),
-      number_color = "blue",
+      numberColor = "blue",
       text = "Regulators among the input genes",
-      right_border = FALSE
+      rightBorder = FALSE
     )
   })
   
@@ -402,22 +390,22 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
 
     if (is.null(r$networks[[input$input_deg_genes_net]]$mat)) {
-      number_color = "orange"
+      numberColor = "orange"
       number = "Inference not performed yet"
       header = ""
-      number_icon = "fa fa-times"
+      numberIcon = "fa fa-times"
     }
     else{
-      number_color = "olive"
+      numberColor = "olive"
       number = "Inference successfully completed"
-      number_icon = "fa fa-check"
+      numberIcon = "fa fa-check"
       header = "You can now proceed to thresholding"
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
+      numberColor = numberColor,
       text = header,
-      right_border = TRUE
+      rightBorder = TRUE
     )
   })
   
@@ -430,16 +418,16 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
     shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
     
-    number_color = "olive"
+    numberColor = "olive"
     number = "Your network is ready"
-    number_icon = "fa fa-check"
+    numberIcon = "fa fa-check"
     header = "You can explore it in the next tab"
     
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
+      numberColor = numberColor,
       text = header,
-      right_border = TRUE
+      rightBorder = TRUE
     )
   })
   
@@ -496,40 +484,6 @@ mod_network_inference_server <- function(input, output, session, r){
   
 #   ____________________________________________________________________________
 #   bttn reactives                                                          ####
-  
-  
-  # 
-  # 
-  # shiny::observeEvent((input$launch_grouping_btn), {
-  #   
-  #   shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
-  #   shiny::req(input$grouping)
-  #   
-  #   if(r$splicing_aware) {
-  #     targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
-  #     data <- r$aggregated_normalized_counts
-  #   }
-  #   else {
-  #     targets <- r$DEGs[[input$input_deg_genes_net]]
-  #     data <- r$normalized_counts
-  #   }
-  #   
-  #   regressors = intersect(targets, r$regulators)
-  #   
-  #   if( sum(regressors %in% rownames(data)) == 0 ){
-  #     shinyalert::shinyalert(
-  #       "No regulators found in the expression data rownames",
-  #       type = "error"
-  #     )
-  #   }
-  #   
-  #   shiny::req(sum(regressors %in% rownames(data)) > 0 )
-  #   
-  #   
-  #   
-  #   
-  #   
-  # })
 
   
   shiny::observeEvent((input$launch_genie_btn), {
@@ -602,15 +556,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators, r$gene_info)
-    
-    # 
-    # if(!is.null(r$gene_info)){
-    #   data$nodes[,colnames(r$gene_info)] <- 
-    #     r$gene_info[match(data$nodes$id, rownames(r$gene_info)),]
-    # }
-    
-    print(data$nodes[1:10,])
-      
+
     membership <- data$nodes$community
     names(membership) <- data$nodes$id
     

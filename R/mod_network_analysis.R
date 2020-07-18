@@ -94,14 +94,24 @@ mod_network_analysis_ui <- function(id){
           style = 'bordered'
         )),
         
-        col_4(shinyWidgets::switchInput(
-          inputId = ns("draw_go"),
-          value = TRUE,
-          onLabel = "Plot",
-          offLabel = "Data table",
-          label = "Result type"
-        )),
-        col_4(shiny::uiOutput(ns("max_go_choice"))),
+        col_4(shinyWidgets::radioGroupButtons(ns("draw_go"), 
+                                              choices = c("Dot plot", "Enrichment map", "Data table"), 
+                                              selected = "Dot plot",
+                                              justified = TRUE,
+                                              direction = "vertical",
+                                              checkIcon = list(
+                                                yes = icon("ok", 
+                                                           lib = "glyphicon")))),
+        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
+                                              choiceNames = c("Biological process", "Cellular component", "Molecular function"),
+                                              choiceValues = c("BP", "CC", "MF"),
+                                              selected = "BP",
+                                              justified = TRUE,
+                                              direction = "vertical",
+                                              checkIcon = list(
+                                                yes = icon("ok", 
+                                                           lib = "glyphicon"))),
+              shiny::uiOutput(ns("max_go_choice"))),
         
         shiny::hr(),
         
@@ -111,8 +121,6 @@ mod_network_analysis_ui <- function(id){
       
     )
   )
-
- 
   )
 }
     
@@ -154,6 +162,103 @@ mod_network_analysis_server <- function(input, output, session, r){
     print(paste(input$click, input$select))
   })
   
+  
+  
+#   ____________________________________________________________________________
+#   Node description                                                        ####
+
+  shiny::observeEvent(input$click, {
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$graph
+    
+    shiny::showModal(shiny::modalDialog(
+      title = "Gene description",
+      size = 'l',
+      shiny::htmlOutput(ns("node_details")),
+      
+      shiny::hr(),
+      
+      shiny::h3("Regulators :"),
+      
+      DT::dataTableOutput(ns("node_regulators")),
+      
+      shiny::hr(),
+      
+      shiny::h3("Targets :"),
+      
+      DT::dataTableOutput(ns("node_targets")),
+      
+      easyClose = TRUE,
+      footer = NULL
+    ))
+  })
+  
+  output$node_regulators <- DT::renderDataTable({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    columns <- c("label", "gene_type", "degree", "community")
+    if (!is.null(r$gene_info)) {
+      columns <- unique(c(colnames(r$gene_info), columns))
+    }
+    regulators <- describe_node(r$networks[[r$current_network]]$graph, input$click)$regulators
+    data[regulators, columns]
+
+  })
+  
+  output$node_targets <- DT::renderDataTable({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    columns <- c("label", "gene_type", "degree", "community")
+    if (!is.null(r$gene_info)) {
+      columns <- unique(c(colnames(r$gene_info), columns))
+    }
+    targets <- describe_node(r$networks[[r$current_network]]$graph, input$click)$targets
+    data[targets, columns]
+  })
+  
+  output$node_details <- shiny::renderText({
+    
+    shiny::req(r$current_network, r$networks)
+    shiny::req(r$networks[[r$current_network]]$nodes)
+    data <- r$networks[[r$current_network]]$nodes
+    
+    if("label" %in% colnames(data))
+      label <- data[input$click, "label"]
+    else
+      label <- "-"
+    
+    if("description" %in% colnames(data)){
+      if(stringr::str_detect(input$click, "mean_")){
+        tfs <- unlist(strsplit(stringr::str_remove(input$click, 'mean_'), '-'))
+        if(!is.null(r$gene_info) & "description" %in% colnames(r$gene_info)){
+          description <- ""
+          for(tf in tfs){
+            description <- paste(description, '<br>', tf, ':', r$gene_info[tf, "description"] )
+          }
+        }
+        else
+          description <- "-"
+      }
+      else{
+        description <- data[input$click, "description"]
+      }
+    }
+    else
+      description <- "-"
+    
+    descr <- paste("<b> AGI : </b>", input$click, '<br>', 
+                   "<b> Common name : </b>", label, '<br>',
+                   "<b> Description : </b>", description)
+    descr
+  })
   
   
 #   ____________________________________________________________________________
@@ -223,21 +328,21 @@ mod_network_analysis_server <- function(input, output, session, r){
       shiny::fluidRow(
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_genes,
-          number_color = "primary",
+          numberColor = "primary",
           text = "Genes",
-          right_border = TRUE
+          rightBorder = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_tfs,
-          number_color = "green",
+          numberColor = "green",
           text = "Regulators",
-          right_border = TRUE
+          rightBorder = TRUE
         )),
         col_4(shinydashboardPlus::descriptionBlock(
           number = n_edges,
-          number_color = "navy",
+          numberColor = "navy",
           text = "Edges",
-          right_border = FALSE
+          rightBorder = FALSE
         )
       ))
     )
@@ -410,7 +515,7 @@ mod_network_analysis_server <- function(input, output, session, r){
     # TODO add check if it is entrez with regular expression here
     shiny::req(length(genes) > 0, length(background) > 0)
     
-    r_mod$go <- enrich_go(genes, background, org = org)
+    r_mod$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
   })
   
   #   ____________________________________________________________________________
@@ -434,6 +539,11 @@ mod_network_analysis_server <- function(input, output, session, r){
     draw_enrich_go(r_mod$go, max_go = max)
   })
   
+  output$go_map_plot <- shiny::renderPlot({
+    shiny::req(r_mod$go)
+    draw_enrich_go_map(r_mod$go)
+  })
+  
   output$go_results <- shiny::renderUI({
     
     if(r$organism == "Other")
@@ -442,11 +552,24 @@ mod_network_analysis_server <- function(input, output, session, r){
     shiny::req(r$organism != "Other")
     
     shiny::req(r_mod$go)
-    if (!input$draw_go){
+    if(nrow(r_mod$go) == 0){
+      shinyalert::shinyalert("No enriched GO terms were found",
+                             "It can happen if input gene list is not big enough",
+                             type = "error")
+    }
+    
+    shiny::req(nrow(r_mod$go) > 0)
+    
+    
+    if (input$draw_go == "Data table"){
       DT::dataTableOutput(ns("go_table"))
     }
     else{
-      plotly::plotlyOutput(ns("go_plot"), height = "700px")
+      if (input$draw_go == "Enrichment map"){
+        shiny::plotOutput(ns("go_map_plot"), height = "800px")
+      }
+      else
+        plotly::plotlyOutput(ns("go_plot"), height = "800px")
     }
   })
 

@@ -83,13 +83,13 @@ draw_distributions <- function(data, boxplot = TRUE) {
   colnames(d)[c(length(colnames(d)) - 1, length(colnames(d)))] <-
     c("sample", "logCount")
   
-  d$condition <- str_split_fixed(d$sample, "_", 2)[, 1]
-  g <-
-    ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
+  d$condition <- stringr::str_split_fixed(d$sample, "_", 2)[, 1]
+  
+    
   
   if (boxplot) {
-    g <-
-      g + ggplot2::geom_boxplot(
+    g <- ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
+      g <- g + ggplot2::geom_boxplot(
         alpha = 0.5,
         lwd = 1,
         ggplot2::aes(fill = condition),
@@ -97,10 +97,8 @@ draw_distributions <- function(data, boxplot = TRUE) {
         outlier.alpha = 0.1
       )
   } else{
-    g <-
-      g + ggplot2::geom_violin(alpha = 0.5,
-                               lwd = 1,
-                               ggplot2::aes(fill = condition))
+    g <- ggplot2::ggplot(data = d, ggplot2::aes(y = sample, x = logCount, color = condition)) +
+      ggridges::geom_density_ridges(size = 2, fill = "#d6dbdf")
   }
   
   g <-
@@ -312,8 +310,14 @@ draw_expression_levels <-
            genes,
            conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[,1]),
            gene.name.size = 12) {
+    
+    
     if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0) {
       stop("The required genes were not found in expression data rownames")
+    }
+    
+    if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) > 10) {
+      stop("Please specify less than 10 genes, for readability reasons.")
     }
     
     conditions <-

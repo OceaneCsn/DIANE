@@ -43,6 +43,7 @@ reference:
 - contents:
   - starts_with("network_")
   - group_regressors
+  - describe_node
  
 - title: Visualization functions
 - contents:

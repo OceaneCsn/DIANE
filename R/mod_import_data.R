@@ -238,6 +238,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$splicing_aware = NULL
     r$gene_info = NULL
     r$organism = NULL
+    r$custom_go = NULL
   })
   
   #   ____________________________________________________________________________
@@ -272,6 +273,7 @@ mod_import_data_server <- function(input, output, session, r) {
       r$splicing_aware = NULL
       r$gene_info = NULL
       r$organism = NULL
+      r$custom_go = NULL
       
       d <-
         read.csv(
@@ -329,20 +331,20 @@ mod_import_data_server <- function(input, output, session, r) {
   output$variants_summary <- shiny::renderUI({
     shiny::req(!is.null(r$splicing_aware))
     if (r$splicing_aware) {
-      number_color = "blue"
+      numberColor = "blue"
       number = "Alternatifve splicing aware"
       header = "gene identifiers"
     }
     else{
-      number_color = "blue"
+      numberColor = "blue"
       number = "No alternatifve splicing information"
       header = "in gene identifiers"
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
+      numberColor = numberColor,
       text = header,
-      right_border = TRUE,
+      rightBorder = TRUE,
     )
   })
   
@@ -474,23 +476,23 @@ mod_import_data_server <- function(input, output, session, r) {
     r$gene_info <- gene_info()
     
     if (is.null(r$gene_info)) {
-      number_color = "orange"
+      numberColor = "orange"
       number = "No additional gene data provided"
       header = ""
-      number_icon = "fa fa-times"
+      numberIcon = "fa fa-times"
     }
     else{
-      number_color = "olive"
+      numberColor = "olive"
       number = "Additional gene data available"
-      number_icon = "fa fa-check"
+      numberIcon = "fa fa-check"
       header = paste(colnames(r$gene_info), collapse = ', ')
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
-      number_icon = number_icon,
+      numberColor = numberColor,
+      numberIcon = numberIcon,
       text = header,
-      right_border = FALSE
+      rightBorder = FALSE
     )
   })
   
@@ -502,9 +504,9 @@ mod_import_data_server <- function(input, output, session, r) {
     
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
-      number_color = "teal",
+      numberColor = "teal",
       text = "organism database",
-      right_border = FALSE
+      rightBorder = FALSE
     )
   })
   

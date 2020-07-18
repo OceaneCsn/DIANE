@@ -174,11 +174,11 @@ mod_normalisation_ui <- function(id) {
               inputId = ns("violin_preview"),
               value = TRUE,
               onLabel = "Boxplots",
-              offLabel = "Violin",
+              offLabel = "Distributions",
               onStatus = "success"
             )
           ),
-          shiny::plotOutput(ns('heatmap_preview_norm'), height = "600px")
+          shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
         ),
         shiny::tabPanel(title = "PCA",
                         shiny::plotOutput(ns('pca_plot'), height = "700px")),
@@ -244,24 +244,24 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   output$norm_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
-      number_color = "orange"
+      numberColor = "orange"
       number = "Normalisation needed"
       header = ""
-      number_icon = "fa fa-times"
+      numberIcon = "fa fa-times"
     }
     else{
-      number_color = "olive"
+      numberColor = "olive"
       number = "Done"
-      number_icon = "fa fa-check"
+      numberIcon = "fa fa-check"
       header =  paste(dim(r$normalized_counts_pre_filter)[1],
                       " genes before filtering")
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
-      number_icon = number_icon,
+      numberColor = numberColor,
+      numberIcon = numberIcon,
       header = header,
-      right_border = FALSE
+      rightBorder = FALSE
     )
   })
   
@@ -274,22 +274,22 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   output$filtering_summary <- shiny::renderUI({
     if (is.null(r$normalized_counts_pre_filter)) {
-      number_color = "red"
+      numberColor = "red"
       number = "Normalisation needed"
       header = ""
-      number_icon = "fa fa-times"
+      numberIcon = "fa fa-times"
     }
     else{
       if (is.null(r$normalized_counts)) {
-        number_color = "orange"
+        numberColor = "orange"
         number = "Filtering needed"
         header = ""
-        number_icon = "fa fa-times"
+        numberIcon = "fa fa-times"
       }
       else{
-        number_color = "olive"
+        numberColor = "olive"
         number = "Done"
-        number_icon = "fa fa-check"
+        numberIcon = "fa fa-check"
         header = paste(dim(r$normalized_counts)[1],
                        " genes after filtering")
         #toDownload <<- round(r$normalized_counts, 2)
@@ -297,10 +297,10 @@ mod_normalisation_server <- function(input, output, session, r) {
     }
     shinydashboardPlus::descriptionBlock(
       number = number,
-      number_color = number_color,
-      number_icon = number_icon,
+      numberColor = numberColor,
+      numberIcon = numberIcon,
       header = header,
-      right_border = FALSE
+      rightBorder = FALSE
     )
   })
   

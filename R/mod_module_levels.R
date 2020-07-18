@@ -86,7 +86,9 @@ mod_module_levels_server <- function(input, output, session, r){
     shiny::req(r$normalized_counts, r$conditions, input$genes)
     
     genes <- unlist(strsplit(input$genes, ','))
-    shiny::req(length(genes)>0)
+    shiny::req(length(genes) > 0)
+    shiny::req(length(genes) < 10)
+    
     shiny::req(sum(genes %in% rownames(r$normalized_counts)) > 0)
   
     draw_expression_levels(data.frame(r$normalized_counts),

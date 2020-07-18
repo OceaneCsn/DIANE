@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Computes enrich Gene Ontology terms in a set of genes — enrich_go • DIANE</title>
+<title>Enriched Gene Ontology terms in a set of genes — enrich_go • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Computes enrich Gene Ontology terms in a set of genes — enrich_go" />
+<meta property="og:title" content="Enriched Gene Ontology terms in a set of genes — enrich_go" />
 <meta property="og:description" content="This function returns the enriched biological processes
 in a set of genes, as compared to a background set of genes.
 The GO terms are retreived by the clusterProfiler package and the
@@ -132,7 +132,7 @@ adjusted pvalue, description, etc." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Computes enrich Gene Ontology terms in a set of genes</h1>
+    <h1>Enriched Gene Ontology terms in a set of genes</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
     <div class="hidden name"><code>enrich_go.Rd</code></div>
     </div>
@@ -154,7 +154,8 @@ adjusted pvalue, description, etc.</p>
   <span class='no'>genes</span>,
   <span class='no'>background</span>,
   <span class='kw'>org</span> <span class='kw'>=</span> <span class='kw pkg'>org.At.tair.db</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/org.At.tair.db/man/org.At.tairBASE.html'>org.At.tair.db</a></span>,
-  <span class='kw'>sim_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.85</span>
+  <span class='kw'>sim_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.85</span>,
+  <span class='kw'>GO_type</span> <span class='kw'>=</span> <span class='st'>"BP"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -178,6 +179,12 @@ org.xx.xx.db)</p></td>
       <th>sim_cutoff</th>
       <td><p>similarity cutoff to use for pooling similar GO terms</p></td>
     </tr>
+    <tr>
+      <th>GO_type</th>
+      <td><p>character between BP (Biological Process), CC(Cellular Component) 
+or MF (Molecular Function), depending on the GO subtype
+to use in the analysis</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -194,7 +201,8 @@ org.xx.xx.db)</p></td>
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_from_agi.html'>convert_from_agi</a></span>(<span class='no'>genes</span>)
 <span class='no'>background</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='convert_from_agi.html'>convert_from_agi</a></span>(<span class='no'>background</span>)
 
-<span class='no'>go</span> <span class='kw'>&lt;-</span> <span class='fu'>enrich_go</span>(<span class='no'>genes</span>, <span class='no'>background</span>)</div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>go</span>)</div><div class='output co'>#&gt;                    ID                  Description GeneRatio   BgRatio
+<span class='no'>go</span> <span class='kw'>&lt;-</span> <span class='fu'>enrich_go</span>(<span class='no'>genes</span>, <span class='no'>background</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>go</span>)</div><div class='output co'>#&gt;                    ID                  Description GeneRatio   BgRatio
 #&gt; GO:0009408 GO:0009408             response to heat    52/498 211/15722
 #&gt; GO:0006457 GO:0006457              protein folding    37/498 170/15722
 #&gt; GO:0042493 GO:0042493             response to drug    36/498 423/15722
