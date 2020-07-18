@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>draw_coseq_run : displays the indications of clustering — draw_coseq_run • DIANE</title>
+<title>Targets and regulators of a gene in a network — describe_node • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="draw_coseq_run : displays the indications of clustering — draw_coseq_run" />
-<meta property="og:description" content="draw_coseq_run : displays the indications of clustering" />
+<meta property="og:title" content="Targets and regulators of a gene in a network — describe_node" />
+<meta property="og:description" content="Targets and regulators of a gene in a network" />
 
 
 
@@ -123,65 +123,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>draw_coseq_run : displays the indications of clustering</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_coseq.R'><code>R/fct_coseq.R</code></a></small>
-    <div class="hidden name"><code>draw_coseq_run.Rd</code></div>
+    <h1>Targets and regulators of a gene in a network</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_network_analysis.R'><code>R/fct_network_analysis.R</code></a></small>
+    <div class="hidden name"><code>describe_node.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>draw_coseq_run : displays the indications of clustering</p>
+    <p>Targets and regulators of a gene in a network</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_coseq_run</span>(<span class='no'>run_pois</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</pre>
+    <pre class="usage"><span class='fu'>describe_node</span>(<span class='no'>graph</span>, <span class='no'>node</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>run_pois</th>
-      <td><p>result of a coseq run</p></td>
+      <th>graph</th>
+      <td><p>igraph object</p></td>
     </tr>
     <tr>
-      <th>plot</th>
-      <td><p>plot to display, eather integrated Complete Likelihood, or barplots
-of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".</p></td>
+      <th>node</th>
+      <td><p>gene to describe</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>plot describing the quality of the clustering process</p>
+    <p>list with targets and regulators attributes</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"H"</span>, <span class='st'>"SH"</span>, <span class='st'>"MH"</span>, <span class='st'>"SMH"</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
-#&gt; coseq analysis: Poisson approach &amp; none transformation
-#&gt; K = 6 to 9 
-#&gt; Use set.seed() prior to running coseq for reproducible results.
-#&gt; ****************************************
-#&gt; Running K = 6 ...
-#&gt; [1] "Initialization: 1"
-#&gt; [1] "Log-like diff: 0.0412174002696979"
-#&gt; [1] "Log-like diff: 0.00816919578990039"
-#&gt; [1] "Log-like diff: 0.00192461009646205"
-#&gt; [1] "Log-like diff: 0.000456460812024773"
-#&gt; [1] "Log-like diff: 0.00010861241324811"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 1.89804837624763e-07"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0307493691764824"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0104514531179802"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00355980838886261"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00120726908370816"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000418455384801675"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0454845681210276"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.164164859006294"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.159060640574263"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.139891102252712"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.120298416206444"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"barplots"</span>)</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"regulators_per_organism"</span>)
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_regulatory_links</span>
+<span class='no'>network</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='network_thresholding.html'>network_thresholding</a></span>(<span class='no'>mat</span>, <span class='kw'>n_edges</span> <span class='kw'>=</span> <span class='fl'>600</span>)
+<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='network_data.html'>network_data</a></span>(<span class='no'>network</span>, <span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]])
+<span class='no'>nodes</span> <span class='kw'>&lt;-</span> <span class='no'>data</span>$<span class='no'>nodes</span>[<span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(-<span class='no'>data</span>$<span class='no'>nodes</span>$<span class='no'>degree</span>),]
+<span class='no'>gene_of_interest</span> <span class='kw'>&lt;-</span> <span class='no'>nodes</span>$<span class='no'>id</span>[<span class='fl'>1</span>]
+<span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>describe_node</span>(<span class='no'>network</span>, <span class='kw'>node</span> <span class='kw'>=</span><span class='no'>gene_of_interest</span>)</div><div class='output co'>#&gt; $targets
+#&gt;  [1] "AT3G12910" "AT5G24110" "AT3G23230" "AT5G56960" "AT1G44830" "AT2G43590"
+#&gt;  [7] "AT1G75040" "AT1G60750" "AT4G11470" "AT3G57240" "AT1G35230" "AT4G18253"
+#&gt; [13] "AT5G57220" "AT4G39610" "AT1G21120" "AT1G16090" "AT1G05675" "AT1G56240"
+#&gt; [19] "AT3G53250" "AT5G25910" "AT4G18250" "AT1G15125" "AT4G19975" "AT2G37980"
+#&gt; [25] "AT4G19430" "AT4G25070" "AT3G23550" "AT3G20395" "AT5G54710" "AT1G54040"
+#&gt; [31] "AT5G60310"
+#&gt; 
+#&gt; $regulators
+#&gt; [1] "AT3G12910" "AT5G24110" "AT3G23230" "AT5G56960" "AT1G01060"
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

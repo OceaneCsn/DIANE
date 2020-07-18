@@ -99,6 +99,15 @@ draw_network_degrees <- function(nodes, graph) {
 #'
 #' @return list with targets and regulators attributes
 #' @export
+#' @examples
+#' data("abiotic_stresses")
+#' data("regulators_per_organism") 
+#' mat <- abiotic_stresses$heat_DEGs_regulatory_links
+#' network <- DIANE::network_thresholding(mat, n_edges = 600)
+#' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
+#' nodes <- data$nodes[order(-data$nodes$degree),]
+#' gene_of_interest <- nodes$id[1] 
+#' DIANE::describe_node(network, node =gene_of_interest)
 describe_node <- function(graph, node){
   
   targets <- igraph::neighborhood(graph, nodes = node, mode = "out")[[1]]$name
