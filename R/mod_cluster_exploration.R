@@ -34,7 +34,7 @@ mod_cluster_exploration_ui <- function(id) {
         closable = FALSE,
         title = "Expression profiles",
         shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
-        
+        shiny::hr(),
         shiny::fluidRow(
           shinyWidgets::downloadBttn(
             outputId = ns("download_genes_in_cluster"),
