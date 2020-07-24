@@ -239,10 +239,23 @@ mod_cluster_exploration_server <-
     
     output$download_genes_in_cluster <- shiny::downloadHandler(
       filename = function() {
-        paste(paste("genes_cluster_", input$cluster_to_explore, ".csv"))
+        paste(paste0("genes_cluster_", input$cluster_to_explore, ".csv"))
       },
       content = function(file) {
         write.csv(table(), file = file, quote = FALSE)
+      }
+    )
+    
+    ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+    ### download GO                                                             ####
+    
+    
+    output$download_go_table <- shiny::downloadHandler(
+      filename = function() {
+        paste(paste0("enriched_GOterms_cluster_", input$cluster_to_explore, ".csv"))
+      },
+      content = function(file) {
+        write.csv(r_clust$go, file = file, quote = FALSE)
       }
     )
     
@@ -434,7 +447,17 @@ mod_cluster_exploration_server <-
       shiny::req(nrow(r_clust$go) > 0)
       
       if (input$draw_go == "Data table"){
-        DT::dataTableOutput(ns("go_table"))
+        
+        tagList(
+          DT::dataTableOutput(ns("go_table")),
+          shinyWidgets::downloadBttn(
+            outputId = ns("download_go_table"),
+            label = "Download enriched GO term as a csv table",
+            style = "bordered",
+            color = "success"
+          )
+        )
+        
       }
       
       else{

@@ -448,6 +448,21 @@ mod_differential_expression_analysis_server <-
       }
     )
     
+    ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+    ### download GO                                                             ####
+    
+    
+    output$download_go_table <- shiny::downloadHandler(
+      filename = function() {
+        paste(paste0("enriched_GOterms", input$reference, '_VS_', 
+                    input$perturbation, '_', 
+                    input$go_type, ".csv"))
+      },
+      content = function(file) {
+        write.csv(r_dea$go, file = file, quote = FALSE)
+      }
+    )
+    
     
     #   ____________________________________________________________________________
     #   Result plots                                                            ####
@@ -455,9 +470,7 @@ mod_differential_expression_analysis_server <-
     output$deg_table <- DT::renderDataTable({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      
-      
-      
+
       top <- r_dea$top_tags 
       top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
       
@@ -601,6 +614,7 @@ mod_differential_expression_analysis_server <-
     
 #   ____________________________________________________________________________
 #   go results                                                              ####
+    
 
     output$go_table <- DT::renderDataTable({
       shiny::req(r_dea$go)
@@ -630,7 +644,6 @@ mod_differential_expression_analysis_server <-
       
       shiny::req(r_dea$go)
       
-      
       if(nrow(r_dea$go) == 0){
         shinyalert::shinyalert("No enriched GO terms were found",
                                "It can happen if input gene list is not big enough",
@@ -640,7 +653,17 @@ mod_differential_expression_analysis_server <-
       shiny::req(nrow(r_dea$go) > 0)
       
       if (input$draw_go == "Data table"){
-        DT::dataTableOutput(ns("go_table"))
+        tagList(
+          DT::dataTableOutput(ns("go_table")),
+          
+            shinyWidgets::downloadBttn(
+              outputId = ns("download_go_table"),
+              label = "Download enriched GO term as a csv table",
+              style = "bordered",
+              color = "success"
+            )
+          
+        )
       }
       else{
         if (input$draw_go == "Enrichment map"){

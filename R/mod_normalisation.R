@@ -143,7 +143,7 @@ mod_normalisation_ui <- function(id) {
         shiny::uiOutput(ns("filtering_summary")),
         shiny::hr(),
         
-        col_12(shiny::uiOutput(ns("dl_bttns")))
+        shiny::uiOutput(ns("dl_bttns"))
       )
     ),
     
