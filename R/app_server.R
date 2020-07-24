@@ -11,7 +11,6 @@ app_server <- function(input, output, session) {
   
 #   ____________________________________________________________________________
 #   reactive values                                                         ####
-
   r <- shiny::reactiveValues(
     raw_counts = NULL,
     normalized_counts = NULL,
@@ -32,7 +31,6 @@ app_server <- function(input, output, session) {
     organism = NULL,
     custom_go = NULL
   )
-  
 
 #   ____________________________________________________________________________
 #   Server modules                                                          ####

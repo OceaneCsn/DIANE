@@ -30,7 +30,9 @@ Fore more information, please find full documentation and examples in the github
 
 **DIANE is in an early stage of development**.
 
-It can be downloaded and installed using the following R code :
+DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/.
+
+Download and install DIANE in your R console as follows :
 
 ```R
 library(remotes)
@@ -43,8 +45,10 @@ You can then launch the application :
 library(DIANE)
 DIANE::run_app()
 ```
+In case your expression input file exceeds 5MB, you may need to run the command ```options(shiny.maxRequestSize=30*1024^2)``` before calling ```DIANE::run_app()``` to upload up to 30BM.
 
-DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/. 
+Once the application is launched, if the resolution poorly fits your screen, you can adjust it with the keyboard shortcuts ```ctrl +``` or  ```ctrl -``` (use ```cmd``` on Mac).
+ 
 
 Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
 

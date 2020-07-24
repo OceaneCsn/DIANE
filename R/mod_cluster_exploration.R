@@ -33,7 +33,16 @@ mod_cluster_exploration_ui <- function(id) {
         width = 12,
         closable = FALSE,
         title = "Expression profiles",
-        shiny::plotOutput(ns("profiles_to_explore"), height = "700px")
+        shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
+        
+        shiny::fluidRow(
+          shinyWidgets::downloadBttn(
+            outputId = ns("download_genes_in_cluster"),
+            label = "Download genes in this cluster as a csv table",
+            style = "bordered",
+            color = "success"
+          )
+        )
       )
     ),
     
@@ -189,22 +198,24 @@ mod_cluster_exploration_server <-
     #   ____________________________________________________________________________
     #   table                                                                   ####
     
-    
-    output$genes_to_explore <- DT::renderDataTable({
+    table <- shiny::reactive({
       req(r$top_tags, r$current_comparison, membership())
       
       genes <- get_genes_in_cluster(membership = membership(),
                                     cluster = input$cluster_to_explore)
       table <- data.frame(Genes = genes)
-
+      
       if (!is.null(r$gene_info)) {
         
         if (r$splicing_aware) ids <- get_locus(genes, unique = FALSE)
         else ids <- genes
         table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
       }
-      
-      table
+    })
+    
+    
+    output$genes_to_explore <- DT::renderDataTable({
+      table()
     })
     
     
@@ -222,6 +233,18 @@ mod_cluster_exploration_server <-
     })
     
     
+### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+### download table                                                          ####
+
+    
+    output$download_genes_in_cluster <- shiny::downloadHandler(
+      filename = function() {
+        paste(paste("genes_cluster_", input$cluster_to_explore, ".csv"))
+      },
+      content = function(file) {
+        write.csv(table(), file = file, quote = FALSE)
+      }
+    )
     
 #   ____________________________________________________________________________
 #   glm                                                                     ####
