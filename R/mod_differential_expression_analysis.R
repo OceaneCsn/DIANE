@@ -99,6 +99,8 @@ mod_differential_expression_analysis_ui <- function(id) {
         shiny::uiOutput(ns("deg_number_summary")),
         
         shiny::hr(),
+        shiny::br(),
+        
         
         shiny::uiOutput(ns("dl_bttns"))
         
@@ -429,13 +431,14 @@ mod_differential_expression_analysis_server <-
     output$dl_bttns <- shiny::renderUI({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      shiny::fluidRow(
+      shiny::fluidRow(col_12(
         shinyWidgets::downloadBttn(
           outputId = ns("download_table_csv"),
           label = "Download result table as .csv",
           style = "bordered",
           color = "success"
         )
+      )
       )
       
     })

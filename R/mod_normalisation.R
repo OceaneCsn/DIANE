@@ -143,6 +143,8 @@ mod_normalisation_ui <- function(id) {
         shiny::uiOutput(ns("filtering_summary")),
         shiny::hr(),
         
+        shiny::br(),
+        
         shiny::uiOutput(ns("dl_bttns"))
       )
     ),
@@ -352,7 +354,7 @@ mod_normalisation_server <- function(input, output, session, r) {
   output$dl_bttns <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     tagList(
-    shiny::fluidRow(
+    shiny::fluidRow(col_12(
       shinyWidgets::downloadBttn(
         outputId = ns("download_normalized_counts_csv"),
         label = "Download normalized counts as .csv",
@@ -366,7 +368,7 @@ mod_normalisation_server <- function(input, output, session, r) {
         style = "bordered",
         color = "success"
       )
-    )
+    ))
     )
     
   })
