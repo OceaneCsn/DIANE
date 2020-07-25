@@ -131,6 +131,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
 #' DIANE::draw_MDS(abiotic_stresses$normalized_counts)
 
 draw_MDS <- function(normalized.count) {
+  normalized.count <- normalized.count / rowMeans(normalized.count)
   mds <- limma::plotMDS(normalized.count, plot = FALSE)
   d <-
     data.frame(
@@ -140,8 +141,14 @@ draw_MDS <- function(normalized.count) {
       condition = str_split_fixed(names(mds$x), '_', 2)[, 1]
     )
   g <-
-    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition)) +
-    ggplot2::geom_point(size = 6)
+    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition, label = sample)) +
+    ggplot2::geom_point(size = 6) + geom_text(
+      color = "black",
+      size = 6,
+      alpha = 0.5,
+      nudge_x = 0.07,
+      nudge_y = 0.07
+    )
   
   g <- g + ggplot2::ggtitle("Multi Dimensional Scaling plot")
   
