@@ -59,16 +59,21 @@ mod_clustering_ui <- function(id) {
         
         shiny::hr(),
         shiny::fluidRow(col_12(
-          shinyWidgets::sliderTextInput(
-            inputId = ns("cluster_range"),
-            label = "Min mand max number of clusters to test :",
-            choices = seq(3, 15),
-            selected = c(6, 9),
-            from_min = 3,
-            from_max = 7,
-            to_min = 8,
-            to_max = 15
+          col_6(
+            shinyWidgets::numericInputIcon(ns("min_k"),
+                             label = "Min number of clusters :",
+                             value = 6, min = 0, max = 20,
+                             help_text = "Minimum cluster number to test"
+                          )
+          ),
+          col_6(
+            shinyWidgets::numericInputIcon(ns("max_k"),
+                                           label = "Max number of clusters :",
+                                           value = 9, min = 0, max = 20,
+                                           help_text = "Maximum cluster number to test"
+            )
           )
+          
         )),
         
         shiny::br(),
@@ -283,7 +288,7 @@ mod_clustering_server <- function(input, output, session, r) {
         data = r$normalized_counts,
         genes = genes,
         conds = input$input_conditions,
-        K = seq(input$cluster_range[1], input$cluster_range[2])
+        K = seq(input$min_k, input$max_k)
       )
     r$clusterings[[input_genes_conditions()]]$model <- run$model
     r$clusterings[[input_genes_conditions()]]$membership <-

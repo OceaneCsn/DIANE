@@ -28,12 +28,11 @@ mod_normalisation_ui <- function(id) {
     
     shiny::h1("Data filtering and normalisation"),
     shiny::hr(),
-    shiny::h2(
-      "Because low count genes and differences in sequencing depths are a 
-      source of bias, we want to perform some data cleaning and transformation."
-    ),
-    shiny::hr(),
-    
+    # shiny::h2(
+    #   "Because low count genes and differences in sequencing depths are a 
+    #   source of bias, we want to perform some data cleaning and transformation."
+    # ),
+    # shiny::hr(),
     
     #   ____________________________________________________________________________
     #   Normalisation settings                                                  ####

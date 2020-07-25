@@ -34,14 +34,14 @@ mod_cluster_exploration_ui <- function(id) {
         closable = FALSE,
         title = "Expression profiles",
         shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
-        shiny::hr(),
-        shiny::fluidRow(
+        shiny::br(),
+        shiny::fluidRow(col_12(
           shinyWidgets::downloadBttn(
             outputId = ns("download_genes_in_cluster"),
             label = "Download genes in this cluster as a csv table",
             style = "bordered",
             color = "success"
-          )
+          ))
         )
       )
     ),
