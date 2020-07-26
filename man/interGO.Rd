@@ -7,7 +7,7 @@
 interGO(go_pair, go_table)
 }
 \arguments{
-\item{go_pair}{}
+\item{go_pair}{pair of go terms}
 
 \item{go_table}{go as returned by enrich_go}
 }

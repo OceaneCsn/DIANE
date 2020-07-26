@@ -518,6 +518,19 @@ mod_network_analysis_server <- function(input, output, session, r){
     r_mod$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
   })
   
+  ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+  ### download GO                                                             ####
+  
+  
+  output$download_go_table <- shiny::downloadHandler(
+    filename = function() {
+      paste(paste0("enriched_GOterms_module_", input$cluster_to_explore, ".csv"))
+    },
+    content = function(file) {
+      write.csv(r_mod$go, file = file, quote = FALSE)
+    }
+  )
+  
   #   ____________________________________________________________________________
   #   go results                                                              ####
   
@@ -562,7 +575,15 @@ mod_network_analysis_server <- function(input, output, session, r){
     
     
     if (input$draw_go == "Data table"){
-      DT::dataTableOutput(ns("go_table"))
+      tagList(
+        DT::dataTableOutput(ns("go_table")),
+        shinyWidgets::downloadBttn(
+          outputId = ns("download_go_table"),
+          label = "Download enriched GO term as a csv table",
+          style = "bordered",
+          color = "success"
+        )
+      )
     }
     else{
       if (input$draw_go == "Enrichment map"){
