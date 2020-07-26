@@ -83,6 +83,9 @@ golem::add_fct( "network_inference")
 golem::add_fct( "network_analysis")
 golem::add_fct( "go")
 golem::add_fct( "regressors_grouping")
+golem::add_fct( "GENIE3_oob")
+golem::add_fct( "edge_testing")
+
 #golem::add_utils( "helpers" )
 
 ## External resources
@@ -140,5 +143,8 @@ usethis::use_travis_badge()
 
 # You're now set! ----
 # go to dev/03_deploy.R
+
+golem::add_shinyserver_file()
+
 rstudioapi::navigateToFile("dev/03_deploy.R")
 

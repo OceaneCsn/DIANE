@@ -43,7 +43,8 @@ Imports:
     ade4,
     ggraph,
     GO.db,
-    ggridges
+    ggridges,
+    pkgload
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

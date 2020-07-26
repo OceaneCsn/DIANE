@@ -10,3 +10,5 @@ $run_dev.*
 ^pkgdown$
 ^\.github$
 ^\.travis\.yml$
+^app\.R$
+^rsconnect$
