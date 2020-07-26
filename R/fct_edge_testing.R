@@ -11,6 +11,8 @@
 #'
 #' @param mat matrix containing the importance values for each target and regulator
 #' (preferably computed with GENIE3 and the OOB importance metric)
+#' @param normalized_counts normalized expression data containing the genes present in
+#' mat argument, and such as used for the first network inference step.
 #' @param nGenes number of total genes in the network, union of thetarget genes,
 #' and regulators
 #' @param nRegulators number of regulators used for the network inference step
@@ -42,6 +44,7 @@
 #' @examples
 test_edges <-
   function(mat,
+           normalized_counts,
            nGenes,
            nRegulators,
            density = 0.02,
@@ -78,18 +81,16 @@ test_edges <-
     
     # assign to each gene its regulators
     targets <- as.vector(unique(links$targetGene))
-    tfs <- as.vector(unique(links$regulatoryGene))
-    
+
     target_to_TF <- list()
     for (t in targets) {
       target_to_TF[[t]] <- as.vector(links[links$targetGene == t,
                                            "regulatoryGene"])
     }
     # estimate pvalues
-    dataT <- t(data)
+    dataT <- t(normalized_counts)
     
     doParallel::registerDoParallel(cores = nCores)
-    
     if (verbose)
       message(paste("\nUsing", foreach::getDoParWorkers(), "cores."))
     "%dopar%" <- foreach::"%dopar%"
@@ -143,8 +144,6 @@ test_edges <-
                                          pvals[match(res$regulatoryGene, names(pvals))]
                                        res
                                      }))
-    message("all done")
-    
     attr(result.reg, "rng") <- NULL
     # It contains the whole sequence of RNG seeds
     links <- result.reg
@@ -157,13 +156,13 @@ test_edges <-
     
     nedges <-
       sapply(
-        X = seq(0.01, 0.1, by = 0.001),
+        X = seq(0.0, 0.1, by = 0.001),
         FUN = function(fdr) {
           return(sum(links$fdr < fdr))
         }
       )
     d <-
-      data.frame(FDRs = seq(0.01, 0.1, by = 0.001), n_edges = nedges)
+      data.frame(FDRs = seq(0.0, 0.1, by = 0.001), n_edges = nedges)
     curve <-
       ggplot2::ggplot(d, ggplot2::aes(x = FDRs, y = n_edges)) +
       ggplot2::geom_point(size = 3, color = "darkgreen") +

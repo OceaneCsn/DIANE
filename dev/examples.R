@@ -132,10 +132,22 @@ mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, t
 
 library(tictoc)
 tic("test edges")
-res <- DIANE::test_edges(mat, nGenes = length(r$grouped_genes), 
-                         nRegulators = length(r$grouped_regressors),nTrees = 1000, verbose = TRUE)
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+                         nGenes = length(r$grouped_genes), 
+                         nRegulators = length(r$grouped_regressors), 
+                         nTrees = 1000, verbose = TRUE)
 toc()
-                        
+
+res$fdr_nEdges_curve
+
+res$pvalues_distributions
+
+net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+
+
+net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+
+DIANE::draw_network(net_data$nodes, net_data$edges)                        
 # mat2 <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
 #                                 regressors = r$grouped_regressors, 
 #                                 verbose = TRUE)

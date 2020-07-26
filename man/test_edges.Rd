@@ -6,6 +6,7 @@
 \usage{
 test_edges(
   mat,
+  normalized_counts,
   nGenes,
   nRegulators,
   density = 0.02,
@@ -19,6 +20,9 @@ test_edges(
 \arguments{
 \item{mat}{matrix containing the importance values for each target and regulator
 (preferably computed with GENIE3 and the OOB importance metric)}
+
+\item{normalized_counts}{normalized expression data containing the genes present in
+mat argument, and such as used for the first network inference step.}
 
 \item{nGenes}{number of total genes in the network, union of thetarget genes,
 and regulators}
