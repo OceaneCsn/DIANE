@@ -10,9 +10,6 @@
 #' @param targets Subset of genes to which potential regulators will be calculated. Must be either
 #' a vector of indices, e.g. \code{c(1,5,6,7)}, or a vector of gene names, e.g. \code{c("at_12377", "at_10912")}.
 #' If NULL (default), regulators will be calculated for all genes in the input matrix.
-#' @param K Number of candidate regulators randomly selected at each tree node (for the determination of the best split).
-#' Must be either "sqrt" for the square root of the total number of candidate regulators (default),
-#' "all" for the total number of candidate regulators, or a stricly positive integer.
 #' @param nTrees Number of trees in an ensemble for each target gene. Default: 1000.
 #' @param nCores Number of cores to use for parallel computing. Default: 1.
 #' @param verbose If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE
@@ -173,7 +170,7 @@ setMethod("GENIE3OOB", "matrix",
                                          numRegulators <-
                                            length(theseRegulatorNames)
                                          mtry <-
-                                           .setMtry(K, numRegulators)
+                                           round(sqrt(numRegulators))
                                          
                                          x <-
                                            exprMatrixT[, theseRegulatorNames]
@@ -181,7 +178,7 @@ setMethod("GENIE3OOB", "matrix",
                                            exprMatrixT[, targetName]
                                          
                                          rf <-
-                                           randomForest(
+                                           randomForest::randomForest(
                                              x,
                                              y,
                                              mtry = mtry,
@@ -191,7 +188,7 @@ setMethod("GENIE3OOB", "matrix",
                                            )
                                          
                                          im <-
-                                           importance(rf)[, "%IncMSE"]
+                                           randomForest::importance(rf)[, "%IncMSE"]
                                          
                                          c(setNames(0, targetName), setNames(im, names(im)))[regulatorNames]
                                        }
@@ -215,21 +212,6 @@ setMethod("GENIE3OOB", "matrix",
     
     return(Matrix)
   }
-
-# mtry <- setMtry(K, numRegulators)
-.setMtry <- function(K, numRegulators)
-{
-  # set mtry
-  if (class(K) == "numeric") {
-    mtry <- K
-  } else if (K == "sqrt") {
-    mtry <- round(sqrt(numRegulators))
-  } else {
-    mtry <- numRegulators
-  }
-  
-  return(mtry)
-}
 
 
 .checkArguments <-

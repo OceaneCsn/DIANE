@@ -44,7 +44,8 @@ Imports:
     ggraph,
     GO.db,
     ggridges,
-    pkgload
+    pkgload,
+    randomForest
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

@@ -11,7 +11,9 @@ network_inference(
   targets,
   nTrees = 1000,
   nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1,
-    1))
+    1)),
+  verbose = TRUE,
+  importance_metric = "node_purity"
 )
 }
 \arguments{
@@ -27,6 +29,14 @@ network_inference(
 
 \item{nCores}{Number of CPU cores to use during the procedure. Default is the detected number of cores
 minus one.}
+
+\item{verbose}{If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE}
+
+\item{importance_metric}{character being either node_purity or MSEincrease_oob. This is the importance type
+computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
+the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
+to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
+ regulators and to over-fitting.}
 }
 \value{
 matrix object

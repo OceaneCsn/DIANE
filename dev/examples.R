@@ -3,6 +3,7 @@ library(DIANE)
 
 data("abiotic_stresses")
 data("gene_annotations")
+data("regulators_per_organism")
 
 ####### go analysis
 
@@ -111,3 +112,31 @@ igraph::plot.igraph(ig, vertex.size = 2, vertex.cex = 2)
 RCy3::createNetworkFromIgraph(ig,"myIgraph")
 
 ########## sig genie3 tests
+library(DIANE)
+
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, regulators_per_organism$`Arabidopsis thaliana`)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+
+r <- DIANE::group_regressors(data, genes, regressors)
+
+mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE)
+
+library(tictoc)
+tic("test edges")
+res <- DIANE::test_edges(mat, nGenes = length(r$grouped_genes), 
+                         nRegulators = length(r$grouped_regressors),nTrees = 1000, verbose = TRUE)
+toc()
+                        
+# mat2 <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
+#                                 regressors = r$grouped_regressors, 
+#                                 verbose = TRUE)
+
