@@ -143,6 +143,7 @@ test_edges <-
                                          pvals[match(res$regulatoryGene, names(pvals))]
                                        res
                                      }))
+    message("all done")
     
     attr(result.reg, "rng") <- NULL
     # It contains the whole sequence of RNG seeds
