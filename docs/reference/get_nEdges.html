@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Number of shared genes between Two GO terms — interGO • DIANE</title>
+<title>Get the number of a edges — get_nEdges • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Number of shared genes between Two GO terms — interGO" />
-<meta property="og:description" content="Number of shared genes between Two GO terms" />
+<meta property="og:title" content="Get the number of a edges — get_nEdges" />
+<meta property="og:description" content="Returns the number of edges of a Gene Regulatory
+Network from its density." />
 
 
 
@@ -123,33 +124,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Number of shared genes between Two GO terms</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
-    <div class="hidden name"><code>interGO.Rd</code></div>
+    <h1>Get the number of a edges</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_edge_testing.R'><code>R/fct_edge_testing.R</code></a></small>
+    <div class="hidden name"><code>get_nEdges.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Number of shared genes between Two GO terms</p>
+    <p>Returns the number of edges of a Gene Regulatory
+Network from its density.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>interGO</span>(<span class='no'>go_pair</span>, <span class='no'>go_table</span>)</pre>
+    <pre class="usage"><span class='fu'>get_nEdges</span>(<span class='no'>density</span>, <span class='no'>nGenes</span>, <span class='no'>nRegulators</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>go_pair</th>
-      <td><p>pair of go terms</p></td>
+      <th>density</th>
+      <td><p>network density (usually between 0.001 and 0.1)</p></td>
     </tr>
     <tr>
-      <th>go_table</th>
-      <td><p>go as returned by enrich_go</p></td>
+      <th>nGenes</th>
+      <td><p>total number of genes</p></td>
+    </tr>
+    <tr>
+      <th>nRegulators</th>
+      <td><p>number of genes that are regulators</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>integer</p>
+    <p>number of edges</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

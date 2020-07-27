@@ -103,13 +103,15 @@
 <p>For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts.</p>
 <p>Fore more information, please find full documentation and examples in the github page <a href="https://oceanecsn.github.io/DIANE" class="uri">https://oceanecsn.github.io/DIANE</a>.</p>
 <p><strong>DIANE is in an early stage of development</strong>.</p>
-<p>It can be downloaded and installed using the following R code :</p>
+<p>DIANE relies on R 4.0.0, available for all OS at <a href="https://cloud.r-project.org/" class="uri">https://cloud.r-project.org/</a>.</p>
+<p>Download and install DIANE in your R console as follows :</p>
 <div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">remotes</span>)
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"OceaneCsn/DIANE"</span>)</pre></div>
 <p>You can then launch the application :</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DIANE</span>)
 <span class="kw pkg">DIANE</span><span class="kw ns">::</span><span class="fu"><a href="reference/run_app.html">run_app</a></span>()</pre></div>
-<p>DIANE relies on R 4.0.0, available for all OS at <a href="https://cloud.r-project.org/" class="uri">https://cloud.r-project.org/</a>.</p>
+<p>In case your expression input file exceeds 5MB, you may need to run the command <code><a href="https://rdrr.io/r/base/options.html">options(shiny.maxRequestSize=30*1024^2)</a></code> before calling <code><a href="reference/run_app.html">DIANE::run_app()</a></code> to upload up to 30BM.</p>
+<p>Once the application is launched, if the resolution poorly fits your screen, you can adjust it with the keyboard shortcuts <code>ctrl +</code> or <code>ctrl -</code> (use <code>cmd</code> on Mac).</p>
 <p>Authors : Océane Cassan, Antoine Martin, Sophie Lèbre</p>
 <p>PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.</p>
 </div>

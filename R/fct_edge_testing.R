@@ -7,8 +7,9 @@
 #' @param nGenes total number of genes
 #' @param nRegulators number of genes that are regulators 
 #'
-#' @return number od edges
+#' @return number of edges
 #' @export
+#' @example get_nEdges(density = 0.01, nGenes = 200, nRegulators = 21)
 get_nEdges <- function(density, nGenes, nRegulators){
   nEdges = round(density * (nGenes - 1) * nRegulators, 0)
   # ou, avec cette formule trouvee dans un papier nature com des GRN sur les bacteries

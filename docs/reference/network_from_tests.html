@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Number of shared genes between Two GO terms — interGO • DIANE</title>
+<title>Create network from edges statistical tests — network_from_tests • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Number of shared genes between Two GO terms — interGO" />
-<meta property="og:description" content="Number of shared genes between Two GO terms" />
+<meta property="og:title" content="Create network from edges statistical tests — network_from_tests" />
+<meta property="og:description" content="Create network from edges statistical tests" />
 
 
 
@@ -123,34 +123,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Number of shared genes between Two GO terms</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
-    <div class="hidden name"><code>interGO.Rd</code></div>
+    <h1>Create network from edges statistical tests</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_edge_testing.R'><code>R/fct_edge_testing.R</code></a></small>
+    <div class="hidden name"><code>network_from_tests.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Number of shared genes between Two GO terms</p>
+    <p>Create network from edges statistical tests</p>
     </div>
 
-    <pre class="usage"><span class='fu'>interGO</span>(<span class='no'>go_pair</span>, <span class='no'>go_table</span>)</pre>
+    <pre class="usage"><span class='fu'>network_from_tests</span>(<span class='no'>links</span>, <span class='no'>fdr</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>go_pair</th>
-      <td><p>pair of go terms</p></td>
+      <th>links</th>
+      <td><p>dataframe of the network edges and associated pvalues,
+as in the links attribute of the <code>test_edges</code> method.</p></td>
     </tr>
     <tr>
-      <th>go_table</th>
-      <td><p>go as returned by enrich_go</p></td>
+      <th>fdr</th>
+      <td><p>threshold value such as all edges wit hadjusted pvalues lesser than
+the argument will be discarded for the final network construction</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>integer</p>
+    <p>an oriented weighted network as an igraph object</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"gene_annotations"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"regulators_per_organism"</span>)
+
+<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_locus.html'>get_locus</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs</span>)
+<span class='no'>regressors</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span>(<span class='no'>genes</span>,
+                        <span class='no'>regulators_per_organism</span>$<span class='no'>`Arabidopsis thaliana`</span>)
+
+<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aggregate_splice_variants.html'>aggregate_splice_variants</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>)
+
+<span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='group_regressors.html'>group_regressors</a></span>(<span class='no'>data</span>, <span class='no'>genes</span>, <span class='no'>regressors</span>)
+
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='network_inference.html'>network_inference</a></span>(<span class='no'>r</span>$<span class='no'>counts</span>,
+                                <span class='kw'>conds</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>,
+                                <span class='kw'>targets</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>grouped_genes</span>,
+                                <span class='kw'>regressors</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>grouped_regressors</span>,
+                                <span class='kw'>importance_metric</span> <span class='kw'>=</span> <span class='st'>"MSEincrease_oob"</span>,
+                                <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='test_edges.html'>test_edges</a></span>(<span class='no'>mat</span>, <span class='kw'>normalized_counts</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>counts</span>, <span class='kw'>density</span> <span class='kw'>=</span> <span class='fl'>0.02</span>,
+                        <span class='kw'>nGenes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>r</span>$<span class='no'>grouped_genes</span>),
+                        <span class='kw'>nRegulators</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>r</span>$<span class='no'>grouped_regressors</span>),
+                        <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>net</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>network_from_tests</span>(<span class='no'>res</span>$<span class='no'>links</span>, <span class='kw'>fdr</span> <span class='kw'>=</span> <span class='fl'>0.01</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Number of shared genes between Two GO terms — interGO • DIANE</title>
+<title>GENIE3OOB — GENIE3OOB • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Number of shared genes between Two GO terms — interGO" />
-<meta property="og:description" content="Number of shared genes between Two GO terms" />
+<meta property="og:title" content="GENIE3OOB — GENIE3OOB" />
+<meta property="og:description" content="GENIE3OOB Infers a gene regulatory network (in the form of a pvalues-filled adjacency matrix)
+from expression data, using ensembles of regression trees." />
 
 
 
@@ -123,33 +124,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Number of shared genes between Two GO terms</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
-    <div class="hidden name"><code>interGO.Rd</code></div>
+    <h1>GENIE3OOB</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_GENIE3_oob.R'><code>R/fct_GENIE3_oob.R</code></a></small>
+    <div class="hidden name"><code>GENIE3OOB.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Number of shared genes between Two GO terms</p>
+    <p><code>GENIE3OOB</code> Infers a gene regulatory network (in the form of a pvalues-filled adjacency matrix)
+from expression data, using ensembles of regression trees.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>interGO</span>(<span class='no'>go_pair</span>, <span class='no'>go_table</span>)</pre>
+    <pre class="usage"><span class='fu'>GENIE3OOB</span>(
+  <span class='no'>exprMatrix</span>,
+  <span class='kw'>regulators</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>K</span> <span class='kw'>=</span> <span class='st'>"sqrt"</span>,
+  <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>go_pair</th>
-      <td><p>pair of go terms</p></td>
+      <th>exprMatrix</th>
+      <td><p>Expression matrix (genes x samples). Every row is a gene, every column is a sample.</p></td>
     </tr>
     <tr>
-      <th>go_table</th>
-      <td><p>go as returned by enrich_go</p></td>
+      <th>regulators</th>
+      <td><p>Subset of genes used as candidate regulators. Must be either a
+vector of indices, e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(1,5,6,7)</a></code>, or a vector of gene names, e.g.
+<code><a href='https://rdrr.io/r/base/c.html'>c("at_12377", "at_10912")</a></code>. The default value NULL means that all the genes are used as candidate regulators.</p></td>
+    </tr>
+    <tr>
+      <th>targets</th>
+      <td><p>Subset of genes to which potential regulators will be calculated. Must be either
+a vector of indices, e.g. <code><a href='https://rdrr.io/r/base/c.html'>c(1,5,6,7)</a></code>, or a vector of gene names, e.g. <code><a href='https://rdrr.io/r/base/c.html'>c("at_12377", "at_10912")</a></code>.
+If NULL (default), regulators will be calculated for all genes in the input matrix.</p></td>
+    </tr>
+    <tr>
+      <th>nTrees</th>
+      <td><p>Number of trees in an ensemble for each target gene. Default: 1000.</p></td>
+    </tr>
+    <tr>
+      <th>nCores</th>
+      <td><p>Number of cores to use for parallel computing. Default: 1.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>integer</p>
+    <p>matrix containing oob importances for all TF-gene pairs</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

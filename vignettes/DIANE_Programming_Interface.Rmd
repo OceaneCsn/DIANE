@@ -18,14 +18,15 @@ library(ggplot2)
 
 # Why an application programming interface?
 
-In addition to the Graphical User Interface, DIANE also comes with all it's server-side functions, called from any R environement or scripts.
+In addition to the Graphical User Interface, DIANE also comes with all it's server-side functions. They can be called from any R environement or scripts, after loading DIANE.
 
-Using DIANE's functions oustside the interface can be an interesting option for several reasons, among which :
+Using DIANE's functions outside of the interface can be an interesting option for several reasons, among which :
 
-+ It allows more flexibility and additionnal R analysis, in case the user wants 
++ It allows more flexibility and additional user-specific R analysis
 
 + It can be part of an automated pipeline
 
+We present in this document how to use those functions on our demo data.
 
 # Input data
 
@@ -355,18 +356,8 @@ draw_glm(glm)
 
 # Network inference
 
-The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0012776) is a method mased on machine learning to infer regulatory links between genes and regulators.
 
-
-GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. Among those genes, some must be considered as potential regulators. 
-
-GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be considered for those profiles during the network inference.
-
-For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
-
-The idea is then to keep the strongest links to build the gene regulatory network.
-
-GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
+We want to build a Gene Regulatory Network, a graph connecting regulator genes to any other gene of interest. 
 
 ## Regulators for your organism
 
@@ -409,17 +400,11 @@ aggregated_data <- aggregate_splice_variants(data = normalized_counts)
 
 ## Grouping highly correlated regulators
 
-This step is optional, but recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" edges from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
+This step is optional, but highly recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" targets from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
 
 The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
 
-
 The dark green nodes represent the highly correlated grouped regulators.
-
-
-## Infernce and visualisation
-
-### Classic GENIE3 inference
 
 ```{r grouping, fig.width=8, fig.height=6}
 
@@ -438,6 +423,32 @@ grouped_targets <- grouping$grouped_genes
 
 grouped_regressors <- grouping$grouped_regressors
 
+```
+
+
+## Inference and visualisation
+
+The inference can now be performed, using either the GENIE3 approach, or our proposed method improvment.
+
+### Classic GENIE3 inference
+
+The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0012776) is a method mased on machine learning to infer regulatory links between genes and regulators.
+
+
+GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. Among those genes, some must be considered as potential regulators. 
+
+GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be considered for those profiles during the network inference.
+
+For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
+
+The idea is then to keep the strongest links to build the gene regulatory network.
+
+GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
+
+
+```{r genie, fig.width=8, fig.height=6}
+
+
 mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets,
                          regressors = grouped_regressors)
 
@@ -451,8 +462,11 @@ DIANE::draw_network(data$nodes, data$edges)
 
 ```
 
+The ```network``` object is an ```igraph``` object, and can be analyzed with all the possibilities offered by this complete package about graphs algorithms.
 
 ### DIANE's edges testing procedure
+
+
 
 A matrix of importances is computed, just as in the previous section, but we prefer to use another importance metric for consistency reasons.
 
@@ -477,7 +491,7 @@ Then, we are going to generate a first network, by considering only the number o
 The density is usually between 0.1 and 0.001, as reviewed in several papers (refs here) about biological network topology.
 This step is crucial, as it prevents from testing all possible pairs, which will useless for a huge majority of pairs, as well as extremely costly.
 
-```{r testing}
+```{r testing, fig.width=10, fig.height=8}
 
 nGenes = length(grouped_targets)
 nRegulators = length(grouped_regressors)
@@ -501,13 +515,13 @@ res <- DIANE::test_edges(mat, normalized_counts = grouped_counts, density = 0.03
 
 ```
 
-```{r, include=TRUE}
+```{r, include=FALSE}
 res <- abiotic_stresses$heat_edge_tests
 ```
 
 The elements contained in the result variable are the network edges associated to their adjusted pvalue, as well as graphics to guide the user in the choice of the adjusted pvalue (fdr) threshold to use for the final network.
 
-```{r}
+```{r, fig.width=10, fig.height=8}
 res$fdr_nEdges_curve
 
 res$pvalues_distributions + xlim(0,0.1)
@@ -526,17 +540,33 @@ You can see those communities on the graph and plot their profiles:
 ```{r communities, fig.width=10, fig.height=8}
 net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
 
+draw_network(net_data$nodes, net_data$edges)
+
 data$nodes$group <- data$nodes$community
 DIANE::draw_network(data$nodes, data$edges)
 
 louvain_membership <- data$nodes$community
 names(louvain_membership) <- data$nodes$id
 
-print(head(louvain_membership, n = 30))
+print(head(louvain_membership, n = 10))
 
 draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_stresses$conditions)
-
 ```
 
 Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes. If there is too few genes, GO enrichment tests may not be significant.
+
+
+## Analysis
+
+We can plot the network connectivity statistics, and get the regulators and targets of a gene as follows :
+
+```{r, fig.width=10, fig.height=8}
+DIANE::draw_network_degrees(net_data$nodes, net)
+
+nodes <- data$nodes[order(-data$nodes$degree),]
+gene_of_interest <- nodes$id[1] 
+
+print(DIANE::describe_node(network, node = gene_of_interest))
+
+```
 

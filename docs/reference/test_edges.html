@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Genie3 regulatory importances estimation — network_inference • DIANE</title>
+<title>test_edges — test_edges • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,14 @@
 
 
 
-<meta property="og:title" content="Genie3 regulatory importances estimation — network_inference" />
-<meta property="og:description" content="GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
-Among those genes, some must be considered as potential regulators. 
-GENIE3 can determine the influence if every regulators over each input genes, 
-using their respective expression profiles. You can specify which conditions 
-you want to be consired for those profiles during the network inference.
-For each target gene, the methods uses Random Forests to provide a ranking of all 
-regulators based on their influence on the target expression. This ranking is then merged 
-across all targets, giving a global regulatory links ranking stored in the result matrix." />
+<meta property="og:title" content="test_edges — test_edges" />
+<meta property="og:description" content="We designed a method to perform statistical testing on TF-target gene pairs
+from the GENIE3 approach.
+The idea is to build a first biologically relevant network with the
+strongest importances diven by a prior GENIE3 run, that would then be
+refined by statistical testing.
+Those tests are performed by the rfPermute package, providing empirical
+pvalues on observed importance values from response variable permutations." />
 
 
 
@@ -130,92 +129,122 @@ across all targets, giving a global regulatory links ranking stored in the resul
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Genie3 regulatory importances estimation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_network_inference.R'><code>R/fct_network_inference.R</code></a></small>
-    <div class="hidden name"><code>network_inference.Rd</code></div>
+    <h1>test_edges</h1>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_edge_testing.R'><code>R/fct_edge_testing.R</code></a></small>
+    <div class="hidden name"><code>test_edges.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
-Among those genes, some must be considered as potential regulators. 
-GENIE3 can determine the influence if every regulators over each input genes, 
-using their respective expression profiles. You can specify which conditions 
-you want to be consired for those profiles during the network inference.
-For each target gene, the methods uses Random Forests to provide a ranking of all 
-regulators based on their influence on the target expression. This ranking is then merged 
-across all targets, giving a global regulatory links ranking stored in the result matrix.</p>
+    <p>We designed a method to perform statistical testing on TF-target gene pairs
+from the GENIE3 approach.
+The idea is to build a first biologically relevant network with the
+strongest importances diven by a prior GENIE3 run, that would then be
+refined by statistical testing.
+Those tests are performed by the rfPermute package, providing empirical
+pvalues on observed importance values from response variable permutations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>network_inference</span>(
-  <span class='no'>normalized.count</span>,
-  <span class='no'>conds</span>,
-  <span class='no'>regressors</span>,
-  <span class='no'>targets</span>,
+    <pre class="usage"><span class='fu'>test_edges</span>(
+  <span class='no'>mat</span>,
+  <span class='no'>normalized_counts</span>,
+  <span class='no'>nGenes</span>,
+  <span class='no'>nRegulators</span>,
+  <span class='kw'>density</span> <span class='kw'>=</span> <span class='fl'>0.02</span>,
   <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>nShuffle</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>()), <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>,
     <span class='fl'>1</span>)),
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>importance_metric</span> <span class='kw'>=</span> <span class='st'>"node_purity"</span>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>normalized.count</th>
-      <td><p>normalized expression matrix containing the regressors and target genes</p></td>
+      <th>mat</th>
+      <td><p>matrix containing the importance values for each target and regulator
+(preferably computed with GENIE3 and the OOB importance metric)</p></td>
     </tr>
     <tr>
-      <th>conds</th>
-      <td><p>condition names to be used in the inference</p></td>
+      <th>normalized_counts</th>
+      <td><p>normalized expression data containing the genes present in
+mat argument, and such as used for the first network inference step.</p></td>
     </tr>
     <tr>
-      <th>regressors</th>
-      <td><p>genes to be taken as regressors during the inference procedures (regulator genes)</p></td>
+      <th>nGenes</th>
+      <td><p>number of total genes in the network, union of thetarget genes,
+and regulators</p></td>
     </tr>
     <tr>
-      <th>targets</th>
-      <td><p>genes to be included in the inferred network. Regressors can also be in the targets</p></td>
+      <th>nRegulators</th>
+      <td><p>number of regulators used for the network inference step</p></td>
+    </tr>
+    <tr>
+      <th>density</th>
+      <td><p>approximate desired density, that will be used to build
+a first network, which edges are the one to be statistically tested. Default
+is 0.02. Biological networks are known to have densities (ratio of edges over
+total possible edges in the graph) between 0.1 and 0.001.
+The number of genes and regulators are needed to compute the density.</p></td>
     </tr>
     <tr>
       <th>nTrees</th>
-      <td><p>Number of trees by Random Forest</p></td>
+      <td><p>number of trees used for random forest importance computations</p></td>
+    </tr>
+    <tr>
+      <th>nShuffle</th>
+      <td><p>number of times the response variable (target gene expression)
+is randomized in order to estimate the null distribution of the
+predictive variables (regulators) importances.</p></td>
     </tr>
     <tr>
       <th>nCores</th>
-      <td><p>Number of CPU cores to use during the procedure. Default is the detected number of cores
-minus one.</p></td>
+      <td><p>Number of CPU cores to use during the procedure.
+Default is the detected number of cores minus one.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE</p></td>
-    </tr>
-    <tr>
-      <th>importance_metric</th>
-      <td><p>character being either node_purity or MSEincrease_oob. This is the importance type
-computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
-the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
-to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
- regulators and to over-fitting.</p></td>
+      <td><p>If set to TRUE, a feedback on the progress of the calculations
+is given. Default: TRUE</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix object</p>
+    <p>named list containing the edges pvalues, as well as graphics
+intended to guide the choice of a pvalue threshold for the final network:</p><ul>
+<li><p>links: a dataframe containing the links of the network before testing,
+as built from the user defined prior density. All edges are associated to their
+pvalue and fdr-adjusted pvalue.</p></li>
+<li><p>fdr_nEdges_curve : relation between the fdr threshold, and the final
+number of edges in the final network</p></li>
+</ul>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"gene_annotations"</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"regulators_per_organism"</span>)
 
-<span class='no'>aggregated_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aggregate_splice_variants.html'>aggregate_splice_variants</a></span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>)
-
 <span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_locus.html'>get_locus</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs</span>)
-<span class='no'>regressors</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span>(<span class='no'>genes</span>, <span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]])
+<span class='no'>regressors</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span>(<span class='no'>genes</span>,
+                        <span class='no'>regulators_per_organism</span>$<span class='no'>`Arabidopsis thaliana`</span>)
 
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'>network_inference</span>(<span class='no'>aggregated_data</span>, <span class='kw'>conds</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>,
-<span class='kw'>targets</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>regressors</span> <span class='kw'>=</span> <span class='no'>regressors</span>)
+<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='aggregate_splice_variants.html'>aggregate_splice_variants</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>)
+
+<span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='group_regressors.html'>group_regressors</a></span>(<span class='no'>data</span>, <span class='no'>genes</span>, <span class='no'>regressors</span>)
+
+<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='network_inference.html'>network_inference</a></span>(<span class='no'>r</span>$<span class='no'>counts</span>,
+                                <span class='kw'>conds</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>,
+                                <span class='kw'>targets</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>grouped_genes</span>,
+                                <span class='kw'>regressors</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>grouped_regressors</span>,
+                                <span class='kw'>importance_metric</span> <span class='kw'>=</span> <span class='st'>"MSEincrease_oob"</span>,
+                                <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>test_edges</span>(<span class='no'>mat</span>, <span class='kw'>normalized_counts</span> <span class='kw'>=</span> <span class='no'>r</span>$<span class='no'>counts</span>, <span class='kw'>density</span> <span class='kw'>=</span> <span class='fl'>0.02</span>,
+                        <span class='kw'>nGenes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>r</span>$<span class='no'>grouped_genes</span>),
+                        <span class='kw'>nRegulators</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>r</span>$<span class='no'>grouped_regressors</span>),
+                        <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

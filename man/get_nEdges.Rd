@@ -14,7 +14,7 @@ get_nEdges(density, nGenes, nRegulators)
 \item{nRegulators}{number of genes that are regulators}
 }
 \value{
-number od edges
+number of edges
 }
 \description{
 Returns the number of edges of a Gene Regulatory
