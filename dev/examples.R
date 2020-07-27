@@ -111,7 +111,7 @@ ig <- igraph::graph_from_data_frame(net_data$edges, directed=TRUE, vertices = ne
 igraph::plot.igraph(ig, vertex.size = 2, vertex.cex = 2)
 RCy3::createNetworkFromIgraph(ig,"myIgraph")
 
-########## sig genie3 tests
+########## sig genie3 tests and abiotic stresses values for mat and tests and grouped
 library(DIANE)
 
 data("abiotic_stresses")
@@ -120,35 +120,54 @@ data("regulators_per_organism")
 
 
 genes <- get_locus(abiotic_stresses$heat_DEGs)
-regressors <- intersect(genes, regulators_per_organism$`Arabidopsis thaliana`)
+regressors <- intersect(genes, 
+                        regulators_per_organism$`Arabidopsis thaliana`)
 
 data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
 
 r <- DIANE::group_regressors(data, genes, regressors)
 
-mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
-                                regressors = r$grouped_regressors, importance_metric = "MSEincrease_oob", 
+
+
+mat <- DIANE::network_inference(r$counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
                                 verbose = TRUE)
 
 library(tictoc)
 tic("test edges")
-res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.03,
                          nGenes = length(r$grouped_genes), 
                          nRegulators = length(r$grouped_regressors), 
                          nTrees = 1000, verbose = TRUE)
 toc()
 
+abiotic_stresses$heat_edge_tests = res
+abiotic_stresses$heat_DEGs_regulatory_links <- mat
+
 res$fdr_nEdges_curve
 
-res$pvalues_distributions
+res$pvalues_distributions + xlim(0,0.1)
 
 net <- DIANE::network_from_tests(res$links, fdr = 0.01)
 
 
 net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
 
-DIANE::draw_network(net_data$nodes, net_data$edges)                        
+DIANE::draw_network(net_data$nodes, net_data$edges)
+
+abiotic_stresses$heat_grouped_data <- r
+
+
+
 # mat2 <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
 #                                 regressors = r$grouped_regressors, 
 #                                 verbose = TRUE)
+
+# res <- data.frame(density = seq(0.001, 0.1, length.out = 20),
+#                   nEdges = sapply(seq(0.001, 0.1, length.out = 20), 
+#                                   get_nEdges, nGenes, nRegulators))
+# ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) + ggtitle()
 

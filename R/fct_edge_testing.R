@@ -1,3 +1,23 @@
+#' Get the number of a edges 
+#' 
+#' Returns the number of edges of a Gene Regulatory
+#' Network from its density.
+#'
+#' @param density network density (usually between 0.001 and 0.1)
+#' @param nGenes total number of genes
+#' @param nRegulators number of genes that are regulators 
+#'
+#' @return number od edges
+#' @export
+get_nEdges <- function(density, nGenes, nRegulators){
+  nEdges = round(density * (nGenes - 1) * nRegulators, 0)
+  # ou, avec cette formule trouvee dans un papier nature com des GRN sur les bacteries
+  #nEdges = 0.4*nGenes**(-0.78)*(nGenes -1)*nRegulators
+  
+  return(nEdges)
+}
+
+
 #' test_edges
 #'
 #' @description
@@ -42,6 +62,30 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("abiotic_stresses")
+#' data("gene_annotations")
+#' data("regulators_per_organism")
+#' 
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
+#' regressors <- intersect(genes, 
+#'                         regulators_per_organism$`Arabidopsis thaliana`)
+#' 
+#' data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+#' 
+#' r <- DIANE::group_regressors(data, genes, regressors)
+#' 
+#' mat <- DIANE::network_inference(r$counts, 
+#'                                 conds = abiotic_stresses$conditions, 
+#'                                 targets = r$grouped_genes,
+#'                                 regressors = r$grouped_regressors, 
+#'                                 importance_metric = "MSEincrease_oob", 
+#'                                 verbose = TRUE) 
+#' res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+#'                         nGenes = length(r$grouped_genes), 
+#'                         nRegulators = length(r$grouped_regressors), 
+#'                         nTrees = 1000, verbose = TRUE)
+#'}
 test_edges <-
   function(mat,
            normalized_counts,
@@ -61,10 +105,7 @@ test_edges <-
     if (density <= 0 | density > 1)
       stop("density must be strictly positive between 0 and 1, preferably less than 0.1")
     
-    nEdges = round(density * (nGenes - 1) * nRegulators, 0)
-    
-    # ou, avec cette formule trouvee dans un papier nature com des GRN sur les bacteries
-    #nEdges = 0.4*nGenes**(-0.78)*(nGenes -1)*nRegulators
+    nEdges <- get_nEdges(density, nGenes, nRegulators)
     
     if (verbose)
       message(
@@ -189,6 +230,31 @@ test_edges <-
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' data("abiotic_stresses")
+#' data("gene_annotations")
+#' data("regulators_per_organism")
+#' 
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
+#' regressors <- intersect(genes, 
+#'                         regulators_per_organism$`Arabidopsis thaliana`)
+#' 
+#' data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+#' 
+#' r <- DIANE::group_regressors(data, genes, regressors)
+#' 
+#' mat <- DIANE::network_inference(r$counts, 
+#'                                 conds = abiotic_stresses$conditions, 
+#'                                 targets = r$grouped_genes,
+#'                                 regressors = r$grouped_regressors, 
+#'                                 importance_metric = "MSEincrease_oob", 
+#'                                 verbose = TRUE) 
+#' res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+#'                         nGenes = length(r$grouped_genes), 
+#'                         nRegulators = length(r$grouped_regressors), 
+#'                         nTrees = 1000, verbose = TRUE)
+#' net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+#'}
 network_from_tests <- function(links, fdr) {
   if (fdr <= 0 | fdr > 1)
     stop(

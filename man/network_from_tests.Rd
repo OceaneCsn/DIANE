@@ -19,3 +19,30 @@ an oriented weighted network as an igraph object
 \description{
 Create network from edges statistical tests
 }
+\examples{
+\dontrun{
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, 
+                        regulators_per_organism$`Arabidopsis thaliana`)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+
+r <- DIANE::group_regressors(data, genes, regressors)
+
+mat <- DIANE::network_inference(r$counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE) 
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+                        nGenes = length(r$grouped_genes), 
+                        nRegulators = length(r$grouped_regressors), 
+                        nTrees = 1000, verbose = TRUE)
+net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+}
+}

@@ -67,3 +67,29 @@ refined by statistical testing.
 Those tests are performed by the rfPermute package, providing empirical
 pvalues on observed importance values from response variable permutations.
 }
+\examples{
+\dontrun{
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, 
+                        regulators_per_organism$`Arabidopsis thaliana`)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+
+r <- DIANE::group_regressors(data, genes, regressors)
+
+mat <- DIANE::network_inference(r$counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE) 
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+                        nGenes = length(r$grouped_genes), 
+                        nRegulators = length(r$grouped_regressors), 
+                        nTrees = 1000, verbose = TRUE)
+}
+}

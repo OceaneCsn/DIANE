@@ -18,6 +18,14 @@ library(ggplot2)
 
 # Why an application programming interface?
 
+In addition to the Graphical User Interface, DIANE also comes with all it's server-side functions, called from any R environement or scripts.
+
+Using DIANE's functions oustside the interface can be an interesting option for several reasons, among which :
+
++ It allows more flexibility and additionnal R analysis, in case the user wants 
+
++ It can be part of an automated pipeline
+
 
 # Input data
 
@@ -146,17 +154,20 @@ normalized_counts <- TCC::getNormalizedData(tcc_object)
 
 We can really see the difference with the violin plot view of the effect of low count genes removal :
 
-```{r viz_filter, fig.width=10, fig.height=9}
-pre_process <- DIANE::draw_distributions(abiotic_stresses$raw_counts, boxplot = FALSE) + ggtitle("Before normalisation and filtering")
-post_process <- DIANE::draw_distributions(normalized_counts, boxplot = FALSE)+ ggtitle("After normalisation and filtering")
+```{r viz_filter, fig.width=10, fig.height=15}
+pre_process <- DIANE::draw_distributions(abiotic_stresses$raw_counts, boxplot = FALSE) + ggtitle("Before")
+post_process <- DIANE::draw_distributions(normalized_counts, boxplot = FALSE)+ ggtitle("After")
 
-gridExtra::grid.arrange(pre_process, post_process, ncol = 1)
+gridExtra::grid.arrange(pre_process, post_process, ncol = 2)
+
+```
 
 
-
-genes <- sample(abiotic_stresses$heat_DEGs, 4)
+```{r levels, fig.width=10, fig.height=9}
+genes <- sample(abiotic_stresses$heat_DEGs,4)
 DIANE::draw_expression_levels(abiotic_stresses$normalized_counts, genes = genes)
 ```
+
 
 ## Sample homogeneity and global analysis
 
@@ -349,11 +360,11 @@ The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journa
 
 GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. Among those genes, some must be considered as potential regulators. 
 
-GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be consired for those profiles during the network inference.
+GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be considered for those profiles during the network inference.
 
 For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
 
-The idea is then to keep the strongest links to build the gene regulatory network. The way of choosing this minimal importance value needed to be included in the network will be described the "thresholding" box.
+The idea is then to keep the strongest links to build the gene regulatory network.
 
 GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
 
@@ -375,16 +386,60 @@ aggregated_data <- aggregate_splice_variants(data = normalized_counts)
 
 
 
-## Example of inference
+<!-- ```{r genie3, fig.width=10, fig.height=8} -->
 
 
-```{r genie3, fig.width=10, fig.height=8}
+
+<!-- mat <- DIANE::network_inference(aggregated_data, conds = abiotic_stresses$conditions, targets = genes, -->
+<!--                          regressors = regressors) -->
+
+<!-- network <- DIANE::network_thresholding(mat, n_edges = length(genes)) -->
+
+<!-- data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`) -->
+
+<!-- knitr::kable(head(data$nodes)) -->
+
+<!-- DIANE::draw_network(data$nodes, data$edges) -->
+
+<!-- DIANE::draw_network_degrees(data$nodes, network) -->
+
+<!-- ``` -->
+
+
+
+## Grouping highly correlated regulators
+
+This step is optional, but recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" edges from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
+
+The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
+
+
+The dark green nodes represent the highly correlated grouped regulators.
+
+
+## Infernce and visualisation
+
+### Classic GENIE3 inference
+
+```{r grouping, fig.width=8, fig.height=6}
 
 genes <- get_locus(topTags$table$genes)
 regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
 
-mat <- DIANE::network_inference(aggregated_data, conds = abiotic_stresses$conditions, targets = genes,
-                         regressors = regressors)
+# use normalized counts if you did not aggregate splice variants
+grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
+
+visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
+                       grouping$correlated_regressors_graph$edges)
+
+grouped_counts <- grouping$counts
+
+grouped_targets <- grouping$grouped_genes
+
+grouped_regressors <- grouping$grouped_regressors
+
+mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets,
+                         regressors = grouped_regressors)
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
@@ -394,14 +449,82 @@ knitr::kable(head(data$nodes))
 
 DIANE::draw_network(data$nodes, data$edges)
 
-DIANE::draw_network_degrees(data$nodes, network)
+```
+
+
+### DIANE's edges testing procedure
+
+A matrix of importances is computed, just as in the previous section, but we prefer to use another importance metric for consistency reasons.
+
+
+```{r sigGENIE, eval=FALSE}
+
+mat <- DIANE::network_inference(grouped_counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = grouped_targets,
+                                regressors = grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE)
 
 ```
 
-A community discovery is performed using the Louvain alogorithm, so we can extract highly connected genes groups.
+
+```{r sigGENIEload, include=FALSE}
+mat <- abiotic_stresses$heat_DEGs_regulatory_links
+```
+
+Then, we are going to generate a first network, by considering only the number of pairs offering a state of the art density value.
+The density is usually between 0.1 and 0.001, as reviewed in several papers (refs here) about biological network topology.
+This step is crucial, as it prevents from testing all possible pairs, which will useless for a huge majority of pairs, as well as extremely costly.
+
+```{r testing}
+
+nGenes = length(grouped_targets)
+nRegulators = length(grouped_regressors)
+
+res <- data.frame(density = seq(0.001, 0.1, length.out = 20),
+                  nEdges = sapply(seq(0.001, 0.1, length.out = 20),
+                                  get_nEdges, nGenes, nRegulators))
+ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) + 
+  ggtitle("Number of network edges as a function of its density") + 
+  geom_vline(xintercept = 0.03, color = "darkgreen", lty = 2, size = 1.2)
+```
+
+Given this graph, we can consider that a density value of 0.3 would be a good compromise between a small enough subset of edges to test, and a coherent density value, not too restrictive.
+
+```{r testingexpr, eval=FALSE}
+
+res <- DIANE::test_edges(mat, normalized_counts = grouped_counts, density = 0.03,
+                         nGenes = nGenes, 
+                         nRegulators = nRegulators, 
+                         nTrees = 1000, verbose = TRUE)
+
+```
+
+```{r, include=TRUE}
+res <- abiotic_stresses$heat_edge_tests
+```
+
+The elements contained in the result variable are the network edges associated to their adjusted pvalue, as well as graphics to guide the user in the choice of the adjusted pvalue (fdr) threshold to use for the final network.
+
+```{r}
+res$fdr_nEdges_curve
+
+res$pvalues_distributions + xlim(0,0.1)
+
+net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+```
+
+Alright, the network is ready to be analyzed!
+
+
+## Visualisation
+
+A community discovery is performed using the Louvain algorithm, so we can extract highly connected genes modules.
 You can see those communities on the graph and plot their profiles:
 
 ```{r communities, fig.width=10, fig.height=8}
+net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
 
 data$nodes$group <- data$nodes$community
 DIANE::draw_network(data$nodes, data$edges)
@@ -416,42 +539,4 @@ draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_
 ```
 
 Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes. If there is too few genes, GO enrichment tests may not be significant.
-
-
-## Grouping highly correlated regulators
-
-This step is optional, but recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" edges from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
-
-The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
-
-
-The dark green nodes represent the highly correlated grouped regulators.
-
-
-```{r grouping, fig.width=8, fig.height=6}
-
-grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
-
-visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
-                       grouping$correlated_regressors_graph$edges)
-
-grouped_couts <- grouping$counts
-
-grouped_targets <- grouping$grouped_genes
-
-grouped_regressors <- grouping$grouped_regressors
-
-mat <- DIANE::network_inference(grouped_couts, conds = abiotic_stresses$conditions, targets = grouped_targets,
-                         regressors = grouped_regressors)
-
-network <- DIANE::network_thresholding(mat, n_edges = length(genes))
-
-data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
-
-knitr::kable(head(data$nodes))
-
-DIANE::draw_network(data$nodes, data$edges)
-
-```
-
 

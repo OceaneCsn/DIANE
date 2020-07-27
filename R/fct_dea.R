@@ -43,8 +43,8 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   rownames(design) <- colnames(tcc$count)
   colnames(design) <-
     str_split_fixed(colnames(design), 'groups', 2)[, 2]
-  # TODO : add a genes dataframe containing the annotations here, they will 
-  # be kept furing all dea process in edgeR
+
+
   dge <- edgeR::DGEList(
     counts = tcc$count,
     lib.size = tcc$norm.factors,
@@ -57,7 +57,6 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   fit <- edgeR::glmFit(y, design)
   return(fit)
 }
-
 
 #' estimateDEGs
 #'

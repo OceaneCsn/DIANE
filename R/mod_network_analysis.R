@@ -21,9 +21,6 @@ mod_network_analysis_ui <- function(id){
       position = 'top-left',
       margins = c(70, 1200)
     ),
-    # TODO group selection in network
-    
-    # TODO gene zoom in network
     
     #   ____________________________________________________________________________
     #   network view                                                            ####

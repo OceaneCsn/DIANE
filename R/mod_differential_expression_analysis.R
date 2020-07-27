@@ -189,9 +189,7 @@ mod_differential_expression_analysis_ui <- function(id) {
     shiny::actionButton(ns("browser"), "backdoor")
   )
 }
-# TODO place spinners correctly
 
-# TODO cleaner demo data
 
 #   __________________________________________________________________________________________________________________________________
 #   Server                                                                                                                        ####
