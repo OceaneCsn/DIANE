@@ -269,3 +269,59 @@ network_from_tests <- function(links, fdr) {
   net <- igraph::graph_from_data_frame(links, directed = TRUE)
   return(net)
 }
+
+
+#' Draw network with removed edges in red
+#'
+#' @param links dataframe of edges containing their adjusted pvalues, as returned 
+#' by the \code{test_edges} function
+#' @param net_data network data of the thresholded network
+#' @export
+#'
+#' @examples
+#' data(abiotic_stresses)
+#' links <- abiotic_stresses$heat_edge_tests
+#' net <- network_from_tests(links, fdr = 0.05)
+#' net_data <- DIANE::network_data(net, 
+#' gene_info = gene_annotations$`Arabidopsis thaliana`, 
+#' regulators = regulators_per_organism$`Arabidopsis thaliana`)
+#' draw_discarded_edges(links, net_data)
+draw_discarded_edges <- function(links, net_data){
+  net_before <- network_from_tests(links, fdr = 1)
+  n_data_before <- DIANE::network_data(net_before,
+                                       gene_info = gene_annotations$`Arabidopsis thaliana`, 
+                                       regulators = regulators_per_organism$`Arabidopsis thaliana`)
+  
+  net_data$edges$pair <- paste(net_data$edges$from, net_data$edges$to)
+  n_data_before$edges$pair <- paste(n_data_before$edges$from, n_data_before$edges$to)
+  n_data_before$edges$is_significant <- !n_data_before$edges$pair %in% net_data$edges$pair
+  n_data_before$edges$color <-ifelse(n_data_before$edges$is_significant, "darkred", "grey")
+  n_data_before$edges$value <- 2
+  
+  
+  visNetwork(nodes = n_data_before$nodes, n_data_before$edges) %>%
+    visEdges(smooth = FALSE, arrows = 'to') %>%
+    visPhysics(
+      solver = "forceAtlas2Based",
+      timestep = 0.6,
+      minVelocity = 12,
+      maxVelocity = 10,
+      stabilization = F
+    ) %>%
+    visGroups(
+      groupname = "Regulator",
+      size = 28,
+      color = list("background" = "#49A346", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visGroups(
+      groupname = "Grouped Regulators",
+      size = 45,
+      color = list("background" = "#1C5435", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visGroups(groupname = "Target Gene",
+              color = list("background" = "#B6B3B3", hover = "grey",
+                           "border" = "#96E69A")) %>%
+    visNodes(borderWidth = 0.5, font = list("size" = 35))
+}

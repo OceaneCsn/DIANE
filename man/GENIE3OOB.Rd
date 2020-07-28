@@ -8,10 +8,9 @@ GENIE3OOB(
   exprMatrix,
   regulators = NULL,
   targets = NULL,
-  K = "sqrt",
   nTrees = 1000,
   nCores = 1,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{

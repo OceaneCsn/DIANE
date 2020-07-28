@@ -45,7 +45,8 @@ Imports:
     GO.db,
     ggridges,
     pkgload,
-    randomForest
+    randomForest,
+    rfPermute
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

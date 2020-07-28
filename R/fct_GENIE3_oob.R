@@ -15,53 +15,18 @@
 #' @param verbose If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE
 #'
 #' @return matrix containing oob importances for all TF-gene pairs
-setGeneric("GENIE3OOB", signature = "exprMatrix",
-           function(exprMatrix,
-                    regulators = NULL,
-                    targets = NULL,
-                    K = "sqrt",
-                    nTrees = 1000,
-                    nCores = 1,
-                    verbose = TRUE)
-           {
-             methods::standardGeneric("GENIE3OOB")
-           })
-
-#' @export
-setMethod("GENIE3OOB", "matrix",
-          function(exprMatrix,
-                   regulators = NULL,
-                   targets = NULL,
-                   K = "sqrt",
-                   nTrees = 1000,
-                   nCores = 1,
-                   verbose = FALSE)
-          {
-            .GENIE3OOB(
-              exprMatrix = exprMatrix,
-              regulators = regulators,
-              targets = targets,
-              K = K,
-              nTrees = nTrees,
-              nCores = nCores,
-              verbose = verbose
-            )
-          })
-
-.GENIE3OOB <-
+GENIE3OOB <-
   function(exprMatrix,
-           regulators,
-           targets,
-           K,
-           nTrees,
-           nCores,
-           verbose)
+           regulators = NULL,
+           targets = NULL,
+           nTrees = 1000,
+           nCores = 1,
+           verbose = FALSE)
   {
     .checkArguments(
       exprMatrix = exprMatrix,
       regulators = regulators,
       targets = targets,
-      K = K,
       nTrees = nTrees,
       nCores = nCores,
       verbose = verbose
@@ -129,7 +94,6 @@ setMethod("GENIE3OOB", "matrix",
       }
     }
     targetNames <- sort(targetNames)
-    nGenes <- length(targetNames)
     rm(targets)
     
     if (verbose)
@@ -137,7 +101,7 @@ setMethod("GENIE3OOB", "matrix",
         paste(
           "Starting GENIE3 network inference with MSEincrease on OOB as importance metric.",
           "\nK: ",
-          K,
+          "sqrt",
           "\nNumber of trees: ",
           nTrees,
           sep = ""
@@ -218,7 +182,6 @@ setMethod("GENIE3OOB", "matrix",
   function(exprMatrix,
            regulators,
            targets,
-           K,
            nTrees,
            nCores,
            verbose)
@@ -248,14 +211,6 @@ setMethod("GENIE3OOB", "matrix",
     if (length(nonUniqueGeneNames) > 0)
       stop("The following gene IDs (rownames) are not unique: ",
            paste(names(nonUniqueGeneNames), collapse = ", "))
-    
-    if (K != "sqrt" && K != "all" && !is.numeric(K)) {
-      stop("Parameter K must be \"sqrt\", or \"all\", or a strictly positive integer.")
-    }
-    
-    if (is.numeric(K) && K < 1) {
-      stop("Parameter K must be \"sqrt\", or \"all\", or a strictly positive integer.")
-    }
     
     if (!is.numeric(nTrees) || nTrees < 1) {
       stop("Parameter nTrees should be a stricly positive integer.")
