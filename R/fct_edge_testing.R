@@ -280,8 +280,8 @@ network_from_tests <- function(links, fdr) {
 #'
 #' @examples
 #' data(abiotic_stresses)
-#' links <- abiotic_stresses$heat_edge_tests
-#' net <- network_from_tests(links, fdr = 0.05)
+#' links <- abiotic_stresses$heat_edge_tests$links
+#' net <- network_from_tests(links, fdr = 0.01)
 #' net_data <- DIANE::network_data(net, 
 #' gene_info = gene_annotations$`Arabidopsis thaliana`, 
 #' regulators = regulators_per_organism$`Arabidopsis thaliana`)
