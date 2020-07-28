@@ -20,3 +20,6 @@ number of edges
 Returns the number of edges of a Gene Regulatory
 Network from its density.
 }
+\examples{
+get_nEdges(density = 0.01, nGenes = 200, nRegulators = 21)
+}

@@ -165,10 +165,10 @@ GENIE3OOB <-
       warning(
         paste(
           sum(is.na(Matrix)),
-          "Na importance values were returned,
+          "Na importance values over", length(c(Matrix)), " were returned,
       it may be caused by too few samples. You can run
-      network inference with the node purity importance metric
-      instance of OOB MSE increase, to avoid this issue."
+      network inference again with the node purity importance metric
+      instead of OOB MSE increase, to avoid this issue."
         )
       )
     }

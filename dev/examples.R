@@ -144,8 +144,23 @@ res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.03,
                          nTrees = 1000, verbose = TRUE)
 toc()
 
-abiotic_stresses$heat_edge_tests = res
-abiotic_stresses$heat_DEGs_regulatory_links <- mat
+# abiotic_stresses$heat_edge_tests = res
+# abiotic_stresses$heat_DEGs_regulatory_links <- mat
+
+########## verif de la correlation des fdrs d'un run à l'autre des tests
+
+links0 <- abiotic_stresses$heat_edge_tests$links
+links <- res$links
+
+links$pair <- paste(links$regulatoryGene, links$targetGene)
+links0$pair <- paste(links0$regulatoryGene, links0$targetGene)
+
+common <- intersect(links$pair, links0$pair)
+commonlinks <- links[links$pair %in% common,]
+
+plot(commonlinks$fdr, links0[match(commonlinks$pair, links0$pair),]$fdr)
+cor(commonlinks$fdr, links0[match(commonlinks$pair, links0$pair),]$fdr)
+
 
 res$fdr_nEdges_curve
 

@@ -132,10 +132,16 @@ shiny::hr(),
         shiny::numericInput(ns("n_trees"), 
                             label = "Number of trees for 
                             GENIE3 Random Forests :", 
-                            min = 500, value = 1000),
+                            min = 200, value = 1000),
         
         shiny::fluidRow(
-          col_12(shinyWidgets::actionBttn(
+          col_6(shinyWidgets::switchInput(ns("importance_metric"),
+                                          label = "Importance metric in random forests",
+                                          onLabel = "MSE increase on OOB",
+                                          offLabel = "Node impurity", value = FALSE, 
+                                          size = "normal", onStatus = "success", 
+                                          offStatus = "primary")),
+          col_6(shinyWidgets::actionBttn(
             ns("launch_genie_btn"),
             label = "Launch Network Inference",
             color = "success",
@@ -518,8 +524,6 @@ mod_network_inference_server <- function(input, output, session, r){
     }
 
     
-    
-    
     if(length(regressors) < 2 ){
       shinyalert::shinyalert(
         "Not enough regulators provided",
@@ -533,11 +537,27 @@ mod_network_inference_server <- function(input, output, session, r){
     
     shiny::req(length(regressors) >= 2)
     
+    if(input$importance_metric)
+      importance = "MSEincrease_oob"
+    else
+      importance = "node_purity"
+    
     mat <- network_inference(normalized.count = data, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = regressors,
                       nTrees = input$n_trees,
-                      nCores = input$n_cores)
+                      nCores = input$n_cores, 
+                      importance_metric = importance)
+    
+    if(sum(is.na(mat)) > 0){
+      shinyalert::shinyalert(
+        paste("NA importance values were produced :", sum(is.na(mat)), "Nan over", length(c(mat))),
+        "It may be caused by too few samples. You can run the
+      network inference again with the node purity importance metric
+      instead of OOB MSE increase, to avoid this issue.",
+        type = "warning"
+      )
+    }
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
     
