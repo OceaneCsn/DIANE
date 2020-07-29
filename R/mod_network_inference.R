@@ -492,7 +492,7 @@ mod_network_inference_server <- function(input, output, session, r){
       label = label,
       color = "success",
       style = 'bordered',
-      size = "lg"
+      size = "sm"
     ))
   })
   
