@@ -140,7 +140,7 @@ shiny::hr(),
                                           onLabel = "MSE increase on OOB",
                                           offLabel = "Node impurity", value = FALSE, 
                                           size = "normal", onStatus = "success", 
-                                          offStatus = "primary")),
+                                          offStatus = "primary", width = "100%")),
           col_6(shinyWidgets::actionBttn(
             ns("launch_genie_btn"),
             label = "Launch Network Inference",
@@ -167,9 +167,15 @@ shiny::hr(),
       closable = FALSE,
       width = 12,
       
-      shiny::fluidRow(col_6(shiny::h4("Thresholding regulatory links?")),
-      
-      col_6(shinyWidgets::dropdownButton(
+      shiny::fluidRow(
+                      col_4(shiny::uiOutput(ns("inference_summary"))),
+                      col_6(shiny::h5("Without thresholding, we would obtain a fully 
+                      connected weighted graph from GENIE3, with far too many links to be 
+                      interpretable. In order build a meaningfull network, this weighted 
+                      adjacency matrix betwen regulators and targets has to be sparsified, 
+                                      and we have to determine the N higher regulatory weights that 
+                                      we consider significant.")),
+      col_2(shinyWidgets::dropdownButton(
         size = 'xs',
         shiny::includeMarkdown(system.file("extdata", "threshold.md", package = "DIANE")),
         circle = TRUE,
@@ -179,22 +185,25 @@ shiny::hr(),
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ))),
       
-      shiny::br(),
       
-      shiny::uiOutput(ns("inference_summary")),
       
       shiny::hr(),
       
       
-      shiny::fluidRow(col_8(shiny::uiOutput(ns("n_edges_choice"))),
+      shiny::fluidRow(col_8(shiny::sliderInput(ns("density"), max = 0.1,round = -3, step = 0.001,
+                                                min = 0, label = "Network's conectivity density" , value = 0.02)
+                             ),
+                      col_2(shiny::uiOutput(ns("n_edges_choice")))),
       
-      
-        col_4(shinyWidgets::actionBttn(
-          ns("thr_btn"),
-          label = "Threshold",
-          color = "success",
-          style = 'bordered'
-        ))),
+      shiny::fluidRow(col_6(shinyWidgets::switchInput(ns("test_edges"),
+                                label = "Edges statistical testing",
+                                onLabel = "ON (more computation)",
+                                offLabel = "OFF (density-based hard thresholding)", value = FALSE, 
+                                size = "normal", onStatus = "success", 
+                                offStatus = "primary", width = "100%")),
+                      col_6(shiny::uiOutput(ns("btn_thr_label")))),
+
+       
       
       shiny::hr(),
       
@@ -462,6 +471,31 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   
+  
+#   ____________________________________________________________________________
+
+  #   button threshold                                                        ####
+
+  
+  output$btn_thr_label <- shiny::renderUI({
+    shiny::req(r$normalized_counts)
+    shiny::req(r$DEGs)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
+    if(input$test_edges)
+      label = "Threshold and test edges"
+    else
+      label = "Threshold"
+    col_4(shinyWidgets::actionBttn(
+      ns("thr_btn"),
+      label = label,
+      color = "success",
+      style = 'bordered',
+      size = "lg"
+    ))
+  })
+  
 #   ____________________________________________________________________________
 #   thresholding settings                                                   ####
   
@@ -472,7 +506,12 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
-    proposition = 1.5*length(r$DEGs[[input$input_deg_genes_net]])
+    #proposition = 1.5*length(r$DEGs[[input$input_deg_genes_net]])
+    mat <- r$networks[[input$input_deg_genes_net]]$mat
+    proposition = get_nEdges(density = input$density, 
+                             nGenes = dim(mat)[2],
+                             nRegulators = dim(mat)[1])
+    
     shiny::numericInput(ns("n_edges"), 
                         label = "Number of edges :", 
                         min = 1, value = proposition)
@@ -571,12 +610,94 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
     
-    r$networks[[input$input_deg_genes_net]]$graph <- network_thresholding(
-      r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
+    
+    if(!input$test_edges){
+      r$networks[[input$input_deg_genes_net]]$graph <- network_thresholding(
+        r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
+      
+      data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
+                           r$regulators, r$gene_info)
+      
+      membership <- data$nodes$community
+      names(membership) <- data$nodes$id
+      
+      r$networks[[input$input_deg_genes_net]]$membership <- membership
+      
+      r$networks[[input$input_deg_genes_net]]$nodes <- data$nodes
+      r$networks[[input$input_deg_genes_net]]$edges <- data$edges
+      
+      r$networks[[input$input_deg_genes_net]]$conditions <- 
+        input$input_conditions_net
+      
+      r$current_network <- input$input_deg_genes_net
+      
+    }
+    else{
+      
+      if(input$grouping)
+        data = r$grouped_normalized_counts
+      else
+        data = r$normalized_counts
+      
+      mat <- r$networks[[input$input_deg_genes_net]]$mat
+      
+      r$edge_tests <- test_edges(mat,
+                        normalized_counts = data, density = input$density,
+                        nGenes = dim(mat)[2],
+                        nRegulators = dim(mat)[1], 
+                        nTrees = input$n_trees, 
+                        verbose = TRUE)
+      
+      print("tests done")
+
+      shiny::showModal(shiny::modalDialog(
+        title = "Edge testing procedure complete",
+        size = 'l',
+        
+        shiny::h5("Now every edge of the pre-buit network is
+                  associated to an adjusted pvalue. The only remaining 
+                  choice is the fdr threshold to apply to keep significant 
+                  edges. Usual values are 0.01, 0.05, or 0.1, and can be interpreted
+                  as the proportion of wrond edges tolerated in the final network.
+                  The curves above can give you some insights about 
+                  the pvalues distributions and the number of edges
+                  the network will have depending on the chosen fdr threshold."),
+        
+        shiny::plotOutput(ns("fdr_choice"), height = "600px"),
+        
+        shiny::hr(),
+        
+        shiny::numericInput(ns("fdr"), value = 0.05, min = 0, max = 1,
+                            label = "FDR threshold :"),
+        
+        footer = list(
+          shiny::actionButton(ns("fdr_chosen"), "OK"))
+      ))
+      
+      print("after modal")
+      
+    }
+    
+    
+  })
+  
+  
+#   ____________________________________________________________________________
+#   event reactive close modal                                              ####
+
+  
+  shiny::observeEvent(input$fdr_chosen, {
+    message("Closing modal")
+    shiny::removeModal()
+    
+    r$networks[[input$input_deg_genes_net]]$graph <- 
+      network_from_tests(r$edge_tests$links, fdr = input$fdr)
+    
+    print("net created")
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators, r$gene_info)
-
+    
     membership <- data$nodes$community
     names(membership) <- data$nodes$id
     
@@ -589,8 +710,17 @@ mod_network_inference_server <- function(input, output, session, r){
       input$input_conditions_net
     
     r$current_network <- input$input_deg_genes_net
-    
   })
+  
+#   ____________________________________________________________________________
+#   fdr_graphics                                                            ####
+
+    output$fdr_choice <- shiny::renderPlot({
+      shiny::req(r$edge_tests)
+      
+      gridExtra::grid.arrange(r$edge_tests$pvalues_distributions + ggplot2::xlim(0,0.1),
+                              r$edge_tests$fdr_nEdges_curve, ncol = 1)
+    })
   
   
 #   ____________________________________________________________________________
@@ -606,8 +736,13 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
     shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
     
-    draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
-                 edges = r$networks[[input$input_deg_genes_net]]$edges)
+    if(!input$test_edges)
+      draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+                   edges = r$networks[[input$input_deg_genes_net]]$edges)
+    else
+      draw_discarded_edges(r$edge_tests$links, 
+                           list(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+                                edges = r$networks[[input$input_deg_genes_net]]$edges))
   })
  
 }
