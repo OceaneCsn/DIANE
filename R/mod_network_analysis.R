@@ -209,10 +209,7 @@ mod_network_analysis_server <- function(input, output, session, r){
                  r$networks[[r$current_network]]$nodes$id)) > 0){
       data <- r$grouped_normalized_counts
     }
-    
-    print(data)
-    print(c(input$click))
-    print(r$networks[[r$current_network]]$conditions)
+
     
     draw_expression_levels(data, genes = c(input$click), 
                            conds = r$networks[[r$current_network]]$conditions)

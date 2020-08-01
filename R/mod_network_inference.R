@@ -400,6 +400,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$inference_summary <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
@@ -427,6 +428,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$thr_summary <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
@@ -503,6 +505,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$n_edges_choice <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
@@ -600,7 +603,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
     
-    
+    r$inference_done
   })
   
   shiny::observeEvent((input$thr_btn), {
@@ -648,7 +651,6 @@ mod_network_inference_server <- function(input, output, session, r){
                         nTrees = input$n_trees, 
                         verbose = TRUE)
       
-      print("tests done")
 
       shiny::showModal(shiny::modalDialog(
         title = "Edge testing procedure complete",
@@ -726,6 +728,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$net_preview <- visNetwork::renderVisNetwork({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
