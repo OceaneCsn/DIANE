@@ -35,13 +35,15 @@ reference:
   
 - title: Gene ontologies and annotations
 - contents:
-  - enrich_go
+  - starts_with("enrich_go")
   - starts_with("convert_from")
   - get_gene_information
+  
  
 - title: Gene regulatory network inference
 - contents:
   - starts_with("network_")
+  - test_edges
   - group_regressors
   - describe_node
  

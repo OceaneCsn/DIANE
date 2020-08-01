@@ -2,9 +2,6 @@
 
 # TODO markdown dea, coseq, glm
 
-# TODO glm
-
-# TODO gene labels et ontologies
 
 #' normalisation UI Function
 #'

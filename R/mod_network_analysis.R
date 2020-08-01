@@ -21,9 +21,6 @@ mod_network_analysis_ui <- function(id){
       position = 'top-left',
       margins = c(70, 1200)
     ),
-    # TODO group selection in network
-    
-    # TODO gene zoom in network
     
     #   ____________________________________________________________________________
     #   network view                                                            ####
@@ -180,6 +177,10 @@ mod_network_analysis_server <- function(input, output, session, r){
       
       shiny::hr(),
       
+      shiny::plotOutput(ns("node_profile")),
+      
+      shiny::hr(),
+      
       shiny::h3("Regulators :"),
       
       DT::dataTableOutput(ns("node_regulators")),
@@ -193,6 +194,25 @@ mod_network_analysis_server <- function(input, output, session, r){
       easyClose = TRUE,
       footer = NULL
     ))
+  })
+  
+  output$node_profile <- shiny::renderPlot({
+    
+    if(r$splicing_aware) {
+      data <- r$aggregated_normalized_counts
+    }
+    else{
+      data <- r$normalized_counts
+    }
+    
+    if(sum(grepl("mean_", 
+                 r$networks[[r$current_network]]$nodes$id)) > 0){
+      data <- r$grouped_normalized_counts
+    }
+
+    
+    draw_expression_levels(data, genes = c(input$click), 
+                           conds = r$networks[[r$current_network]]$conditions)
   })
   
   output$node_regulators <- DT::renderDataTable({

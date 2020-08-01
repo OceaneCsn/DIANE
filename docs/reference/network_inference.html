@@ -153,7 +153,9 @@ across all targets, giving a global regulatory links ranking stored in the resul
   <span class='no'>targets</span>,
   <span class='kw'>nTrees</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
   <span class='kw'>nCores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>()), <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>,
-    <span class='fl'>1</span>))
+    <span class='fl'>1</span>)),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>importance_metric</span> <span class='kw'>=</span> <span class='st'>"node_purity"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,6 +185,18 @@ across all targets, giving a global regulatory links ranking stored in the resul
       <th>nCores</th>
       <td><p>Number of CPU cores to use during the procedure. Default is the detected number of cores
 minus one.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE</p></td>
+    </tr>
+    <tr>
+      <th>importance_metric</th>
+      <td><p>character being either node_purity or MSEincrease_oob. This is the importance type
+computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
+the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
+to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
+ regulators and to over-fitting.</p></td>
     </tr>
     </table>
 

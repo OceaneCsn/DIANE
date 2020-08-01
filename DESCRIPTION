@@ -43,7 +43,10 @@ Imports:
     ade4,
     ggraph,
     GO.db,
-    ggridges
+    ggridges,
+    pkgload,
+    randomForest,
+    rfPermute
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

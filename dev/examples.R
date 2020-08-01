@@ -3,6 +3,7 @@ library(DIANE)
 
 data("abiotic_stresses")
 data("gene_annotations")
+data("regulators_per_organism")
 
 ####### go analysis
 
@@ -15,6 +16,11 @@ go <- enrich_go(genes, background)
 #DIANE::draw_enrich_go(go, max_go = 30)
 
 
+
+draw_heatmap(data = abiotic_stresses$normalized_counts)
+
+
+heatmap(abiotic_stresses$heat_DEGs_regulatory_links, )
 
 
 library(ggraph)
@@ -67,11 +73,12 @@ r$correlated_regressors_graph
 mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
                                  regressors = r$grouped_regressors)
 
-network <- DIANE::network_thresholding(mat, n_edges = 500)
+network <- DIANE::network_thresholding(mat, n_edges = 150)
 
 d_GENIE3 <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 
-DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges)
+library(visNetwork)
+DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges) %>% visNodes(font = list("size" = 0) )
 DIANE::draw_network_degrees(d_GENIE3$nodes, network)
 
 
@@ -110,31 +117,78 @@ ig <- igraph::graph_from_data_frame(net_data$edges, directed=TRUE, vertices = ne
 igraph::plot.igraph(ig, vertex.size = 2, vertex.cex = 2)
 RCy3::createNetworkFromIgraph(ig,"myIgraph")
 
+########## sig genie3 tests and abiotic stresses values for mat and tests and grouped
+library(DIANE)
 
-# edgeToJSON_igraph = function(graph){
-#   df <- igraph::get.data.frame(graph,what="both")
-#   vertices <- df$vertices
-#   edges <- df$edges
-#   # if the vertex names are unspecified, number them
-#   if(is.null(df$vertices$name)){
-#     vertices$name = as.character(sort(unique(unlist(edges))))
-#   }
-#   imports <- NULL
-#   # get all attributes if defined in vertices of the igraph
-#   output <- apply(
-#     vertices,MARGIN=1,function(vtx){
-#       name <- vtx[["name"]]
-#       if(any(edges[,1]==name)) imports = as.vector(edges[edges[,1]==name,2])
-#       c(vtx,imports=list(imports))
-#     }
-#   )
-#   output <- unname(output)
-#   rjson::toJSON(output)
-# }
-# 
-# 
-# graph.json <- edgeToJSON_igraph(ig)
-# write(graph.json, file = "~/Documents/graph.json")
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
 
-######### decribe node
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, 
+                        regulators_per_organism$`Arabidopsis thaliana`)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+
+r <- DIANE::group_regressors(data, genes, regressors)
+
+
+
+mat <- DIANE::network_inference(r$counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE)
+
+library(tictoc)
+tic("test edges")
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.03,
+                         nGenes = length(r$grouped_genes), 
+                         nRegulators = length(r$grouped_regressors), 
+                         nTrees = 1000, verbose = TRUE)
+toc()
+
+# abiotic_stresses$heat_edge_tests = res
+# abiotic_stresses$heat_DEGs_regulatory_links <- mat
+
+########## verif de la correlation des fdrs d'un run à l'autre des tests
+
+links0 <- abiotic_stresses$heat_edge_tests$links
+links <- res$links
+
+links$pair <- paste(links$regulatoryGene, links$targetGene)
+links0$pair <- paste(links0$regulatoryGene, links0$targetGene)
+
+common <- intersect(links$pair, links0$pair)
+commonlinks <- links[links$pair %in% common,]
+
+plot(commonlinks$fdr, links0[match(commonlinks$pair, links0$pair),]$fdr)
+cor(commonlinks$fdr, links0[match(commonlinks$pair, links0$pair),]$fdr)
+
+
+res$fdr_nEdges_curve
+
+res$pvalues_distributions + xlim(0,0.1)
+
+net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+
+
+net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+
+DIANE::draw_network(net_data$nodes, net_data$edges)
+
+abiotic_stresses$heat_grouped_data <- r
+
+
+
+# mat2 <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
+#                                 regressors = r$grouped_regressors, 
+#                                 verbose = TRUE)
+
+# res <- data.frame(density = seq(0.001, 0.1, length.out = 20),
+#                   nEdges = sapply(seq(0.001, 0.1, length.out = 20), 
+#                                   get_nEdges, nGenes, nRegulators))
+# ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) + ggtitle()
 

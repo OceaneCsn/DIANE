@@ -46,8 +46,6 @@ mod_cluster_exploration_ui <- function(id) {
       )
     ),
     
-    # TODO download data from one cluster
-    
     # TODO true reset when toggle demo data
     #   ____________________________________________________________________________
     #   Clusters characteristics                                                ####

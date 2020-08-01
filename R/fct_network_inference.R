@@ -17,6 +17,12 @@
 #' @param nTrees Number of trees by Random Forest
 #' @param nCores Number of CPU cores to use during the procedure. Default is the detected number of cores
 #' minus one.
+#' @param verbose If set to TRUE, a feedback on the progress of the calculations is given. Default: TRUE
+#' @param importance_metric character being either node_purity or MSEincrease_oob. This is the importance type
+#' computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
+#' the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
+#' to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
+#'  regulators and to over-fitting.
 #'
 #' @return matrix object
 #' @export
@@ -35,7 +41,9 @@
 #' }
 
 network_inference <- function(normalized.count, conds, regressors, targets, nTrees=1000, 
-                              nCores=ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores()-1, 1))){
+                              nCores = ifelse(is.na(parallel::detectCores()), 
+                                              1, max(parallel::detectCores() - 1, 1)),
+                              verbose = TRUE, importance_metric = "node_purity"){
 
   conditions <- colnames(normalized.count)[str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
   
@@ -48,6 +56,11 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
     stop("The required target genes were not found in the expression data")
   }
   
+  if (!importance_metric %in% c("node_purity", "MSEincrease_oob")) {
+    stop("The importance_metric argument must be either node_purity or 
+         MSEincrease_oob")
+  }
+  
   normalized.count <- normalized.count[,conditions]
   
   regressors <- intersect(rownames(normalized.count), regressors)
@@ -56,9 +69,12 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
     stop("No regressors were found among the targets")
   }
   
-  mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
-                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = 2, verbose = FALSE)
-  
+  if (importance_metric == "node_purity")
+    mat <- GENIE3::GENIE3(as.matrix(normalized.count), regulators = regressors, targets = targets, 
+                treeMethod = "RF", K = "sqrt", nTrees = nTrees, nCores = nCores, verbose = verbose)
+  if (importance_metric == "MSEincrease_oob")
+    mat <- GENIE3OOB(as.matrix(normalized.count), regulators = regressors, targets = targets,
+                     nTrees = nTrees, nCores = nCores, verbose = verbose)
   return(mat)
 }
 

@@ -21,8 +21,12 @@ A named list with the following elements:
  differentially expressed between control and heat stress, 
  This membership was obtained after running coseq expression based clustering on those genes, 
  on all the dataset conditions, and resulted in 9 clusters.}
- \item{heat_DEGs_regulatory_links}{Matrix of size N_regulatprs*692 genes. Those gens are the ones detected as 
- differentially expressed between control and heat stress. It was inferred by the GENIE3 function.}
+ \item{heat_DEGs_regulatory_links}{Matrix of size 25*654 genes. The matrix contains the importances of the 25 regulators
+ on the 654 genes, and was infered with the \code{network_inference} method. Those gens are the ones detected as 
+ differentially expressed between control and heat stress, and the regulators among them were grouped when correlated over 0.9.}
+ \item{heat_edge_tests}{Statistical testing from the \code{edge_testing} function, applied to the heat_DEGs_regulatory_links element.
+ It contains the pvalue for each edge of a prior network built on a desired density.}
+ 
 }
 }
 \source{
