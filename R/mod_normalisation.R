@@ -364,7 +364,7 @@ mod_normalisation_server <- function(input, output, session, r) {
       ),
       shiny::hr(),
       shiny::downloadButton(
-        ns("report"), "Generate report")
+        ns("report"), "Generate html report")
     ))
     )
     
