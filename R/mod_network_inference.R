@@ -674,8 +674,6 @@ mod_network_inference_server <- function(input, output, session, r){
           shiny::actionButton(ns("fdr_chosen"), "OK"))
       ))
       
-      print("after modal")
-      
     }
     
     
@@ -692,8 +690,6 @@ mod_network_inference_server <- function(input, output, session, r){
     
     r$networks[[input$input_deg_genes_net]]$graph <- 
       network_from_tests(r$edge_tests$links, fdr = input$fdr)
-    
-    print("net created")
     
     data <- network_data(r$networks[[input$input_deg_genes_net]]$graph, 
                          r$regulators, r$gene_info)
@@ -739,10 +735,12 @@ mod_network_inference_server <- function(input, output, session, r){
     if(!input$test_edges)
       draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
                    edges = r$networks[[input$input_deg_genes_net]]$edges)
-    else
+    else{
+      shiny::req(r$edge_tests$links)
       draw_discarded_edges(r$edge_tests$links, 
                            list(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
                                 edges = r$networks[[input$input_deg_genes_net]]$edges))
+    }
   })
  
 }

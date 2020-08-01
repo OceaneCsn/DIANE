@@ -17,6 +17,11 @@ go <- enrich_go(genes, background)
 
 
 
+draw_heatmap(data = abiotic_stresses$normalized_counts)
+
+
+heatmap(abiotic_stresses$heat_DEGs_regulatory_links, )
+
 
 library(ggraph)
 
@@ -68,11 +73,12 @@ r$correlated_regressors_graph
 mat <- DIANE::network_inference(r$counts, conds = abiotic_stresses$conditions, targets = r$grouped_genes,
                                  regressors = r$grouped_regressors)
 
-network <- DIANE::network_thresholding(mat, n_edges = 500)
+network <- DIANE::network_thresholding(mat, n_edges = 150)
 
 d_GENIE3 <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 
-DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges)
+library(visNetwork)
+DIANE::draw_network(d_GENIE3$nodes, d_GENIE3$edges) %>% visNodes(font = list("size" = 0) )
 DIANE::draw_network_degrees(d_GENIE3$nodes, network)
 
 
