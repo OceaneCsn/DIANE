@@ -118,7 +118,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
       legend.text.align = 1,
       axis.title = ggplot2::element_text(size = 24)
     )
-  g
+  g 
 }
 
 #' Multi-dimensional scaling plot
@@ -356,6 +356,6 @@ draw_expression_levels <-
         legend.text = element_text(size = 18),
         axis.text.y = element_text(size = 22, angle = 320),
         axis.title.y = element_text(size = 20),
-        axis.text.x = element_text(size = 19, angle = 320)
+        axis.text.x = element_text(size = 19, angle = 20)
       ) + xlab("") + ylab("Normalized counts")
   }

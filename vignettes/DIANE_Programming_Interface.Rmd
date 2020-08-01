@@ -30,7 +30,7 @@ We present in this document how to use those functions on our demo data.
 
 # Input data
 
-The DIANE companion dataset is meant to illustrate its functionnality and provide an explicit example of the expected input data.
+The DIANE companion dataset is meant to illustrate its functionality and provide an explicit example of the expected input data.
 
 
 The chosen dataset contians the transcriptome of Arabidopsis thaliana plants exposed to global warming 

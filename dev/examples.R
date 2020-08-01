@@ -16,7 +16,7 @@ go <- enrich_go(genes, background)
 #DIANE::draw_enrich_go(go, max_go = 30)
 
 
-
+library(plotly)
 draw_heatmap(data = abiotic_stresses$normalized_counts)
 
 
@@ -27,7 +27,7 @@ library(ggraph)
 
 ########### tests ACP
 
-draw_pca(normalized_counts)
+draw_PCA(abiotic_stresses$normalized_counts)
 
 
 ## demo 
@@ -41,6 +41,10 @@ data("abiotic_stresses")
 data("regulators_per_organism")
 data("gene_annotations")
 
+
+genes <- sample(abiotic_stresses$heat_DEGs, 4)
+ggplotly(draw_expression_levels(abiotic_stresses$normalized_counts, genes = genes))%>%
+  layout(legend = list(font = list(size = 15)))
 
 conditions <- stringr::str_split_fixed(colnames(raw_counts), '_', 2)[,1]
 
