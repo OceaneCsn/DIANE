@@ -128,10 +128,10 @@ draw_DEGs <- function(tags,
       y = -log10(FDR),
       x = logFC,
       color = isDE
-    )) + ggplot2::ggtitle("Vulcano plot")
+    )) + ggplot2::ggtitle("Volcano plot")
   g <-
-    g + ggplot2::geom_point(size = 1.2) + 
-    ggplot2::scale_color_manual(name = "Is differentially expressed", values = c("#999999", "#25BA40"))
+    g + ggplot2::geom_point(size = 1.5, alpha = 0.75) + 
+    ggplot2::scale_color_manual(name = "DEG", values = c("#999999", "#25BA40"))
   g + ggplot2::theme(
     axis.text.x = ggplot2::element_text(size = 18),
     axis.text.y = ggplot2::element_text(size = 18),

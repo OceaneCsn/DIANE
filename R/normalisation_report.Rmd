@@ -18,7 +18,7 @@ library(knitr)
 ```
 
 
-# Dashboard for the Inference and Analysis of Networks from Expression data <img src="favicon.ico" align="right" alt="" width="120" />
+# Dashboard for the Inference and Analysis of Networks from Expression data <img src="favicon.ico" align="right" alt="" width="160" />
 
 ---
 

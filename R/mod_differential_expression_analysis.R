@@ -124,12 +124,12 @@ mod_differential_expression_analysis_ui <- function(id) {
             inputId = ns("MA_vulcano_switch"),
             value = TRUE,
             onLabel = "MA",
-            offLabel = "Vulcano",
+            offLabel = "Volcano",
             onStatus = 'success'
           ),
           
           
-          shiny::plotOutput(ns("ma_vulcano"), height = "700px")
+          plotly::plotlyOutput(ns("ma_vulcano"), height = "700px")
           
         ),
         shiny::tabPanel(
@@ -564,15 +564,15 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$ma_vulcano <- shiny::renderPlot({
+    output$ma_vulcano <- plotly::renderPlotly({
       shiny::req(r$top_tags)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      draw_DEGs(
+      plotly::ggplotly(draw_DEGs(
         tags = r_dea$tags,
         fdr = input$dea_fdr,
         lfc = input$dea_lfc,
         MA = input$MA_vulcano_switch
-      )
+      ))
     })
     
     
