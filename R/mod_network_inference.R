@@ -463,7 +463,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     shinyWidgets::sliderTextInput(
       inputId = ns("n_cores"),
-      label = "Number of cores available for 
+      label = "Number of cores for 
                             multithreaded inference :",
       choices = seq(1, cpus),
       grid = TRUE,

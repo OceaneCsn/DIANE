@@ -90,7 +90,7 @@ mod_clustering_ui <- function(id) {
         
         shiny::hr(),
         shiny::uiOutput(ns("coseq_summary")),
-        shiny::hr(),
+        
         
         shiny::uiOutput(ns("dl_bttns"))
         
@@ -314,6 +314,7 @@ mod_clustering_server <- function(input, output, session, r) {
     shiny::req(r$clusterings)
     shiny::req(r$clusterings[[input_genes_conditions()]]$model)
     tagList(
+      shiny::hr(),
       shiny::downloadButton(
           ns("report"), "Generate html report")
       )

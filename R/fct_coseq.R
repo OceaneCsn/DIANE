@@ -170,7 +170,7 @@ draw_profiles <-
         outlier.alpha = 0.1
       ) +
       ggplot2::geom_jitter(width = 0.1, alpha = 0.0015) +
-      ggplot2::ggtitle("Expression profiles of the clusters")
+      ggplot2::ggtitle("Normalized expression profiles")
     
     g <-
       g + ggplot2::theme(
@@ -185,7 +185,7 @@ draw_profiles <-
           colour = "grey50"
         ),
         legend.text.align = 1,
-        axis.title = ggplot2::element_text(size = 24)
+        axis.title = ggplot2::element_text(size = 19)
       ) + ggplot2::xlab("") + ggplot2::ylab(ylab)
     g
   }
