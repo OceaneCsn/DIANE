@@ -25,15 +25,13 @@ community_structure <- function(graph) {
 #' DIANE::draw_network_degrees(data$nodes, network)
 draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
-  TFs <- nodes[nodes$gene_type == "Regulator" | nodes$gene_type == "Grouped Regulators", "id"]
-  
-  print(TFs)
+  TFs <- nodes[nodes$gene_type == "Regulator" | 
+                 nodes$gene_type == "Grouped Regulators", "id"]
   
   degree_in_targets <-
     igraph::degree(graph, mode = 'in', v = targets)
   degree_in_tfs <- igraph::degree(graph, mode = "in", v = TFs)
   degree_out_tfs <- igraph::degree(graph, mode = "out", v = TFs)
-  print(degree_out_tfs)
   betweenness <- igraph::betweenness(graph, weights = NA, v = TFs)
   deg_targ = data.frame(degree_in_targets)
   Node_nw_st <-

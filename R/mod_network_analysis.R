@@ -57,7 +57,19 @@ mod_network_analysis_ui <- function(id){
       
       shiny::tabPanel(
         title = "Degree-ranked gene list",
-        DT::dataTableOutput(ns("gene_ranking"))
+        DT::dataTableOutput(ns("gene_ranking")),
+                            shinyWidgets::downloadBttn(
+                              outputId = ns("download_node_table"),
+                              label = "Download nodes as csv table",
+                              style = "bordered",
+                              color = "success"
+                            ),
+                            shinyWidgets::downloadBttn(
+                              outputId = ns("download_edges_table"),
+                              label = "Download edges as csv table",
+                              style = "bordered",
+                              color = "success"
+                            )
         
       ),
       shiny::tabPanel(
@@ -548,6 +560,32 @@ mod_network_analysis_server <- function(input, output, session, r){
     },
     content = function(file) {
       write.csv(r_mod$go, file = file, quote = FALSE)
+    }
+  )
+  
+  ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+  ### download nodes                                                          ####
+  
+  
+  output$download_node_table <- shiny::downloadHandler(
+    filename = function() {
+      paste("network_nodes.csv")
+    },
+    content = function(file) {
+      write.csv(r$networks[[r$current_network]]$nodes, file = file, quote = FALSE)
+    }
+  )
+  
+  ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
+  ### download edges                                                          ####
+  
+  
+  output$download_edges_table <- shiny::downloadHandler(
+    filename = function() {
+      paste("network_edges.csv")
+    },
+    content = function(file) {
+      write.csv(r$networks[[r$current_network]]$edges, file = file, quote = FALSE)
     }
   )
   
