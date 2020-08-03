@@ -179,10 +179,10 @@ mod_normalisation_ui <- function(id) {
           shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
         ),
         shiny::tabPanel(title = "PCA",
-                        shiny::plotOutput(ns('pca_plot'), height = "700px")),
+                        shiny::plotOutput(ns('pca_plot'), height = "800px")),
         
         shiny::tabPanel(title = "MDS plot",
-                        shiny::plotOutput(ns('mds_plot'), height = "600px")),
+                        shiny::plotOutput(ns('mds_plot'), height = "800px")),
         
         shiny::tabPanel(title = "Summary",
                         shiny::verbatimTextOutput(ns("tcc_summary")))
