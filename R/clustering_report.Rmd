@@ -71,6 +71,3 @@ draw_profiles(
     )
 ```
 
-## GO enrichment analysis
-
-If you performed GO enrichment analysis, you can directly download the result dataframe from the GO analysis in the application.
