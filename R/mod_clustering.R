@@ -339,7 +339,7 @@ mod_clustering_server <- function(input, output, session, r) {
       
       # Set up parameters to pass to Rmd document
       params <- list(r = r$clusterings[[input_genes_conditions()]],
-                     input = input, normalized_counts = r$normalized_counts)
+                     input = input)
       
       # Knit the document, passing in the `params` list, and eval it in a
       # child of the global environment (this isolates the code in the document

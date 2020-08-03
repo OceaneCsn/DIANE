@@ -16,6 +16,8 @@ params:
 r <- params$r
 input <- params$input
 library(knitr)
+library(igraph)
+library(visNetwork)
 ```
 
 
@@ -35,20 +37,31 @@ It contains the main settings and results for the network inference tab of the a
 
 Input genes for clustering (deferentially expressed genes) :
 ```{r}
-r$genes
+paste(input$input_deg_genes_net, ",", length(r$DEGs[[input$input_deg_genes_net]]) ,"genes")
 ```
 
 
 Conditions used for the inference :
 ```{r}
-r$conditions
+input$input_conditions_net
+```
+
+Were genes aggregated to remove splicing awarness? (sum of all transcripts variants for a gene) 
+```{r}
+r$splicing_aware
 ```
 
 ## Regulators
 
 How many regulators were found among the input genes :
 ```{r}
-
+if(r$splicing_aware) {
+  targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+}else {
+  targets <- r$DEGs[[input$input_deg_genes_net]]
+}
+regressors = intersect(targets, r$regulators)
+length(regressors)
 ```
 
 
@@ -56,70 +69,142 @@ How many regulators were found among the input genes :
 ## Grouping correlated regulators
 
 
-The regulators that were correlated above this threshold were grouped :
+The regulators that were correlated above this threshold (spearman correlation) were grouped :
 ```{r}
-r$model
+input$cor_thr/100.0
 ```
 
 The grouping was performed using the modules of this correlation network :
-```{r}
-
-```
-
-
-Before grouping :
-```{r}
-
-```
-
-After grouping :
-```{r}
+```{r, fig.width=10, fig.height=10}
+if(!is.null(r$cor_network)){
+    nodes <- r$cor_network$nodes
+  nodes$label <- r$gene_info[match(nodes$id, rownames(r$gene_info)), "label"]
+  
+  visNetwork(nodes, r$cor_network$edges)%>% 
+    visNodes(font = list("size" = 35))
+}
 
 ```
 
 
 ## Inference
 
+Number of genes and regulators after grouping and potential splice variants agregation:
+```{r}
+paste("total genes :", ncol(r$networks[[input$input_deg_genes_net]]$mat), "regulators :", nrow(r$networks[[input$input_deg_genes_net]]$mat))
+```
+
+
 Number of trees used for the inference :
 ```{r}
-
+input$n_trees
 ```
 
 
 Importance metric used for the inference : 
 ```{r}
-
+if(input$importance_metric){
+  importance = "MSEincrease_oob"
+}else
+  importance = "node_purity"
+importance
 ```
 
 
-## Fully connected weighted networj thresholding
+## Fully connected weighted network thresholding
 
 
 Selected network density and corresponding number of edges :
 ```{r}
-
+paste("density:",input$density, ",", input$n_edges, "edges")
 ```
 
 
 Was statistical testing performed:
 ```{r}
-
+input$test_edges
 ```
 
 
 # Results
 
+## Network topology
+
+Aperçu du réseau :
+```{r, fig.width=10, fig.height=10}
+if(!input$test_edges){
+  draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+               edges = r$networks[[input$input_deg_genes_net]]$edges)
+}else{
+  draw_discarded_edges(r$edge_tests$links, 
+                       list(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+                            edges = r$networks[[input$input_deg_genes_net]]$edges))
+}
+```
+
 
 Number of nodes and number of edges of the network :
 ```{r}
-
+graph <- r$networks[[input$input_deg_genes_net]]$graph
+paste(length(V(graph)), "nodes,", length(E(graph)), "edges")
 ```
 
-Number of identified modules :
-```{r, fig.width=10, fig.height=10}
 
+Network degrees and betweenness distributions:
+```{r}
+draw_network_degrees(nodes = r$networks[[r$current_network]]$nodes,
+                     graph = r$networks[[r$current_network]]$graph)
+```
+
+## Highly connected genes
+
+Here are the top 30 most connected genes of the network. The full table can be downloaded directly from the app as a csv file.
+
+```{r}
+data <- r$networks[[r$current_network]]$nodes
+    
+columns <- c("label", "gene_type", "degree", "community")
+if (!is.null(r$gene_info)) {
+  columns <- unique(c(colnames(r$gene_info), columns))
+}
+data <- data[order(-data$degree),]
+knitr::kable(head(data[, columns], n = 30))
+```
+
+
+## Network modules
+
+
+Number of identified modules :
+```{r}
+length(unique(r$networks[[r$current_network]]$membership))
+```
+
+Modules view :
+```{r}
+nodes <- r$networks[[r$current_network]]$nodes
+    
+nodes$group <- nodes$community
+draw_network(nodes = nodes,
+             edges = r$networks[[r$current_network]]$edges)
 ```
 
 Profiles of the modules :
 
+```{r, fig.width=10, fig.height=10}
+if(r$splicing_aware) {
+  data <- r$aggregated_normalized_counts
+}else{
+  data <- r$normalized_counts
+}
+
+if(sum(grepl("mean_", 
+  r$networks[[r$current_network]]$nodes$id)) > 0){
+  data <- r$grouped_normalized_counts
+}
+
+draw_profiles(data = data,
+              membership = r$networks[[r$current_network]]$membership,
+              conds = r$networks[[r$current_network]]$conditions)
+```
 

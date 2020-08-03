@@ -29,7 +29,7 @@ eacg gene, either a regulator or a target gene.
 \dontrun{
 data("abiotic_stresses")
 data("regulators_per_organism")
-
+genes <- get_locus(abiotic_stresses$heat_DEGs)
 # mat was inferred using the function network_inference
 mat <- abiotic_stresses$heat_DEGs_regulatory_links
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))

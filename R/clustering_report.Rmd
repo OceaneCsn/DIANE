@@ -9,7 +9,6 @@ output:
 params:
   r: NA
   input: NA
-  normalized_counts: NA
 ---
   
 ```{r, include=FALSE}
@@ -65,7 +64,7 @@ draw_coseq_run(r$model, plot = "barplots")
 Normalized expression profiles of the clusters:
 ```{r, fig.width=10, fig.height=10}
 draw_profiles(
-      data = params$normalized_counts,
+      data = r$normalized_counts,
       conds = r$conditions,
       membership = r$membership
     )

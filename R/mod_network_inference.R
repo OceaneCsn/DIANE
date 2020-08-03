@@ -195,13 +195,14 @@ shiny::hr(),
                              ),
                       col_2(shiny::uiOutput(ns("n_edges_choice")))),
       
-      shiny::fluidRow(col_6(shinyWidgets::switchInput(ns("test_edges"),
+      shiny::fluidRow(col_4(shinyWidgets::switchInput(ns("test_edges"),
                                 label = "Edges statistical testing",
                                 onLabel = "ON (more computation)",
                                 offLabel = "OFF (density-based hard thresholding)", value = FALSE, 
                                 size = "normal", onStatus = "success", 
                                 offStatus = "primary", width = "100%")),
-                      col_6(shiny::uiOutput(ns("btn_thr_label")))),
+                      col_4(shiny::uiOutput(ns("btn_thr_label"))),
+                      col_4(shiny::uiOutput(ns("dl_bttns")))),
 
        
       
@@ -584,6 +585,8 @@ mod_network_inference_server <- function(input, output, session, r){
     else
       importance = "node_purity"
     
+
+    
     mat <- network_inference(normalized.count = data, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = regressors,
@@ -603,7 +606,9 @@ mod_network_inference_server <- function(input, output, session, r){
     
     r$networks[[input$input_deg_genes_net]]$mat <- mat
     
-    r$inference_done
+    # resets old network if one was already created
+    r$networks[[input$input_deg_genes_net]]$graph <- NULL
+    
   })
   
   shiny::observeEvent((input$thr_btn), {
@@ -745,8 +750,60 @@ mod_network_inference_server <- function(input, output, session, r){
                                 edges = r$networks[[input$input_deg_genes_net]]$edges))
     }
   })
+  
+  #   ____________________________________________________________________________
+  #   dl button                                                               ####
+  
+  
+  output$dl_bttns <- shiny::renderUI({
+    shiny::req(r$normalized_counts)
+    shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
+    tagList(
+      shiny::downloadButton(
+        ns("report"), "Generate html report")
+    )
+  })
+  
+  
+  
+  
+  #   ____________________________________________________________________________
+  #   report                                                                  ####
+  
+  output$report <- shiny::downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "network_inference_report.html",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "inference_report.Rmd")
+      tempImage <- file.path(tempdir(), "favicon.ico")
+      file.copy("./R/inference_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      params <- list(r = r, input = input)
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+    }
+  )
+  
  
 }
+
     
 ## To be copied in the UI
 # mod_network_inference_ui("network_inference_ui_1")
