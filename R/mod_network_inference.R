@@ -254,7 +254,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     shinyWidgets::checkboxGroupButtons(
       inputId = ns('input_conditions_net'),
-      label = "Conditions to used to infer network edges :",
+      label = "Conditions used to infer network edges :",
       choices = unique(r$conditions),
       justified = TRUE,
       checkIcon = list(yes = shiny::icon("ok",

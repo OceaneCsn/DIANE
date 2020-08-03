@@ -27,11 +27,13 @@ draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
   TFs <- nodes[nodes$gene_type == "Regulator" | nodes$gene_type == "Grouped Regulators", "id"]
   
+  print(TFs)
   
   degree_in_targets <-
     igraph::degree(graph, mode = 'in', v = targets)
   degree_in_tfs <- igraph::degree(graph, mode = "in", v = TFs)
   degree_out_tfs <- igraph::degree(graph, mode = "out", v = TFs)
+  print(degree_out_tfs)
   betweenness <- igraph::betweenness(graph, weights = NA, v = TFs)
   deg_targ = data.frame(degree_in_targets)
   Node_nw_st <-
@@ -66,7 +68,7 @@ draw_network_degrees <- function(nodes, graph) {
     ggplot2::ggplot(data = Node_nw_st, ggplot2::aes(x = degree_out_tfs)) +
     ggplot2::geom_histogram(fill = "#69b322",
                             color = "#e9ecef",
-                            alpha = 0.7) + ggplot2::xlim(0, 10) +
+                            alpha = 0.7) + 
     ggplot2::ggtitle("Out-Degree distribution of regulators") +
     ggplot2::theme(
       plot.title = ggplot2::element_text(size = 16),
