@@ -183,7 +183,7 @@ mod_cluster_exploration_server <-
       # to reset the go analysis if new cluster
       r_clust$go <- NULL
       shiny::req(input$cluster_to_explore)
-      ggplotly(draw_profiles(
+      plotly::ggplotly(draw_profiles(
         data = r$normalized_counts,
         membership = membership(),
         k = input$cluster_to_explore,
