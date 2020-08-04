@@ -179,10 +179,10 @@ mod_normalisation_ui <- function(id) {
           shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
         ),
         shiny::tabPanel(title = "PCA",
-                        shiny::plotOutput(ns('pca_plot'), height = "700px")),
+                        shiny::plotOutput(ns('pca_plot'), height = "800px")),
         
         shiny::tabPanel(title = "MDS plot",
-                        shiny::plotOutput(ns('mds_plot'), height = "600px")),
+                        shiny::plotOutput(ns('mds_plot'), height = "800px")),
         
         shiny::tabPanel(title = "Summary",
                         shiny::verbatimTextOutput(ns("tcc_summary")))
@@ -190,6 +190,7 @@ mod_normalisation_ui <- function(id) {
       
     ),
     shiny::br()
+    
   )
 }
 
@@ -322,7 +323,8 @@ mod_normalisation_server <- function(input, output, session, r) {
         d <- r$normalized_counts
       }
     }
-    draw_distributions(d, boxplot = input$violin_preview)
+    draw_distributions(d, boxplot = input$violin_preview)+ 
+      ggplot2::ggtitle("Per-condition expression ditributions")
   })
   
   
@@ -351,19 +353,18 @@ mod_normalisation_server <- function(input, output, session, r) {
     shiny::req(r$normalized_counts)
     tagList(
     shiny::fluidRow(col_12(
-      shinyWidgets::downloadBttn(
-        outputId = ns("download_normalized_counts_csv"),
-        label = "Download normalized counts as .csv",
-        style = "bordered",
-        color = "success"
+      shiny::downloadButton(
+        ns("download_normalized_counts_csv"),
+        label = "Download normalized counts as .csv"
       ),
-      
-      shinyWidgets::downloadBttn(
-        outputId = ns("download_normalized_counts_RData"),
-        label = "Download normalized counts as .RData",
-        style = "bordered",
-        color = "success"
-      )
+      shiny::hr(),
+      shiny::downloadButton(
+        ns("download_normalized_counts_RData"),
+        label = "Download normalized counts as .RData"
+      ),
+      shiny::hr(),
+      shiny::downloadButton(
+        ns("report"), "Generate html report")
     ))
     )
     
@@ -384,6 +385,35 @@ mod_normalisation_server <- function(input, output, session, r) {
     },
     content = function(file) {
       write.csv(round(r$normalized_counts, 2), file = file, quote = FALSE)
+    }
+  )
+  
+  
+#   ____________________________________________________________________________
+#   report                                                                  ####
+
+  output$report <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "normalisation_report.html",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "normalisation_report.Rmd")
+      tempImage <- file.path(tempdir(), "favicon.ico")
+      file.copy("./R/normalisation_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      params <- list(r = r, input = input)
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
     }
   )
 }

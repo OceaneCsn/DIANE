@@ -89,7 +89,10 @@ mod_clustering_ui <- function(id) {
         
         
         shiny::hr(),
-        shiny::uiOutput(ns("coseq_summary"))
+        shiny::uiOutput(ns("coseq_summary")),
+        
+        
+        shiny::uiOutput(ns("dl_bttns"))
         
       )
     ),
@@ -295,10 +298,58 @@ mod_clustering_server <- function(input, output, session, r) {
       run$membership
     r$clusterings[[input_genes_conditions()]]$conditions <-
       input$input_conditions
+    r$clusterings[[input_genes_conditions()]]$genes <- 
+      input_genes_conditions()
     r$current_comparison <- input_genes_conditions()
     
   })
+  
+  
+#   ____________________________________________________________________________
+#   dl button                                                               ####
 
+  
+  output$dl_bttns <- shiny::renderUI({
+    shiny::req(r$DEGs)
+    shiny::req(r$clusterings)
+    shiny::req(r$clusterings[[input_genes_conditions()]]$model)
+    tagList(
+      shiny::hr(),
+      shiny::downloadButton(
+          ns("report"), "Generate html report")
+      )
+  })
+
+  
+  
+  #   ____________________________________________________________________________
+  #   report                                                                  ####
+  
+  output$report <- shiny::downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "clustering_report.html",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+      tempReport <- file.path(tempdir(), "clustering_report.Rmd")
+      tempImage <- file.path(tempdir(), "favicon.ico")
+      file.copy("./R/clustering_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
+      
+      # Set up parameters to pass to Rmd document
+      params <- list(r = r$clusterings[[input_genes_conditions()]],
+                     input = input, normalized_counts = r$normalized_counts)
+      
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      rmarkdown::render(tempReport, output_file = file,
+                        params = params,
+                        envir = new.env(parent = globalenv())
+      )
+    }
+  )
   
   
   #   ____________________________________________________________________________

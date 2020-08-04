@@ -33,7 +33,7 @@ mod_cluster_exploration_ui <- function(id) {
         width = 12,
         closable = FALSE,
         title = "Expression profiles",
-        shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
+        plotly::plotlyOutput(ns("profiles_to_explore"), height = "700px"),
         shiny::br(),
         shiny::fluidRow(col_12(
           shinyWidgets::downloadBttn(
@@ -179,16 +179,16 @@ mod_cluster_exploration_server <-
     #   profiles                                                                ####
     
     
-    output$profiles_to_explore <- shiny::renderPlot({
+    output$profiles_to_explore <- plotly::renderPlotly({
       # to reset the go analysis if new cluster
       r_clust$go <- NULL
       shiny::req(input$cluster_to_explore)
-      draw_profiles(
+      ggplotly(draw_profiles(
         data = r$normalized_counts,
         membership = membership(),
         k = input$cluster_to_explore,
         conds = conditions()
-      )
+      ))
      
     })
     

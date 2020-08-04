@@ -97,7 +97,7 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
 #' \dontrun{
 #' data("abiotic_stresses")
 #' data("regulators_per_organism")
-#' 
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
 #' # mat was inferred using the function network_inference
 #' mat <- abiotic_stresses$heat_DEGs_regulatory_links
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
@@ -129,7 +129,7 @@ network_thresholding <- function(mat, n_edges){
 #' \dontrun{
 #' data("abiotic_stresses")
 #' data("regulators_per_organism")
-#' 
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
 #' # mat was inferred using the function network_inference
 #' mat <- abiotic_stresses$heat_DEGs_regulatory_links
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))
@@ -152,8 +152,10 @@ network_data <- function(graph, regulators, gene_info = NULL){
                              ifelse(grepl("mean_", data$nodes$id), 
                                     "Grouped Regulators", "Target Gene"))
   data$nodes$gene_type <- data$nodes$group
-  data$edges$value <- data$edges$weight
-  
+  if("weight" %in% colnames(data$edges))
+    data$edges$value <- data$edges$weight
+  if("fdr" %in% colnames(data$edges))
+    data$edges$value <- -log10(data$edges$fdr)
   # adding additional infos
   if(!is.null(gene_info)){
     data$nodes[,colnames(gene_info)] <- 
@@ -186,6 +188,7 @@ network_data <- function(graph, regulators, gene_info = NULL){
 #' @examples \dontrun{
 #' data("abiotic_stresses")
 #' data("regulators_per_organism")
+#' genes <- get_locus(abiotic_stresses$heat_DEGs)
 #' # mat was inferred using the function network_inference
 #' mat <- abiotic_stresses$heat_DEGs_regulatory_links
 #' network <- DIANE::network_thresholding(mat, n_edges = length(genes))

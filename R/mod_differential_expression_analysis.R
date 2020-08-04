@@ -124,12 +124,12 @@ mod_differential_expression_analysis_ui <- function(id) {
             inputId = ns("MA_vulcano_switch"),
             value = TRUE,
             onLabel = "MA",
-            offLabel = "Vulcano",
+            offLabel = "Volcano",
             onStatus = 'success'
           ),
           
           
-          shiny::plotOutput(ns("ma_vulcano"), height = "700px")
+          plotly::plotlyOutput(ns("ma_vulcano"), height = "700px")
           
         ),
         shiny::tabPanel(
@@ -208,7 +208,10 @@ mod_differential_expression_analysis_server <-
       top_tags = NULL,
       DEGs = NULL,
       ref = NULL,
-      trt = NULL
+      trt = NULL,
+      lfc = NULL,
+      fdr = NULL,
+      gene_table = NULL
     )
 
     
@@ -301,7 +304,7 @@ mod_differential_expression_analysis_server <-
     
     shiny::observeEvent((input$estimate_disp_btn), {
       shiny::req(r$tcc)
-      #r_dea$fit <- estimateDispersion(r$tcc)
+      r_dea$fit <- estimateDispersion(r$tcc)
       r$fit <- estimateDispersion(r$tcc)
     })
     
@@ -337,6 +340,8 @@ mod_differential_expression_analysis_server <-
       r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
       r_dea$go <- NULL
       
+      r_dea$lfc <- input$dea_lfc
+      r_dea$fdr <- input$dea_fdr
     })
     
 
@@ -429,16 +434,20 @@ mod_differential_expression_analysis_server <-
     output$dl_bttns <- shiny::renderUI({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      shiny::fluidRow(col_12(
-        shinyWidgets::downloadBttn(
-          outputId = ns("download_table_csv"),
-          label = "Download result table as .csv",
-          style = "bordered",
-          color = "success"
+      tagList(
+        shiny::fluidRow(col_12(
+          shinyWidgets::downloadBttn(
+            outputId = ns("download_table_csv"),
+            label = "Download result table as .csv",
+            style = "bordered",
+            color = "success"
+          )
         )
+        ),
+        shiny::hr(),
+        shiny::downloadButton(
+          ns("report"), "Generate html report")
       )
-      )
-      
     })
     
     output$download_table_csv <- shiny::downloadHandler(
@@ -449,6 +458,35 @@ mod_differential_expression_analysis_server <-
         write.csv(r_dea$top_tags, file = file, quote = FALSE)
       }
     )
+    
+    #   ____________________________________________________________________________
+    #   report                                                                  ####
+    
+    output$report <- shiny::downloadHandler(
+      # For PDF output, change this to "report.pdf"
+      filename = "DEA_report.html",
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "DEA_report.Rmd")
+        tempImage <- file.path(tempdir(), "favicon.ico")
+        file.copy("./R/DEA_report.Rmd", tempReport, overwrite = TRUE)
+        file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
+        
+        # Set up parameters to pass to Rmd document
+        params <- list(r_dea = r_dea)
+        
+        # Knit the document, passing in the `params` list, and eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app).
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv())
+        )
+      }
+    )
+  
     
     ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
     ### download GO                                                             ####
@@ -484,6 +522,8 @@ mod_differential_expression_analysis_server <-
         else ids <- rownames(top)
         top[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
       }
+      
+      r_dea$gene_table <- top[, columns]
       
       DT::formatStyle(
         DT::datatable(top[, columns]),
@@ -524,15 +564,15 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$ma_vulcano <- shiny::renderPlot({
+    output$ma_vulcano <- plotly::renderPlotly({
       shiny::req(r$top_tags)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      draw_DEGs(
+      plotly::ggplotly(draw_DEGs(
         tags = r_dea$tags,
         fdr = input$dea_fdr,
         lfc = input$dea_lfc,
         MA = input$MA_vulcano_switch
-      )
+      ))
     })
     
     

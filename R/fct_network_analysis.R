@@ -25,8 +25,8 @@ community_structure <- function(graph) {
 #' DIANE::draw_network_degrees(data$nodes, network)
 draw_network_degrees <- function(nodes, graph) {
   targets <- nodes[nodes$gene_type == "Target Gene", "id"]
-  TFs <- nodes[nodes$gene_type == "Regulator" | nodes$gene_type == "Grouped Regulators", "id"]
-  
+  TFs <- nodes[nodes$gene_type == "Regulator" | 
+                 nodes$gene_type == "Grouped Regulators", "id"]
   
   degree_in_targets <-
     igraph::degree(graph, mode = 'in', v = targets)
@@ -66,7 +66,7 @@ draw_network_degrees <- function(nodes, graph) {
     ggplot2::ggplot(data = Node_nw_st, ggplot2::aes(x = degree_out_tfs)) +
     ggplot2::geom_histogram(fill = "#69b322",
                             color = "#e9ecef",
-                            alpha = 0.7) + ggplot2::xlim(0, 10) +
+                            alpha = 0.7) + 
     ggplot2::ggtitle("Out-Degree distribution of regulators") +
     ggplot2::theme(
       plot.title = ggplot2::element_text(size = 16),
