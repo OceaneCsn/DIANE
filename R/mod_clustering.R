@@ -334,7 +334,8 @@ mod_clustering_server <- function(input, output, session, r) {
       # can happen when deployed).
       tempReport <- file.path(tempdir(), "clustering_report.Rmd")
       tempImage <- file.path(tempdir(), "favicon.ico")
-      file.copy("./R/clustering_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy(system.file("extdata", "clustering_report.Rmd", package = "DIANE"), 
+                tempReport, overwrite = TRUE)
       file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
       
       # Set up parameters to pass to Rmd document

@@ -471,7 +471,8 @@ mod_differential_expression_analysis_server <-
         # can happen when deployed).
         tempReport <- file.path(tempdir(), "DEA_report.Rmd")
         tempImage <- file.path(tempdir(), "favicon.ico")
-        file.copy("./R/DEA_report.Rmd", tempReport, overwrite = TRUE)
+        file.copy(system.file("extdata", "DEA_report.Rmd", package = "DIANE"),
+                  tempReport, overwrite = TRUE)
         file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
         
         # Set up parameters to pass to Rmd document

@@ -401,7 +401,8 @@ mod_normalisation_server <- function(input, output, session, r) {
       # can happen when deployed).
       tempReport <- file.path(tempdir(), "normalisation_report.Rmd")
       tempImage <- file.path(tempdir(), "favicon.ico")
-      file.copy("./R/normalisation_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy(system.file("extdata", "normalisation_report.Rmd", package = "DIANE"),
+                tempReport, overwrite = TRUE)
       file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
       
       # Set up parameters to pass to Rmd document

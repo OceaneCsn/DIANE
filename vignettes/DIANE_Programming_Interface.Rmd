@@ -447,10 +447,7 @@ GENIE3 was among the best performers of the [DREAM challenge](https://www.synaps
 
 
 ```{r genie, fig.width=8, fig.height=6}
-
-
-mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets,
-                         regressors = grouped_regressors)
+mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets, regressors = grouped_regressors, nCores = 1)
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
@@ -459,7 +456,6 @@ data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]],
 knitr::kable(head(data$nodes))
 
 DIANE::draw_network(data$nodes, data$edges)
-
 ```
 
 The ```network``` object is an ```igraph``` object, and can be analyzed with all the possibilities offered by this complete package about graphs algorithms.
