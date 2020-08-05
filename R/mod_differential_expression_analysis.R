@@ -565,7 +565,7 @@ mod_differential_expression_analysis_server <-
     })
     
     output$ma_vulcano <- plotly::renderPlotly({
-      shiny::req(r$top_tags)
+      shiny::req(r$top_tags, r_dea$DEGs)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       plotly::ggplotly(draw_DEGs(
         tags = r_dea$tags,
