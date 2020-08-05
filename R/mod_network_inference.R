@@ -785,7 +785,8 @@ mod_network_inference_server <- function(input, output, session, r){
       # can happen when deployed).
       tempReport <- file.path(tempdir(), "inference_report.Rmd")
       tempImage <- file.path(tempdir(), "favicon.ico")
-      file.copy("./R/inference_report.Rmd", tempReport, overwrite = TRUE)
+      file.copy(system.file("extdata", "inference_report.Rmd", package = "DIANE"),
+                tempReport, overwrite = TRUE)
       file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
       
       # Set up parameters to pass to Rmd document
