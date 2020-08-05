@@ -344,7 +344,7 @@ draw_expression_levels <-
            aes(
              x = condition,
              y = value,
-             color = condition,
+             color = replicate,
              shape = replicate
            )) +
       geom_point(size = 4, alpha = 0.8) + facet_wrap( ~ gene, scales = "free") +
