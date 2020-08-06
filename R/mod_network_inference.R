@@ -787,7 +787,8 @@ mod_network_inference_server <- function(input, output, session, r){
       tempImage <- file.path(tempdir(), "favicon.ico")
       file.copy(system.file("extdata", "inference_report.Rmd", package = "DIANE"),
                 tempReport, overwrite = TRUE)
-      file.copy("./inst/app/www/favicon.ico", tempImage, overwrite = TRUE)
+      file.copy(system.file("extdata", "favicon.ico", package = "DIANE"),
+                tempImage, overwrite = TRUE)
       
       # Set up parameters to pass to Rmd document
       params <- list(r = r, input = input)
