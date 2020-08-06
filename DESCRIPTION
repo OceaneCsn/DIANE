@@ -47,7 +47,8 @@ Imports:
     pkgload,
     randomForest,
     rfPermute,
-    knitr
+    knitr,
+    rmarkdown
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
@@ -56,6 +57,4 @@ URL: https://github.com/OceaneCsn/DIANE, https://oceanecsn.github.io/DIANE
 BugReports: https://github.com/OceaneCsn/DIANE/issues
 biocViews: Workflow, GeneExpressionWorkflow
 Depends: R (>= 4.0.0)
-Suggests: 
-    rmarkdown
 VignetteBuilder: knitr
