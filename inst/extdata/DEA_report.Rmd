@@ -71,8 +71,8 @@ The entire table is downloadable from the application as a csv file.
 # Plots
 
 ```{r, fig.width=10, fig.height=8}
-draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = TRUE)
-draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = FALSE)
+DIANE::draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = TRUE)
+DIANE::draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = FALSE)
 ```
 
 ## GO enrichment analysis

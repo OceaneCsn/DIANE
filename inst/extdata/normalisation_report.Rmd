@@ -110,7 +110,7 @@ Once normalisation is complete, one can start by exploraing in a global way whic
 
 
 ```{r, fig.width=10, fig.height=8}
-draw_PCA(r$normalized_counts)
+DIANE::draw_PCA(r$normalized_counts)
 ```
 
 
@@ -118,5 +118,5 @@ draw_PCA(r$normalized_counts)
 
 
 ```{r, fig.width=10, fig.height=8}
-draw_MDS(r$normalized_counts)
+DIANE::draw_MDS(r$normalized_counts)
 ```

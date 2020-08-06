@@ -133,10 +133,10 @@ input$test_edges
 Aperçu du réseau :
 ```{r, fig.width=10, fig.height=10}
 if(!input$test_edges){
-  draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
+  DIANE::draw_network(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
                edges = r$networks[[input$input_deg_genes_net]]$edges)
 }else{
-  draw_discarded_edges(r$edge_tests$links, 
+  DIANE::draw_discarded_edges(r$edge_tests$links, 
                        list(nodes = r$networks[[input$input_deg_genes_net]]$nodes,
                             edges = r$networks[[input$input_deg_genes_net]]$edges))
 }
@@ -152,7 +152,7 @@ paste(length(V(graph)), "nodes,", length(E(graph)), "edges")
 
 Network degrees and betweenness distributions:
 ```{r}
-draw_network_degrees(nodes = r$networks[[r$current_network]]$nodes,
+DIANE::draw_network_degrees(nodes = r$networks[[r$current_network]]$nodes,
                      graph = r$networks[[r$current_network]]$graph)
 ```
 
@@ -185,7 +185,7 @@ Modules view :
 nodes <- r$networks[[r$current_network]]$nodes
     
 nodes$group <- nodes$community
-draw_network(nodes = nodes,
+DIANE::draw_network(nodes = nodes,
              edges = r$networks[[r$current_network]]$edges)
 ```
 
@@ -203,7 +203,7 @@ if(sum(grepl("mean_",
   data <- r$grouped_normalized_counts
 }
 
-draw_profiles(data = data,
+DIANE::draw_profiles(data = data,
               membership = r$networks[[r$current_network]]$membership,
               conds = r$networks[[r$current_network]]$conditions)
 ```
