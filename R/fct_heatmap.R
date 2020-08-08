@@ -350,7 +350,7 @@ draw_expression_levels <-
       geom_point(size = 4, alpha = 0.8) + facet_wrap( ~ gene, scales = "free") +
       ggtitle("Normalized expression levels") +
       theme(
-        plot.title = element_text(size = 22, face = "bold"),
+        plot.title = element_text(size = 22, hjust = 0.5, face = "bold"),
         strip.text.x = element_text(size = gene.name.size),
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 18),

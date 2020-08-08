@@ -61,7 +61,7 @@ nrow(r$gene_table[r$gene_table$Regulation == "Down",])
 
 DEGs preview :
 ```{r}
-knitr::kable(head(r$gene_table, n = 40))
+head(r$gene_table, n = 40)
 ```
 
 The entire table is downloadable from the application as a csv file.
