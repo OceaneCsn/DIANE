@@ -58,3 +58,4 @@ BugReports: https://github.com/OceaneCsn/DIANE/issues
 biocViews: Workflow, GeneExpressionWorkflow
 Depends: R (>= 4.0.0)
 VignetteBuilder: knitr
+SystemRequirements: pandoc version 1.12.3 or higher (for rmarkdown report generation)
