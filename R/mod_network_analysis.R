@@ -193,15 +193,11 @@ mod_network_analysis_server <- function(input, output, session, r){
       
       shiny::hr(),
       
-      shiny::h3("Regulators :"),
-      
-      DT::dataTableOutput(ns("node_regulators")),
+      shiny::uiOutput(ns("node_reg")),
       
       shiny::hr(),
       
-      shiny::h3("Targets :"),
-      
-      DT::dataTableOutput(ns("node_targets")),
+      shiny::uiOutput(ns("node_targ")),
       
       easyClose = TRUE,
       footer = NULL
@@ -227,32 +223,53 @@ mod_network_analysis_server <- function(input, output, session, r){
                            conds = r$networks[[r$current_network]]$conditions)
   })
   
-  output$node_regulators <- DT::renderDataTable({
-    
+  node_descr <- shiny::reactive({
     shiny::req(r$current_network, r$networks)
     shiny::req(r$networks[[r$current_network]]$nodes)
-    data <- r$networks[[r$current_network]]$nodes
-    
+    return(describe_node(r$networks[[r$current_network]]$graph, input$click))
+  })
+  
+  output$node_reg <- shiny::renderUI({
+    if(length(node_descr()$regulators) > 0){
+      tagList(shiny::h3("Regulators :"),
+              DT::dataTableOutput(ns("node_regulators")))
+    }
+    else
+      shiny::h3("No regulators found")
+  })
+  
+  output$node_targ <- shiny::renderUI({
+    if(length(node_descr()$targets) > 0){
+      tagList(shiny::h3("Targets :"),
+              DT::dataTableOutput(ns("node_targets")))
+    }
+    else
+      shiny::h3("No targets found")
+  })
+
+  
+  output$node_regulators <- DT::renderDataTable({
+
     columns <- c("label", "gene_type", "degree", "community")
     if (!is.null(r$gene_info)) {
       columns <- unique(c(colnames(r$gene_info), columns))
     }
-    regulators <- describe_node(r$networks[[r$current_network]]$graph, input$click)$regulators
+    regulators <- node_descr()$regulators
+    
+    data <- r$networks[[r$current_network]]$nodes
     data[regulators, columns]
 
   })
   
   output$node_targets <- DT::renderDataTable({
     
-    shiny::req(r$current_network, r$networks)
-    shiny::req(r$networks[[r$current_network]]$nodes)
-    data <- r$networks[[r$current_network]]$nodes
-    
     columns <- c("label", "gene_type", "degree", "community")
     if (!is.null(r$gene_info)) {
       columns <- unique(c(colnames(r$gene_info), columns))
     }
-    targets <- describe_node(r$networks[[r$current_network]]$graph, input$click)$targets
+    targets <- node_descr()$targets
+    
+    data <- r$networks[[r$current_network]]$nodes
     data[targets, columns]
   })
   

@@ -483,9 +483,12 @@ mod_network_inference_server <- function(input, output, session, r){
   output$btn_thr_label <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
-    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
     if(input$test_edges)
       label = "Threshold and test edges"
     else
