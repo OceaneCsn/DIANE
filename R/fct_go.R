@@ -35,9 +35,12 @@ convert_from_agi <- function(ids, to = "entrez"){
 #' @return named list
 #' @export
 #' @examples
+#' if(require("org.Hs.eg.db")){
 #' genes <- c("ENSG00000000003", "ENSG00000003989", "ENSG00000005884", "ENSG00000007168")
 #' convert_from_ensembl(genes)
 #' convert_from_ensembl(genes, to = "symbol")
+#' }
+#' 
 convert_from_ensembl <- function(ids, to = "entrez"){
   if(to == "entrez"){
     xx <- as.list(org.Hs.eg.db::org.Hs.egENSEMBL2EG)
@@ -64,10 +67,12 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 #' @return named list
 #' @export
 #' @examples
+#' if(require("org.Mm.eg.db")){
 #' genes <- c("ENSMUSG00000000001", "ENSMUSG00000000049")
 #' convert_from_ensembl_mus(genes)
 #' convert_from_ensembl_mus(genes, to = "symbol")
 #' convert_from_ensembl_mus(genes, to = "name")
+#' }
 convert_from_ensembl_mus <- function(ids, to = "entrez"){
   if(to == "entrez"){
     xx <- as.list(org.Mm.eg.db::org.Mm.egENSEMBL)
