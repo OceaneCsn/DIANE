@@ -415,6 +415,7 @@ mod_import_data_server <- function(input, output, session, r) {
           label = "Choose your organism :",
           choices = c("Arabidopsis thaliana", 
                       "Homo sapiens",
+                      "Mus musculus",
                       "Other"),
           selected = "Other"
         ),

@@ -55,6 +55,36 @@ convert_from_ensembl <- function(ids, to = "entrez"){
   }
 }
 
+#' For Mus musculus, converts ensembl IDs to entrez IDs, 
+#' symbol or name, 
+#'
+#' @param ids genes to convert, ensembl
+#' @param to value in c("entrez", "symbol", "name")
+#'
+#' @return named list
+#' @export
+#' @examples
+#' genes <- c("ENSMUSG00000000001", "ENSMUSG00000000049")
+#' convert_from_ensembl_mus(genes)
+#' convert_from_ensembl_mus(genes, to = "symbol")
+#' convert_from_ensembl_mus(genes, to = "name")
+convert_from_ensembl_mus <- function(ids, to = "entrez"){
+  if(to == "entrez"){
+    xx <- as.list(org.Mm.eg.db::org.Mm.egENSEMBL)
+    return(names(unlist(xx)[unlist(xx) %in% ids]))
+  }
+  else{
+    entrez <- convert_from_ensembl_mus(ids, to = "entrez")
+    if (to == "symbol")
+      x <- org.Mm.eg.db::org.Mm.egSYMBOL
+    if (to == "name")
+      x <- org.Mm.eg.db::org.Mm.egGENENAME
+    mapped_genes <- AnnotationDbi::mappedkeys(x)
+    xx <- as.list(x[mapped_genes])
+    return(unlist(xx[as.vector(entrez)]))
+  }
+}
+
 
 #' Enriched Gene Ontology terms in a set of genes
 #' 

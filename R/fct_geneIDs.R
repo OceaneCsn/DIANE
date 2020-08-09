@@ -91,11 +91,11 @@ check_IDs <- function(ids, organism){
     return(TRUE)
   else{
     if(matched > 0 & matched < length(ids)){
-      warning("Some of the gene IDs do not match expected regex")
+      warning("Some of the gene IDs do not match the expected regex")
       return(FALSE)
     }
     else{
-      warning("None of the gene IDs match expected regex")
+      warning("None of the gene IDs match the expected regex")
       return(FALSE)
     }
   }
