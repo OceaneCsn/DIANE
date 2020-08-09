@@ -333,7 +333,7 @@ draw_expression_levels <-
       stop("The required conditions were not found in the expression data")
     }
     
-    data <- data.frame(data)
+    data <- as.data.frame(data)
     data$gene <- rownames(data)
     
     d <-

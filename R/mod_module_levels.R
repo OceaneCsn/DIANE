@@ -92,7 +92,7 @@ mod_module_levels_server <- function(input, output, session, r){
     shiny::req(sum(genes %in% rownames(r$normalized_counts)) > 0)
     
   
-  plotly::ggplotly(draw_expression_levels(data.frame(r$normalized_counts),
+  plotly::ggplotly(draw_expression_levels(as.data.frame(r$normalized_counts),
                            conds = input$input_conditions,
                            genes = genes, gene.name.size = 22)) %>%
     plotly::layout(legend = list(font = list(size = 15)))
