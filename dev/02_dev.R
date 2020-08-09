@@ -90,6 +90,8 @@ golem::add_fct( "go")
 golem::add_fct( "regressors_grouping")
 golem::add_fct( "GENIE3_oob")
 golem::add_fct( "edge_testing")
+golem::add_fct( "geneIDs")
+
 
 #golem::add_utils( "helpers" )
 

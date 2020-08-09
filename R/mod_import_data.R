@@ -299,14 +299,32 @@ mod_import_data_server <- function(input, output, session, r) {
       }
     }
     
-    if (length(unique(colnames(d))) < length(colnames(d))) {
-      shinyalert::shinyalert(
-        "Invalid rownames",
-        "Please specify unique rownames, in the form condition_replicateNumber",
-        type = "error"
-      )
-      stop()
-    }
+    
+    
+    ############### checking organism compatibility
+    
+    if(r$organism != "Other"){
+      print(check_IDs(rownames(d), r$organism))
+      if(!check_IDs(rownames(d), r$organism)){
+        if(r$organism == "Arabidopsis thaliana")
+          ex = "AT1G62510.1 or AT1G62510"
+        
+        if(r$organism == "Homo sapiens")
+          ex = "ENSG00000000419"
+        
+        if(r$organism == "Mus musculus")
+          ex = "ENSMUSG00000087910"
+        
+        shinyalert::shinyalert(
+          "Invalid gene IDs",
+          paste("Some or all of the gene IDs in your Gene column do not match 
+          the expected pattern for the selected organism.
+          For", r$organism, "they should be in the form", ex, "for example."),
+          type = "error"
+        )
+        stop()
+      }
+    } 
     
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
@@ -514,7 +532,6 @@ mod_import_data_server <- function(input, output, session, r) {
     ######## setting organism here
 
     shiny::req(r$organism)
-    print(paste("in summary organisms : ", r$organism))
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
       numberColor = "teal",
