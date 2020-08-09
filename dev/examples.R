@@ -196,3 +196,10 @@ abiotic_stresses$heat_grouped_data <- r
 #                                   get_nEdges, nGenes, nRegulators))
 # ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) + ggtitle()
 
+
+######## Mm TFs 
+
+tfs <- read.csv('D:/These/DIANE_inputs/Mus_musculus_TF.txt', sep = '\t')
+tfs <- tfs$Ensembl
+write.table(tfs, row.names = F, quote = F, file = "D:/These/DIANE_inputs/Mus_musculus_TF.txt")
+regulators_per_organism[["Mus musculus"]] <- tfs
