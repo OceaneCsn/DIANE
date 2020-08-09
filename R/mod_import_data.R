@@ -407,15 +407,33 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       r$organism <- NULL
       r$gene_info <- NULL
+      
+      
+      choices = c("Arabidopsis thaliana")
+      if( require("org.Mm.eg.db"))
+        choices <- c(choices, "Mus musculus")
+      
+      if( require("org.Hs.eg.db"))
+        choices <- c(choices, "Homo sapiens")
+      
+      if( require("org.Ce.eg.db"))
+        choices <- c(choices, "Caenorhabditis elegans")
+      
+      if( require("org.Dm.eg.db"))
+        choices <- c(choices, "Drosophilia melanogatser")
+      
+      if( require("org.EcK12.eg.db"))
+        choices <- c(choices, "Escherichia coli")
+      
+      
+      
       shiny::showModal(shiny::modalDialog(
         title = "Organism to study",
         size = 's',
         shinyWidgets::pickerInput(
           inputId = ns('organism'),
           label = "Choose your organism :",
-          choices = c("Arabidopsis thaliana", 
-                      "Homo sapiens",
-                      "Mus musculus",
+          choices = c(choices,
                       "Other"),
           selected = "Other"
         ),

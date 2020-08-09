@@ -81,10 +81,10 @@ check_IDs <- function(ids, organism){
     pattern = "AT[[:alnum:]]G[[:digit:]]{5}"
   
   if(organism == "Homo sapiens")
-    pattern = "ENSG[0-9]{11}"
+    pattern = "ENSG[[:digit:]]{11}"
   
   if(organism == "Mus musculus")
-    pattern = "ENSMUSG[0-9]{11}"
+    pattern = "ENSMUSG[[:digit:]]{11}"
   
   matched <- sum(stringr::str_detect(ids, pattern = pattern))
   if( matched == length(ids))
