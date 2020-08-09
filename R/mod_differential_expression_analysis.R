@@ -649,6 +649,12 @@ mod_differential_expression_analysis_server <-
           org = org.Hs.eg.db::org.Hs.eg.db
         }
         
+        if(r$organism == "Mus musculus"){
+          genes <- convert_from_ensembl_mus(genes)
+          background <- convert_from_ensembl_mus(background)
+          org = org.Mm.eg.db::org.Mm.eg.db
+        }
+        
         # TODO add check if it is entrez with regular expression here
         shiny::req(length(genes) > 0, length(background) > 0)
         r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)

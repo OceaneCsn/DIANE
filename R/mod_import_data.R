@@ -299,14 +299,32 @@ mod_import_data_server <- function(input, output, session, r) {
       }
     }
     
-    if (length(unique(colnames(d))) < length(colnames(d))) {
-      shinyalert::shinyalert(
-        "Invalid rownames",
-        "Please specify unique rownames, in the form condition_replicateNumber",
-        type = "error"
-      )
-      stop()
-    }
+    
+    
+    ############### checking organism compatibility
+    
+    if(r$organism != "Other"){
+      print(check_IDs(rownames(d), r$organism))
+      if(!check_IDs(rownames(d), r$organism)){
+        if(r$organism == "Arabidopsis thaliana")
+          ex = "AT1G62510.1 or AT1G62510"
+        
+        if(r$organism == "Homo sapiens")
+          ex = "ENSG00000000419"
+        
+        if(r$organism == "Mus musculus")
+          ex = "ENSMUSG00000087910"
+        
+        shinyalert::shinyalert(
+          "Invalid gene IDs",
+          paste("Some or all of the gene IDs in your Gene column do not match 
+          the expected pattern for the selected organism.
+          For", r$organism, "they should be in the form", ex, "for example."),
+          type = "error"
+        )
+        stop()
+      }
+    } 
     
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
@@ -389,14 +407,33 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       r$organism <- NULL
       r$gene_info <- NULL
+      
+      
+      choices = c("Arabidopsis thaliana")
+      if( require("org.Mm.eg.db"))
+        choices <- c(choices, "Mus musculus")
+      
+      if( require("org.Hs.eg.db"))
+        choices <- c(choices, "Homo sapiens")
+      
+      if( require("org.Ce.eg.db"))
+        choices <- c(choices, "Caenorhabditis elegans")
+      
+      if( require("org.Dm.eg.db"))
+        choices <- c(choices, "Drosophilia melanogatser")
+      
+      if( require("org.EcK12.eg.db"))
+        choices <- c(choices, "Escherichia coli")
+      
+      
+      
       shiny::showModal(shiny::modalDialog(
         title = "Organism to study",
-        size = 's',
+        shiny::htmlOutput(ns("org_install")),
         shinyWidgets::pickerInput(
           inputId = ns('organism'),
           label = "Choose your organism :",
-          choices = c("Arabidopsis thaliana", 
-                      "Homo sapiens",
+          choices = c(choices,
                       "Other"),
           selected = "Other"
         ),
@@ -404,6 +441,27 @@ mod_import_data_server <- function(input, output, session, r) {
           shiny::actionButton(ns("org_chosen"), "OK"))
       ))
     }
+  })
+  
+  output$org_install <- shiny::renderText({
+    "<b>The organisms listed below are the one detected on the system.</b> <br>
+    To use new organisms, please close DIANE and install the corresponding 
+    package from Bioconductor from R ou Rstudio consoles.<br>
+    
+    <code> if (!requireNamespace(\"BiocManager\", quietly = TRUE))
+      install.packages(\"BiocManager\") </code> <br>
+    
+    For Human : <code> BiocManager::install(\"org.Hs.eg.db\") </code> <br>
+    For Mouse : <code> BiocManager::install(\"org.Mm.eg.db\") </code> <br>
+    For Caenorhabditis elegans : <code> BiocManager::install(\"org.Ce.eg.db\") </code> <br>
+    For E coli : <code> BiocManager::install(\"org.EcK12.eg.db\") </code> <br>
+    For fruit fly : <code> BiocManager::install(\"org.Dm.eg.db\") </code> <br>
+    
+    Then, when you launch DIANE again, your organism should appear 
+    in the following selection menu.
+    
+    For now, only Arabidopsis, Human and Mouse are working.
+    "
   })
   
   shiny::observeEvent(input$org_chosen, {
@@ -514,7 +572,6 @@ mod_import_data_server <- function(input, output, session, r) {
     ######## setting organism here
 
     shiny::req(r$organism)
-    print(paste("in summary organisms : ", r$organism))
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
       numberColor = "teal",

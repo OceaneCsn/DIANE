@@ -36,7 +36,6 @@ Imports:
     clusterProfiler,
     plotly,
     AnnotationDbi,
-    org.Hs.eg.db,
     foreach,
     doParallel,
     doRNG,
@@ -49,6 +48,10 @@ Imports:
     rfPermute,
     knitr,
     rmarkdown
+Suggests: 
+    org.Hs.eg.db,
+    org.Dm.eg.db,
+    org.Mm.eg.db
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true
