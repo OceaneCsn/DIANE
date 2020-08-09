@@ -54,7 +54,12 @@ group_regressors <- function(normalized.count, genes, regressors, corr_thr = 0.9
                       normalized.count = normalized.count)
   top <- pairs[pairs$cor > corr_thr,]
   
-  
+  if(nrow(top) == 0){
+    warning("No grouping was performed as no regulators pair was correlated over the threshold.")
+    return(list(counts = normalized.count, correlated_regressors_graph = NULL,
+                grouped_genes = genes,
+                grouped_regressors = regressors))
+  }
   # graph and communities detection of highly correlated TFs
   net_un <- igraph::graph_from_data_frame(top, directed = FALSE)
   louvain <- igraph::cluster_louvain(net_un)

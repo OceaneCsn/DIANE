@@ -48,14 +48,8 @@ mod_import_data_ui <- function(id) {
           icon = NULL,
           bigger = TRUE,
           width = "200%"
-        )),
-        col_8(shinyWidgets::pickerInput(
-          inputId = ns('organism'),
-          label = "Choose your organism if proposed :",
-          choices = c("Arabidopsis thaliana", 
-                      "Homo sapiens",
-                      "Other")
         ))
+        
       ),
       
       shiny::radioButtons(
@@ -272,7 +266,6 @@ mod_import_data_server <- function(input, output, session, r) {
       r$use_demo = input$use_demo
       r$splicing_aware = NULL
       r$gene_info = NULL
-      r$organism = NULL
       r$custom_go = NULL
       
       d <-
@@ -317,9 +310,9 @@ mod_import_data_server <- function(input, output, session, r) {
     
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
-    
     r$splicing_aware <- are_splice_variants(row.names(d))
     r$raw_counts <- d
+    #r$gene_info <- gene_info()
     d
   })
   
@@ -389,23 +382,44 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ____________________________________________________________________________
   #   organism                                                                ####
   
-  organism <- shiny::reactive({
+  shiny::observe({
     if (input$use_demo) {
-      d <- "Arabidopsis thaliana"
+      r$organism <- "Arabidopsis thaliana"
     }
     else{
-      d <- input$organism
+      r$organism <- NULL
+      r$gene_info <- NULL
+      shiny::showModal(shiny::modalDialog(
+        title = "Organism to study",
+        size = 's',
+        shinyWidgets::pickerInput(
+          inputId = ns('organism'),
+          label = "Choose your organism :",
+          choices = c("Arabidopsis thaliana", 
+                      "Homo sapiens",
+                      "Other"),
+          selected = "Other"
+        ),
+        footer = list(
+          shiny::actionButton(ns("org_chosen"), "OK"))
+      ))
     }
-    d
   })
   
+  shiny::observeEvent(input$org_chosen, {
+    r$organism <- input$organism
+    shiny::removeModal()
+    #r$gene_info <- gene_info()
+  })
   
   #   ____________________________________________________________________________
   #   genes info                                                              ####
   
   gene_info <- shiny::reactive({
     req(r$raw_counts)
+    req(r$organism)
     if (r$organism != "Other") {
+      
       ids <- rownames(r$raw_counts)
       if(r$splicing_aware){
         ids <- get_locus(rownames(r$raw_counts))
@@ -474,7 +488,6 @@ mod_import_data_server <- function(input, output, session, r) {
   output$gene_info_summary <- shiny::renderUI({
     ######## setting gene info here
     r$gene_info <- gene_info()
-    
     if (is.null(r$gene_info)) {
       numberColor = "orange"
       number = "No additional gene data provided"
@@ -482,6 +495,7 @@ mod_import_data_server <- function(input, output, session, r) {
       numberIcon = "fa fa-times"
     }
     else{
+      print(paste(colnames(r$gene_info), collapse = ', '))
       numberColor = "olive"
       number = "Additional gene data available"
       numberIcon = "fa fa-check"
@@ -498,10 +512,9 @@ mod_import_data_server <- function(input, output, session, r) {
   
   output$organism_summary <- shiny::renderUI({
     ######## setting organism here
-    r$organism <- organism()
-    
+
     shiny::req(r$organism)
-    
+    print(paste("in summary organisms : ", r$organism))
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
       numberColor = "teal",
