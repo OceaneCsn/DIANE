@@ -486,9 +486,8 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(input$input_deg_genes_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
-    shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
-    shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
-    shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
+    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
+
     if(input$test_edges)
       label = "Threshold and test edges"
     else
@@ -695,7 +694,6 @@ mod_network_inference_server <- function(input, output, session, r){
 
   
   shiny::observeEvent(input$fdr_chosen, {
-    message("Closing modal")
     shiny::removeModal()
     
     r$networks[[input$input_deg_genes_net]]$graph <- 

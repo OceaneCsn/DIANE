@@ -333,6 +333,7 @@ draw_expression_levels <-
       stop("The required conditions were not found in the expression data")
     }
     
+    data <- data.frame(data)
     data$gene <- rownames(data)
     
     d <-
@@ -344,8 +345,7 @@ draw_expression_levels <-
            aes(
              x = condition,
              y = value,
-             color = replicate,
-             shape = replicate
+             color = replicate
            )) +
       geom_point(size = 4, alpha = 0.8) + facet_wrap( ~ gene, scales = "free") +
       ggtitle("Normalized expression levels") +
