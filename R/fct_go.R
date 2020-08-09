@@ -71,7 +71,9 @@ convert_from_ensembl <- function(ids, to = "entrez"){
 convert_from_ensembl_mus <- function(ids, to = "entrez"){
   if(to == "entrez"){
     xx <- as.list(org.Mm.eg.db::org.Mm.egENSEMBL)
-    return(names(unlist(xx)[unlist(xx) %in% ids]))
+    entrez <- names(unlist(xx)[unlist(xx) %in% ids])
+    nms <- unlist(xx)[unlist(xx) %in% ids]
+    return(stats::setNames(entrez, nms))
   }
   else{
     entrez <- convert_from_ensembl_mus(ids, to = "entrez")
@@ -231,7 +233,7 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 #' Gives gene information (common name and description) for a specific organism
 #'
 #' @param ids vector of genes, AGI for Arabidopsis and ensembl for Human
-#' @param organism value in c("Arabidopsis thaliana", "Homo sapiens")
+#' @param organism value in c("Arabidopsis thaliana", "Homo sapiens", "Mus musculus")
 #'
 #' @return a dataframe with input genes as rownames, and columns label and desciption
 #' @export
@@ -258,6 +260,23 @@ get_gene_information <- function(ids, organism){
     
     d <- data.frame(genes = ids, label = label,
                    description = description)
+    
+    rownames(d) <- d$genes
+  }
+  
+  if (organism == "Mus musculus"){
+    # handling missing values in entrez ids
+    entrez <- convert_from_ensembl_mus(ids)
+    entrez <- entrez[match(ids, names(entrez))]
+    
+    label <- convert_from_ensembl_mus(ids, to = "symbol")
+    label <- label[match(entrez, names(label))]
+    
+    description = convert_from_ensembl_mus(ids, to = "name")
+    description = description[match(entrez, names(description))]
+    
+    d <- data.frame(genes = ids, label = label,
+                    description = description)
     
     rownames(d) <- d$genes
   }
