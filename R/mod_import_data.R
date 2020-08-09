@@ -459,6 +459,8 @@ mod_import_data_server <- function(input, output, session, r) {
     
     Then, when you launch DIANE again, your organism should appear 
     in the following selection menu.
+    
+    For now, only Arabidopsis, Human and Mouse are working.
     "
   })
   
