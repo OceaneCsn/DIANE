@@ -35,7 +35,7 @@ It contains the main settings and results for the network inference tab of the a
 
 ## Biological question
 
-Input genes for clustering (deferentially expressed genes) :
+Input genes for the inference (deferentially expressed genes) :
 ```{r}
 paste(input$input_deg_genes_net, ",", length(r$DEGs[[input$input_deg_genes_net]]) ,"genes")
 ```
