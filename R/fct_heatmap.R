@@ -174,14 +174,15 @@ draw_MDS <- function(normalized.count) {
 #' Draw variables along principal PCA components
 #'
 #' @param data normalized expression data
-#'
+#' @param free_scale weather of not the plot the conditions 
+#' coordinate in axis from 0 to 1 only
 #' @export
 #' @import ggplot2
 #'
 #' @examples
 #' data("abiotic_stresses")
 #' draw_PCA(abiotic_stresses$normalized_counts)
-draw_PCA <- function(data) {
+draw_PCA <- function(data, free_scale = FALSE) {
   # PCA computation
   data <- log(data + 2)
   data <- data / rowMeans(data)
@@ -195,6 +196,7 @@ draw_PCA <- function(data) {
     )
   
   acp$co$condition = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 1]
+  acp$co$replicate = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 2]
   
   scree <-
     data.frame(
@@ -212,7 +214,8 @@ draw_PCA <- function(data) {
              x = Comp1,
              y = Comp2,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -220,8 +223,8 @@ draw_PCA <- function(data) {
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+    geom_point(size = 6, alpha = 0.7) + geom_vline(xintercept = 0) + 
+    geom_hline(yintercept = 0) +
     theme(legend.position = "none") +
     ggtitle("Principal components 1 and 2") +
     xlab(paste("x-axis : Comp1 ", scree[1, "explained.variance"], "%")) +
@@ -233,7 +236,8 @@ draw_PCA <- function(data) {
              x = Comp2,
              y = Comp3,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -241,8 +245,8 @@ draw_PCA <- function(data) {
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+    geom_point(size = 6, alpha = 0.7) +
+    geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
     theme(legend.position = "none") +
     ggtitle("Principal components 2 and 3") +
     xlab(paste("x-axis : Comp2 ", scree[2, "explained.variance"], "%")) +
@@ -254,7 +258,8 @@ draw_PCA <- function(data) {
              x = Comp3,
              y = Comp4,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -262,8 +267,8 @@ draw_PCA <- function(data) {
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
+    geom_point(size = 6, alpha = 0.7) + 
+    geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
     theme(
       legend.position = "bottom",
       legend.text = ggplot2::element_text(size = 18),
@@ -272,6 +277,12 @@ draw_PCA <- function(data) {
     ggtitle("Principal components 3 and 4") +
     xlab(paste("x-axis : Comp3 ", scree[3, "explained.variance"], "%")) +
     ylab(paste("y-axis : Comp4 ", scree[4, "explained.variance"], "%"))
+  
+  if(!free_scale){
+    g3_4 <- g3_4 + xlim(-1, 1) + ylim(-1, 1)
+    g2_3 <- g2_3 + xlim(-1, 1) + ylim(-1, 1)
+    g1_2 <- g1_2 + xlim(-1, 1) + ylim(-1, 1)
+  }
   
   screeplot <- ggplot(scree,
                       aes(

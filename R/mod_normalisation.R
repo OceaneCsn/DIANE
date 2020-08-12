@@ -153,7 +153,7 @@ mod_normalisation_ui <- function(id) {
       shinydashboard::tabBox(
         title = "Data exploration",
         width = 12,
-        height = "750px",
+        height = "900px",
         
         shiny::tabPanel(
           title = "Samples distributions",
@@ -176,7 +176,7 @@ mod_normalisation_ui <- function(id) {
               onStatus = "success"
             )
           ),
-          shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
+          col_12(shiny::plotOutput(ns('heatmap_preview_norm'), height = "800px"))
         ),
         shiny::tabPanel(title = "PCA",
                         shiny::plotOutput(ns('pca_plot'), height = "800px")),

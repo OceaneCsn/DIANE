@@ -4,10 +4,13 @@
 \alias{draw_PCA}
 \title{Draw variables along principal PCA components}
 \usage{
-draw_PCA(data)
+draw_PCA(data, free_scale = FALSE)
 }
 \arguments{
 \item{data}{normalized expression data}
+
+\item{free_scale}{weather of not the plot the conditions 
+coordinate in axis from 0 to 1 only}
 }
 \description{
 Draw variables along principal PCA components
