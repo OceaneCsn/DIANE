@@ -51,7 +51,9 @@ Imports:
 Suggests: 
     org.Hs.eg.db,
     org.Dm.eg.db,
-    org.Mm.eg.db
+    org.Mm.eg.db,
+    org.Ce.eg.db,
+    org.EcK12.eg.db
 Remotes: nik01010/dashboardthemes 
 Encoding: UTF-8
 LazyData: true

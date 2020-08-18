@@ -195,6 +195,7 @@ draw_PCA <- function(data) {
     )
   
   acp$co$condition = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 1]
+  acp$co$replicate = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 2]
   
   scree <-
     data.frame(
@@ -212,7 +213,8 @@ draw_PCA <- function(data) {
              x = Comp1,
              y = Comp2,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -222,10 +224,10 @@ draw_PCA <- function(data) {
            ) +
     geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
     ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none", title = element_text(size = 18, face = "bold")) +
     ggtitle("Principal components 1 and 2") +
-    xlab(paste("x-axis : Comp1 ", scree[1, "explained.variance"], "%")) +
-    ylab(paste("y-axis : Comp2 ", scree[2, "explained.variance"], "%"))
+    xlab(paste("x-axis : cor. to Comp1 ", scree[1, "explained.variance"], "%")) +
+    ylab(paste("y-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%"))
   
   g2_3 <-
     ggplot(data = acp$co,
@@ -233,7 +235,8 @@ draw_PCA <- function(data) {
              x = Comp2,
              y = Comp3,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -243,10 +246,10 @@ draw_PCA <- function(data) {
            ) +
     geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
     ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-    theme(legend.position = "none") +
+    theme(legend.position = "none", title = element_text(size = 18, face = "bold")) +
     ggtitle("Principal components 2 and 3") +
-    xlab(paste("x-axis : Comp2 ", scree[2, "explained.variance"], "%")) +
-    ylab(paste("y-axis : Comp3 ", scree[3, "explained.variance"], "%"))
+    xlab(paste("x-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%")) +
+    ylab(paste("y-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%"))
   
   g3_4 <-
     ggplot(data = acp$co,
@@ -254,7 +257,8 @@ draw_PCA <- function(data) {
              x = Comp3,
              y = Comp4,
              color = condition,
-             label = condition
+             label = condition,
+             shape = replicate
            )) + geom_text(
              color = "black",
              size = 6,
@@ -265,13 +269,13 @@ draw_PCA <- function(data) {
     geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
     ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
     theme(
-      legend.position = "bottom",
+      legend.position = "bottom", title = element_text(size = 18, face = "bold"),
       legend.text = ggplot2::element_text(size = 18),
       legend.text.align = 1
     ) +
     ggtitle("Principal components 3 and 4") +
-    xlab(paste("x-axis : Comp3 ", scree[3, "explained.variance"], "%")) +
-    ylab(paste("y-axis : Comp4 ", scree[4, "explained.variance"], "%"))
+    xlab(paste("x-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%")) +
+    ylab(paste("y-axis : cor. to Comp4 ", scree[4, "explained.variance"], "%"))
   
   screeplot <- ggplot(scree,
                       aes(
@@ -283,7 +287,8 @@ draw_PCA <- function(data) {
     geom_bar(stat = "identity") + geom_text(size = 6,
                                             vjust = 1.6,
                                             color = "white") +
-    ggtitle("PCA Screeplot") + theme(legend.position = "none")
+    ggtitle("PCA Screeplot") + theme(legend.position = "none",
+                                     title = element_text(size = 18, face = "bold") )
   
   
   gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)

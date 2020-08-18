@@ -410,19 +410,19 @@ mod_import_data_server <- function(input, output, session, r) {
       
       
       choices = c("Arabidopsis thaliana")
-      if( require("org.Mm.eg.db"))
+      if( requireNamespace("org.Mm.eg.db"))
         choices <- c(choices, "Mus musculus")
       
-      if( require("org.Hs.eg.db"))
+      if( requireNamespace("org.Hs.eg.db"))
         choices <- c(choices, "Homo sapiens")
       
-      if( require("org.Ce.eg.db"))
+      if( requireNamespace("org.Ce.eg.db"))
         choices <- c(choices, "Caenorhabditis elegans")
       
-      if( require("org.Dm.eg.db"))
+      if( requireNamespace("org.Dm.eg.db"))
         choices <- c(choices, "Drosophilia melanogatser")
       
-      if( require("org.EcK12.eg.db"))
+      if( requireNamespace("org.EcK12.eg.db"))
         choices <- c(choices, "Escherichia coli")
       
       
