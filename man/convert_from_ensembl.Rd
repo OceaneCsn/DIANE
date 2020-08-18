@@ -20,7 +20,10 @@ For Homo sapiens, converts ensembl IDs to entrez IDs,
 symbol or name,
 }
 \examples{
+if(require("org.Hs.eg.db")){
 genes <- c("ENSG00000000003", "ENSG00000003989", "ENSG00000005884", "ENSG00000007168")
 convert_from_ensembl(genes)
 convert_from_ensembl(genes, to = "symbol")
+}
+
 }

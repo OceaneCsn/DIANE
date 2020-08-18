@@ -43,7 +43,7 @@ mod_module_levels_ui <- function(id){
             collapsible = TRUE,
             closable = FALSE,
             width = 12,
-            plotly::plotlyOutput(ns("expression_plot"), height = "700px"))
+            shiny::plotOutput(ns("expression_plot"), height = "700px"))
  
   )
 }
@@ -81,7 +81,7 @@ mod_module_levels_server <- function(input, output, session, r){
   })
   
   
-  output$expression_plot <- plotly::renderPlotly({
+  output$expression_plot <- shiny::renderPlot({
     
     shiny::req(r$normalized_counts, r$conditions, input$genes)
     
@@ -92,10 +92,9 @@ mod_module_levels_server <- function(input, output, session, r){
     shiny::req(sum(genes %in% rownames(r$normalized_counts)) > 0)
     
   
-  plotly::ggplotly(draw_expression_levels(as.data.frame(r$normalized_counts),
+  draw_expression_levels(as.data.frame(r$normalized_counts),
                            conds = input$input_conditions,
-                           genes = genes, gene.name.size = 22)) %>%
-    plotly::layout(legend = list(font = list(size = 15)))
+                           genes = genes, gene.name.size = 22)
   })
  
 }

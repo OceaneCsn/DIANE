@@ -561,7 +561,7 @@ mod_differential_expression_analysis_server <-
         profiles = TRUE,
         title = paste0(
           "LogCount of differentially expressed genes between : ",
-          r_dea$top_tags$comparison
+          paste0(r_dea$ref, " and ", r_dea$trt)
         )
       )
     })

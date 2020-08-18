@@ -20,8 +20,10 @@ For Mus musculus, converts ensembl IDs to entrez IDs,
 symbol or name,
 }
 \examples{
+if(require("org.Mm.eg.db")){
 genes <- c("ENSMUSG00000000001", "ENSMUSG00000000049")
 convert_from_ensembl_mus(genes)
 convert_from_ensembl_mus(genes, to = "symbol")
 convert_from_ensembl_mus(genes, to = "name")
+}
 }
