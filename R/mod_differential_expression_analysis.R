@@ -129,7 +129,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           ),
           
           
-          plotly::plotlyOutput(ns("ma_vulcano"), height = "700px")
+          shiny::plotOutput(ns("ma_vulcano"), height = "700px")
           
         ),
         shiny::tabPanel(
@@ -305,7 +305,7 @@ mod_differential_expression_analysis_server <-
     shiny::observeEvent((input$estimate_disp_btn), {
       shiny::req(r$tcc)
       r_dea$fit <- estimateDispersion(r$tcc)
-      r$fit <- estimateDispersion(r$tcc)
+      r$fit <- r_dea$fit
     })
     
     shiny::observeEvent((input$deg_test_btn), {
@@ -566,15 +566,15 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$ma_vulcano <- plotly::renderPlotly({
+    output$ma_vulcano <- shiny::renderPlot({
       shiny::req(r$top_tags, r_dea$DEGs)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      plotly::ggplotly(draw_DEGs(
+      draw_DEGs(
         tags = r_dea$tags,
         fdr = input$dea_fdr,
         lfc = input$dea_lfc,
         MA = input$MA_vulcano_switch
-      ))
+      )
     })
     
     

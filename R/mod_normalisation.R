@@ -79,7 +79,7 @@ mod_normalisation_ui <- function(id) {
             shinyWidgets::awesomeRadio(
               inputId = ns("norm_method"),
               label = "Normalisation method:",
-              choices = c("tmm", "deseq"),
+              choices = c("tmm", "deseq", "none"),
               inline = TRUE,
               selected = "tmm",
               status = "success"
@@ -212,29 +212,48 @@ mod_normalisation_server <- function(input, output, session, r) {
   })
   
   
+  shiny::observe({
+    if(input$norm_method == "none"){
+      shinyWidgets::updateSwitchInput(session, ns("prior_removal"),
+                        value = FALSE)
+      
+    }
+  })
+  
   #   ____________________________________________________________________________
   #   buttn reactives                                                         ####
   
   shiny::observeEvent(input$normalize_btn, {
     shiny::req(r$raw_counts)
-    r$tcc <-
-      normalize(
-        r$raw_counts,
-        r$conditions,
-        norm_method = input$norm_method,
-        iteration = input$prior_removal
-      )
-    r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
-    # the filtering needs to be done again if previously made, so :
-    r$normalized_counts <- NULL
-    
+    if(input$norm_method != "none"){
+      r$tcc <-
+        normalize(
+          r$raw_counts,
+          r$conditions,
+          norm_method = input$norm_method,
+          iteration = input$prior_removal
+        )
+      r$normalized_counts_pre_filter <- TCC::getNormalizedData(r$tcc)
+      # the filtering needs to be done again if previously made, so :
+      r$normalized_counts <- NULL
+    }
+    else{
+      r$normalized_counts_pre_filter <- r$raw_counts
+      r$normalized_counts <- NULL
+    }
   })
   
   shiny::observeEvent((input$use_SumFilter), {
     shiny::req(r$normalized_counts_pre_filter)
-    r$tcc <- filter_low_counts(r$tcc, thr = input$low_counts_filter)
-    r$normalized_counts <- TCC::getNormalizedData(r$tcc)
-    
+    if(input$norm_method != "none"){
+      r$tcc <- filter_low_counts(r$tcc, thr = input$low_counts_filter)
+      r$normalized_counts <- TCC::getNormalizedData(r$tcc)
+    }
+    else{
+      r$normalized_counts <- r$normalized_counts_pre_filter[
+        rowSums(r$normalized_counts_pre_filter) > input$low_counts_filter,]
+      r$tcc <- list(counts = r$normalized_counts)
+    }
   })
   
   
