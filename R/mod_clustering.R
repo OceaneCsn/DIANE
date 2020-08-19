@@ -268,7 +268,8 @@ mod_clustering_server <- function(input, output, session, r) {
     
     shiny::req(input$input_deg_genes)
 
-    genes_conditions <- unique(as.vector(str_split_fixed(input$input_deg_genes, ' ',2)))
+    genes_conditions <- unique(as.vector(
+      stringr::str_split_fixed(input$input_deg_genes, ' ',2)))
     
     if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
       shinyalert::shinyalert(
