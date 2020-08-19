@@ -27,7 +27,7 @@ mod_network_inference_ui <- function(id){
 #   ____________________________________________________________________________
 #   inference settings                                                      ####
 
-      boxPlus(
+    shinydashboardPlus::boxPlus(
         title = "Inference Settings",
         solidHeader = FALSE,
         status = "success",
@@ -159,7 +159,7 @@ shiny::hr(),
 #   ____________________________________________________________________________
 #   thresholding options                                                    ####
 
-    col_6(boxPlus(
+    col_6(shinydashboardPlus::boxPlus(
       title = "Thresholding settings",
       solidHeader = FALSE,
       status = "success",

@@ -35,7 +35,7 @@ mod_normalisation_ui <- function(id) {
     #   Normalisation settings                                                  ####
     
     col_3(
-      boxPlus(
+      shinydashboardPlus::boxPlus(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",

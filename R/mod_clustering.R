@@ -22,7 +22,7 @@ mod_clustering_ui <- function(id) {
     #   Clustering settings                                                     ####
     
     col_4(
-      boxPlus(
+      shinydashboardPlus::boxPlus(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",

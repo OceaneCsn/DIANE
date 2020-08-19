@@ -23,7 +23,7 @@ mod_module_levels_ui <- function(id){
       margins = c(70, 1200)
     ),
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Plot settings",
       solidHeader = FALSE,
       status = "success",
@@ -38,7 +38,7 @@ mod_module_levels_ui <- function(id){
     shiny::uiOutput(ns("condition_choice"))
       
     ),
-    boxPlus(solidHeader = FALSE,
+    shinydashboardPlus::boxPlus(solidHeader = FALSE,
             status = "success",
             collapsible = TRUE,
             closable = FALSE,

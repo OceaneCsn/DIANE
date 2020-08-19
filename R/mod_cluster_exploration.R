@@ -29,7 +29,7 @@ mod_cluster_exploration_ui <- function(id) {
     #   Profiles column                                                         ####
     
     col_6(
-      boxPlus(
+      shinydashboardPlus::boxPlus(
         width = 12,
         closable = FALSE,
         title = "Expression profiles",
