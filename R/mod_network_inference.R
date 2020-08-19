@@ -460,13 +460,12 @@ mod_network_inference_server <- function(input, output, session, r){
     # either the total number of cores minus one as max
     if(!golem::get_golem_options("server_version")){
       cpus <- parallel::detectCores()
-      if(is.na(cpus)) cpus <- 1
+      if(is.na(cpus)){cpus <- 1}
     }
     else{
       cpus = 56
     }
-    
-    
+
     shinyWidgets::sliderTextInput(
       inputId = ns("n_cores"),
       label = "Number of cores for 
