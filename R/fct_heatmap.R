@@ -38,7 +38,7 @@ draw_heatmap <-
       conds <- colnames(data)
     else
       conds <-
-        colnames(data)[str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
+        colnames(data)[stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
     
     if (log)
       data <- log(data + 1)
@@ -142,7 +142,7 @@ draw_MDS <- function(normalized.count) {
     )
   g <-
     ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition, label = sample)) +
-    ggplot2::geom_point(size = 6) + geom_text(
+    ggplot2::geom_point(size = 6) + ggplot2::geom_text(
       color = "black",
       size = 6,
       alpha = 0.5,
@@ -208,87 +208,87 @@ draw_PCA <- function(data) {
   
   # Plots
   g1_2 <-
-    ggplot(data = acp$co,
-           aes(
+    ggplot2::ggplot(data = acp$co,
+           ggplot2::aes(
              x = Comp1,
              y = Comp2,
              color = condition,
              label = condition,
              shape = replicate
-           )) + geom_text(
+           )) + ggplot2::geom_text(
              color = "black",
              size = 6,
              alpha = 0.5,
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-    theme(legend.position = "none", title = element_text(size = 18, face = "bold")) +
-    ggtitle("Principal components 1 and 2") +
-    xlab(paste("x-axis : cor. to Comp1 ", scree[1, "explained.variance"], "%")) +
-    ylab(paste("y-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%"))
+    ggplot2::geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
+    ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
+    ggplot2::ggtitle("Principal components 1 and 2") +
+    ggplot2::xlab(paste("x-axis : cor. to Comp1 ", scree[1, "explained.variance"], "%")) +
+    ggplot2::ylab(paste("y-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%"))
   
   g2_3 <-
-    ggplot(data = acp$co,
-           aes(
+    ggplot2::ggplot(data = acp$co,
+           ggplot2::aes(
              x = Comp2,
              y = Comp3,
              color = condition,
              label = condition,
              shape = replicate
-           )) + geom_text(
+           )) + ggplot2::geom_text(
              color = "black",
              size = 6,
              alpha = 0.5,
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-    theme(legend.position = "none", title = element_text(size = 18, face = "bold")) +
-    ggtitle("Principal components 2 and 3") +
-    xlab(paste("x-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%")) +
-    ylab(paste("y-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%"))
+    gggplot2::eom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
+    ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
+    ggplot2::ggtitle("Principal components 2 and 3") +
+    ggplot2::xlab(paste("x-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%")) +
+    ggplot2::ylab(paste("y-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%"))
   
   g3_4 <-
     ggplot(data = acp$co,
-           aes(
+           ggplot2::aes(
              x = Comp3,
              y = Comp4,
              color = condition,
              label = condition,
              shape = replicate
-           )) + geom_text(
+           )) + ggplot2::geom_text(
              color = "black",
              size = 6,
              alpha = 0.5,
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
-    ylim(-1, 1) + geom_vline(xintercept = 0) + geom_hline(yintercept = 0) +
-    theme(
-      legend.position = "bottom", title = element_text(size = 18, face = "bold"),
+    ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
+    ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::theme(
+      legend.position = "bottom", title = ggplot2::element_text(size = 18, face = "bold"),
       legend.text = ggplot2::element_text(size = 18),
       legend.text.align = 1
     ) +
-    ggtitle("Principal components 3 and 4") +
-    xlab(paste("x-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%")) +
-    ylab(paste("y-axis : cor. to Comp4 ", scree[4, "explained.variance"], "%"))
+    ggplot2::ggtitle("Principal components 3 and 4") +
+    ggplot2::xlab(paste("x-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%")) +
+    ggplot2::ylab(paste("y-axis : cor. to Comp4 ", scree[4, "explained.variance"], "%"))
   
-  screeplot <- ggplot(scree,
-                      aes(
+  screeplot <- ggplot2::ggplot(scree,
+                      ggplot2::aes(
                         y = explained.variance,
                         x = component,
                         fill = component,
                         label = paste(round(explained.variance, 1), '%')
                       )) +
-    geom_bar(stat = "identity") + geom_text(size = 6,
+    ggplot2::geom_bar(stat = "identity") + ggplot2::geom_text(size = 6,
                                             vjust = 1.6,
                                             color = "white") +
-    ggtitle("PCA Screeplot") + theme(legend.position = "none",
-                                     title = element_text(size = 18, face = "bold") )
+    ggplot2::ggtitle("PCA Screeplot") + ggplot2::theme(legend.position = "none",
+                                     title = ggplot2::element_text(size = 18, face = "bold") )
   
   
   gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
@@ -346,21 +346,23 @@ draw_expression_levels <-
         rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
     d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
     d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
-    ggplot(d,
-           aes(
+    
+    ggplot2::ggplot(d,
+             ggplot2::aes(
              x = condition,
              y = value,
              color = replicate
            )) +
-      geom_point(size = 4, alpha = 0.8) + facet_wrap( ~ gene, scales = "free") +
-      ggtitle("Normalized expression levels") +
-      theme(
-        plot.title = element_text(size = 22, hjust = 0.5, face = "bold"),
-        strip.text.x = element_text(size = gene.name.size),
-        legend.title = element_text(size = 20),
-        legend.text = element_text(size = 18),
-        axis.text.y = element_text(size = 22, angle = 320),
-        axis.title.y = element_text(size = 20),
-        axis.text.x = element_text(size = 15, angle = 20)
-      ) + xlab("") + ylab("Normalized counts")
+      ggplot2::geom_point(size = 4, alpha = 0.8) + 
+      ggplot2::facet_wrap( ~ gene, scales = "free") +
+      ggplot2::ggtitle("Normalized expression levels") +
+      ggplot2::theme(
+        plot.title = ggplot2::element_text(size = 22, hjust = 0.5, face = "bold"),
+        strip.text.x = ggplot2::element_text(size = gene.name.size),
+        legend.title = ggplot2::element_text(size = 20),
+        legend.text = ggplot2::element_text(size = 18),
+        axis.text.y = ggplot2::element_text(size = 22, angle = 320),
+        axis.title.y = ggplot2::element_text(size = 20),
+        axis.text.x = ggplot2::element_text(size = 15, angle = 20)
+      ) + ggplot2::xlab("") + ggplot2::ylab("Normalized counts")
   }
