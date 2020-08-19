@@ -444,29 +444,30 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$org_install <- shiny::renderText({
-    if(!golem::get_golem_options("server_version")){
-      "<b>The organisms listed below are the one detected on the system.</b> <br>
-    To use new organisms, please close DIANE and install the corresponding 
-    package from Bioconductor from R ou Rstudio consoles.<br>
-    
-    <code> if (!requireNamespace(\"BiocManager\", quietly = TRUE))
-      install.packages(\"BiocManager\") </code> <br>
-    
-    For Human : <code> BiocManager::install(\"org.Hs.eg.db\") </code> <br>
-    For Mouse : <code> BiocManager::install(\"org.Mm.eg.db\") </code> <br>
-    For Caenorhabditis elegans : <code> BiocManager::install(\"org.Ce.eg.db\") </code> <br>
-    For E coli : <code> BiocManager::install(\"org.EcK12.eg.db\") </code> <br>
-    For fruit fly : <code> BiocManager::install(\"org.Dm.eg.db\") </code> <br>
-    
-    Then, when you launch DIANE again, your organism should appear 
-    in the following selection menu.
-    
-    For now, only Arabidopsis, Human and Mouse are working.
-    "
-    }
-    else{
-      "You can choose between all the organisms above"
-    }
+    # if(!golem::get_golem_options("server_version")){
+    #   "<b>The organisms listed below are the one detected on the system.</b> <br>
+    # To use new organisms, please close DIANE and install the corresponding 
+    # package from Bioconductor from R ou Rstudio consoles.<br>
+    # 
+    # <code> if (!requireNamespace(\"BiocManager\", quietly = TRUE))
+    #   install.packages(\"BiocManager\") </code> <br>
+    # 
+    # For Human : <code> BiocManager::install(\"org.Hs.eg.db\") </code> <br>
+    # For Mouse : <code> BiocManager::install(\"org.Mm.eg.db\") </code> <br>
+    # For Caenorhabditis elegans : <code> BiocManager::install(\"org.Ce.eg.db\") </code> <br>
+    # For E coli : <code> BiocManager::install(\"org.EcK12.eg.db\") </code> <br>
+    # For fruit fly : <code> BiocManager::install(\"org.Dm.eg.db\") </code> <br>
+    # 
+    # Then, when you launch DIANE again, your organism should appear 
+    # in the following selection menu.
+    # 
+    # For now, only Arabidopsis, Human and Mouse are working.
+    # "
+    # }
+    # else{
+    #   "You can choose between all the organisms above"
+    # }
+    golem::get_golem_options("server_version")
   })
   
   shiny::observeEvent(input$org_chosen, {
