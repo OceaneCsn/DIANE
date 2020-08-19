@@ -308,26 +308,26 @@ draw_discarded_edges <- function(links, net_data){
   
   
   visNetwork::visNetwork(nodes = n_data_before$nodes, n_data_before$edges) %>%
-    visNetwork::visEdges(smooth = FALSE, arrows = 'to') %>%
+    visNetwork::visEdges(smooth = FALSE, arrows = 'to') visNetwork::"%>%"
     visNetwork::visPhysics(
       solver = "forceAtlas2Based",
       timestep = 0.6,
       minVelocity = 12,
       maxVelocity = 10,
       stabilization = F
-    ) %>%
+    ) visNetwork::"%>%"
     visNetwork::visGroups(
       groupname = "Regulator",
       size = 28,
       color = list("background" = "#49A346", "border" = "#FFFFCC"),
       shape = "square"
-    ) %>%
+    ) visNetwork::"%>%"
     visNetwork::visGroups(
       groupname = "Grouped Regulators",
       size = 45,
       color = list("background" = "#1C5435", "border" = "#FFFFCC"),
       shape = "square"
-    ) %>%
+    ) visNetwork::"%>%"
     visNetwork::visGroups(groupname = "Target Gene",
               color = list("background" = "#B6B3B3", hover = "grey",
                            "border" = "#96E69A")) %>%
