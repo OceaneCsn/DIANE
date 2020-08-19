@@ -252,7 +252,7 @@ draw_PCA <- function(data) {
     ggplot2::ylab(paste("y-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%"))
   
   g3_4 <-
-    ggplot(data = acp$co,
+    ggplot2::ggplot(data = acp$co,
            ggplot2::aes(
              x = Comp3,
              y = Comp4,
