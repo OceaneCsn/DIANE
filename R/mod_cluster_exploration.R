@@ -19,7 +19,7 @@ mod_cluster_exploration_ui <- function(id) {
     shiny::h1("Analyse the genes of a specific cluster"),
     shiny::hr(),
     shiny::fluidRow(col_8(shiny::uiOutput(ns("cluster_to_explore_choice"))),
-                    col_4(valueBoxOutput(ns(
+                    col_4(shinydashboard::valueBoxOutput(ns(
                       "gene_number_cluster"
                     )))
     ),
@@ -217,8 +217,8 @@ mod_cluster_exploration_server <-
     })
     
     
-    output$gene_number_cluster <- renderValueBox({
-      valueBox(
+    output$gene_number_cluster <- shinydashboard::renderValueBox({
+      shinydashboard::valueBox(
         value = length(
           get_genes_in_cluster(
             membership = membership(),
