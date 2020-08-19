@@ -142,7 +142,7 @@ enrich_go <- function(genes, background,
                                    ont = GO_type,
                                    universe = background,
                                    pAdjustMethod = "BH",
-                                   pvalueCutoff  = 0.01,
+                                   pvalueCutoff  = 0.05,
                                    qvalueCutoff  = 0.05,
                                    readable = TRUE)
   if(!is.null(ego)){

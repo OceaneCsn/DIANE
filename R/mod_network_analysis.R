@@ -472,8 +472,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
     nodes$label <-
       r$gene_info[match(nodes$id, rownames(r$gene_info)), "label"]
     library(visNetwork)
-    visNetwork::visNetwork(nodes, r$cor_network$edges) %>% 
-      visNetwork::visNodes(font = list("size" = 35), 
+    visNetwork::visNetwork(nodes, r$cor_network$edges) %>% visNetwork::visNodes(font = list("size" = 35), 
                color = list("background" = "#1C5435", "border" = "#FFFFCC"),
                shape = "square", size = 30)
   })
