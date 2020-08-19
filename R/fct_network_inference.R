@@ -195,7 +195,7 @@ network_data <- function(graph, regulators, gene_info = NULL){
 #' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 #' DIANE::draw_network(data$nodes, data$edges)}
 draw_network <- function(nodes, edges){
-  library(visNetwork)
+  requireNamespace("visNetwork")
   visNetwork::visNetwork(nodes = nodes, edges = edges) %>%
     visNetwork::visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
     visPhysics(

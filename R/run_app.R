@@ -1,6 +1,8 @@
 #' Run the Shiny Application
 #'
 #' @param ... A series of options to be used inside the app.
+#' @param server_version TRUE if the app is deployed on web server, 
+#' else (default), FALSE
 #' @return shiny application
 #'
 #' @export

@@ -7,6 +7,9 @@
 run_app(server_version = FALSE, ...)
 }
 \arguments{
+\item{server_version}{TRUE if the app is deployed on web server, 
+else (default), FALSE}
+
 \item{...}{A series of options to be used inside the app.}
 }
 \value{
