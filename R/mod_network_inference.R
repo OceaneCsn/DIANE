@@ -458,7 +458,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     # assigns either one core if detection fails,
     # either the total number of cores minus one as max
-    if(!golem::get_golem_options("server_version")){
+    if(golem::get_golem_options("server_version")){
       cpus <- parallel::detectCores()
       if(is.na(cpus)) cpus <- 1
     }
