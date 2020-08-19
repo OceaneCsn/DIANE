@@ -19,7 +19,7 @@
 #' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 run_coseq <- function(conds, genes, data, K = 6:12) {
 
-  conditions <- colnames(data)[str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
+  conditions <- colnames(data)[stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
   
   groups <- stringr::str_split_fixed(conditions, '_', 2)[, 1]
   dataC <- round(data[genes, conditions], 0)

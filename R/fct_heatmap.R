@@ -244,7 +244,7 @@ draw_PCA <- function(data) {
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    ggplot2::eom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
+    ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
     ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
     ggplot2::ggtitle("Principal components 2 and 3") +
