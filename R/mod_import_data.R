@@ -444,7 +444,8 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$org_install <- shiny::renderText({
-    "<b>The organisms listed below are the one detected on the system.</b> <br>
+    if(!golem::get_golem_options("server_version")){
+      "<b>The organisms listed below are the one detected on the system.</b> <br>
     To use new organisms, please close DIANE and install the corresponding 
     package from Bioconductor from R ou Rstudio consoles.<br>
     
@@ -462,6 +463,10 @@ mod_import_data_server <- function(input, output, session, r) {
     
     For now, only Arabidopsis, Human and Mouse are working.
     "
+    }
+    else{
+      "You can choose between all the organisms above"
+    }
   })
   
   shiny::observeEvent(input$org_chosen, {
