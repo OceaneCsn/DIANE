@@ -28,7 +28,7 @@ mod_import_data_ui <- function(id) {
     #   ____________________________________________________________________________
     #   File upload                                                             ####
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Expression file upload",
       width = 4,
       solidHeader = FALSE,
@@ -125,9 +125,9 @@ mod_import_data_ui <- function(id) {
       ),
       
       
-      valueBoxOutput(ns("data_dim")),
-      valueBoxOutput(ns("conditions")),
-      valueBoxOutput(ns("samples")),
+      shinydashboard::valueBoxOutput(ns("data_dim")),
+      shinydashboard::valueBoxOutput(ns("conditions")),
+      shinydashboard::valueBoxOutput(ns("samples")),
       
       
       col_4(shiny::uiOutput(ns("variants_summary"))),
@@ -140,7 +140,7 @@ mod_import_data_ui <- function(id) {
     #   Previews                                                                ####
     
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Preview of the expression matrix",
       width = 4,
       solidHeader = FALSE,
@@ -152,7 +152,7 @@ mod_import_data_ui <- function(id) {
       of your conditions."
     ),
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Design file",
       width = 3,
       solidHeader = FALSE,
