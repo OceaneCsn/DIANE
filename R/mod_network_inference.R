@@ -661,7 +661,8 @@ mod_network_inference_server <- function(input, output, session, r){
                         nGenes = dim(mat)[2],
                         nRegulators = dim(mat)[1], 
                         nTrees = input$n_trees, 
-                        verbose = TRUE)
+                        verbose = TRUE,
+                        nCores = input$n_cores)
       
 
       shiny::showModal(shiny::modalDialog(
