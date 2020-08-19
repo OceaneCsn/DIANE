@@ -45,7 +45,7 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
                                               1, max(parallel::detectCores() - 1, 1)),
                               verbose = TRUE, importance_metric = "node_purity"){
 
-  conditions <- colnames(normalized.count)[str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
+  conditions <- colnames(normalized.count)[stringr::str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
   
   
   if (length(conditions) == 0) {

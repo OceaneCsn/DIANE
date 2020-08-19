@@ -138,7 +138,7 @@ draw_MDS <- function(normalized.count) {
       dim1 = mds$x,
       dim2 = mds$y,
       sample = names(mds$x),
-      condition = str_split_fixed(names(mds$x), '_', 2)[, 1]
+      condition = stringr::str_split_fixed(names(mds$x), '_', 2)[, 1]
     )
   g <-
     ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition, label = sample)) +
@@ -222,7 +222,7 @@ draw_PCA <- function(data) {
              nudge_x = 0.07,
              nudge_y = 0.07
            ) +
-    ggplot2::geom_point(size = 6, alpha = 0.7) + xlim(-1, 1) +
+    ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
     ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
     ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
     ggplot2::ggtitle("Principal components 1 and 2") +
