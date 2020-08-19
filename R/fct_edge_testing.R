@@ -133,15 +133,22 @@ test_edges <-
     # estimate pvalues
     dataT <- t(normalized_counts)
     
+    force(dataT)
+    force(targets)
+    force(nShuffle)
+    force(nTrees)
+    force(target_to_TF)
+    
     doParallel::registerDoParallel(cores = nCores)
     if (verbose)
       message(paste("\nUsing", foreach::getDoParWorkers(), "cores."))
-    "%dopar%" <- foreach::"%dopar%"
+    #"%dopar%" <- foreach::"%dopar%"
     suppressPackageStartupMessages(result.reg <-
                                      doRNG::"%dorng%"(foreach::foreach(
                                        target = targets, .combine = rbind
                                      ),
                                      {
+                                       # to prevent bug in shiny?
                                        # remove target gene from input genes
                                        theseRegulatorNames <-
                                          target_to_TF[[target]]
