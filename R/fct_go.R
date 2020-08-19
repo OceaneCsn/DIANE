@@ -338,7 +338,7 @@ draw_enrich_go_map <- function(go){
   layout$GeneCount <- go[match(layout$name, go$ID),"Count"]
   layout$adj.p.value <- go[match(layout$name, go$ID),"p.adjust"]
   layout$label <- go[match(layout$name, go$ID),"Description"]
-  library("ggplot")
+  library("ggplot2")
   ggraph::ggraph(layout) + 
     ggraph::geom_edge_link(ggplot2::aes(width = common_genes), alpha=0.1) + 
     ggraph::geom_node_point(ggplot2::aes(size = GeneCount, color=adj.p.value)) +
