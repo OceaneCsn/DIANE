@@ -4,7 +4,7 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(...)
+run_app(server_version = FALSE, ...)
 }
 \arguments{
 \item{...}{A series of options to be used inside the app.}

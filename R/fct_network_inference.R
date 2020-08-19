@@ -45,7 +45,7 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
                                               1, max(parallel::detectCores() - 1, 1)),
                               verbose = TRUE, importance_metric = "node_purity"){
 
-  conditions <- colnames(normalized.count)[str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
+  conditions <- colnames(normalized.count)[stringr::str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
   
   
   if (length(conditions) == 0) {
@@ -195,8 +195,9 @@ network_data <- function(graph, regulators, gene_info = NULL){
 #' data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]])
 #' DIANE::draw_network(data$nodes, data$edges)}
 draw_network <- function(nodes, edges){
-  visNetwork(nodes = nodes, edges = edges) %>%
-  visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
+  library(visNetwork)
+  visNetwork::visNetwork(nodes = nodes, edges = edges) %>%
+    visNetwork::visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
     visPhysics(
       solver = "forceAtlas2Based",
       timestep = 0.6,
@@ -204,20 +205,20 @@ draw_network <- function(nodes, edges){
       maxVelocity = 10,
       stabilization = F
     ) %>%
-    visGroups(
+    visNetwork::visGroups(
       groupname = "Regulator",
       size = 28,
       color = list("background" = "#49A346", "border" = "#FFFFCC"),
       shape = "square"
     ) %>%
-    visGroups(
+    visNetwork::visGroups(
       groupname = "Grouped Regulators",
       size = 45,
       color = list("background" = "#1C5435", "border" = "#FFFFCC"),
       shape = "square"
     ) %>%
-    visGroups(groupname = "Target Gene",
+    visNetwork::visGroups(groupname = "Target Gene",
               color = list("background" = "#B6B3B3", hover = "grey",
                            "border" = "#96E69A")) %>%
-    visNodes(borderWidth = 0.5, font = list("size" = 35))
+    visNetwork::visNodes(borderWidth = 0.5, font = list("size" = 35))
 }

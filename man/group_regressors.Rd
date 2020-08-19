@@ -17,7 +17,7 @@ group_regressors(normalized.count, genes, regressors, corr_thr = 0.9)
 }
 \value{
 a named list.
-counts : the normalized expression data containing the new summarized variables, in 
+counts : the normalized expression data containing the new summarized variables, in
 the format mean_geneID1-geneID2... The individual genes that were grouped are removed.
 correlated_regressors_graph : visNetwork interactive plot of the correlated regulators
 grouped_genes : new vector of target genes, with individual correlated genes replaced by groups
@@ -25,7 +25,7 @@ grouped_regressors : new vector of regressors, with individual correlated genes 
 }
 \description{
 During network inference, the importance of regressors is assessed for aech target gene.
-But in the case of highly correlated regulators, only one of them could be captured by the random 
+But in the case of highly correlated regulators, only one of them could be captured by the random
 forests, stealing importance from the others, and leave the other ones with no edge, which would be incorrect.
 To account for this, this function summarizes the expression of the regulators being correlated above
 a certain threshold in new variables with the mean of their profiles.

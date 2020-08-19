@@ -42,7 +42,7 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   design = stats::model.matrix( ~ groups + 0)
   rownames(design) <- colnames(tcc$count)
   colnames(design) <-
-    str_split_fixed(colnames(design), 'groups', 2)[, 2]
+    stringr::str_split_fixed(colnames(design), 'groups', 2)[, 2]
 
 
   dge <- edgeR::DGEList(

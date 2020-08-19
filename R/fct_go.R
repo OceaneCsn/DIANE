@@ -142,7 +142,7 @@ enrich_go <- function(genes, background,
                                    ont = GO_type,
                                    universe = background,
                                    pAdjustMethod = "BH",
-                                   pvalueCutoff  = 0.01,
+                                   pvalueCutoff  = 0.05,
                                    qvalueCutoff  = 0.05,
                                    readable = TRUE)
   if(!is.null(ego)){
@@ -338,11 +338,11 @@ draw_enrich_go_map <- function(go){
   layout$GeneCount <- go[match(layout$name, go$ID),"Count"]
   layout$adj.p.value <- go[match(layout$name, go$ID),"p.adjust"]
   layout$label <- go[match(layout$name, go$ID),"Description"]
-  
   ggraph::ggraph(layout) + 
-    ggraph::geom_edge_link(aes(width = common_genes), alpha=0.1) + 
-    ggraph::geom_node_point(aes(size = GeneCount, color=adj.p.value)) +
-    ggraph::geom_node_label(aes(label = label), repel = TRUE, alpha = 0.75)+
-    ggtitle("Gene Ontology enrichment map") + theme(plot.title = element_text(size = 20, face = "bold") ) +
+    ggraph::geom_edge_link(ggplot2::aes(width = common_genes), alpha=0.1) + 
+    ggraph::geom_node_point(ggplot2::aes(size = GeneCount, color=adj.p.value)) +
+    ggraph::geom_node_label(ggplot2::aes(label = label), repel = TRUE, alpha = 0.75)+
+    ggtitle("Gene Ontology enrichment map") + ggplot2::theme(
+      plot.title = ggplot2::element_text(size = 20, face = "bold") ) +
     ggplot2::scale_color_gradient(low="#114223", high="#92D9A2")
 }

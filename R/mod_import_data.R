@@ -28,7 +28,7 @@ mod_import_data_ui <- function(id) {
     #   ____________________________________________________________________________
     #   File upload                                                             ####
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Expression file upload",
       width = 4,
       solidHeader = FALSE,
@@ -125,9 +125,9 @@ mod_import_data_ui <- function(id) {
       ),
       
       
-      valueBoxOutput(ns("data_dim")),
-      valueBoxOutput(ns("conditions")),
-      valueBoxOutput(ns("samples")),
+      shinydashboard::valueBoxOutput(ns("data_dim")),
+      shinydashboard::valueBoxOutput(ns("conditions")),
+      shinydashboard::valueBoxOutput(ns("samples")),
       
       
       col_4(shiny::uiOutput(ns("variants_summary"))),
@@ -140,7 +140,7 @@ mod_import_data_ui <- function(id) {
     #   Previews                                                                ####
     
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Preview of the expression matrix",
       width = 4,
       solidHeader = FALSE,
@@ -152,7 +152,7 @@ mod_import_data_ui <- function(id) {
       of your conditions."
     ),
     
-    boxPlus(
+    shinydashboardPlus::boxPlus(
       title = "Design file",
       width = 3,
       solidHeader = FALSE,
@@ -444,24 +444,29 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$org_install <- shiny::renderText({
-    "<b>The organisms listed below are the one detected on the system.</b> <br>
-    To use new organisms, please close DIANE and install the corresponding 
+    if(!golem::get_golem_options("server_version")){
+      "<b>The organisms listed below are the one detected on the system.</b> <br>
+    To use new organisms, please close DIANE and install the corresponding
     package from Bioconductor from R ou Rstudio consoles.<br>
-    
+
     <code> if (!requireNamespace(\"BiocManager\", quietly = TRUE))
       install.packages(\"BiocManager\") </code> <br>
-    
+
     For Human : <code> BiocManager::install(\"org.Hs.eg.db\") </code> <br>
     For Mouse : <code> BiocManager::install(\"org.Mm.eg.db\") </code> <br>
     For Caenorhabditis elegans : <code> BiocManager::install(\"org.Ce.eg.db\") </code> <br>
     For E coli : <code> BiocManager::install(\"org.EcK12.eg.db\") </code> <br>
     For fruit fly : <code> BiocManager::install(\"org.Dm.eg.db\") </code> <br>
-    
-    Then, when you launch DIANE again, your organism should appear 
+
+    Then, when you launch DIANE again, your organism should appear
     in the following selection menu.
-    
+
     For now, only Arabidopsis, Human and Mouse are working.
     "
+    }
+    else{
+      "For now, you can choose between all the organisms above"
+    }
   })
   
   shiny::observeEvent(input$org_chosen, {
@@ -521,24 +526,24 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ____________________________________________________________________________
   #   ValueBoxes summaries                                                    ####
   
-  output$data_dim <- renderValueBox({
+  output$data_dim <- shinydashboard::renderValueBox({
 
-    valueBox(
+    shinydashboard::valueBox(
       value = dim(raw_data())[1],
       subtitle = "genes",
       color = "aqua",
       width = 4
     )
   })
-  output$conditions <- renderValueBox({
+  output$conditions <- shinydashboard::renderValueBox({
     shiny::req(r$conditions)
-    valueBox(value = length((unique(r$conditions))),
+    shinydashboard::valueBox(value = length((unique(r$conditions))),
              subtitle = "conditions",
              color = "teal")
   })
   
-  output$samples <- renderValueBox({
-    valueBox(value = length(colnames(raw_data())),
+  output$samples <- shinydashboard::renderValueBox({
+    shinydashboard::valueBox(value = length(colnames(raw_data())),
              subtitle = "samples",
              color = "olive")
   })

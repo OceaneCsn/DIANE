@@ -9,7 +9,7 @@ get_correlation(pair, normalized.count)
 \arguments{
 \item{pair}{character of two gene IDs sepearte by a white space}
 
-\item{normalized.count}{normalized expression matrix containing 
+\item{normalized.count}{normalized expression matrix containing
 the IDs of the pair}
 }
 \value{

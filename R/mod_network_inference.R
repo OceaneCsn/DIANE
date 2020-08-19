@@ -27,7 +27,7 @@ mod_network_inference_ui <- function(id){
 #   ____________________________________________________________________________
 #   inference settings                                                      ####
 
-      boxPlus(
+    shinydashboardPlus::boxPlus(
         title = "Inference Settings",
         solidHeader = FALSE,
         status = "success",
@@ -159,7 +159,7 @@ shiny::hr(),
 #   ____________________________________________________________________________
 #   thresholding options                                                    ####
 
-    col_6(boxPlus(
+    col_6(shinydashboardPlus::boxPlus(
       title = "Thresholding settings",
       solidHeader = FALSE,
       status = "success",
@@ -458,10 +458,14 @@ mod_network_inference_server <- function(input, output, session, r){
     
     # assigns either one core if detection fails,
     # either the total number of cores minus one as max
-    cpus <- parallel::detectCores()
-    if(is.na(cpus)) cpus <- 1
-    
-    
+    if(!golem::get_golem_options("server_version")){
+      cpus <- parallel::detectCores()
+      if(is.na(cpus)){cpus <- 1}
+    }
+    else{
+      cpus = 56
+    }
+
     shinyWidgets::sliderTextInput(
       inputId = ns("n_cores"),
       label = "Number of cores for 
@@ -656,7 +660,8 @@ mod_network_inference_server <- function(input, output, session, r){
                         nGenes = dim(mat)[2],
                         nRegulators = dim(mat)[1], 
                         nTrees = input$n_trees, 
-                        verbose = TRUE)
+                        verbose = TRUE,
+                        nCores = input$n_cores)
       
 
       shiny::showModal(shiny::modalDialog(

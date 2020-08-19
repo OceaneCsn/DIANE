@@ -35,7 +35,7 @@ mod_normalisation_ui <- function(id) {
     #   Normalisation settings                                                  ####
     
     col_3(
-      boxPlus(
+      shinydashboardPlus::boxPlus(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
@@ -153,7 +153,7 @@ mod_normalisation_ui <- function(id) {
       shinydashboard::tabBox(
         title = "Data exploration",
         width = 12,
-        height = "750px",
+        height = "1000px",
         
         shiny::tabPanel(
           title = "Samples distributions",

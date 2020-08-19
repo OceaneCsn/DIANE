@@ -22,7 +22,7 @@ mod_differential_expression_analysis_ui <- function(id) {
     #   Dispersion estimation                                                   ####
     
     col_3(
-      boxPlus(
+      shinydashboardPlus::boxPlus(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",

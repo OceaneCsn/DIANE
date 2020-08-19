@@ -60,10 +60,10 @@ fit_glm <-
            design,
            factors = colnames(design)) {
     normalized_counts <- as.matrix(normalized_counts)
-    glmData <- melt(round(normalized_counts[genes, ], 0))
+    glmData <- reshape2::melt(round(normalized_counts[genes, ], 0))
     glmData <- glmData[, 2:length(colnames(glmData))]
     colnames(glmData) <- c("Sample", "Counts")
-    glmData$condition <- str_split_fixed(glmData$Sample, '_', 2)[, 1]
+    glmData$condition <- stringr::str_split_fixed(glmData$Sample, '_', 2)[, 1]
     for (factor in factors) {
       glmData[, factor] <- design[glmData$condition, factor]
     }

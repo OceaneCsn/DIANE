@@ -161,11 +161,11 @@ app_ui <- function(request) {
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
 #' @noRd
 golem_add_external_resources <- function() {
-  add_resource_path('www', app_sys('app/www'))
+  golem::add_resource_path('www', app_sys('app/www'))
   #add_resource_path('md', app_sys('app/www/md'))
   
-  tags$head(favicon(),
-            bundle_resources(path = app_sys('app/www'),
+  tags$head(golem::favicon(),
+            golem::bundle_resources(path = app_sys('app/www'),
                              app_title = 'DIANE'),
             # Add here other external resources
             #shinyalert::useShinyalert())

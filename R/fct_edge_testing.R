@@ -133,15 +133,22 @@ test_edges <-
     # estimate pvalues
     dataT <- t(normalized_counts)
     
+    force(dataT)
+    force(targets)
+    force(nShuffle)
+    force(nTrees)
+    force(target_to_TF)
+    
     doParallel::registerDoParallel(cores = nCores)
     if (verbose)
       message(paste("\nUsing", foreach::getDoParWorkers(), "cores."))
-    "%dopar%" <- foreach::"%dopar%"
+    #"%dopar%" <- foreach::"%dopar%"
     suppressPackageStartupMessages(result.reg <-
                                      doRNG::"%dorng%"(foreach::foreach(
                                        target = targets, .combine = rbind
                                      ),
                                      {
+                                       # to prevent bug in shiny?
                                        # remove target gene from input genes
                                        theseRegulatorNames <-
                                          target_to_TF[[target]]
@@ -299,30 +306,31 @@ draw_discarded_edges <- function(links, net_data){
   n_data_before$edges$color <-ifelse(n_data_before$edges$is_significant, "darkred", "grey")
   n_data_before$edges$value <- 2
   
+  library("visNetwork")
   
-  visNetwork(nodes = n_data_before$nodes, n_data_before$edges) %>%
-    visEdges(smooth = FALSE, arrows = 'to') %>%
-    visPhysics(
+  visNetwork::visNetwork(nodes = n_data_before$nodes, n_data_before$edges) %>%
+    visNetwork::visEdges(smooth = FALSE, arrows = 'to') %>%
+    visNetwork::visPhysics(
       solver = "forceAtlas2Based",
       timestep = 0.6,
       minVelocity = 12,
       maxVelocity = 10,
       stabilization = F
     ) %>%
-    visGroups(
+    visNetwork::visGroups(
       groupname = "Regulator",
       size = 28,
       color = list("background" = "#49A346", "border" = "#FFFFCC"),
       shape = "square"
     ) %>%
-    visGroups(
+    visNetwork::visGroups(
       groupname = "Grouped Regulators",
       size = 45,
       color = list("background" = "#1C5435", "border" = "#FFFFCC"),
       shape = "square"
     ) %>%
-    visGroups(groupname = "Target Gene",
+    visNetwork::visGroups(groupname = "Target Gene",
               color = list("background" = "#B6B3B3", hover = "grey",
                            "border" = "#96E69A")) %>%
-    visNodes(borderWidth = 0.5, font = list("size" = 35))
+    visNetwork::visNodes(borderWidth = 0.5, font = list("size" = 35))
 }
