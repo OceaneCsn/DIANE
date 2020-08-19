@@ -527,24 +527,24 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ____________________________________________________________________________
   #   ValueBoxes summaries                                                    ####
   
-  output$data_dim <- renderValueBox({
+  output$data_dim <- shinydashboard::renderValueBox({
 
-    valueBox(
+    shinydashboard::valueBox(
       value = dim(raw_data())[1],
       subtitle = "genes",
       color = "aqua",
       width = 4
     )
   })
-  output$conditions <- renderValueBox({
+  output$conditions <- shinydashboard::renderValueBox({
     shiny::req(r$conditions)
-    valueBox(value = length((unique(r$conditions))),
+    shinydashboard::valueBox(value = length((unique(r$conditions))),
              subtitle = "conditions",
              color = "teal")
   })
   
-  output$samples <- renderValueBox({
-    valueBox(value = length(colnames(raw_data())),
+  output$samples <- shinydashboard::renderValueBox({
+    shinydashboard::valueBox(value = length(colnames(raw_data())),
              subtitle = "samples",
              color = "olive")
   })
