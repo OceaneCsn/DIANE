@@ -133,27 +133,29 @@ draw_profiles <-
     d$cluster <- clusters[match(d$gene, names(clusters))]
     d$geneRep <-
       paste0(d$gene, stringr::str_split_fixed(d$variable, '_', 2)[, 2])
-    
+    d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
     
     if (is.null(k)) {
       g <-
         ggplot2::ggplot(data = d, ggplot2::aes(x = group, y = value))  +
         ggplot2::facet_wrap(~ cluster, scales = "free")
+      leg <- "none"
     }
     else{
       k <- as.vector(k)
       g <-
         ggplot2::ggplot(data = d[d$cluster %in% k,], ggplot2::aes(x = group, y = value)) +
         ggplot2::facet_wrap(~ cluster, scales = "free")
+      leg <- "none"
     }
     if (!is.null(k) && length(k) == 1) {
       g <-
         g + ggplot2::geom_line(
           alpha = 0.12,
           lwd = 0.9,
-          color = "darkgreen",
-          ggplot2::aes(group = geneRep)
+          ggplot2::aes(group = geneRep, color =replicate)
         )
+      leg <- "right"
     }
     else {
       g <-
@@ -176,7 +178,8 @@ draw_profiles <-
       g + ggplot2::theme(
         plot.title = ggplot2::element_text(size = 22, face = "bold"),
         strip.text.x = ggplot2::element_text(size = 20),
-        legend.position = "none",
+        legend.position = leg, legend.text = ggplot2::element_text(size = 20),
+        legend.title = ggplot2::element_text(size = 20, face = "bold"),
         axis.text.y = ggplot2::element_text(size = 12, angle = 30),
         axis.text.x = ggplot2::element_text(
           size = 12,

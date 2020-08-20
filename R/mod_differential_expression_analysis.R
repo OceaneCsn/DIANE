@@ -542,7 +542,7 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("conds_heatmap"),
-        label = "Reference",
+        label = "Conditions :",
         choices = unique(r$conditions),
         selected = c(r_dea$ref, r_dea$trt),
         justified = TRUE,
