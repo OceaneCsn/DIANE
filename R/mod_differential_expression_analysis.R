@@ -223,24 +223,27 @@ mod_differential_expression_analysis_server <-
     output$condition_choices <- shiny::renderUI({
       req(r$conditions)
       tagList(
+        
+        col_6(
         shinyWidgets::radioGroupButtons(
           inputId = ns("reference"),
           label = "Reference",
           choices = unique(r$conditions),
-          justified = TRUE,
+          justified = TRUE, direction = "vertical",
           checkIcon = list(yes = shiny::icon("ok",
                                              lib = "glyphicon"))
-        ),
+        )),
         
+        col_6(
         shinyWidgets::radioGroupButtons(
           inputId = ns("perturbation"),
           label = "Perturbation",
           choices = unique(r$conditions),
           selected = unique(r$conditions)[2],
-          justified = TRUE,
+          justified = TRUE,direction = "vertical",
           checkIcon = list(yes = shiny::icon("ok",
                                              lib = "glyphicon"))
-        )
+        ))
       )
     })
     

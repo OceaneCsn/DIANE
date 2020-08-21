@@ -179,12 +179,7 @@ mod_normalisation_ui <- function(id) {
           ),
           shiny::plotOutput(ns('heatmap_preview_norm'), height = "900px")
         ),
-        shiny::tabPanel(title = "PCA",
-                        shiny::plotOutput(ns('pca_plot'), height = "800px")),
-        
-        shiny::tabPanel(title = "MDS plot",
-                        shiny::plotOutput(ns('mds_plot'), height = "800px")),
-        
+         
         shiny::tabPanel(title = "Summary",
                         shiny::verbatimTextOutput(ns("tcc_summary")))
       )
@@ -347,24 +342,6 @@ mod_normalisation_server <- function(input, output, session, r) {
       ggplot2::ggtitle("Per-condition expression ditributions")
   })
   
-  
-#   ____________________________________________________________________________
-#   mds                                                                     ####
-
-  
-  output$mds_plot <- shiny::renderPlot({
-    shiny::req(r$normalized_counts)
-    draw_MDS(r$normalized_counts)
-  })
-  
-  
-#   ____________________________________________________________________________
-#   pca                                                                     ####
-
-  output$pca_plot <- shiny::renderPlot({
-    shiny::req(r$normalized_counts)
-    draw_PCA(r$normalized_counts)
-  })
   
   #   ____________________________________________________________________________
   #   download buttons                                                        ####

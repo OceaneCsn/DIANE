@@ -62,7 +62,7 @@ app_ui <- function(request) {
             icon = shiny::icon("table")
           ),
           shinydashboard::menuItem(
-            "Gene expression levels",
+            "Exploratory analysis",
             tabName = "levels_tab",
             icon = shiny::icon("chart-line")
           ),

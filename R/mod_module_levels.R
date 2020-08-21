@@ -11,7 +11,7 @@ mod_module_levels_ui <- function(id){
   ns <- NS(id)
   tagList(
     
-    shiny::h1("Visualise normalized gene expression profiles"),
+    shiny::h1("Explore normalized gene expression"),
     
     shiny::hr(),
     
@@ -23,28 +23,43 @@ mod_module_levels_ui <- function(id){
       margins = c(70, 1200)
     ),
     
-    shinydashboardPlus::boxPlus(
-      title = "Plot settings",
-      solidHeader = FALSE,
-      status = "success",
-      collapsible = TRUE,
-      closable = FALSE,
+    
+    shinydashboard::tabBox(
+      title = "Explore normalized data",
       width = 12,
+      height = "1100px",
       
-
-    shiny::uiOutput(ns("gene_choice")),
+        
+      shiny::tabPanel(title = "PCA",
+                      shiny::plotOutput(ns('pca_plot'), height = "1000px")),
       
-     
-    shiny::uiOutput(ns("condition_choice"))
+      shiny::tabPanel(title = "MDS",
+                      shiny::plotOutput(ns('mds_plot'), height = "1000px")),
       
-    ),
-    shinydashboardPlus::boxPlus(solidHeader = FALSE,
-            status = "success",
-            collapsible = TRUE,
-            closable = FALSE,
-            width = 12,
-            shiny::plotOutput(ns("expression_plot"), height = "700px"))
- 
+      shiny::tabPanel(title = "Visualize gene expression levels",
+                      shinydashboardPlus::boxPlus(
+                        title = "Genes and conditions choice",
+                        solidHeader = FALSE,
+                        status = "success",
+                        collapsible = TRUE,
+                        closable = FALSE,
+                        width = 12,
+                        
+                        
+                        shiny::uiOutput(ns("gene_choice")),
+                        
+                        
+                        shiny::uiOutput(ns("condition_choice"))
+                        
+                      ),
+                      shinydashboardPlus::boxPlus(solidHeader = FALSE,
+                                                  status = "success",
+                                                  collapsible = TRUE,
+                                                  closable = FALSE,
+                                                  width = 12,
+                                                  shiny::plotOutput(ns("expression_plot"), height = "900px"))
+                      
+      ))
   )
 }
     
@@ -66,7 +81,6 @@ mod_module_levels_server <- function(input, output, session, r){
       checkIcon = list(yes = shiny::icon("ok",
                                          lib = "glyphicon")),
       selected = unique(r$conditions)
-      #direction = "vertical"
     )
   })
   
@@ -75,11 +89,13 @@ mod_module_levels_server <- function(input, output, session, r){
     
     shiny::textInput(ns("genes"), 
                      label = "Genes to plot, as identified in the Gene 
-                     column of expression data, comma separated for several genes :", 
+                     column of expression data. For several genes, the must be comma separated, no space:", 
                      width = '100%',
                      value = paste0(sample(rownames(r$normalized_counts), 4), collapse = ','))
   })
   
+  #   ____________________________________________________________________________
+  #   profiles                                                                ####
   
   output$expression_plot <- shiny::renderPlot({
     
@@ -96,6 +112,26 @@ mod_module_levels_server <- function(input, output, session, r){
                            conds = input$input_conditions,
                            genes = genes, gene.name.size = 22)
   })
+  
+  
+  #   ____________________________________________________________________________
+  #   mds                                                                     ####
+  
+  
+  output$mds_plot <- shiny::renderPlot({
+    shiny::req(r$normalized_counts)
+    draw_MDS(r$normalized_counts)
+  })
+  
+  
+  #   ____________________________________________________________________________
+  #   pca                                                                     ####
+  
+  output$pca_plot <- shiny::renderPlot({
+    shiny::req(r$normalized_counts)
+    draw_PCA(r$normalized_counts)
+  })
+  
  
 }
     
