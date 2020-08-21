@@ -306,7 +306,7 @@ draw_discarded_edges <- function(links, net_data){
   n_data_before$edges$color <-ifelse(n_data_before$edges$is_significant, "darkred", "grey")
   n_data_before$edges$value <- 2
   
-  requireNamespace("visNetwork")
+  library("visNetwork")
   
   visNetwork::visNetwork(nodes = n_data_before$nodes, n_data_before$edges) %>%
     visNetwork::visEdges(smooth = FALSE, arrows = 'to') %>%
