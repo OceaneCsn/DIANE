@@ -32,10 +32,9 @@ Fore more information, please find full documentation and examples in the github
 
 DIANE relies on R 4.0.0, available for all OS at https://cloud.r-project.org/.
 
-Download and install DIANE in your R console as follows :
+Download and install DIANE in your R console as follows (you need the remotes installed) :
 
 ```R
-library(remotes)
 remotes::install_github("OceaneCsn/DIANE")
 ```
 
