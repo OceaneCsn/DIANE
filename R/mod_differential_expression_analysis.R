@@ -180,9 +180,15 @@ mod_differential_expression_analysis_ui <- function(id) {
                         shiny::hr(),
                         
                         shiny::fluidRow(col_12(shiny::uiOutput(ns("go_results"))))
+        ),
+        shiny::tabPanel(
+          title = "Compare genes lists",
+          shiny::h5("Once more than one differential expression analysis were performed, 
+                    you can visualise and compare the different genes lists in a Venn
+                    diagram."),
+          shiny::uiOutput(ns("venn_lists_choice")),
+          shiny::plotOutput(ns("venn"), height = "700px")
         )
-        #shiny::verbatimTextOutput(ns("edgeR_summary")),
-        
       )
       
     ),
@@ -537,6 +543,30 @@ mod_differential_expression_analysis_server <-
         backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
       )
     })
+    
+    #   ____________________________________________________________________________
+    #   Venn                                                                    ####
+    
+    
+    output$venn_lists_choice <- shiny::renderUI({
+      
+      shiny::req(length(r$DEGs) > 1)
+      
+      shinyWidgets::checkboxGroupButtons(
+        inputId = ns("venn_genes"),
+        label = "Please select between 2 and 4 lists of genes to show in the Venn diagram :",
+        choices = names(r$DEGs),
+        justified = TRUE,
+        checkIcon = list(yes = shiny::icon("ok",
+                                           lib = "glyphicon"))
+      )
+    })
+    
+    output$venn <- shiny::renderPlot({
+      shiny::req(length(input$venn_genes) >= 2 & length(input$venn_genes) <= 4)
+      draw_venn(r$DEGs[input$venn_genes])
+    })
+    
     
     
     output$heatmap_conditions_choice <- shiny::renderUI({

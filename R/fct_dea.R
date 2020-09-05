@@ -138,3 +138,16 @@ draw_DEGs <- function(tags,
     title = ggplot2::element_text(size = 20, face = "bold")
   )
 }
+
+
+#' Venn diagram
+#'
+#' @param gene_list named list of genes
+#'
+#' @export
+draw_venn <- function(gene_list){
+  if (length(gene_list) < 2 | length(gene_list)>4)
+    stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
+  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888")
+  venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45")
+}

@@ -58,6 +58,7 @@ usethis::use_package( "randomForest" )
 usethis::use_package( "rfPermute" ) 
 usethis::use_package( "knitr" ) 
 usethis::use_package( "rmarkdown" ) 
+usethis::use_package( "ggVennDiagram" ) 
 
 
 #usethis::use_package( "MASS" )
