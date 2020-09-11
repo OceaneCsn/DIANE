@@ -464,7 +464,7 @@ mod_differential_expression_analysis_server <-
         paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
       },
       content = function(file) {
-        write.csv(r_dea$top_tags, file = file, quote = FALSE)
+        write.table(r_dea$gene_table, file = file, sep = ';', quote = FALSE)
       }
     )
     
