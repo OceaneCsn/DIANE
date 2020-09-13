@@ -354,6 +354,8 @@ mod_differential_expression_analysis_server <-
     })
     
 
+    
+
     #   ____________________________________________________________________________
     #   Summaries                                                               ####
     
@@ -436,6 +438,8 @@ mod_differential_expression_analysis_server <-
       )
     })
     
+
+    
     
     #   ____________________________________________________________________________
     #   Dl button                                                               ####
@@ -459,15 +463,27 @@ mod_differential_expression_analysis_server <-
       )
     })
     
+    to_dl <- shiny::reactive({
+      shiny::req(r_dea$gene_table)
+      df <- r_dea$gene_table
+      df$Gene_ID <- rownames(r_dea$gene_table)
+      df[,!stringr::str_detect(colnames(df), "description")]
+    })
+    
     output$download_table_csv <- shiny::downloadHandler(
       filename = function() {
         paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
       },
       content = function(file) {
-        write.table(r_dea$gene_table, file = file, sep = ';', quote = FALSE)
+        write.table(to_dl(), file = file, row.names = FALSE, sep = ';',
+          quote = FALSE)
       }
     )
     
+
+    
+    
+
     #   ____________________________________________________________________________
     #   report                                                                  ####
     
