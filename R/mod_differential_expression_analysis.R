@@ -467,7 +467,8 @@ mod_differential_expression_analysis_server <-
       shiny::req(r_dea$gene_table)
       df <- r_dea$gene_table
       df$Gene_ID <- rownames(r_dea$gene_table)
-      df[,!stringr::str_detect(colnames(df), "description")]
+      df[,!stringr::
+           str_detect(colnames(df), "description")]
     })
     
     output$download_table_csv <- shiny::downloadHandler(

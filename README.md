@@ -1,6 +1,3 @@
-[![Travis build status](https://travis-ci.com/OceaneCsn/DIANE.svg?branch=master)](https://travis-ci.com/OceaneCsn/DIANE)
-
-
 # Dashboard for the Inference and Analysis of Networks from Expression data <img src="man/figures/hex-DIANE.png" align="right" alt="" width="120" />
 
 
