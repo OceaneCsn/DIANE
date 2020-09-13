@@ -486,11 +486,18 @@ mod_import_data_server <- function(input, output, session, r) {
     req(r$organism)
     if (r$organism != "Other") {
       
+      
       ids <- rownames(r$raw_counts)
       if(r$splicing_aware){
         ids <- get_locus(rownames(r$raw_counts))
       }
-      d <- get_gene_information(ids, r$organism)
+      if(r$organism == "Lupinus albus"){
+        d <- lupine$annotation[intersect(ids, rownames(lupine$annotation)),]
+      }
+      else{
+        d <- get_gene_information(ids, r$organism)
+      }
+      
     }
     else{
         if(!is.null(input$gene_info_input)){
@@ -554,6 +561,7 @@ mod_import_data_server <- function(input, output, session, r) {
   output$gene_info_summary <- shiny::renderUI({
     ######## setting gene info here
     r$gene_info <- gene_info()
+    print(head(r$gene_info))
     if (is.null(r$gene_info)) {
       numberColor = "orange"
       number = "No additional gene data provided"

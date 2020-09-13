@@ -214,6 +214,7 @@ regulators_per_organism[["Mus musculus"]] <- tfs
 
 annot <- read.csv("D:/These/Thesis/DIANE_inputs/genesLupinAnnot.csv", sep = '\t', row.names = 1, header = FALSE)
 colnames(annot) <- c("description")
+annot$label <- rownames(annot)
 
 
 gos <- read.csv("D:/These/Thesis/DIANE_inputs/lupin_golist.txt", sep = '\t')
