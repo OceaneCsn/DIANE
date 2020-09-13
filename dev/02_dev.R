@@ -107,6 +107,7 @@ golem::add_fct( "geneIDs")
 usethis::use_data(abiotic_stresses, version = 3, overwrite = T)
 usethis::use_data(gene_annotations , version = 3, overwrite = T)
 usethis::use_data(regulators_per_organism , version = 3, overwrite = T)
+usethis::use_data(lupine, version = 3, overwrite = T, internal = TRUE)
 
 
 #usethis::use_data_raw( name = "raw_data_demo", open = FALSE ) 

@@ -86,6 +86,9 @@ check_IDs <- function(ids, organism){
   if(organism == "Mus musculus")
     pattern = "ENSMUSG[[:digit:]]{11}"
   
+  if(organism == "Lupinus albus")
+    pattern = "Lalb_Chr[[:digit:]]{2}c*[[:digit:]]*g[[:digit:]]"
+  
   matched <- sum(stringr::str_detect(ids, pattern = pattern))
   if( matched == length(ids))
     return(TRUE)

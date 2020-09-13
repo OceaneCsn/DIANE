@@ -315,6 +315,9 @@ mod_import_data_server <- function(input, output, session, r) {
         if(r$organism == "Mus musculus")
           ex = "ENSMUSG00000087910"
         
+        if(r$organism == "Lupinus albus")
+          ex = "Lalb_Chr00c02g0404151"
+        
         shinyalert::shinyalert(
           "Invalid gene IDs",
           paste("Some or all of the gene IDs in your Gene column do not match 
@@ -409,7 +412,7 @@ mod_import_data_server <- function(input, output, session, r) {
       r$gene_info <- NULL
       
       
-      choices = c("Arabidopsis thaliana")
+      choices = c("Arabidopsis thaliana", "Lupinus albus")
       if( requireNamespace("org.Mm.eg.db"))
         choices <- c(choices, "Mus musculus")
       

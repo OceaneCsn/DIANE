@@ -203,3 +203,19 @@ tfs <- read.csv('D:/These/DIANE_inputs/Mus_musculus_TF.txt', sep = '\t')
 tfs <- tfs$Ensembl
 write.table(tfs, row.names = F, quote = F, file = "D:/These/DIANE_inputs/Mus_musculus_TF.txt")
 regulators_per_organism[["Mus musculus"]] <- tfs
+
+
+
+
+
+################ lupine data
+
+
+
+annot <- read.csv("D:/These/Thesis/DIANE_inputs/genesLupinAnnot.csv", sep = '\t', row.names = 1, header = FALSE)
+colnames(annot) <- c("description")
+
+
+gos <- read.csv("D:/These/Thesis/DIANE_inputs/lupin_golist.txt", sep = '\t')
+
+lupine <- list(annotation = annot, go_list = gos)
