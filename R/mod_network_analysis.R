@@ -543,82 +543,159 @@ mod_network_analysis_server <- function(input, output, session, r) {
     shiny::req(r$normalized_counts)
     shiny::req(r$networks[[r$current_network]]$membership)
     
-    if (r$organism == "Other") {
-      shinyalert::shinyalert(
-        "For now, only Arabidopsis thaliana and
-        Homo sapiens are supported for GO analysis",
-        "Did you correctly set your organism in the
-                               Data import tab?",
-        type = "error"
-      )
-    }
-    shiny::req(r$organism != "Other")
-    
-    
     if (input$cluster_to_explore == "All") {
       shinyalert::shinyalert("Please specify a module to perform the analysis on",
                              type = "error")
     }
-    shiny::req(r$organism != "Other")
-    
+
     shiny::req(input$cluster_to_explore != "All")
     
     
-    
-    
-    genes <- get_genes_in_cluster(
-      membership =
-        r$networks[[r$current_network]]$membership,
-      cluster = input$cluster_to_explore
-    )
-    
-    background <- rownames(r$normalized_counts)
-    
-    # spreads the grouped regulators
-    if (sum(grepl("mean_", genes)) > 0) {
-      individuals <- genes[!grepl("means_", genes)]
-      groups <- setdiff(genes, individuals)
-      for (group in groups) {
-        individuals <- c(individuals,
-                         strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
-                         '-')
+    if (r$organism == "Other") {
+      
+      if(is.null(r$custom_go)){
+        if(!is.null(input$go_data)){
+          pathName = input$go_data$datapath
+          d <- read.csv(
+            sep = input$sep,
+            file = pathName,
+            header = TRUE,
+            stringsAsFactors = FALSE
+          )
+          print(ncol(d))
+          r$custom_go <- d
+        }
+        else{
+          shinyalert::shinyalert("Please input Gene to GO term file. ", 
+                                 "For now, only Arabidopsis thaliana, mus musculus, and 
+        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                 type = "error")
+        }
       }
-      genes <- individuals
+      shiny::req(r$custom_go)
+      if (ncol(r$custom_go) != 2) {
+        r$custom_go <- NULL
+        shinyalert::shinyalert(
+          "Invalid file",
+          "It must contain two columns as described.
+            Did you correctly set the separator?",
+          type = "error"
+        )
+      }
+      
+      shiny::req(ncol(r$custom_go) == 2)
+      
+      GOs <- r$custom_go
+      
+      genes <- get_genes_in_cluster(
+        membership =
+          r$networks[[r$current_network]]$membership,
+        cluster = input$cluster_to_explore
+      )
+      
+      # spreads the grouped regulators
+      if (sum(grepl("mean_", genes)) > 0) {
+        individuals <- genes[!grepl("means_", genes)]
+        groups <- setdiff(genes, individuals)
+        for (group in groups) {
+          individuals <- c(individuals,
+                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
+                           '-')
+        }
+        genes <- individuals
+      }
+      
+      universe <- intersect(rownames(r$normalized_counts), GOs[,1])
+      
+      r_mod$go <- enrich_go_custom(genes, universe, GOs)
+      
+    }
+    else{
+      genes <- get_genes_in_cluster(
+        membership =
+          r$networks[[r$current_network]]$membership,
+        cluster = input$cluster_to_explore
+      )
+      
+      # spreads the grouped regulators
+      if (sum(grepl("mean_", genes)) > 0) {
+        individuals <- genes[!grepl("means_", genes)]
+        groups <- setdiff(genes, individuals)
+        for (group in groups) {
+          individuals <- c(individuals,
+                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
+                           '-')
+        }
+        genes <- individuals
+      }
+      
+      background <- rownames(r$normalized_counts)
+      
+      if (r$splicing_aware){
+        genes <- get_locus(genes)
+        background <- get_locus(background)
+      }
+      
+      if (r$organism == "Lupinus albus"){
+        
+        GOs <- lupine$go_list
+        
+        
+        universe <- intersect(background, GOs[,1])
+        
+        r_mod$go <- enrich_go_custom(genes, universe, GOs)
+      }
+      else{
+        
+        if (r$organism == "Arabidopsis thaliana") {
+          genes <- convert_from_agi(genes)
+          background <- convert_from_agi(background)
+          org = org.At.tair.db::org.At.tair.db
+        }
+        
+        if (r$organism == "Homo sapiens") {
+          genes <- convert_from_ensembl(genes)
+          background <- convert_from_ensembl(background)
+          org = org.Hs.eg.db::org.Hs.eg.db
+        }
+        
+        if (r$organism == "Mus musculus") {
+          genes <- convert_from_ensembl_mus(genes)
+          background <- convert_from_ensembl_mus(background)
+          org = org.Mm.eg.db::org.Mm.eg.db
+        }
+        
+        # TODO add check if it is entrez with regular expression here
+        shiny::req(length(genes) > 0, length(background) > 0)
+        
+        r_mod$go <-
+          enrich_go(genes,
+                    background,
+                    org = org,
+                    GO_type = input$go_type)
+        
+      }
+      
     }
     
     
+      
+      ################# known organisms
+      
     
-    if (r$splicing_aware) {
-      genes <- get_locus(genes)
-      background <- get_locus(background)
-    }
     
-    if (r$organism == "Arabidopsis thaliana") {
-      genes <- convert_from_agi(genes)
-      background <- convert_from_agi(background)
-      org = org.At.tair.db::org.At.tair.db
-    }
     
-    if (r$organism == "Homo sapiens") {
-      genes <- convert_from_ensembl(genes)
-      background <- convert_from_ensembl(background)
-      org = org.Hs.eg.db::org.Hs.eg.db
-    }
     
-    if (r$organism == "Mus musculus") {
-      genes <- convert_from_ensembl_mus(genes)
-      background <- convert_from_ensembl_mus(background)
-      org = org.Mm.eg.db::org.Mm.eg.db
-    }
     
-    # TODO add check if it is entrez with regular expression here
-    shiny::req(length(genes) > 0, length(background) > 0)
     
-    r_mod$go <-
-      enrich_go(genes,
-                background,
-                org = org,
-                GO_type = input$go_type)
+    
+    
+    
+    
+    
+    
+    
+    
   })
   
   ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..

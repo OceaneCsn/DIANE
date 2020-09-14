@@ -654,7 +654,7 @@ mod_differential_expression_analysis_server <-
           }
           else{
             shinyalert::shinyalert("Please input Gene to GO term file. ", 
-                                   "For now, only Arabidopsis thaliana and 
+                                   "For now, only Arabidopsis thaliana, mus musculus, and 
         Homo sapiens are supported, but you can input your own gene - GO terms matching.",
                                    type = "error")
           }

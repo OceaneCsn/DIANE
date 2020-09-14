@@ -216,7 +216,10 @@ annot <- read.csv("D:/These/Thesis/DIANE_inputs/genesLupinAnnot.csv", sep = '\t'
 colnames(annot) <- c("description")
 annot$label <- rownames(annot)
 
+library(DIANE)
+data("regulators_per_organism")
 
+regulators_per_organism[["Lupinus albus"]] <- annot[stringr::str_detect(annot$description, "transcription"), 'label']
 gos <- read.csv("D:/These/Thesis/DIANE_inputs/lupin_golist.txt", sep = '\t')
 
 lupine <- list(annotation = annot, go_list = gos)

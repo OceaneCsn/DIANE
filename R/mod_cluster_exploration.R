@@ -377,39 +377,54 @@ mod_cluster_exploration_server <-
         universe <- intersect(rownames(r$normalized_counts), GOs[,1])
         
         r_clust$go <- enrich_go_custom(genes, universe, GOs)
+        
       }else{
-      genes <- get_genes_in_cluster(membership = membership(),
-                                    cluster = input$cluster_to_explore)
+        
+        genes <- get_genes_in_cluster(membership = membership(),
+                                      cluster = input$cluster_to_explore)
+        
+        background <- rownames(r$normalized_counts)
+        
+        if (r$splicing_aware){
+          genes <- get_locus(genes)
+          background <- get_locus(background)
+        }
+        
+        if (r$organism == "Lupinus albus"){
+          
+          GOs <- lupine$go_list
+          
+          
+          universe <- intersect(background, GOs[,1])
+          r_clust$go <- enrich_go_custom(genes, universe, GOs)
+        }
+        
+        else{
+          if (r$organism == "Arabidopsis thaliana") {
+            genes <- convert_from_agi(genes)
+            background <- convert_from_agi(background)
+            org = org.At.tair.db::org.At.tair.db
+          }
+          
+          if(r$organism == "Homo sapiens"){
+            genes <- convert_from_ensembl(genes)
+            background <- convert_from_ensembl(background)
+            org = org.Hs.eg.db::org.Hs.eg.db
+          }
+          
+          if(r$organism == "Mus musculus"){
+            genes <- convert_from_ensembl_mus(genes)
+            background <- convert_from_ensembl_mus(background)
+            org = org.Mm.eg.db::org.Mm.eg.db
+          }
+          
+          # TODO add check if it is entrez with regular expression here
+          shiny::req(length(genes) > 0, length(background) > 0)
+          
+          r_clust$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
+          
+        }
       
-      background <- rownames(r$normalized_counts)
-      
-      if (r$splicing_aware){
-        genes <- get_locus(genes)
-        background <- get_locus(background)
-      }
-      
-      if (r$organism == "Arabidopsis thaliana") {
-        genes <- convert_from_agi(genes)
-        background <- convert_from_agi(background)
-        org = org.At.tair.db::org.At.tair.db
-      }
-      
-      if(r$organism == "Homo sapiens"){
-        genes <- convert_from_ensembl(genes)
-        background <- convert_from_ensembl(background)
-        org = org.Hs.eg.db::org.Hs.eg.db
-      }
-      
-      if(r$organism == "Mus musculus"){
-        genes <- convert_from_ensembl_mus(genes)
-        background <- convert_from_ensembl_mus(background)
-        org = org.Mm.eg.db::org.Mm.eg.db
-      }
-      
-      # TODO add check if it is entrez with regular expression here
-      shiny::req(length(genes) > 0, length(background) > 0)
-      
-      r_clust$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
       }
     })
     

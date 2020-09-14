@@ -304,6 +304,7 @@ mod_import_data_server <- function(input, output, session, r) {
     ############### checking organism compatibility
     
     if(r$organism != "Other"){
+      print(rownames(d))
       print(check_IDs(rownames(d), r$organism))
       if(!check_IDs(rownames(d), r$organism)){
         if(r$organism == "Arabidopsis thaliana")

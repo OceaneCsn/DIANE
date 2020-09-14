@@ -78,16 +78,17 @@ get_locus <- function(gene_ids, unique = TRUE){
 #' organism = "Homo sapiens")
 check_IDs <- function(ids, organism){
   if(organism == "Arabidopsis thaliana")
-    pattern = "AT[[:alnum:]]G[[:digit:]]{5}"
+    pattern = "^AT[[:alnum:]]G[[:digit:]]{5}"
   
   if(organism == "Homo sapiens")
-    pattern = "ENSG[[:digit:]]{11}"
+    pattern = "^ENSG[[:digit:]]{11}"
   
   if(organism == "Mus musculus")
-    pattern = "ENSMUSG[[:digit:]]{11}"
+    pattern = "^ENSMUSG[[:digit:]]{11}"
   
   if(organism == "Lupinus albus")
-    pattern = "Lalb_Chr[[:digit:]]{2}c*[[:digit:]]*g[[:digit:]]"
+    #pattern = "Lalb_Chr[[:digit:]]{2}c*[[:digit:]]*g[[:digit:]]"
+    pattern = "^Lalb_Chr[[:digit:]]{2}(c[[:digit:]]{2})?g[[:digit:]]{7}"
   
   matched <- sum(stringr::str_detect(ids, pattern = pattern))
   if( matched == length(ids))
