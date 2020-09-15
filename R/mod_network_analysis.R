@@ -638,7 +638,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       if (r$organism == "Lupinus albus"){
         
-        GOs <- lupine$go_list
+        GOs <- DIANE:::lupine$go_list
         
         
         universe <- intersect(background, GOs[,1])

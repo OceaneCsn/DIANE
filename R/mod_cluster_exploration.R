@@ -392,7 +392,7 @@ mod_cluster_exploration_server <-
         
         if (r$organism == "Lupinus albus"){
           
-          GOs <- lupine$go_list
+          GOs <- DIANE:::lupine$go_list
           
           
           universe <- intersect(background, GOs[,1])

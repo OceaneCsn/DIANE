@@ -693,7 +693,7 @@ mod_differential_expression_analysis_server <-
           }
           
           
-          GOs <- lupine$go_list
+          GOs <- DIANE:::lupine$go_list
           
           
           universe <- intersect(background, GOs[,1])

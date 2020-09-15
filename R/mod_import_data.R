@@ -493,7 +493,7 @@ mod_import_data_server <- function(input, output, session, r) {
         ids <- get_locus(rownames(r$raw_counts))
       }
       if(r$organism == "Lupinus albus"){
-        d <- lupine$annotation[intersect(ids, rownames(lupine$annotation)),]
+        d <- DIANE:::lupine$annotation[intersect(ids, rownames(DIANE:::lupine$annotation)),]
       }
       else{
         d <- get_gene_information(ids, r$organism)
