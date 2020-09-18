@@ -176,7 +176,7 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qva
     stop("Empty universe")
   }
    
-  if (length(intersect(genes, genes_to_GO[,1])) == 0) {
+  if (length(intersect(genes, universe)) == 0) {
     stop("The genes are not in the first column of the custom dataframe")
   }
   

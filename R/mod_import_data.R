@@ -338,12 +338,10 @@ mod_import_data_server <- function(input, output, session, r) {
     d
   })
   
-  # TODO problem window id wrong design
-  
-  
 #   ____________________________________________________________________________
 #   splicing summary                                                        ####
   output$variants_summary <- shiny::renderUI({
+    shiny::req(r$conditions)
     shiny::req(!is.null(r$splicing_aware))
     if (r$splicing_aware) {
       numberColor = "blue"
@@ -484,6 +482,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   gene_info <- shiny::reactive({
     req(r$raw_counts)
+    req(r$conditions)
     req(r$organism)
     if (r$organism != "Other") {
       
