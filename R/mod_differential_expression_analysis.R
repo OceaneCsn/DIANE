@@ -30,33 +30,20 @@ mod_differential_expression_analysis_ui <- function(id) {
         closable = FALSE,
         width = 12,
         
-        shiny::h4("Estimation of disperion : "),
-        
-        
-        shiny::fluidRow(
-          # col_8(
-          #   shinyWidgets::actionBttn(
-          #     ns("estimate_disp_btn"),
-          #     label = "Launch estimation",
-          #     color = "success",
-          #     style = 'bordered'
-          #   )
-          # ),
-          col_2(
-            shinyWidgets::dropdownButton(
-              size = 'xs',
-              shiny::includeMarkdown(
-                system.file("extdata", "edgeR.md", package = "DIANE")
-              ),
-              circle = TRUE,
-              status = "success",
-              icon = shiny::icon("question"),
-              width = "600px",
-              tooltip = shinyWidgets::tooltipOptions(title = "More details")
-            )
+        shiny::h4("Estimation of disperion"),
+        col_2(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            shiny::includeMarkdown(
+              system.file("extdata", "edgeR.md", package = "DIANE")
+            ),
+            circle = TRUE,
+            status = "success",
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
           )
         ),
-        
         
         shiny::hr(),
         shiny::uiOutput(ns("disp_estimate_summary")),
@@ -145,11 +132,6 @@ mod_differential_expression_analysis_ui <- function(id) {
                           color = "success",
                           style = 'bordered'
                         )),
-                        
-                        
-                        
-        
-                        
                         col_4(
                           shinyWidgets::radioGroupButtons(ns("draw_go"), 
                                        choices = c("Dot plot", "Enrichment map", "Data table"), 
@@ -182,12 +164,17 @@ mod_differential_expression_analysis_ui <- function(id) {
                         shiny::fluidRow(col_12(shiny::uiOutput(ns("go_results"))))
         ),
         shiny::tabPanel(
-          title = "Compare genes lists",
+          title = "Compare genes lists (Venn)",
           shiny::h5("Once more than one differential expression analysis were performed, 
                     you can visualise and compare the different genes lists in a Venn
                     diagram."),
           shiny::uiOutput(ns("venn_lists_choice")),
-          shiny::plotOutput(ns("venn"), height = "700px")
+          shinyWidgets::awesomeRadio(ns("up_down_radio"), label = "Differentially expressed genes to compare :", 
+                                     choices = setNames(object = c("All", "Up", "Down"), 
+                                                        c("All", "Up-regulated", "Down-regulated")),
+                                     inline = TRUE, status = "success"),
+          shiny::plotOutput(ns("venn"), height = "700px"),
+          shiny::uiOutput(ns("dl_bttn_venn"))
         )
       )
       
@@ -586,11 +573,68 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$venn <- shiny::renderPlot({
+    
+    
+    venn_list <- shiny::reactive({
       shiny::req(length(input$venn_genes) >= 2 & length(input$venn_genes) <= 4)
-      draw_venn(r$DEGs[input$venn_genes])
+      
+      if(input$up_down_radio == "All"){
+        venn_list <- r$DEGs[input$venn_genes]
+      }
+      else{
+        venn_list <- list()
+        for(comp in input$venn_genes){
+            if(input$up_down_radio == "Up"){
+            venn_list[[comp]] <- r$top_tags[[comp]][
+              r$top_tags[[comp]]$logFC > 0 , "genes"]
+          }
+          else{
+            venn_list[[comp]] <- r$top_tags[[comp]][
+              r$top_tags[[comp]]$logFC < 0 , "genes"]
+          }
+        }
+      }
+      venn_list
     })
     
+    output$venn <- shiny::renderPlot({
+      shiny::req(venn_list)
+      draw_venn(venn_list())
+    })
+    
+    output$dl_bttn_venn <- shiny::renderUI({
+      shiny::req(venn_list)
+      tagList(
+        shiny::fluidRow(col_12(
+          shinyWidgets::downloadBttn(
+            outputId = ns("download_intersect_venn"),
+            label = "Download the intersection of all sets (central part in the Venn diagram)",
+            style = "bordered",
+            color = "success"
+          )
+        )
+      )
+      )
+    })
+    
+    output$download_intersect_venn <- shiny::downloadHandler(
+      filename = function() {
+        paste(paste0("Venn_intersection_", paste(input$venn_genes, collapse = "-"), ".csv"))
+      },
+      content = function(file) {
+        write.table(Reduce(intersect, venn_list()), file = file, row.names = FALSE, sep = ';',
+                    quote = FALSE, col.names = FALSE)
+      }
+    )
+    
+    
+    
+    
+    
+    
+    
+    #   ____________________________________________________________________________
+    #   heatmap                                                               ####
     
     
     output$heatmap_conditions_choice <- shiny::renderUI({
@@ -656,7 +700,6 @@ mod_differential_expression_analysis_server <-
               header = TRUE,
               stringsAsFactors = FALSE
             )
-            print(ncol(d))
             r$custom_go <- d
           }
           else{

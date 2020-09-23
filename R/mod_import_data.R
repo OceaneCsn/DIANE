@@ -304,8 +304,7 @@ mod_import_data_server <- function(input, output, session, r) {
     ############### checking organism compatibility
     
     if(r$organism != "Other"){
-      print(rownames(d))
-      print(check_IDs(rownames(d), r$organism))
+
       if(!check_IDs(rownames(d), r$organism)){
         if(r$organism == "Arabidopsis thaliana")
           ex = "AT1G62510.1 or AT1G62510"
@@ -561,7 +560,6 @@ mod_import_data_server <- function(input, output, session, r) {
   output$gene_info_summary <- shiny::renderUI({
     ######## setting gene info here
     r$gene_info <- gene_info()
-    print(head(r$gene_info))
     if (is.null(r$gene_info)) {
       numberColor = "orange"
       number = "No additional gene data provided"
@@ -569,7 +567,6 @@ mod_import_data_server <- function(input, output, session, r) {
       numberIcon = "fa fa-times"
     }
     else{
-      print(paste(colnames(r$gene_info), collapse = ', '))
       numberColor = "olive"
       number = "Additional gene data available"
       numberIcon = "fa fa-check"
