@@ -34,14 +34,14 @@ mod_differential_expression_analysis_ui <- function(id) {
         
         
         shiny::fluidRow(
-          col_8(
-            shinyWidgets::actionBttn(
-              ns("estimate_disp_btn"),
-              label = "Launch estimation",
-              color = "success",
-              style = 'bordered'
-            )
-          ),
+          # col_8(
+          #   shinyWidgets::actionBttn(
+          #     ns("estimate_disp_btn"),
+          #     label = "Launch estimation",
+          #     color = "success",
+          #     style = 'bordered'
+          #   )
+          # ),
           col_2(
             shinyWidgets::dropdownButton(
               size = 'xs',
@@ -311,13 +311,20 @@ mod_differential_expression_analysis_server <-
     
     
     
-    shiny::observeEvent((input$estimate_disp_btn), {
-      shiny::req(r$tcc)
-      r_dea$fit <- estimateDispersion(r$tcc)
-      r$fit <- r_dea$fit
-    })
-    
+    # shiny::observeEvent((input$estimate_disp_btn), {
+    #   shiny::req(r$tcc)
+    #   r_dea$fit <- estimateDispersion(r$tcc)
+    #   r$fit <- r_dea$fit
+    # })
+    # 
     shiny::observeEvent((input$deg_test_btn), {
+      
+      shiny::req(r$tcc)
+      if(is.null(r$fit)){
+        r_dea$fit <- estimateDispersion(r$tcc)
+        r$fit <- r_dea$fit
+      }
+      
       shiny::req(r$fit,
                  input$dea_fdr,
                  input$reference,
