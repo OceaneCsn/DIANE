@@ -89,7 +89,7 @@ mod_module_levels_server <- function(input, output, session, r){
     
     shiny::textInput(ns("genes"), 
                      label = "Genes to plot, as identified in the Gene 
-                     column of expression data. For several genes, the must be comma separated, no space:", 
+                     column of expression data. For several genes, they must be comma separated, without space, as in the example:", 
                      width = '100%',
                      value = paste0(sample(rownames(r$normalized_counts), 4), collapse = ','))
   })

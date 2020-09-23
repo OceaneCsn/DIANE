@@ -341,9 +341,12 @@ draw_expression_levels <-
     data <- as.data.frame(data)
     data$gene <- rownames(data)
     
+    
+      #reshape2::melt(as.data.frame(data[stringr::str_detect(
+        #rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
     d <-
-      reshape2::melt(as.data.frame(data[stringr::str_detect(
-        rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
+      reshape2::melt(as.data.frame(data[intersect(
+        rownames(data), genes), c(conditions, 'gene')]))
     d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
     d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
     
