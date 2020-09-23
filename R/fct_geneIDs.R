@@ -6,7 +6,8 @@
 #'
 #' @return boolean
 are_splice_variants <- function(gene_ids){
-  return(sum(stringr::str_detect( gene_ids, pattern = "\\.[[:digit:]]+$")) == length(gene_ids))
+  #return(sum(stringr::str_detect( gene_ids, pattern = "\\.[[:digit:]]+$")) == length(gene_ids))
+  return(sum(stringr::str_detect( gene_ids, pattern = "\\.[[:digit:]]+$")) > 0)
 }
 
 #' Merge all splice variants of an expression dataset into 

@@ -21,7 +21,6 @@ get_factors_from_conditions <- function(conditions, design){
   
   undesired <- names(uniques[uniques == TRUE])
   
-  
   return(factors[!factors %in% undesired])
 }
 

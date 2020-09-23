@@ -221,5 +221,43 @@ data("regulators_per_organism")
 
 regulators_per_organism[["Lupinus albus"]] <- annot[stringr::str_detect(annot$description, "transcription"), 'label']
 gos <- read.csv("D:/These/Thesis/DIANE_inputs/lupin_golist.txt", sep = '\t')
-
 lupine <- list(annotation = annot, go_list = gos)
+
+
+
+######### labels TAIT/ensembl
+
+
+tair <- read.csv("~/Documents/Seafile/Thesis/DIANE_inputs/col_brm_lbd_David_TAIR10.csv", sep = '\t', row.names = "Gene", h = TRUE)
+ens <- read.csv("~/Documents/Seafile/Thesis/DIANE_inputs/col_brm_lbd_David_Ensembl.csv", sep = '\t', row.names = "Gene", h = TRUE)
+
+
+DIANE::check_IDs(rownames(tair), organism = "Arabidopsis thaliana")
+DIANE::check_IDs(rownames(ens), organism = "Arabidopsis thaliana")
+length(intersect(rownames(tair), rownames(ens)))
+
+library(DIANE)
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+
+conditions <- stringr::str_split_fixed(colnames(ens), '_', 2)[,1]
+
+annot <- gene_annotations$`Arabidopsis thaliana`
+
+
+which(!stringr::str_detect( rownames(ens), pattern = "\\.[[:digit:]]+$"))
+
+loci.ens <- get_locus(rownames(ens))
+
+DIANE::
+
+gene_annotations$`Arabidopsis thaliana`[sample(rownames(ens), 20),]
+gene_annotations$`Arabidopsis thaliana`[sample(rownames(tair), 20),]
+
+
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+threshold = 10*length(conditions)
+tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+normalized_counts <- TCC::getNormalizedData(tcc_object)
