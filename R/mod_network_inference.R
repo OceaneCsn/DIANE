@@ -615,6 +615,10 @@ mod_network_inference_server <- function(input, output, session, r){
     # resets old network if one was already created
     r$networks[[input$input_deg_genes_net]]$graph <- NULL
     
+    loggit::loggit(custom_log_lvl = TRUE,
+                   log_lvl = r$session_id,
+                   log_msg = "network inference")
+    
   })
   
   shiny::observeEvent((input$thr_btn), {
@@ -662,6 +666,10 @@ mod_network_inference_server <- function(input, output, session, r){
                         nTrees = input$n_trees, 
                         verbose = TRUE,
                         nCores = input$n_cores)
+      
+      loggit::loggit(custom_log_lvl = TRUE,
+                     log_lvl = r$session_id,
+                     log_msg = "edges testing")
       
 
       shiny::showModal(shiny::modalDialog(

@@ -5,4 +5,5 @@ int/doc
 inst/doc
 .Rproj
 app.R
-logs/*
+logs/next_id.txt
+logs/loggit.log
