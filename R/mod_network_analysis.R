@@ -678,6 +678,10 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
     }
     
+    loggit::loggit(custom_log_lvl = TRUE,
+                   log_lvl = r$session_id,
+                   log_msg = "GO enrichment module")
+    
     
       
       ################# known organisms

@@ -598,10 +598,6 @@ mod_differential_expression_analysis_server <-
     output$venn <- shiny::renderPlot({
       shiny::req(venn_list)
       
-      loggit::loggit(custom_log_lvl = TRUE,
-                     log_lvl = r$session_id,
-                     log_msg = "Venn DEA")
-      
       draw_venn(venn_list())
     })
     
