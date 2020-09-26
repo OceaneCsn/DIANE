@@ -296,20 +296,17 @@ mod_differential_expression_analysis_server <-
     #   ____________________________________________________________________________
     #   Buttons reactives                                                       ####
     
-    
-    
-    # shiny::observeEvent((input$estimate_disp_btn), {
-    #   shiny::req(r$tcc)
-    #   r_dea$fit <- estimateDispersion(r$tcc)
-    #   r$fit <- r_dea$fit
-    # })
-    # 
+
     shiny::observeEvent((input$deg_test_btn), {
       
       shiny::req(r$tcc)
       if(is.null(r$fit)){
         r_dea$fit <- estimateDispersion(r$tcc)
         r$fit <- r_dea$fit
+        
+        loggit::loggit(custom_log_lvl = TRUE,
+                       log_lvl = r$session_id,
+                       log_msg = "DEA")
       }
       
       shiny::req(r$fit,
@@ -345,6 +342,7 @@ mod_differential_expression_analysis_server <-
       
       r_dea$lfc <- input$dea_lfc
       r_dea$fdr <- input$dea_fdr
+      
     })
     
 
@@ -599,6 +597,11 @@ mod_differential_expression_analysis_server <-
     
     output$venn <- shiny::renderPlot({
       shiny::req(venn_list)
+      
+      loggit::loggit(custom_log_lvl = TRUE,
+                     log_lvl = r$session_id,
+                     log_msg = "Venn DEA")
+      
       draw_venn(venn_list())
     })
     
@@ -785,6 +788,10 @@ mod_differential_expression_analysis_server <-
         }
         
       }
+      
+      loggit::loggit(custom_log_lvl = TRUE,
+                     log_lvl = r$session_id,
+                     log_msg = "GO enrichment DEA")
       
     })
     

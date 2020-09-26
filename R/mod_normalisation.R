@@ -250,6 +250,13 @@ mod_normalisation_server <- function(input, output, session, r) {
         rowSums(r$normalized_counts_pre_filter) > input$low_counts_filter,]
       r$tcc <- list(counts = r$normalized_counts)
     }
+    
+    
+    loggit::loggit(custom_log_lvl = TRUE,
+                   log_lvl = r$session_id,
+                   log_msg = "normalisation")
+    
+    
   })
   
   

@@ -5,3 +5,4 @@ int/doc
 inst/doc
 .Rproj
 app.R
+logs/*

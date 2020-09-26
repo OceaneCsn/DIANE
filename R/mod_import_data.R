@@ -298,7 +298,7 @@ mod_import_data_server <- function(input, output, session, r) {
         stop()
       }
     }
-    
+    #shiny::req("Gene" %in% colnames(d))
     
     
     ############### checking organism compatibility
@@ -327,7 +327,9 @@ mod_import_data_server <- function(input, output, session, r) {
         )
         stop()
       }
-    } 
+    }
+    
+    #shiny::req(check_IDs(rownames(d), r$organism))
     
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
@@ -558,6 +560,8 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$gene_info_summary <- shiny::renderUI({
+    shiny::req(raw_data)
+    shiny::req(r$organism)
     ######## setting gene info here
     r$gene_info <- gene_info()
     if (is.null(r$gene_info)) {
@@ -583,8 +587,10 @@ mod_import_data_server <- function(input, output, session, r) {
   
   output$organism_summary <- shiny::renderUI({
     ######## setting organism here
-
+    shiny::req(raw_data)
     shiny::req(r$organism)
+    
+    
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
       numberColor = "teal",

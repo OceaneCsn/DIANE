@@ -11,6 +11,7 @@ app_server <- function(input, output, session) {
   
 #   ____________________________________________________________________________
 #   reactive values                                                         ####
+  
   r <- shiny::reactiveValues(
     raw_counts = NULL,
     normalized_counts = NULL,
@@ -29,8 +30,37 @@ app_server <- function(input, output, session) {
     splicing_aware = NULL,
     gene_info = NULL,
     organism = NULL,
-    custom_go = NULL
+    custom_go = NULL,
+    session_id = as.character(floor(runif(1)*1e20))
   )
+  
+  
+  #   ____________________________________________________________________________
+  #   logs                                                                    ####
+  
+  LOG_FILE = "./logs/loggit.log"
+  SESSION_ID_FILE = "./logs/next_id.txt"
+  
+  if (!file.exists(SESSION_ID_FILE)){
+    file.create(SESSION_ID_FILE)
+    write(1, SESSION_ID_FILE )
+  }
+  
+  session_id <- readLines(SESSION_ID_FILE)
+  close( file( SESSION_ID_FILE, open="w" ) )
+  write(as.numeric(session_id) + 1, SESSION_ID_FILE )
+  
+  #session_id <- as.character(floor(runif(1)*1e20))
+  
+  loggit::set_logfile(LOG_FILE)
+  loggit::set_timestamp_format("%Y-%m-%d %H:%M:%S")
+  
+  
+  loggit::loggit(custom_log_lvl = TRUE,
+         log_lvl = session_id,
+         log_msg = "connection")
+  
+  r$session_id <- session_id
 
 #   ____________________________________________________________________________
 #   Server modules                                                          ####
