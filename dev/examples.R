@@ -261,3 +261,37 @@ tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$con
 threshold = 10*length(conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 normalized_counts <- TCC::getNormalizedData(tcc_object)
+
+############### new coseq tests
+
+library(DIANE)
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+
+genes <- abiotic_stresses$heat_DEGs
+
+
+clustering <- DIANE::run_coseq(
+  conds = unique(abiotic_stresses$conditions), 
+  data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
+
+normSin <- run_coseq(
+  conds = unique(abiotic_stresses$conditions), transfo = "arcsin", model = "Normal",
+  data = abiotic_stresses$normalized_counts, genes = genes, K = 2:9)
+
+normLogit <- run_coseq(
+  conds = unique(abiotic_stresses$conditions), transfo = "logit", model = "Poisson",
+  data = abiotic_stresses$normalized_counts, genes = genes, K = 2:9)
+
+
+DIANE::draw_coseq_run(normSin$model, plot = "barplots")
+DIANE::draw_coseq_run(normSin$model, plot = "ICL")
+DIANE::draw_coseq_run(clustering$model, plot = "ICL")
+
+
+draw_profiles(abiotic_stresses$normalized_counts, normLogit$membership, abiotic_stresses$conditions)
+coseq::compareICL(list(normLogit$model, normSin$model))
+
+summary(normLogit)

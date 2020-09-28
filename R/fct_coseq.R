@@ -6,6 +6,13 @@
 #' @param genes Genes used as an input for the clustering
 #' @param data normalized counts (MUST be normalized!)
 #' @param K number of clusters range
+#' @param model Model to use for clustering : to choose between
+#' Poisson or Normal.
+#' @param transfo transformation to apply to normalized counts
+#' before modelling with "Normal" Mixture Models. For "Poisson",
+#' no tranfsormation will be used, this argument will be ignored.
+#' It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
+#'  “clr”, “alr”, “ilr”, or “none”
 #'
 #' @importFrom coseq coseq clusters
 #'
@@ -17,26 +24,44 @@
 #' genes <- abiotic_stresses$heat_DEGs
 #' clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), 
 #' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
-run_coseq <- function(conds, genes, data, K = 6:12) {
+run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
+                      model = "Poisson") {
 
-  conditions <- colnames(data)[stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
+  conditions <- colnames(data)[
+    stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
+  
+  
+  if(model == "Poisson")
+    transfo = "none"
+  
+  if(!transfo %in% c("voom", "arcsin", "logit", 
+                    "logMedianRef", "profile", 
+                    "logclr", "clr", "alr", 
+                    "ilr", "none"))
+    stop("The required transformation is not known. Please refer
+         to function documentation")
+  
+  if(!model %in% c("Poisson", "Normal"))
+    stop("The required model is not known. Please refer
+         to function documentation")
   
   groups <- stringr::str_split_fixed(conditions, '_', 2)[, 1]
   dataC <- round(data[genes, conditions], 0)
-  run_pois <-
+  clustering_run <-
     coseq::coseq(
       dataC,
       conds = groups,
       K = K,
-      model = "Poisson",
+      model = model,
       iter = 5,
-      transformation = "none",
+      transformation = transfo,
       normFactors = "none",
-      parallel = TRUE
+      parallel = TRUE, #to avoid singular covariance matrices :
+      GaussianModel = "Gaussian_pk_Lk_Bk"
     )
   return(list(
-    membership = coseq::clusters(run_pois),
-    model = run_pois
+    membership = coseq::clusters(clustering_run),
+    model = clustering_run
   ))
 }
 
@@ -44,7 +69,7 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 
 #' draw_coseq_run : displays the indications of clustering
 #'
-#' @param run_pois result of a coseq run
+#' @param clustering_run result of a coseq run
 #' @param plot plot to display, eather integrated Complete Likelihood, or barplots
 #' of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".
 #' @return plot describing the quality of the clustering process
@@ -58,11 +83,11 @@ run_coseq <- function(conds, genes, data, K = 6:12) {
 #' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 #' DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 #' DIANE::draw_coseq_run(clustering$model, plot = "ICL")
-draw_coseq_run <- function(run_pois, plot = "ICL") {
+draw_coseq_run <- function(clustering_run, plot = "ICL") {
   if (plot == "ICL")
-    p <- coseq::plot(run_pois, graphs = c("ICL"))
+    p <- coseq::plot(clustering_run, graphs = c("ICL"))
   if (plot == "barplots") {
-    p <- coseq::plot(run_pois, graphs = c("probapost_barplots"))
+    p <- coseq::plot(clustering_run, graphs = c("probapost_barplots"))
   }
   p
 }

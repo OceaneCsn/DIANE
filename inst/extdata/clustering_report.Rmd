@@ -47,6 +47,16 @@ Number of clusters tested :
 paste("min =", input$min_k, "max =", input$max_k )
 ```
 
+Chosen Mixture Models :
+```{r}
+if(input$coseq_model) "Poisson" else "Normal"
+```
+
+Transformation prior to Gaussian Mixture :
+```{r}
+if(input$coseq_model) "NA" else input$transfo
+```
+
 Statistical model :
 ```{r}
 r$model

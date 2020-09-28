@@ -4,7 +4,7 @@
 \alias{run_coseq}
 \title{run_coseq}
 \usage{
-run_coseq(conds, genes, data, K = 6:12)
+run_coseq(conds, genes, data, K = 6:12, transfo = "none", model = "Poisson")
 }
 \arguments{
 \item{conds}{Condition names to be used for clustering}
@@ -14,6 +14,15 @@ run_coseq(conds, genes, data, K = 6:12)
 \item{data}{normalized counts (MUST be normalized!)}
 
 \item{K}{number of clusters range}
+
+\item{transfo}{transformation to apply to normalized counts
+before modelling with "Normal" Mixture Models. For "Poisson",
+no tranfsormation will be used, this argument will be ignored.
+It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
+ “clr”, “alr”, “ilr”, or “none”}
+
+\item{model}{Model to use for clustering : to choose between
+Poisson or Normal.}
 }
 \value{
 named list containing the coseq run result as "model", and the cluster membership 

@@ -4,10 +4,10 @@
 \alias{draw_coseq_run}
 \title{draw_coseq_run : displays the indications of clustering}
 \usage{
-draw_coseq_run(run_pois, plot = "ICL")
+draw_coseq_run(clustering_run, plot = "ICL")
 }
 \arguments{
-\item{run_pois}{result of a coseq run}
+\item{clustering_run}{result of a coseq run}
 
 \item{plot}{plot to display, eather integrated Complete Likelihood, or barplots
 of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".}

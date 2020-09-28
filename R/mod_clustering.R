@@ -78,6 +78,19 @@ mod_clustering_ui <- function(id) {
         
         shiny::br(),
         
+        
+        col_6(shinyWidgets::switchInput(
+          inputId = ns("coseq_model"),
+          label = "Mixture Model to use",
+          value = TRUE,
+          onLabel = "Poisson",
+          offLabel = "Normal",
+          onStatus = 'success',
+          offStatus = 'primary'
+        )),
+        
+        col_6(shiny::uiOutput(ns("transfo_ui"))),
+        
         shiny::fluidRow(col_12(
           shinyWidgets::actionBttn(
             ns("launch_coseq_btn"),
@@ -221,6 +234,27 @@ mod_clustering_server <- function(input, output, session, r) {
     )
   })
   
+  #   ____________________________________________________________________________
+  #   Transfos choices ui                                                     ####
+  
+  
+  
+  output$transfo_ui <- shiny::renderUI({
+    shiny::req(r$normalized_counts)
+    shiny::req(!input$coseq_model)
+    tagList(
+      shiny::selectInput(
+        inputId = ns("transfo"),
+        label = "Transformation prior to Gaussian Mixtures:",
+        choices = c("voom", "arcsin", "logit", 
+                    "logMedianRef", "profile", 
+                    "logclr", "clr", "alr", 
+                    "ilr", "none"),
+        selected = "arcsin"
+      ),
+    )
+  })
+  
   
   #   ____________________________________________________________________________
   #   coseq summary ui                                                        ####
@@ -287,11 +321,21 @@ mod_clustering_server <- function(input, output, session, r) {
     # union of all the input comparisons
     genes <- unique(unlist(r$DEGs[input$input_deg_genes]))
     
+    if(input$coseq_model){
+      mod <- "Poisson"
+      transfo <- "none"
+    }
+    else{
+      mod <- "Normal"
+      transfo <- input$transfo
+    }
     run <-
       run_coseq(
         data = r$normalized_counts,
         genes = genes,
         conds = input$input_conditions,
+        transfo = transfo,
+        model = mod,
         K = seq(input$min_k, input$max_k)
       )
     r$clusterings[[input_genes_conditions()]]$model <- run$model
