@@ -302,7 +302,7 @@ mod_import_data_server <- function(input, output, session, r) {
     
     
     ############### checking organism compatibility
-    
+    shiny::req(r$organism)
     if(r$organism != "Other"){
 
       if(!check_IDs(rownames(d), r$organism)){
@@ -343,9 +343,8 @@ mod_import_data_server <- function(input, output, session, r) {
 #   splicing summary                                                        ####
   output$variants_summary <- shiny::renderUI({
     shiny::req(r$conditions)
-    shiny::req(!r$splicing_aware)
-    shiny::req(raw_data())
-    
+    shiny::req(!is.null(r$splicing_aware))
+
     if (r$splicing_aware) {
       numberColor = "blue"
       number = "Alternatifve splicing aware"
@@ -410,8 +409,7 @@ mod_import_data_server <- function(input, output, session, r) {
       r$organism <- "Arabidopsis thaliana"
     }
     else{
-      r$organism <- NULL
-      r$gene_info <- NULL
+      
       
       
       choices = c("Arabidopsis thaliana", "Lupinus albus")
@@ -477,6 +475,8 @@ mod_import_data_server <- function(input, output, session, r) {
   shiny::observeEvent(input$org_chosen, {
     r$organism <- input$organism
     shiny::removeModal()
+    
+    
     #r$gene_info <- gene_info()
   })
   
@@ -487,9 +487,7 @@ mod_import_data_server <- function(input, output, session, r) {
     req(r$raw_counts)
     req(r$conditions)
     req(r$organism)
-    shiny::req(raw_data())
-    
-    
+
     if (r$organism != "Other") {
       
       
@@ -526,15 +524,17 @@ mod_import_data_server <- function(input, output, session, r) {
   ########### table view
   
   output$raw_data_preview <- DT::renderDataTable({
-    head(raw_data(), n = 6)
+    raw_data()
+    shiny::req(r$raw_counts)
+    head(r$raw_counts)
   })
   
   ########## matrix preview
   output$heatmap_preview <- shiny::renderPlot({
     shiny::req(r$raw_counts)
-    d <- raw_data()[rowSums(raw_data()) > 0,]
+    d <- r$raw_counts[rowSums(r$raw_counts) > 0,]
     
-    draw_heatmap(d)
+    draw_heatmap(d, title = "Expression data preview")
   })
   
   
@@ -568,10 +568,14 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$gene_info_summary <- shiny::renderUI({
-    shiny::req(raw_data)
+    shiny::req(r$raw_counts)
     shiny::req(r$organism)
+    
+    
     ######## setting gene info here
     r$gene_info <- gene_info()
+    
+    
     if (is.null(r$gene_info)) {
       numberColor = "orange"
       number = "No additional gene data provided"
@@ -595,7 +599,8 @@ mod_import_data_server <- function(input, output, session, r) {
   
   output$organism_summary <- shiny::renderUI({
     ######## setting organism here
-    shiny::req(raw_data)
+    shiny::req(r$raw_counts)
+    
     shiny::req(r$organism)
     
     
