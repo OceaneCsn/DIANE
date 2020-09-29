@@ -300,7 +300,7 @@ mod_import_data_server <- function(input, output, session, r) {
     }
     #shiny::req("Gene" %in% colnames(d))
     
-    
+   
     ############### checking organism compatibility
     shiny::req(r$organism)
     if(r$organism != "Other"){
@@ -325,12 +325,10 @@ mod_import_data_server <- function(input, output, session, r) {
           For", r$organism, "they should be in the form", ex, "for example."),
           type = "error"
         )
-        stop()
+        #stop()
       }
     }
-    
     shiny::req(check_IDs(rownames(d), r$organism))
-    
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$splicing_aware <- are_splice_variants(row.names(d))
@@ -413,19 +411,19 @@ mod_import_data_server <- function(input, output, session, r) {
       
       
       choices = c("Arabidopsis thaliana", "Lupinus albus")
-      if( requireNamespace("org.Mm.eg.db"))
+      if( requireNamespace("org.Mm.eg.db", quietly = TRUE))
         choices <- c(choices, "Mus musculus")
       
-      if( requireNamespace("org.Hs.eg.db"))
+      if( requireNamespace("org.Hs.eg.db", quietly = TRUE))
         choices <- c(choices, "Homo sapiens")
       
-      if( requireNamespace("org.Ce.eg.db"))
+      if( requireNamespace("org.Ce.eg.db", quietly = TRUE))
         choices <- c(choices, "Caenorhabditis elegans")
       
-      if( requireNamespace("org.Dm.eg.db"))
+      if( requireNamespace("org.Dm.eg.db", quietly = TRUE))
         choices <- c(choices, "Drosophilia melanogatser")
       
-      if( requireNamespace("org.EcK12.eg.db"))
+      if( requireNamespace("org.EcK12.eg.db", quietly = TRUE))
         choices <- c(choices, "Escherichia coli")
       
       
@@ -598,9 +596,7 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$organism_summary <- shiny::renderUI({
-    ######## setting organism here
     shiny::req(r$raw_counts)
-    
     shiny::req(r$organism)
     
     
