@@ -343,7 +343,9 @@ mod_import_data_server <- function(input, output, session, r) {
 #   splicing summary                                                        ####
   output$variants_summary <- shiny::renderUI({
     shiny::req(r$conditions)
-    shiny::req(!is.null(r$splicing_aware))
+    shiny::req(!r$splicing_aware)
+    shiny::req(raw_data())
+    
     if (r$splicing_aware) {
       numberColor = "blue"
       number = "Alternatifve splicing aware"
@@ -450,7 +452,7 @@ mod_import_data_server <- function(input, output, session, r) {
     if(!golem::get_golem_options("server_version")){
       "<b>The organisms listed below are the one detected on the system.</b> <br>
     To use new organisms, please close DIANE and install the corresponding
-    package from Bioconductor from R ou Rstudio consoles.<br>
+    package from R or Rstudio consoles.<br>
 
     <code> if (!requireNamespace(\"BiocManager\", quietly = TRUE))
       install.packages(\"BiocManager\") </code> <br>
@@ -485,6 +487,9 @@ mod_import_data_server <- function(input, output, session, r) {
     req(r$raw_counts)
     req(r$conditions)
     req(r$organism)
+    shiny::req(raw_data())
+    
+    
     if (r$organism != "Other") {
       
       
