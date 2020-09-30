@@ -327,8 +327,9 @@ mod_import_data_server <- function(input, output, session, r) {
         )
         #stop()
       }
+      shiny::req(check_IDs(rownames(d), r$organism))
     }
-    shiny::req(check_IDs(rownames(d), r$organism))
+    
     r$conditions <-
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$splicing_aware <- are_splice_variants(row.names(d))
