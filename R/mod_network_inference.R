@@ -459,7 +459,7 @@ mod_network_inference_server <- function(input, output, session, r){
       if(is.na(cpus)){cpus <- 1}
     }
     else{
-      cpus = 56
+      cpus = 32
     }
 
     shinyWidgets::sliderTextInput(
