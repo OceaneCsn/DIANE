@@ -146,8 +146,7 @@ mod_clustering_ui <- function(id) {
           )
         )
       )
-    ),
-    shiny::actionButton(ns("browser"), "backdoor")
+    )
   )
 }
 
@@ -438,10 +437,7 @@ mod_clustering_server <- function(input, output, session, r) {
     )
   })
   
-  shiny::observeEvent(input$browser, {
-    browser()
-  })
-  
+
 }
 
 

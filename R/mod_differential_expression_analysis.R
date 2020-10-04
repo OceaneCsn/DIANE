@@ -178,8 +178,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         )
       )
       
-    ),
-    shiny::actionButton(ns("browser"), "backdoor")
+    )
   )
 }
 
@@ -854,9 +853,6 @@ mod_differential_expression_analysis_server <-
     })
     
     
-    shiny::observeEvent(input$browser, {
-      browser()
-    })
   }
 
 ## To be copied in the UI

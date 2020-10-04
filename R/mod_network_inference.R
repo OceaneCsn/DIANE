@@ -215,10 +215,6 @@ shiny::hr(),
     ))
 
 
-  
-  ,shiny::actionButton(ns("browser"), "backdoor")
-
-
  
   )
 }
@@ -529,14 +525,7 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   
-  
-  
-  
-  shiny::observeEvent(input$browser, {
-    browser()
-  })
-  
-  
+
 #   ____________________________________________________________________________
 #   bttn reactives                                                          ####
 
