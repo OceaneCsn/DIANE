@@ -30,7 +30,7 @@ mod_clustering_ui <- function(id) {
         closable = FALSE,
         width = 12,
         
-        col_10(shiny::h4("Poisson mixture model clustering")),
+        col_10(shiny::h4("Mixture models clustering")),
         
         col_2(
           shinyWidgets::dropdownButton(
@@ -172,17 +172,25 @@ mod_clustering_server <- function(input, output, session, r) {
   
   output$input_genes <- shiny::renderUI({
     shiny::req(r$DEGs)
-    
-    shinyWidgets::checkboxGroupButtons(
-      inputId = ns('input_deg_genes'),
-      label = "Input genes for clustering :",
-      choiceValues = names(r$DEGs),
-      justified = TRUE,
-      checkIcon = list(yes = shiny::icon("ok",
-                                         lib = "glyphicon")),
-      direction = "vertical",
-      choiceNames = paste(names(r$DEGs), paste(lengths(r$DEGs), "genes"))
-    )
+    if(length(r$DEGs) > 0){
+      shinyWidgets::checkboxGroupButtons(
+        inputId = ns('input_deg_genes'),
+        label = "Input genes for clustering :",
+        choiceValues = names(r$DEGs),
+        justified = TRUE,
+        checkIcon = list(yes = shiny::icon("ok",
+                                           lib = "glyphicon")),
+        direction = "vertical",
+        choiceNames = paste(names(r$DEGs), paste(lengths(r$DEGs), "genes"))
+      )
+    }
+    else{
+      shinydashboardPlus::descriptionBlock(
+        number = "Please perform one or more differential expression analysis before clustering",
+        numberColor = "orange",
+        rightBorder = FALSE
+      )
+    }
   })
   
   input_genes_conditions <- shiny::reactive({

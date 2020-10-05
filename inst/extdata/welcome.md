@@ -4,12 +4,7 @@
 
 ---
 
-<img src="www/headerLogo.png" alt="banner" width="1000"/>
-
-
 DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
-
-
 
 We designed this tool to process, explore, and perform advanced statistical analysis on **multifactorial expression data** using state of the art methods. It includes :
 
@@ -22,8 +17,10 @@ We designed this tool to process, explore, and perform advanced statistical anal
 
 + Machine learning based Gene regulatory network inference
 
-
 All of the features in DIANE are accessible via a signle page shiny application that can be locally launched.
+
+<img src="www/DIANE.png" alt="banner" width="1200" align="center"/>
+
 
 For more advanced users, all server-side functions in DIANE are exported so they can be called from R scripts. 
 
@@ -51,9 +48,6 @@ library(DIANE)
 DIANE::run_app()
 ```
 
+Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
 
-
-Author : Océane Cassan
-
-PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
-
+Dev : Océane Cassan, PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
