@@ -168,26 +168,32 @@ shiny::hr(),
       width = 12,
       
       shiny::fluidRow(
-                      col_4(shiny::uiOutput(ns("inference_summary"))),
-                      col_6(shiny::h5("Without thresholding, we would obtain a fully 
+                      col_2(shiny::uiOutput(ns("inference_summary"))),
+                      col_2(shinyWidgets::dropdownButton(
+                        size = 'xs',
+                        shiny::includeMarkdown(system.file("extdata", "threshold.md", package = "DIANE")),
+                        circle = TRUE,
+                        status = "success",
+                        icon = shiny::icon("question"),
+                        width = "600px",
+                        tooltip = shinyWidgets::tooltipOptions(title = "More details")
+                      )),
+                      col_8(shiny::h5("Without thresholding, we would obtain a fully 
                       connected weighted graph from GENIE3, with far too many links to be 
                       interpretable. In order build a meaningfull network, this weighted 
                       adjacency matrix betwen regulators and targets has to be sparsified, 
                                       and we have to determine the N higher regulatory weights that 
                                       we consider significant.")),
-      col_2(shinyWidgets::dropdownButton(
-        size = 'xs',
-        shiny::includeMarkdown(system.file("extdata", "threshold.md", package = "DIANE")),
-        circle = TRUE,
-        status = "success",
-        icon = shiny::icon("question"),
-        width = "600px",
-        tooltip = shinyWidgets::tooltipOptions(title = "More details")
-      ))),
+      ),
       
       
       
       shiny::hr(),
+      
+      shiny::h5("Density and proposed number of edges to develop here"),
+      
+      shiny::hr(),
+      
       
       
       shiny::fluidRow(col_8(shiny::sliderInput(ns("density"), max = 0.1,round = -3, step = 0.001,
@@ -232,12 +238,33 @@ mod_network_inference_server <- function(input, output, session, r){
 
   output$input_genes_net <- shiny::renderUI({
     shiny::req(r$DEGs)
-    shinyWidgets::pickerInput(
-      inputId = ns('input_deg_genes_net'),
-      label = "Genes composing the network :",
-      choices = names(r$DEGs),
-      choicesOpt = list(subtext = paste(lengths(r$DEGs), "genes"))
-    )
+    
+    if(length(r$DEGs) > 0){
+      shinyWidgets::pickerInput(
+        inputId = ns('input_deg_genes_net'),
+        label = "Genes composing the network :",
+        choices = names(r$DEGs),
+        choicesOpt = list(subtext = paste(lengths(r$DEGs), "genes"))
+      )
+      # shinyWidgets::checkboxGroupButtons(
+      #   inputId = ns('input_deg_genes'),
+      #   label = "Input genes for clustering :",
+      #   choiceValues = names(r$DEGs),
+      #   justified = TRUE,
+      #   checkIcon = list(yes = shiny::icon("ok",
+      #                                      lib = "glyphicon")),
+      #   direction = "vertical",
+      #   choiceNames = paste(names(r$DEGs), paste(lengths(r$DEGs), "genes"))
+      # )
+    }
+    else{
+      shinydashboardPlus::descriptionBlock(
+        number = "Please perform one or more differential expression analysis before network inference",
+        numberColor = "orange",
+        rightBorder = FALSE
+      )
+    }
+    
   })
   
   
