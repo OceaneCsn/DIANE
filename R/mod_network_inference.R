@@ -190,7 +190,15 @@ shiny::hr(),
       
       shiny::hr(),
       
-      shiny::h5("Density and proposed number of edges to develop here"),
+      shiny::h5("As biological networks are known for their pronounced sparsity, 
+                considering all possible regulator-target pairs would be of very little interest. 
+                Studies found that the typical values of density (ratio between the number of edges, 
+                and the number of edges of the complete graph) in state of the art biological networks 
+                lie approximately between 0.1 and 0.001. We therefore propose to create a first graph, 
+                topologically consistent with biological network standards, which will be further refined 
+                by statistical testing. During the testing phase, the null ditributions of regulatory weights 
+                are estimated by the permutations, thus providing an empricial p-value 
+                for the observed importance."),
       
       shiny::hr(),
       

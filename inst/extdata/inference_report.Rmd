@@ -75,7 +75,7 @@ input$cor_thr/100.0
 ```
 
 The grouping was performed using the modules of this correlation network :
-```{r, fig.width=10, fig.height=10}
+```{r, fig.width=10, fig.height=5}
 if(!is.null(r$cor_network)){
     nodes <- r$cor_network$nodes
   nodes$label <- r$gene_info[match(nodes$id, rownames(r$gene_info)), "label"]
