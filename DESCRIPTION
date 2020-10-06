@@ -47,7 +47,8 @@ Imports:
     randomForest,
     rfPermute,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tictoc
 Suggests: 
     org.Hs.eg.db,
     org.Dm.eg.db,
