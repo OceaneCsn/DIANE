@@ -339,10 +339,11 @@ draw_enrich_go_map <- function(go){
   layout$adj.p.value <- go[match(layout$name, go$ID),"p.adjust"]
   layout$label <- go[match(layout$name, go$ID),"Description"]
   ggraph::ggraph(layout) + 
-    ggraph::geom_edge_link(ggplot2::aes(width = common_genes), alpha=0.1) + 
+    ggraph::geom_edge_link(
+      width = 2.2, ggplot2::aes(alpha = 0.1 + 0.2*common_genes/max(pairs$common_genes))) + #
     ggraph::geom_node_point(ggplot2::aes(size = GeneCount, color=adj.p.value)) +
     ggraph::geom_node_label(ggplot2::aes(label = label), repel = TRUE, alpha = 0.75)+
-    ggtitle("Gene Ontology enrichment map") + ggplot2::theme(
+    ggplot2::ggtitle("Gene Ontology enrichment map") + ggplot2::theme(
       plot.title = ggplot2::element_text(size = 20, face = "bold") ) +
     ggplot2::scale_color_gradient(low="#114223", high="#92D9A2")
 }
