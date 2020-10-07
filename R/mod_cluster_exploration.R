@@ -204,10 +204,12 @@ mod_cluster_exploration_server <-
       table <- data.frame(Genes = genes)
       
       if (!is.null(r$gene_info)) {
-        
         if (r$splicing_aware) ids <- get_locus(genes, unique = FALSE)
         else ids <- genes
         table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
+      }
+      else{
+        table
       }
     })
     
