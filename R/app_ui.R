@@ -22,6 +22,21 @@ logo_diane <- dashboardthemes::shinyDashboardLogoDIY(
   
 )
 
+dbHeader <- shinydashboard::dashboardHeader(title = logo_diane,
+                                            shinydashboard::dropdownMenu(type = "messages", badgeStatus = "success",
+                                                         icon = shiny::icon("info"), headerText = "Information",
+                                                         shinydashboard::notificationItem(icon = shiny::icon("desktop"),
+                                                                     text = "Adjust with ctrl/cmd + or -"
+                                                                  
+                                                         ),
+                                                         shinydashboard::notificationItem(text = "oceane.cassan@supagro.fr",
+                                                                     icon = shiny::icon("envelope")
+                                                         ),
+                                                         shinydashboard::notificationItem(text = "Report bugs on github",
+                                                                          href = "https://github.com/OceaneCsn/DIANE/issues",
+                                                                          icon = shiny::icon("bug")
+                                                         )
+                                            ))
 
 #' The application User-Interface
 #'
@@ -36,10 +51,8 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # List the first level UI elements here
-    shinydashboard::dashboardPage(
-      shinydashboard::dashboardHeader(title = logo_diane),
-      
-      
+    shinydashboard::dashboardPage(dbHeader,
+
 #   ____________________________________________________________________________
 #   sidebar                                                                 ####
 
@@ -100,6 +113,9 @@ app_ui <- function(request) {
       
       shinydashboard::dashboardBody(
         dashboardthemes::shinyDashboardThemes(theme = "grey_light"),
+        
+        #shiny::includeMarkdown(system.file("extdata", "logo_top.md", package = "DIANE")),
+        #img(src='myImage.png', align = "right"),
         
         
         shinydashboard::tabItems(

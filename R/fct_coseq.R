@@ -22,7 +22,7 @@
 #' @examples
 #' data("abiotic_stresses")
 #' genes <- abiotic_stresses$heat_DEGs
-#' clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), 
+#' clustering <- run_coseq(conds = unique(abiotic_stresses$conditions), 
 #' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
                       model = "Poisson") {
@@ -57,7 +57,8 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
       transformation = transfo,
       normFactors = "none",
       parallel = TRUE, #to avoid singular covariance matrices :
-      GaussianModel = "Gaussian_pk_Lk_Bk"
+      GaussianModel = "Gaussian_pk_Lk_Bk",
+      verbose = FALSE
     )
   return(list(
     membership = coseq::clusters(clustering_run),

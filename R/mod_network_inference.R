@@ -216,13 +216,14 @@ shiny::hr(),
                                 size = "normal", onStatus = "success", 
                                 offStatus = "primary", width = "100%")),
                       col_4(shiny::uiOutput(ns("btn_thr_label"))),
-                      col_4(shiny::uiOutput(ns("dl_bttns")))),
+                      col_4(shiny::uiOutput(ns("estimation_summary")))),
 
        
       
       shiny::hr(),
       
       shiny::uiOutput(ns("thr_summary")),
+      shiny::uiOutput(ns("dl_bttns")),
       
       visNetwork::visNetworkOutput(ns("net_preview"), height = "650px")
       
@@ -508,7 +509,14 @@ mod_network_inference_server <- function(input, output, session, r){
   })
   
   
+  time_estimation <- shiny::reactiveValues(
+    estimation = NULL
+  )
   
+  shiny::observeEvent(input$n_cores, {
+    time_estimation$estimation <- NULL
+  })
+
   
 #   ____________________________________________________________________________
 
@@ -523,10 +531,15 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
 
-    if(input$test_edges)
-      label = "Threshold and test edges"
+    if(input$test_edges){
+      if(is.null(time_estimation$estimation))
+        label = "Estimate running time"
+      else
+        label = "Threshold and test network"
+    }
+      
     else
-      label = "Threshold"
+      label = "Threshold network"
     col_4(shinyWidgets::actionBttn(
       ns("thr_btn"),
       label = label,
@@ -534,6 +547,29 @@ mod_network_inference_server <- function(input, output, session, r){
       style = 'bordered',
       size = "sm"
     ))
+  })
+  
+  
+  #   ____________________________________________________________________________
+  #   estimation display                                                      ####
+  
+  
+  output$estimation_summary <- shiny::renderUI({
+    shiny::req(r$normalized_counts)
+    shiny::req(r$DEGs)
+    shiny::req(input$input_deg_genes_net)
+    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]])
+    shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
+    shiny::req(time_estimation$estimation)
+    
+    shinydashboardPlus::descriptionBlock(
+      number = "Estimated time for edges statistical testing :",
+      numberColor = "orange",
+      rightBorder = FALSE,
+      header = paste("Aproximatively", round(time_estimation$estimation/60, 0), "minutes")
+    )
+    
   })
   
 #   ____________________________________________________________________________
@@ -553,9 +589,12 @@ mod_network_inference_server <- function(input, output, session, r){
                              nGenes = dim(mat)[2],
                              nRegulators = dim(mat)[1])
     
+    time_estimation$estimation <- NULL
+    
     shiny::numericInput(ns("n_edges"), 
                         label = "Number of edges :", 
                         min = 1, value = proposition)
+    
   })
   
   
@@ -624,6 +663,8 @@ mod_network_inference_server <- function(input, output, session, r){
                       nCores = input$n_cores, 
                       importance_metric = importance)
     
+    time_estimation$estimation <- NULL
+    
     if(sum(is.na(mat)) > 0){
       shinyalert::shinyalert(
         paste("NA importance values were produced :", sum(is.na(mat)), "Nan over", length(c(mat))),
@@ -645,6 +686,13 @@ mod_network_inference_server <- function(input, output, session, r){
     
   })
   
+  #   ____________________________________________________________________________
+  #   bttn reactive thr                                                       ####
+  
+  
+
+  
+  
   shiny::observeEvent((input$thr_btn), {
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
@@ -653,7 +701,7 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
     
     
-    if(!input$test_edges){
+    if (!input$test_edges){
       r$networks[[input$input_deg_genes_net]]$graph <- network_thresholding(
         r$networks[[input$input_deg_genes_net]]$mat, n_edges = input$n_edges)
       
@@ -676,31 +724,53 @@ mod_network_inference_server <- function(input, output, session, r){
     }
     else{
       
-      if(input$grouping)
-        data = r$grouped_normalized_counts
-      else
-        data = r$normalized_counts
+      ######## time estimation 
       
-      mat <- r$networks[[input$input_deg_genes_net]]$mat
-      
-      r$edge_tests <- test_edges(mat,
-                        normalized_counts = data, density = input$density,
-                        nGenes = dim(mat)[2],
-                        nRegulators = dim(mat)[1], 
-                        nTrees = input$n_trees, 
-                        verbose = TRUE,
-                        nCores = input$n_cores)
-      
-      loggit::loggit(custom_log_lvl = TRUE,
-                     log_lvl = r$session_id,
-                     log_msg = "edges testing")
-      
-
-      shiny::showModal(shiny::modalDialog(
-        title = "Edge testing procedure complete",
-        size = 'l',
+      if (is.null(time_estimation$estimation)){
+        if(input$grouping)
+          data = r$grouped_normalized_counts
+        else
+          data = r$normalized_counts
         
-        shiny::h5("Now every edge of the pre-buit network is
+        mat <- r$networks[[input$input_deg_genes_net]]$mat
+        
+        time_estimation$estimation <- estimate_test_edges_time(mat,
+                                   normalized_counts = data, density = input$density,
+                                   nGenes = dim(mat)[2],
+                                   nRegulators = dim(mat)[1], 
+                                   nTrees = input$n_trees, 
+                                   verbose = TRUE,
+                                   nCores = input$n_cores)
+      }
+      
+      ######## Actual testing
+      
+      else{
+        if (input$grouping)
+          data = r$grouped_normalized_counts
+        else
+          data = r$normalized_counts
+        
+        mat <- r$networks[[input$input_deg_genes_net]]$mat
+        
+        r$edge_tests <- test_edges(mat,
+                                   normalized_counts = data, density = input$density,
+                                   nGenes = dim(mat)[2],
+                                   nRegulators = dim(mat)[1], 
+                                   nTrees = input$n_trees, 
+                                   verbose = TRUE,
+                                   nCores = input$n_cores)
+        
+        loggit::loggit(custom_log_lvl = TRUE,
+                       log_lvl = r$session_id,
+                       log_msg = "edges testing")
+        
+        
+        shiny::showModal(shiny::modalDialog(
+          title = "Edge testing procedure complete",
+          size = 'l',
+          
+          shiny::h5("Now every edge of the pre-buit network is
                   associated to an adjusted pvalue. The only remaining 
                   choice is the fdr threshold to apply to keep significant 
                   edges. Usual values are 0.01, 0.05, or 0.1, and can be interpreted
@@ -708,17 +778,20 @@ mod_network_inference_server <- function(input, output, session, r){
                   The curves above can give you some insights about 
                   the pvalues distributions and the number of edges
                   the network will have depending on the chosen fdr threshold."),
-        
-        shiny::plotOutput(ns("fdr_choice"), height = "600px"),
-        
-        shiny::hr(),
-        
-        shiny::numericInput(ns("fdr"), value = 0.05, min = 0, max = 1,
-                            label = "FDR threshold :"),
-        
-        footer = list(
-          shiny::actionButton(ns("fdr_chosen"), "OK"))
-      ))
+          
+          shiny::plotOutput(ns("fdr_choice"), height = "600px"),
+          
+          shiny::hr(),
+          
+          shiny::numericInput(ns("fdr"), value = 0.05, min = 0, max = 1,
+                              label = "FDR threshold :"),
+          
+          footer = list(
+            shiny::actionButton(ns("fdr_chosen"), "OK"))
+        ))
+      }
+      
+      
       
     }
     
@@ -850,4 +923,3 @@ mod_network_inference_server <- function(input, output, session, r){
     
 ## To be copied in the server
 # callModule(mod_network_inference_server, "network_inference_ui_1")
- 

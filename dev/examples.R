@@ -147,6 +147,7 @@ mat <- DIANE::network_inference(r$counts,
                                 verbose = TRUE)
 
 library(tictoc)
+
 tic("test edges")
 res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.03,
                          nGenes = length(r$grouped_genes), 
@@ -295,3 +296,54 @@ draw_profiles(abiotic_stresses$normalized_counts, normLogit$membership, abiotic_
 coseq::compareICL(list(normLogit$model, normSin$model))
 
 summary(normLogit)
+
+
+
+
+########## sig genie time estimation
+library(DIANE)
+
+data("abiotic_stresses")
+data("gene_annotations")
+data("regulators_per_organism")
+
+
+genes <- get_locus(abiotic_stresses$heat_DEGs)
+regressors <- intersect(genes, 
+                        regulators_per_organism$`Arabidopsis thaliana`)
+
+data <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+
+r <- DIANE::group_regressors(data, genes, regressors)
+
+
+
+mat <- DIANE::network_inference(r$counts, 
+                                conds = abiotic_stresses$conditions, 
+                                targets = r$grouped_genes,
+                                regressors = r$grouped_regressors, 
+                                importance_metric = "MSEincrease_oob", 
+                                verbose = TRUE)
+
+library(tictoc)
+
+tic("test edges")
+res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+                         nGenes = length(r$grouped_genes), 
+                         nRegulators = length(r$grouped_regressors), 
+                         nTrees = 1000, verbose = TRUE)
+
+toc()
+
+tic("test")
+a <- toc()
+elapsed <- a$toc - a$tic
+
+
+
+
+t <- estimate_test_edges_time(mat, normalized_counts = r$counts, density = 0.02,
+                         nGenes = length(r$grouped_genes), 
+                         nRegulators = length(r$grouped_regressors), 
+                         nTrees = 1000, verbose = TRUE)
+t/60

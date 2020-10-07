@@ -155,7 +155,8 @@ network_data <- function(graph, regulators, gene_info = NULL){
   if("weight" %in% colnames(data$edges))
     data$edges$value <- data$edges$weight
   if("fdr" %in% colnames(data$edges))
-    data$edges$value <- -log10(data$edges$fdr)
+    data$edges$value <- 2
+  #data$edges$value <- log10(-log10(data$edges$fdr))
   # adding additional infos
   if(!is.null(gene_info)){
     data$nodes[,colnames(gene_info)] <- 

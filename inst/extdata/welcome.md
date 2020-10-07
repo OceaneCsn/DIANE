@@ -1,7 +1,6 @@
  
 
 # Dashboard for the Inference and Analysis of Networks from Expression data <img src="www/favicon.ico" align="right" alt="" width="180" />
-
 ---
 
 DIANE is a shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.

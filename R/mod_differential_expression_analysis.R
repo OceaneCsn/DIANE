@@ -351,18 +351,13 @@ mod_differential_expression_analysis_server <-
     #   Summaries                                                               ####
     
     output$disp_estimate_summary <- shiny::renderUI({
-      if (is.null(r$fit)) {
-        numberColor = "orange"
-        number = "Needed"
-        header = ""
-        numberIcon = "fa fa-times"
-      }
-      else{
-        numberColor = "olive"
-        number = "Done"
-        numberIcon = "fa fa-check"
-        header = "See EdgeR summary tab for more details"
-      }
+      shiny::req(is.null(r$normalized_counts))
+
+      numberColor = "red"
+      number = "Normalisation needed"
+      header = ""
+      numberIcon = "fa fa-times"
+      
       shinydashboardPlus::descriptionBlock(
         number = number,
         numberColor = numberColor,
@@ -374,16 +369,16 @@ mod_differential_expression_analysis_server <-
     
     
     output$deg_test_summary <- shiny::renderUI({
-      if (is.null(r$fit)) {
+      if (is.null(r$normalized_counts)) {
         numberColor = "red"
-        number = "Dispersion estimation needed"
+        number = "Normalisation needed"
         header = ""
         numberIcon = "fa fa-times"
       }
       else{
         if (is.null(r_dea$top_tags)) {
           numberColor = "orange"
-          number = "Test can be performed"
+          number = "Tests can be performed"
           header = ""
           numberIcon = "fa fa-times"
         }

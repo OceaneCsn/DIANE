@@ -195,7 +195,8 @@ mod_import_data_ui <- function(id) {
       DT::dataTableOutput(ns("design_preview")),
       footer = "Describe the levels of each factors for your conditions"
     ),
-
+    
+    shiny::br(),
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
   )

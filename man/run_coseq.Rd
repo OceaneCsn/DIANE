@@ -34,6 +34,6 @@ run_coseq
 \examples{
 data("abiotic_stresses")
 genes <- abiotic_stresses$heat_DEGs
-clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), 
+clustering <- run_coseq(conds = unique(abiotic_stresses$conditions), 
 data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 }
