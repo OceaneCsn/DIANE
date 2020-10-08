@@ -174,7 +174,10 @@ mod_differential_expression_analysis_ui <- function(id) {
                                                         c("All", "Up-regulated", "Down-regulated")),
                                      inline = TRUE, status = "success"),
           shiny::plotOutput(ns("venn"), height = "700px"),
-          shiny::uiOutput(ns("dl_bttn_venn"))
+          shiny::uiOutput(ns("dl_bttn_venn")),
+          
+          shiny::uiOutput(ns("venn_spec_comp_choice")),
+          shiny::uiOutput(ns("venn_spec_comp_bttn"))
         )
       )
       
@@ -591,7 +594,6 @@ mod_differential_expression_analysis_server <-
     
     output$venn <- shiny::renderPlot({
       shiny::req(venn_list)
-      
       draw_venn(venn_list())
     })
     
@@ -620,10 +622,38 @@ mod_differential_expression_analysis_server <-
       }
     )
     
+    output$venn_spec_comp_choice <- renderUI({
+      shiny::req(venn_list())
+      tagList(
+        shiny::selectInput(ns("venn_spec_comp"), label = "Genes specific to a comparison :",
+                           choices = input$venn_genes, selected = input$venn_genes[1])
+      )
+    })
+    
+    output$venn_spec_comp_bttn <- renderUI({
+      shiny::req(venn_list())
+      tagList(
+        shinyWidgets::downloadBttn(
+          outputId = ns("download_specific_venn"),
+          label = paste("Download genes specific to the", input$venn_spec_comp, "list"),
+          style = "bordered",
+          color = "success"
+        )
+      )
+    })
     
     
-    
-    
+    output$download_specific_venn <- shiny::downloadHandler(
+      filename = function() {
+        paste(paste0("Venn_specific_to", input$venn_spec_comp, ".csv"))
+      },
+      content = function(file) {
+        write.table(setdiff(venn_list()[[input$venn_spec_comp]], 
+                            Reduce(intersect, venn_list())), 
+                    file = file, row.names = FALSE, sep = ';',
+                    quote = FALSE, col.names = FALSE)
+      }
+    )
     
     
     #   ____________________________________________________________________________
@@ -644,6 +674,7 @@ mod_differential_expression_analysis_server <-
                                            lib = "glyphicon"))
       )
     })
+    
     output$heatmap <- shiny::renderPlot({
       shiny::req(input$conds_heatmap, r_dea$DEGs, r$normalized_counts)
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
@@ -670,8 +701,6 @@ mod_differential_expression_analysis_server <-
         MA = input$MA_vulcano_switch
       )
     })
-    
-    
 
 #   ____________________________________________________________________________
 #   GO enrich                                                               ####

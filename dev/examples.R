@@ -347,3 +347,28 @@ t <- estimate_test_edges_time(mat, normalized_counts = r$counts, density = 0.02,
                          nRegulators = length(r$grouped_regressors), 
                          nTrees = 1000, verbose = TRUE)
 t/60
+
+
+g2 <- sample(rownames(abiotic_stresses$normalized_counts), size = 4000)
+g1 <- sample(rownames(abiotic_stresses$normalized_counts), size = 4040)
+
+venn <- ggVennDiagram::ggVennDiagram(list(g1 = g1, g2 = g2), color = "#888888")
+gene_lists <- list(g1 = g1, g2 = g2)
+
+library(rlist)
+
+length(setdiff(g1, g2))
+
+
+list.count(gene_list, )
+
+
+get_specific <- function(gene_lists, l ){
+  common <- Reduce(intersect, gene_lists)
+  return(setdiff(gene_lists[[l]], common))
+}
+
+
+
+length(get_specific(gene_lists, "g1"))
+
