@@ -93,6 +93,41 @@ convert_from_ensembl_mus <- function(ids, to = "entrez"){
 }
 
 
+#' For drosophilia, converts ensembl IDs to entrez IDs, 
+#' symbol or name, 
+#'
+#' @param ids genes to convert, ensembl
+#' @param to value in c("entrez", "symbol", "name")
+#'
+#' @return named list
+#' @export
+#' @examples
+#' if(require("org.Dm.eg.db")){
+#' genes <- c("FBgn0000042", "FBgn0011224")
+#' convert_from_ensembl_dm(genes)
+#' convert_from_ensembl_dm(genes, to = "symbol")
+#' convert_from_ensembl_dm(genes, to = "name")
+#' }
+convert_from_ensembl_dm <- function(ids, to = "entrez"){
+  if(to == "entrez"){
+    xx <- as.list(org.Dm.eg.db::org.Dm.egENSEMBL)
+    entrez <- names(unlist(xx)[unlist(xx) %in% ids])
+    nms <- unlist(xx)[unlist(xx) %in% ids]
+    return(stats::setNames(entrez, nms))
+  }
+  else{
+    entrez <- convert_from_ensembl_dm(ids, to = "entrez")
+    if (to == "symbol")
+      x <- org.Dm.eg.db::org.Dm.egSYMBOL
+    if (to == "name")
+      x <- org.Dm.eg.db::org.Dm.egGENENAME
+    mapped_genes <- AnnotationDbi::mappedkeys(x)
+    xx <- as.list(x[mapped_genes])
+    return(unlist(xx[as.vector(entrez)]))
+  }
+}
+
+
 #' Enriched Gene Ontology terms in a set of genes
 #' 
 #' @description This function returns the enriched biological processes
@@ -270,6 +305,23 @@ get_gene_information <- function(ids, organism){
   }
   
   if (organism == "Mus musculus"){
+    # handling missing values in entrez ids
+    entrez <- convert_from_ensembl_mus(ids)
+    entrez <- entrez[match(ids, names(entrez))]
+    
+    label <- convert_from_ensembl_mus(ids, to = "symbol")
+    label <- label[match(entrez, names(label))]
+    
+    description = convert_from_ensembl_mus(ids, to = "name")
+    description = description[match(entrez, names(description))]
+    
+    d <- data.frame(genes = ids, label = label,
+                    description = description)
+    
+    rownames(d) <- d$genes
+  }
+  
+  if (organism == "Drosophilia melanogaster"){
     # handling missing values in entrez ids
     entrez <- convert_from_ensembl_mus(ids)
     entrez <- entrez[match(ids, names(entrez))]

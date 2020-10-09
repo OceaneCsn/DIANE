@@ -91,6 +91,10 @@ check_IDs <- function(ids, organism){
     #pattern = "Lalb_Chr[[:digit:]]{2}c*[[:digit:]]*g[[:digit:]]"
     pattern = "^Lalb_Chr[[:digit:]]{2}(c[[:digit:]]{2})?g[[:digit:]]{7}"
   
+  if(organism == "Drosophilia melanogaster")
+    pattern = "^FBgn[[:digit:]]{7}"
+  
+  
   matched <- sum(stringr::str_detect(ids, pattern = pattern))
   if( matched == length(ids))
     return(TRUE)
