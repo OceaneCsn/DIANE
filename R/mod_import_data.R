@@ -426,7 +426,7 @@ mod_import_data_server <- function(input, output, session, r) {
         choices <- c(choices, "Caenorhabditis elegans")
       
       if( requireNamespace("org.Dm.eg.db", quietly = TRUE))
-        choices <- c(choices, "Drosophilia melanogatser")
+        choices <- c(choices, "Drosophilia melanogaster")
       
       if( requireNamespace("org.EcK12.eg.db", quietly = TRUE))
         choices <- c(choices, "Escherichia coli")

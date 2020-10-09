@@ -323,13 +323,13 @@ get_gene_information <- function(ids, organism){
   
   if (organism == "Drosophilia melanogaster"){
     # handling missing values in entrez ids
-    entrez <- convert_from_ensembl_mus(ids)
+    entrez <- convert_from_ensembl_dm(ids)
     entrez <- entrez[match(ids, names(entrez))]
     
-    label <- convert_from_ensembl_mus(ids, to = "symbol")
+    label <- convert_from_ensembl_dm(ids, to = "symbol")
     label <- label[match(entrez, names(label))]
     
-    description = convert_from_ensembl_mus(ids, to = "name")
+    description = convert_from_ensembl_dm(ids, to = "name")
     description = description[match(entrez, names(description))]
     
     d <- data.frame(genes = ids, label = label,
