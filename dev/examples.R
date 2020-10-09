@@ -372,3 +372,9 @@ get_specific <- function(gene_lists, l ){
 
 length(get_specific(gene_lists, "g1"))
 
+
+
+### tfs droso
+
+tfs <- read.table("../Drosophilia_TFs.txt", h = F)
+regulators_per_organism[["Drosophilia melanogaster"]] <- tfs$V1

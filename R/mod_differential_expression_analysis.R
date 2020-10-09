@@ -801,6 +801,12 @@ mod_differential_expression_analysis_server <-
             org = org.Mm.eg.db::org.Mm.eg.db
           }
           
+          if(r$organism == "Drosophilia melanogaster"){
+            genes <- convert_from_ensembl_dm(genes)
+            background <- convert_from_ensembl_dm(background)
+            org = org.Dm.eg.db::org.Dm.eg.db
+          }
+          
           # TODO add check if it is entrez with regular expression here
           shiny::req(length(genes) > 0, length(background) > 0)
           r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)

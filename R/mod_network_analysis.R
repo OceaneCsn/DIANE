@@ -665,6 +665,12 @@ mod_network_analysis_server <- function(input, output, session, r) {
           org = org.Mm.eg.db::org.Mm.eg.db
         }
         
+        if(r$organism == "Drosophilia melanogaster"){
+          genes <- convert_from_ensembl_dm(genes)
+          background <- convert_from_ensembl_dm(background)
+          org = org.Dm.eg.db::org.Dm.eg.db
+        }
+        
         # TODO add check if it is entrez with regular expression here
         shiny::req(length(genes) > 0, length(background) > 0)
         

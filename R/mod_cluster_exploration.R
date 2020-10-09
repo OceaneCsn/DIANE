@@ -395,8 +395,6 @@ mod_cluster_exploration_server <-
         if (r$organism == "Lupinus albus"){
           
           GOs <- DIANE:::lupine$go_list
-          
-          
           universe <- intersect(background, GOs[,1])
           r_clust$go <- enrich_go_custom(genes, universe, GOs)
         }
@@ -418,6 +416,12 @@ mod_cluster_exploration_server <-
             genes <- convert_from_ensembl_mus(genes)
             background <- convert_from_ensembl_mus(background)
             org = org.Mm.eg.db::org.Mm.eg.db
+          }
+          
+          if(r$organism == "Drosophilia melanogaster"){
+            genes <- convert_from_ensembl_dm(genes)
+            background <- convert_from_ensembl_dm(background)
+            org = org.Dm.eg.db::org.Dm.eg.db
           }
           
           # TODO add check if it is entrez with regular expression here
