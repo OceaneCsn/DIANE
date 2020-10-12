@@ -1,5 +1,3 @@
-
-
 # Ready to explore RNA-Seq datasets <img src="www/favicon.ico" align="right" alt="" width="180" />
 ---
   
