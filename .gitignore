@@ -7,3 +7,4 @@ inst/doc
 app.R
 logs/next_id.txt
 logs/loggit.log
+inst/extdata/datasets/*
