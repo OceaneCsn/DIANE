@@ -76,6 +76,7 @@ golem::add_module( name = "network_inference" )
 golem::add_module( name = "network_analysis" )
 golem::add_module( name = "module_analysis" )
 golem::add_module( name = "module_levels" )
+golem::add_module( name = "datasets" )
 
 
 ## Add helper functions ----

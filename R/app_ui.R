@@ -102,8 +102,15 @@ app_ui <- function(request) {
                                         text = "Network inference"),
             shinydashboard::menuSubItem(tabName = "network_analysis_tab",
                                         text = "Network analysis")
-            )
+            ),
+          shinydashboard::menuItem(
+            "Ready to upload datasets",
+            tabName = "datasets_tab",
+            icon = shiny::icon("mouse")
           )
+        )
+        
+        
       ),
 
 
@@ -156,10 +163,16 @@ app_ui <- function(request) {
                                   mod_network_inference_ui("network_inference_ui_1")),
           shinydashboard::tabItem(tabName = "network_analysis_tab",
                                   mod_network_analysis_ui("network_analysis_ui_1")
-          )
+          ),
           # shinydashboard::tabItem(tabName = "module_analysis_tab",
           #                         mod_module_analysis_ui("module_analysis_ui_1")
           # )
+          #   ____________________________________________________________________________
+          #   clustering                                                              ####
+          
+          shinydashboard::tabItem(tabName = "datasets_tab",
+                                  mod_datasets_ui("datasets_ui_1"))
+
          
         )
         
@@ -178,6 +191,7 @@ app_ui <- function(request) {
 #' @noRd
 golem_add_external_resources <- function() {
   golem::add_resource_path('www', app_sys('app/www'))
+  golem::add_resource_path('datasets', app_sys('extdata/datasets'))
   #add_resource_path('md', app_sys('app/www/md'))
   
   tags$head(golem::favicon(),
