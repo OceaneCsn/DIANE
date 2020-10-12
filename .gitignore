@@ -8,3 +8,4 @@ app.R
 logs/next_id.txt
 logs/loggit.log
 inst/extdata/datasets/*
+*.DS_Store
