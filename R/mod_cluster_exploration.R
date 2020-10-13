@@ -424,6 +424,12 @@ mod_cluster_exploration_server <-
             org = org.Dm.eg.db::org.Dm.eg.db
           }
           
+          if(r$organism == "Caenorhabditis elegans"){
+            genes <- convert_from_ensembl_ce(genes)
+            background <- convert_from_ensembl_ce(background)
+            org = org.Ce.eg.db::org.Ce.eg.db
+          }
+          
           # TODO add check if it is entrez with regular expression here
           shiny::req(length(genes) > 0, length(background) > 0)
           

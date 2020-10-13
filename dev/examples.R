@@ -378,3 +378,10 @@ length(get_specific(gene_lists, "g1"))
 
 tfs <- read.table("../Drosophilia_TFs.txt", h = F)
 regulators_per_organism[["Drosophilia melanogaster"]] <- tfs$V1
+
+## tfs c elegans 
+
+
+tfs <- read.table("D:/These/DIANE_inputs/Ce_TF_list.csv", h = T, sep = ',')
+regulators_per_organism[["Caenorhabditis elegans"]] <- tfs$Gene.WB.ID
+

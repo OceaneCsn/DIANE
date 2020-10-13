@@ -46,12 +46,12 @@ Spatial transcriptomic dataset of lateral root and increasing proteoid root dens
 [Download expression file](/datasets/Lupin_ClusterRoots.csv)
 
 
-+ **Three bacterial diets for C. elegans** <i class="fab fa-pagelines"></i>
++ **Three bacterial diets for C. elegans** <i class="fas fa-bacteria"></i>
 
 RNAseq of young adult Caenorhabditis elegans animals fed on three different bacterial diets, E. coli OP50, B. subtilis PXN21 and a mixture of both.
 
 [Expression Atlas](https://www.ebi.ac.uk/gxa/experiments/E-MTAB-8164/Downloads) | 
-[Download expression file](/datasets/Lupin_ClusterRoots.csv)
+[Download expression file](/datasets/C_elegans_bacterial_diets.csv)
 
 
 

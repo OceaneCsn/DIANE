@@ -25,7 +25,7 @@ mod_datasets_server <- function(input, output, session){
   
   output$examples <- shiny::renderUI({
     
-    if(golem::get_golem_options("server_version"))
+    if(!golem::get_golem_options("server_version"))
       shiny::includeMarkdown(
         system.file("extdata", "ex_datasets.md", package = "DIANE"))
     else
