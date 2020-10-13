@@ -763,10 +763,8 @@ mod_differential_expression_analysis_server <-
             genes <- get_locus(genes)
             background <- get_locus(background)
           }
-          
-          
+
           GOs <- DIANE:::lupine$go_list
-          
           
           universe <- intersect(background, GOs[,1])
           r_dea$go <- enrich_go_custom(genes, universe, GOs)
@@ -805,6 +803,12 @@ mod_differential_expression_analysis_server <-
             genes <- convert_from_ensembl_dm(genes)
             background <- convert_from_ensembl_dm(background)
             org = org.Dm.eg.db::org.Dm.eg.db
+          }
+          
+          if(r$organism == "Caenorhabditis elegans"){
+            genes <- convert_from_ensembl_ce(genes)
+            background <- convert_from_ensembl_ce(background)
+            org = org.Ce.eg.db::org.Ce.eg.db
           }
           
           # TODO add check if it is entrez with regular expression here

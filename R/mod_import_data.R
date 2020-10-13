@@ -319,6 +319,9 @@ mod_import_data_server <- function(input, output, session, r) {
         if(r$organism == "Drosophilia melanogaster")
           ex = "FBgn0000036"
         
+        if(r$organism == "Caenorhabditis elegans")
+          ex = "WBGene00000042"
+        
         if(r$organism == "Lupinus albus")
           ex = "Lalb_Chr00c02g0404151"
         

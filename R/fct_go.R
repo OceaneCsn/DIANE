@@ -128,6 +128,40 @@ convert_from_ensembl_dm <- function(ids, to = "entrez"){
 }
 
 
+#' For c elegans, converts ensembl IDs to entrez IDs, 
+#' symbol or name, 
+#'
+#' @param ids genes to convert, ensembl
+#' @param to value in c("entrez", "symbol", "name")
+#'
+#' @return named list
+#' @export
+#' @examples
+#' if(require("org.Ce.eg.db")){
+#' genes <- c("WBGene00000042", "WBGene00000041")
+#' convert_from_ensembl_ce(genes)
+#' convert_from_ensembl_ce(genes, to = "symbol")
+#' convert_from_ensembl_ce(genes, to = "name")
+#' }
+convert_from_ensembl_ce <- function(ids, to = "entrez"){
+  if(to == "entrez"){
+    xx <- as.list(org.Ce.eg.db::org.Ce.egENSEMBL)
+    entrez <- names(unlist(xx)[unlist(xx) %in% ids])
+    nms <- unlist(xx)[unlist(xx) %in% ids]
+    return(stats::setNames(entrez, nms))
+  }
+  else{
+    entrez <- convert_from_ensembl_ce(ids, to = "entrez")
+    if (to == "symbol")
+      x <- org.Ce.eg.db::org.Ce.egSYMBOL
+    if (to == "name")
+      x <- org.Ce.eg.db::org.Ce.egGENENAME
+    mapped_genes <- AnnotationDbi::mappedkeys(x)
+    xx <- as.list(x[mapped_genes])
+    return(unlist(xx[as.vector(entrez)]))
+  }
+}
+
 #' Enriched Gene Ontology terms in a set of genes
 #' 
 #' @description This function returns the enriched biological processes
@@ -330,6 +364,24 @@ get_gene_information <- function(ids, organism){
     label <- label[match(entrez, names(label))]
     
     description = convert_from_ensembl_dm(ids, to = "name")
+    description = description[match(entrez, names(description))]
+    
+    d <- data.frame(genes = ids, label = label,
+                    description = description)
+    
+    rownames(d) <- d$genes
+  }
+  
+  
+  if (organism == "Caenorhabditis elegans"){
+    # handling missing values in entrez ids
+    entrez <- convert_from_ensembl_ce(ids)
+    entrez <- entrez[match(ids, names(entrez))]
+    
+    label <- convert_from_ensembl_ce(ids, to = "symbol")
+    label <- label[match(entrez, names(label))]
+    
+    description = convert_from_ensembl_ce(ids, to = "name")
     description = description[match(entrez, names(description))]
     
     d <- data.frame(genes = ids, label = label,
