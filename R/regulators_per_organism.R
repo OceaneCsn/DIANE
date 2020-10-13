@@ -9,6 +9,7 @@
 #'  \item{For Human}{\url{http://humantfs.ccbr.utoronto.ca/download.php}}
 #'  \item{Mus musculus}{\url{http://bioinfo.life.hust.edu.cn/AnimalTFDB/#!/download}}
 #'  \item{Drosophilia melanogaster}{\url{https://flybase.org/reports/FBgg0000745.html}}
+#'  \item{C elegans}{\url{http://www.wormbook.org/chapters/www_transcriptionalregulation.2/transregulate.html#sec5-1}}
 #'  }
 #' @format A named list with the following elements:
 #' \describe{
@@ -16,6 +17,7 @@
 #'  \item{Homo sapiens}{Character vector of the known transcription factors in Human}
 #'  \item{Mus musculus}{Character vector of the known transcription factors in Mouse}
 #'  \item{Drosophilia melanogaster}{Character vector of the known transcription factors in Drosophilia melanogaster}
+#'  \item{Caenorhabditis elegans}{Character vector of the known transcription factors in C elegans}
 #' }
 #' @examples
 #' {
