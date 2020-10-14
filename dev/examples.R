@@ -385,3 +385,10 @@ regulators_per_organism[["Drosophilia melanogaster"]] <- tfs$V1
 tfs <- read.table("D:/These/DIANE_inputs/Ce_TF_list.csv", h = T, sep = ',')
 regulators_per_organism[["Caenorhabditis elegans"]] <- tfs$Gene.WB.ID
 
+## tfs e coli
+
+
+tfs <- read.table("D:/These/DIANE_inputs/TFSet.txt", h = F, sep = '\t')
+tfs <- unique(tfs$V3)
+tfs <- c(stringr::str_split_fixed(tfs, ', ', 2)[,1], stringr::str_split_fixed(tfs, ', ', 2)[,2][stringr::str_split_fixed(tfs, ', ', 2)[,2] != ""])
+regulators_per_organism[["Escherichia coli"]] <- tfs
