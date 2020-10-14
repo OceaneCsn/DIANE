@@ -162,6 +162,44 @@ convert_from_ensembl_ce <- function(ids, to = "entrez"){
   }
 }
 
+
+
+
+#' For E coli, converts ensembl IDs to entrez IDs, 
+#' symbol or name, 
+#'
+#' @param ids genes to convert, ensembl
+#' @param to value in c("entrez", "symbol", "name")
+#'
+#' @return named list
+#' @export
+#' @examples
+#' if(require("org.Ce.eg.db")){
+#' genes <- c("WBGene00000042", "WBGene00000041")
+#' convert_from_ensembl_ce(genes)
+#' convert_from_ensembl_ce(genes, to = "symbol")
+#' convert_from_ensembl_ce(genes, to = "name")
+#' }
+convert_from_ensembl_eck12 <- function(ids, to = "entrez"){
+  if(to == "entrez"){
+    xx <- as.list(org.EcK12.eg.db::org.EcK12.egALIAS2EG)
+    entrez <- unlist(xx)[names(unlist(xx)) %in% ids]
+    return(entrez)
+  }
+  else{
+    entrez <- convert_from_ensembl_eck12(ids, to = "entrez")
+    if (to == "symbol")
+      x <- org.EcK12.eg.db::org.EcK12.egSYMBOL
+    if (to == "name")
+      x <- org.EcK12.eg.db::org.EcK12.egGENENAME
+    mapped_genes <- AnnotationDbi::mappedkeys(x)
+    xx <- as.list(x[mapped_genes])
+    return(unlist(xx[as.vector(entrez)]))
+  }
+}
+
+
+
 #' Enriched Gene Ontology terms in a set of genes
 #' 
 #' @description This function returns the enriched biological processes
@@ -304,6 +342,7 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 
 
 
+
 #' Gives gene information (common name and description) for a specific organism
 #'
 #' @param ids vector of genes, AGI for Arabidopsis and ensembl for Human
@@ -321,75 +360,38 @@ get_gene_information <- function(ids, organism){
     d <- gene_annotations$`Arabidopsis thaliana`[
       match(ids, rownames(gene_annotations$`Arabidopsis thaliana`)),]
   }
-  if (organism == "Homo sapiens"){
-    # handling missing values in entrez ids
-    entrez <- convert_from_ensembl(ids)
-    entrez <- entrez[match(ids, names(entrez))]
+  else{
+    annotate_org <- function(organism){
+      
+      mapping <- setNames(c(convert_from_ensembl, convert_from_ensembl_mus,
+                            convert_from_ensembl_dm, convert_from_ensembl_ce,
+                            convert_from_ensembl_eck12), 
+                          nm = c("Homo sapiens", "Mus musculus", "Drosophilia melanogaster",
+                                 "Caenorhabditis elegans", "Escherichia coli"))
+      
+      
+      FUN <- mapping[[organism]]
+      
+      entrez <- FUN(ids)
+      entrez <- entrez[match(ids, names(entrez))]
+      
+      label <- FUN(ids, to = "symbol")
+      label <- label[match(entrez, names(label))]
+      
+      description = FUN(ids, to = "name")
+      description = description[match(entrez, names(description))]
+      
+      d <- data.frame(genes = ids, label = label,
+                      description = description)
+      
+      rownames(d) <- d$genes
+      
+      return(d)
+    }
     
-    label <- convert_from_ensembl(ids, to = "symbol")
-    label <- label[match(entrez, names(label))]
-    
-    description = convert_from_ensembl(ids, to = "name")
-    description = description[match(entrez, names(description))]
-    
-    d <- data.frame(genes = ids, label = label,
-                   description = description)
-    
-    rownames(d) <- d$genes
+    d <- annotate_org(organism)
   }
-  
-  if (organism == "Mus musculus"){
-    # handling missing values in entrez ids
-    entrez <- convert_from_ensembl_mus(ids)
-    entrez <- entrez[match(ids, names(entrez))]
-    
-    label <- convert_from_ensembl_mus(ids, to = "symbol")
-    label <- label[match(entrez, names(label))]
-    
-    description = convert_from_ensembl_mus(ids, to = "name")
-    description = description[match(entrez, names(description))]
-    
-    d <- data.frame(genes = ids, label = label,
-                    description = description)
-    
-    rownames(d) <- d$genes
-  }
-  
-  if (organism == "Drosophilia melanogaster"){
-    # handling missing values in entrez ids
-    entrez <- convert_from_ensembl_dm(ids)
-    entrez <- entrez[match(ids, names(entrez))]
-    
-    label <- convert_from_ensembl_dm(ids, to = "symbol")
-    label <- label[match(entrez, names(label))]
-    
-    description = convert_from_ensembl_dm(ids, to = "name")
-    description = description[match(entrez, names(description))]
-    
-    d <- data.frame(genes = ids, label = label,
-                    description = description)
-    
-    rownames(d) <- d$genes
-  }
-  
-  
-  if (organism == "Caenorhabditis elegans"){
-    # handling missing values in entrez ids
-    entrez <- convert_from_ensembl_ce(ids)
-    entrez <- entrez[match(ids, names(entrez))]
-    
-    label <- convert_from_ensembl_ce(ids, to = "symbol")
-    label <- label[match(entrez, names(label))]
-    
-    description = convert_from_ensembl_ce(ids, to = "name")
-    description = description[match(entrez, names(description))]
-    
-    d <- data.frame(genes = ids, label = label,
-                    description = description)
-    
-    rownames(d) <- d$genes
-  }
-  
+
   return(d[,c("label", "description")])
 }
 

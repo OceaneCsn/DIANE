@@ -781,6 +781,7 @@ mod_differential_expression_analysis_server <-
             background <- get_locus(background)
           }
           
+        
           if(r$organism == "Arabidopsis thaliana"){
             genes <- convert_from_agi(genes)
             background <- convert_from_agi(background)
@@ -809,6 +810,12 @@ mod_differential_expression_analysis_server <-
             genes <- convert_from_ensembl_ce(genes)
             background <- convert_from_ensembl_ce(background)
             org = org.Ce.eg.db::org.Ce.eg.db
+          }
+          
+          if(r$organism == "Escherichia coli"){
+            genes <- convert_from_ensembl_eck12(genes)
+            background <- convert_from_ensembl_eck12(background)
+            org = org.EcK12.eg.db::org.EcK12.eg.db
           }
           
           # TODO add check if it is entrez with regular expression here

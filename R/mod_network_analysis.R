@@ -677,6 +677,13 @@ mod_network_analysis_server <- function(input, output, session, r) {
           org = org.Ce.eg.db::org.Ce.eg.db
         }
         
+        
+        if(r$organism == "Escherichia coli"){
+          genes <- convert_from_ensembl_eck12(genes)
+          background <- convert_from_ensembl_eck12(background)
+          org = org.EcK12.eg.db::org.EcK12.eg.db
+        }
+        
         # TODO add check if it is entrez with regular expression here
         shiny::req(length(genes) > 0, length(background) > 0)
         
