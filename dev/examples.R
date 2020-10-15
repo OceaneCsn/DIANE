@@ -376,7 +376,7 @@ length(get_specific(gene_lists, "g1"))
 
 ### tfs droso
 
-tfs <- read.table("../Drosophilia_TFs.txt", h = F)
+tfs <- read.table("D:/These/DIANE_inputs/TFs_droso.txt", h = F)
 regulators_per_organism[["Drosophilia melanogaster"]] <- tfs$V1
 
 ## tfs c elegans 

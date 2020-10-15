@@ -37,24 +37,23 @@ mod_import_data_ui <- function(id) {
       closable = FALSE,
       
       shiny::fluidRow(
-        col_4(shinyWidgets::prettyCheckbox(
+        col_4(shinyWidgets::switchInput(
           ns("use_demo"),
-          "Use demo data",
-          value = TRUE,
-          fill = TRUE,
-          thick = TRUE,
-          status = "success",
-          animation = "smooth",
-          icon = NULL,
-          bigger = TRUE,
-          width = "200%"
+          "Toggle to import your data",
+          value = TRUE,onLabel = "Demo Arabidopsis data",
+          offLabel = "Your dataset",
+          onStatus = "success"
+          
         ))
+        ,
+        col_8(shiny::uiOutput(ns("gene_ids")))
         
       ),
       
+      shiny::uiOutput(ns("org_selection")),
+      
       shiny::radioButtons(
         ns('sep'),
-        
         'Separator : ',
         c(
           Comma = ',',
@@ -410,40 +409,47 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ____________________________________________________________________________
   #   organism                                                                ####
   
+  
+  org_choices <- shiny::reactive({
+    choices = c("Arabidopsis thaliana", "Lupinus albus")
+    if( requireNamespace("org.Mm.eg.db", quietly = TRUE))
+      choices <- c(choices, "Mus musculus")
+    
+    if( requireNamespace("org.Hs.eg.db", quietly = TRUE))
+      choices <- c(choices, "Homo sapiens")
+    
+    if( requireNamespace("org.Ce.eg.db", quietly = TRUE))
+      choices <- c(choices, "Caenorhabditis elegans")
+    
+    if( requireNamespace("org.Dm.eg.db", quietly = TRUE))
+      choices <- c(choices, "Drosophilia melanogaster")
+    
+    if( requireNamespace("org.EcK12.eg.db", quietly = TRUE))
+      choices <- c(choices, "Escherichia coli")
+    
+    c("Other", choices)
+  })
+  
+  
+  output$org_selection <- shiny::renderUI({
+    shiny::req(!input$use_demo)
+    shiny::selectInput(ns("org_select"),label = "Your organism :",
+                choices = org_choices(), selected = "Other")
+  }) 
+  
   shiny::observe({
     if (input$use_demo) {
       r$organism <- "Arabidopsis thaliana"
     }
     else{
-      
-      
-      
-      choices = c("Arabidopsis thaliana", "Lupinus albus")
-      if( requireNamespace("org.Mm.eg.db", quietly = TRUE))
-        choices <- c(choices, "Mus musculus")
-      
-      if( requireNamespace("org.Hs.eg.db", quietly = TRUE))
-        choices <- c(choices, "Homo sapiens")
-      
-      if( requireNamespace("org.Ce.eg.db", quietly = TRUE))
-        choices <- c(choices, "Caenorhabditis elegans")
-      
-      if( requireNamespace("org.Dm.eg.db", quietly = TRUE))
-        choices <- c(choices, "Drosophilia melanogaster")
-      
-      if( requireNamespace("org.EcK12.eg.db", quietly = TRUE))
-        choices <- c(choices, "Escherichia coli")
-      
-      
-      
+
       shiny::showModal(shiny::modalDialog(
         title = "Organism to study",
         shiny::htmlOutput(ns("org_install")),
         shinyWidgets::pickerInput(
           inputId = ns('organism'),
           label = "Choose your organism :",
-          choices = c(choices,
-                      "Other"),
+          choices = c(org_choices()),
           selected = "Other"
         ),
         footer = list(
@@ -481,9 +487,13 @@ mod_import_data_server <- function(input, output, session, r) {
   shiny::observeEvent(input$org_chosen, {
     r$organism <- input$organism
     shiny::removeModal()
-    
-    
-    #r$gene_info <- gene_info()
+    shiny::updateSelectInput(session, "org_select", selected = r$organism)
+
+  })
+  
+  shiny::observe({
+    shiny::req(!input$use_demo)
+    r$organism <- input$org_select
   })
   
   #   ____________________________________________________________________________
@@ -548,6 +558,22 @@ mod_import_data_server <- function(input, output, session, r) {
   #   ____________________________________________________________________________
   #   ValueBoxes summaries                                                    ####
   
+  output$gene_ids <- shiny::renderUI({
+    shiny::req(r$organism)
+    
+    if(r$organism== "Other") txt <- "No gene ID requirement"
+    else txt <- regulators_per_organism[[r$organism]]
+    
+    shinydashboardPlus::descriptionBlock(
+      number = "Expected gene IDs are in the form",
+      numberColor = "teal",
+      header =  sample(txt, size = 1),
+      text = paste("for", r$organism),
+      rightBorder = FALSE
+    )
+  })
+  
+  
   output$data_dim <- shinydashboard::renderValueBox({
     shiny::req(r$raw_counts)
 
@@ -604,9 +630,7 @@ mod_import_data_server <- function(input, output, session, r) {
   })
   
   output$organism_summary <- shiny::renderUI({
-    shiny::req(r$raw_counts)
     shiny::req(r$organism)
-    
     
     shinydashboardPlus::descriptionBlock(
       number = r$organism,
