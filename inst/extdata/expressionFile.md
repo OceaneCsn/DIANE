@@ -14,7 +14,7 @@ In order for your input to be compatible with the proposed organisms, it should 
 + For Arabidopsis thaliana : TAIR IDs (ex: AT1G01020, or AT1G01020.1) 
 + For Human : ensembl IDs (ex: ENSG00000005513) 
 
-Here is the head of our companion expression file, from 12 Arabidopsis thaliana's samples :
+Here is the head of our companion expression file, from 24 Arabidopsis thaliana's samples (8 conditions with triplicates) :
 
 ```
 Gene,C_1,C_2,C_3,S_1,S_2,S_3,M_1,M_2,M_3,H_1,H_2,H_3,SM_1,SM_2,SM_3,SH_1,SH_2,SH_3,MH_1,MH_2,MH_3,SMH_1,SMH_2,SMH_3

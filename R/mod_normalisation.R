@@ -75,16 +75,7 @@ mod_normalisation_ui <- function(id) {
         
         
         shiny::fluidRow(
-          col_12(
-            shinyWidgets::awesomeRadio(
-              inputId = ns("norm_method"),
-              label = "Normalisation method:",
-              choices = c("tmm", "deseq", "none"),
-              inline = TRUE,
-              selected = "tmm",
-              status = "success"
-            )
-          )
+          shiny::uiOutput(ns("norm_choice"))
         ),
         shiny::fluidRow(  
           col_4(
@@ -197,6 +188,23 @@ mod_normalisation_ui <- function(id) {
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
+  output$norm_choice <-  shiny::renderUI({
+    shiny::req(!is.null(r$use_demo))
+    if(!r$use_demo) sel <- 'tmm'
+    else sel <- 'none'
+    
+    col_12(
+      shinyWidgets::awesomeRadio(
+        inputId = ns("norm_method"),
+        label = "Normalisation method:",
+        choices = c("tmm", "deseq", "none"),
+        inline = TRUE,
+        selected = sel,
+        status = "success"
+      )
+    )
+  })
+  
   
   output$filter_proposition <- shiny::renderUI({
     shiny::numericInput(
@@ -209,6 +217,7 @@ mod_normalisation_server <- function(input, output, session, r) {
   
   
   shiny::observe({
+    shiny::req(input$norm_method)
     if(input$norm_method == "none"){
       shinyWidgets::updateSwitchInput(session, ns("prior_removal"),
                         value = FALSE)
@@ -216,11 +225,19 @@ mod_normalisation_server <- function(input, output, session, r) {
     }
   })
   
+  shiny::observeEvent(input$norm_method,{
+  
+    r$normalized_counts_pre_filter <- NULL
+      
+    
+  })
+  
   #   ____________________________________________________________________________
   #   buttn reactives                                                         ####
   
   shiny::observeEvent(input$normalize_btn, {
     shiny::req(r$raw_counts)
+    shiny::req(input$norm_method)
     if(input$norm_method != "none"){
       r$tcc <-
         normalize(
@@ -396,7 +413,7 @@ mod_normalisation_server <- function(input, output, session, r) {
 #   ____________________________________________________________________________
 #   report                                                                  ####
 
-  output$report <- downloadHandler(
+  output$report <- shiny::downloadHandler(
     # For PDF output, change this to "report.pdf"
     filename = "normalisation_report.html",
     content = function(file) {

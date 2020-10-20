@@ -72,7 +72,7 @@ mod_import_data_ui <- function(id) {
         circle = TRUE,
         status = "primary",
         icon = shiny::icon("question"),
-        width = "600px",
+        width = "1200px",
         tooltip = shinyWidgets::tooltipOptions(title = "More details")
       ),
       
