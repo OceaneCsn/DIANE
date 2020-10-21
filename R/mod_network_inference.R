@@ -761,6 +761,14 @@ mod_network_inference_server <- function(input, output, session, r){
                                    verbose = TRUE,
                                    nCores = input$n_cores)
         
+        future::future(test_edges(mat,
+                   normalized_counts = data, density = input$density,
+                   nGenes = dim(mat)[2],
+                   nRegulators = dim(mat)[1], 
+                   nTrees = input$n_trees, 
+                   verbose = TRUE,
+                   nCores = input$n_cores)) %...>% handle_test_results()
+        
         loggit::loggit(custom_log_lvl = TRUE,
                        log_lvl = r$session_id,
                        log_msg = "edges testing")
