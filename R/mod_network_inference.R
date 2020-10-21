@@ -692,8 +692,8 @@ mod_network_inference_server <- function(input, output, session, r){
   
 
   
-  
-  shiny::observeEvent((input$thr_btn), {
+  #shiny::observeEvent((input$thr_btn), {
+  shiny::eventReactive((input$thr_btn), {
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
@@ -741,6 +741,8 @@ mod_network_inference_server <- function(input, output, session, r){
                                    nTrees = input$n_trees, 
                                    verbose = TRUE,
                                    nCores = input$n_cores)
+        
+        "no_testing"
       }
       
       ######## Actual testing
@@ -753,21 +755,26 @@ mod_network_inference_server <- function(input, output, session, r){
         
         mat <- r$networks[[input$input_deg_genes_net]]$mat
         
-        r$edge_tests <- test_edges(mat,
-                                   normalized_counts = data, density = input$density,
-                                   nGenes = dim(mat)[2],
-                                   nRegulators = dim(mat)[1], 
-                                   nTrees = input$n_trees, 
-                                   verbose = TRUE,
-                                   nCores = input$n_cores)
+        future::plan(future::multisession)
         
-        future::future(test_edges(mat,
+        # r$edge_tests <- test_edges(mat,
+        #                            normalized_counts = data, density = input$density,
+        #                            nGenes = dim(mat)[2],
+        #                            nRegulators = dim(mat)[1], 
+        #                            nTrees = input$n_trees, 
+        #                            verbose = TRUE,
+        #                            nCores = input$n_cores)
+        
+        future::future({test_edges(mat,
                    normalized_counts = data, density = input$density,
                    nGenes = dim(mat)[2],
                    nRegulators = dim(mat)[1], 
                    nTrees = input$n_trees, 
                    verbose = TRUE,
-                   nCores = input$n_cores)) %...>% handle_test_results()
+                   nCores = input$n_cores)
+                     
+                     
+                   
         
         loggit::loggit(custom_log_lvl = TRUE,
                        log_lvl = r$session_id,
@@ -797,6 +804,8 @@ mod_network_inference_server <- function(input, output, session, r){
           footer = list(
             shiny::actionButton(ns("fdr_chosen"), "OK"))
         ))
+        
+        })
       }
       
       
