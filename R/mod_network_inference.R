@@ -685,6 +685,7 @@ mod_network_inference_server <- function(input, output, session, r){
                    log_msg = "network inference")
     
   })
+
   
   #   ____________________________________________________________________________
   #   bttn reactive thr                                                       ####
@@ -693,7 +694,7 @@ mod_network_inference_server <- function(input, output, session, r){
 
   
   #shiny::observeEvent((input$thr_btn), {
-  shiny::eventReactive((input$thr_btn), {
+  shiny::observeEvent((input$thr_btn), {
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
@@ -720,7 +721,6 @@ mod_network_inference_server <- function(input, output, session, r){
         input$input_conditions_net
       
       r$current_network <- input$input_deg_genes_net
-      
     }
     else{
       
@@ -742,7 +742,6 @@ mod_network_inference_server <- function(input, output, session, r){
                                    verbose = TRUE,
                                    nCores = input$n_cores)
         
-        "no_testing"
       }
       
       ######## Actual testing
@@ -765,27 +764,31 @@ mod_network_inference_server <- function(input, output, session, r){
         #                            verbose = TRUE,
         #                            nCores = input$n_cores)
         
-        future::future({test_edges(mat,
-                   normalized_counts = data, density = input$density,
+        nTrees = input$n_trees
+        nCores = input$n_cores
+        density = input$density
+        
+        future::future({test_edges(
+                   mat,
+                   normalized_counts = data, 
+                   density = density,
                    nGenes = dim(mat)[2],
                    nRegulators = dim(mat)[1], 
-                   nTrees = input$n_trees, 
+                   nTrees = nTrees, 
                    verbose = TRUE,
-                   nCores = input$n_cores)
+                   nCores = nCores)}) %...>% (function(value) {
                      
-                     
-                   
-        
-        loggit::loggit(custom_log_lvl = TRUE,
-                       log_lvl = r$session_id,
-                       log_msg = "edges testing")
-        
-        
-        shiny::showModal(shiny::modalDialog(
-          title = "Edge testing procedure complete",
-          size = 'l',
-          
-          shiny::h5("Now every edge of the pre-buit network is
+            r$edge_tests <- value
+            loggit::loggit(custom_log_lvl = TRUE,
+                           log_lvl = r$session_id,
+                           log_msg = "edges testing")
+            
+            
+            shiny::showModal(shiny::modalDialog(
+              title = "Edge testing procedure complete",
+              size = 'l',
+              
+              shiny::h5("Now every edge of the pre-buit network is
                   associated to an adjusted pvalue. The only remaining 
                   choice is the fdr threshold to apply to keep significant 
                   edges. Usual values are 0.01, 0.05, or 0.1, and can be interpreted
@@ -793,19 +796,25 @@ mod_network_inference_server <- function(input, output, session, r){
                   The curves above can give you some insights about 
                   the pvalues distributions and the number of edges
                   the network will have depending on the chosen fdr threshold."),
+              
+              shiny::plotOutput(ns("fdr_choice"), height = "600px"),
+              
+              shiny::hr(),
+              
+              shiny::numericInput(ns("fdr"), value = 0.05, min = 0, max = 1,
+                                  label = "FDR threshold :"),
+              
+              footer = list(
+                shiny::actionButton(ns("fdr_chosen"), "OK"))
+              
+            ))
+          })
           
-          shiny::plotOutput(ns("fdr_choice"), height = "600px"),
           
-          shiny::hr(),
-          
-          shiny::numericInput(ns("fdr"), value = 0.05, min = 0, max = 1,
-                              label = "FDR threshold :"),
-          
-          footer = list(
-            shiny::actionButton(ns("fdr_chosen"), "OK"))
-        ))
         
-        })
+        
+        
+        
       }
       
       
