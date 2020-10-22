@@ -768,7 +768,7 @@ mod_network_inference_server <- function(input, output, session, r){
         nCores = input$n_cores
         density = input$density
         
-        future::future({test_edges(
+        promise <- future::future({test_edges(
                    mat,
                    normalized_counts = data, 
                    density = density,
@@ -776,7 +776,10 @@ mod_network_inference_server <- function(input, output, session, r){
                    nRegulators = dim(mat)[1], 
                    nTrees = nTrees, 
                    verbose = TRUE,
-                   nCores = nCores)}) promises::"%...>%" (function(value) {
+                   nCores = nCores)})
+        
+        
+        promises::then(promise, function(value) {
                      
             r$edge_tests <- value
             loggit::loggit(custom_log_lvl = TRUE,
@@ -809,12 +812,7 @@ mod_network_inference_server <- function(input, output, session, r){
               
             ))
           })
-          
-          
-        
-        
-        
-        
+
       }
       
       
