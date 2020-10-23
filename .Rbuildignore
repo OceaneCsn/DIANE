@@ -12,4 +12,4 @@ $run_dev.*
 ^\.travis\.yml$
 ^app\.R$
 ^rsconnect$
-inst/extdata/datasets/*
+inst/extdata/datasets/*.csv
