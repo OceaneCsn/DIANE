@@ -142,8 +142,8 @@ shiny::hr(),
           col_6(shinyWidgets::actionBttn(
             ns("launch_genie_btn"),
             label = "Launch Network Inference",
-            color = "success",
-            style = 'bordered'
+            style = "material-flat",
+            color = "success"
           ))),
         
         
@@ -157,7 +157,7 @@ shiny::hr(),
 #   ____________________________________________________________________________
 #   thresholding options                                                    ####
 
-    col_6(shinydashboardPlus::boxPlus(
+    col_8(shinydashboardPlus::boxPlus(
       title = "Thresholding settings",
       solidHeader = FALSE,
       status = "success",
@@ -282,7 +282,7 @@ mod_network_inference_server <- function(input, output, session, r){
         inputId = ns('input_cluster_genes_net'),
         label = "Use only specific clusters (from previous clustering tab) :",
         choices = unique(coseq_membership()), direction = "vertical",
-        justified = TRUE, status = "success",
+        justified = TRUE,
         selected = unique(coseq_membership()),
         checkIcon = list(yes = shiny::icon("ok",
                                            lib = "glyphicon"))
@@ -562,10 +562,9 @@ mod_network_inference_server <- function(input, output, session, r){
       label = "Threshold network"
     col_4(shinyWidgets::actionBttn(
       ns("thr_btn"),
-      label = label,
-      color = "success",
-      style = 'bordered',
-      size = "sm"
+      label = label, 
+      style = "material-flat",
+      color = "success"
     ))
   })
   

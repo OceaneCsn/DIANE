@@ -95,8 +95,8 @@ mod_clustering_ui <- function(id) {
           shinyWidgets::actionBttn(
             ns("launch_coseq_btn"),
             label = "Launch clustering",
-            color = "success",
-            style = 'bordered'
+            style = "material-flat",
+            color = "success"
           )
         )),
         

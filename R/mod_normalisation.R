@@ -81,9 +81,9 @@ mod_normalisation_ui <- function(id) {
           col_4(
             shinyWidgets::actionBttn(
               ns("normalize_btn"),
-              label = "Normalize",
-              color = "success",
-              style = 'bordered'
+              label = "Normalize", 
+              style = "material-flat",
+              color = "success"
             )
           )
         ),
@@ -117,9 +117,9 @@ mod_normalisation_ui <- function(id) {
         col_4(
           shinyWidgets::actionBttn(
             ns("use_SumFilter"),
-            label = "Filter",
-            color = "success",
-            style = 'bordered'
+            label = "Filter", 
+            style = "material-flat",
+            color = "success"
           )
         ),
         

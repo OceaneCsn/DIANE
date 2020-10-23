@@ -77,7 +77,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           ns("deg_test_btn"),
           label = "Detect differentially expressed genes",
           color = "success",
-          style = 'bordered'
+          style = "material-flat"
         ),
         
         shiny::hr(),
@@ -130,7 +130,7 @@ mod_differential_expression_analysis_ui <- function(id) {
                           ns("go_enrich_btn"),
                           label = "Start GO enrichment analysis",
                           color = "success",
-                          style = 'bordered'
+                          style = "material-flat"
                         )),
                         col_4(
                           shinyWidgets::radioGroupButtons(ns("draw_go"), 
@@ -139,7 +139,7 @@ mod_differential_expression_analysis_ui <- function(id) {
                                        justified = TRUE,
                                        direction = "vertical",
                                        checkIcon = list(
-                                         yes = icon("ok", 
+                                         yes = shiny::icon("ok", 
                                                     lib = "glyphicon")))
                           
                         ),
@@ -153,7 +153,7 @@ mod_differential_expression_analysis_ui <- function(id) {
                                                               justified = TRUE,
                                                               direction = "vertical",
                                                               checkIcon = list(
-                                                                yes = icon("ok", 
+                                                                yes = shiny::icon("ok", 
                                                                            lib = "glyphicon"))),
                               shiny::uiOutput(ns("max_go_choice"))),
                         
@@ -442,14 +442,16 @@ mod_differential_expression_analysis_server <-
           shinyWidgets::downloadBttn(
             outputId = ns("download_table_csv"),
             label = "Download result table as .csv",
-            style = "bordered",
-            color = "success"
+            style = "material-flat",            
+            color = "primary"
           )
         )
         ),
         shiny::hr(),
-        shiny::downloadButton(
-          ns("report"), "Generate html report")
+        shinyWidgets::downloadBttn(
+          ns("report"), "Generate html report",
+          style = "material-flat",            
+          color = "teal")
       )
     })
     
@@ -605,7 +607,7 @@ mod_differential_expression_analysis_server <-
           shinyWidgets::downloadBttn(
             outputId = ns("download_intersect_venn"),
             label = "Download the intersection of all sets (central part in the Venn diagram)",
-            style = "bordered",
+            style = "material-flat",
             color = "success"
           )
         )
@@ -623,7 +625,7 @@ mod_differential_expression_analysis_server <-
       }
     )
     
-    output$venn_spec_comp_choice <- renderUI({
+    output$venn_spec_comp_choice <- shiny::renderUI({
       shiny::req(venn_list())
       tagList(
         shiny::selectInput(ns("venn_spec_comp"), label = "Genes specific to a comparison :",
@@ -631,13 +633,13 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$venn_spec_comp_bttn <- renderUI({
+    output$venn_spec_comp_bttn <- shiny::renderUI({
       shiny::req(venn_list())
       tagList(
         shinyWidgets::downloadBttn(
           outputId = ns("download_specific_venn"),
           label = paste("Download genes specific to the", input$venn_spec_comp, "list"),
-          style = "bordered",
+          style = "material-flat",
           color = "success"
         )
       )
