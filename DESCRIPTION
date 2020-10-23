@@ -48,7 +48,9 @@ Imports:
     rfPermute,
     knitr,
     rmarkdown,
-    tictoc
+    tictoc,
+    future,
+    promises
 Suggests: 
     org.Hs.eg.db,
     org.Dm.eg.db,

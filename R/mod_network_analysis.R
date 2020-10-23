@@ -443,6 +443,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
   output$gene_ranking <- DT::renderDataTable({
     shiny::req(r$current_network, r$networks)
     shiny::req(r$networks[[r$current_network]]$nodes)
+    shiny::req(input$cluster_to_explore)
     
     data <- r$networks[[r$current_network]]$nodes
     
@@ -467,6 +468,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
     shiny::req(r$networks[[r$current_network]]$nodes)
     shiny::req(r$networks[[r$current_network]]$edges)
     shiny::req(r$cor_network)
+    shiny::req(input$cluster_to_explore)
     
     nodes <- r$cor_network$nodes
     nodes$label <-
@@ -542,6 +544,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
   shiny::observeEvent((input$go_enrich_btn), {
     shiny::req(r$normalized_counts)
     shiny::req(r$networks[[r$current_network]]$membership)
+    shiny::req(input$cluster_to_explore)
     
     if (input$cluster_to_explore == "All") {
       shinyalert::shinyalert("Please specify a module to perform the analysis on",
