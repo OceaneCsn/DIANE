@@ -86,7 +86,7 @@ mod_clustering_ui <- function(id) {
           onLabel = "Poisson",
           offLabel = "Normal",
           onStatus = 'success',
-          offStatus = 'primary'
+          offStatus = 'success'
         )),
         
         col_6(shiny::uiOutput(ns("transfo_ui"))),
@@ -372,9 +372,11 @@ mod_clustering_server <- function(input, output, session, r) {
     shiny::req(r$clusterings[[input_genes_conditions()]]$model)
     tagList(
       shiny::hr(),
-      shiny::downloadButton(
-          ns("report"), "Generate html report")
-      )
+      
+      shinyWidgets::downloadBttn(
+        ns("report"), "Generate html report",
+        style = "material-flat")
+    )
   })
 
   

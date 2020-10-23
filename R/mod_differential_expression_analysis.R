@@ -46,8 +46,6 @@ mod_differential_expression_analysis_ui <- function(id) {
         ),
         
         shiny::hr(),
-        shiny::uiOutput(ns("disp_estimate_summary")),
-        shiny::hr(),
         
         #   ____________________________________________________________________________
         #   DEG parameters                                                          ####
@@ -443,15 +441,14 @@ mod_differential_expression_analysis_server <-
             outputId = ns("download_table_csv"),
             label = "Download result table as .csv",
             style = "material-flat",            
-            color = "primary"
+            color = "success"
           )
         )
         ),
         shiny::hr(),
         shinyWidgets::downloadBttn(
           ns("report"), "Generate html report",
-          style = "material-flat",            
-          color = "teal")
+          style = "material-flat", color = "default")
       )
     })
     

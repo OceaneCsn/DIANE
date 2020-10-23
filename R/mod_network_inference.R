@@ -951,8 +951,10 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$networks[[input$input_deg_genes_net]]$nodes)
     shiny::req(r$networks[[input$input_deg_genes_net]]$edges)
     tagList(
-      shiny::downloadButton(
-        ns("report"), "Generate html report")
+      shinyWidgets::downloadBttn(
+        ns("report"), "Generate html report",
+        style = "material-flat")
+    
     )
   })
   
@@ -961,7 +963,7 @@ mod_network_inference_server <- function(input, output, session, r){
   
   #   ____________________________________________________________________________
   #   report                                                                  ####
-  
+   
   output$report <- shiny::downloadHandler(
     # For PDF output, change this to "report.pdf"
     filename = "network_inference_report.html",
@@ -988,8 +990,6 @@ mod_network_inference_server <- function(input, output, session, r){
       )
     }
   )
-  
- 
 }
 
     

@@ -120,10 +120,39 @@ app_ui <- function(request) {
       
       shinydashboard::dashboardBody(
         dashboardthemes::shinyDashboardThemes(theme = "grey_light"),
-        
+        #htmltools::includeCSS("inst/app/www/styles.css"),
         #shiny::includeMarkdown(system.file("extdata", "logo_top.md", package = "DIANE")),
         #img(src='myImage.png', align = "right"),
         
+        tags$style(HTML("
+            @import url('//fonts.googleapis.com/css?family=Prociono|Cabin:400,700');
+            
+            h1 {
+              font-family: 'Prociono', cursive;
+              font-weight: 500;
+              line-height: 1.1;
+              color: #369358;
+            }
+            
+            h2 {
+              font-family: 'Prociono', cursive;
+              font-weight: 500;
+              line-height: 1.1;
+            }
+            
+            li {
+              font-family: 'Prociono', cursive;
+              font-weight: 500;
+              line-height: 1.1;
+            }
+            
+            .box-title {
+              font-family: 'Prociono', cursive;
+              font-weight: 500;
+              line-height: 1.1;
+            }
+      
+          ")),
         
         shinydashboard::tabItems(
           shinydashboard::tabItem(tabName = "context_tab",
@@ -201,3 +230,4 @@ golem_add_external_resources <- function() {
             #shinyalert::useShinyalert())
   )
 }
+

@@ -374,18 +374,25 @@ mod_normalisation_server <- function(input, output, session, r) {
     shiny::req(r$normalized_counts)
     tagList(
     shiny::fluidRow(col_12(
-      shiny::downloadButton(
+      shinyWidgets::downloadBttn(
         ns("download_normalized_counts_csv"),
-        label = "Download normalized counts as .csv"
+        label = "Download normalized counts as .csv",
+        style = "material-flat",
+        color = "success"
       ),
+      
       shiny::hr(),
-      shiny::downloadButton(
+      
+      shinyWidgets::downloadBttn(
         ns("download_normalized_counts_RData"),
-        label = "Download normalized counts as .RData"
+        label = "Download normalized counts as .RData",
+        style = "material-flat",
+        color = "success"
       ),
       shiny::hr(),
-      shiny::downloadButton(
-        ns("report"), "Generate html report")
+      shinyWidgets::downloadBttn(
+        ns("report"), "Generate html report",
+        style = "material-flat")
     ))
     )
     
