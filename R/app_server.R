@@ -41,7 +41,7 @@ app_server <- function(input, output, session) {
   LOG_FILE = "./logs/loggit.log"
   SESSION_ID_FILE = "./logs/next_id.txt"
   
-  
+  print(golem::get_golem_options("server_version"))
   if(golem::get_golem_options("server_version")){
     if (!file.exists(SESSION_ID_FILE)){
       file.create(SESSION_ID_FILE)
