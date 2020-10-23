@@ -50,10 +50,8 @@ mod_network_inference_ui <- function(id){
         
         shiny::br(),
         
-        shiny::fluidRow(col_10(shiny::uiOutput(ns("input_genes_net")))),
-        shiny::hr(),
-        shiny::fluidRow(col_12(shiny::uiOutput(ns("input_conditions_choice_net")))),
-        
+        shiny::fluidRow(col_12(shiny::uiOutput(ns("input_genes_net")))),
+         
         shiny::hr(),
         
 #   ____________________________________________________________________________
@@ -240,6 +238,13 @@ shiny::hr(),
 mod_network_inference_server <- function(input, output, session, r){
   ns <- session$ns
   
+  coseq_membership <- shiny::reactive({
+    shiny::req(r$clusterings, r$current_comparison, input$input_deg_genes_net)
+    shiny::req(input$input_deg_genes_net == r$current_comparison)
+    req(r$clusterings[[r$current_comparison]])
+    r$clusterings[[r$current_comparison]]$membership
+  })
+  
   
   
 #   ____________________________________________________________________________
@@ -249,26 +254,22 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$DEGs)
     
     if(length(r$DEGs) > 0){
-      shinyWidgets::pickerInput(
-        inputId = ns('input_deg_genes_net'),
-        label = "Genes composing the network :",
-        choices = names(r$DEGs),
-        choicesOpt = list(subtext = paste(lengths(r$DEGs), "genes"))
+      tagList(
+          shinyWidgets::pickerInput(
+            inputId = ns('input_deg_genes_net'),
+            label = "Input genes for network inference:",
+            choices = names(r$DEGs),
+            choicesOpt = list(subtext = paste(lengths(r$DEGs), "genes"))
+          ),
+          col_6(shiny::uiOutput(ns("input_cluster_genes"))),
+          col_6(shiny::uiOutput(ns("input_conditions_choice_net")))
+          
       )
-      # shinyWidgets::checkboxGroupButtons(
-      #   inputId = ns('input_deg_genes'),
-      #   label = "Input genes for clustering :",
-      #   choiceValues = names(r$DEGs),
-      #   justified = TRUE,
-      #   checkIcon = list(yes = shiny::icon("ok",
-      #                                      lib = "glyphicon")),
-      #   direction = "vertical",
-      #   choiceNames = paste(names(r$DEGs), paste(lengths(r$DEGs), "genes"))
-      # )
     }
     else{
       shinydashboardPlus::descriptionBlock(
-        number = "Please perform one or more differential expression analysis before network inference",
+        number = "Please perform one or more differential 
+        expression analysis before network inference",
         numberColor = "orange",
         rightBorder = FALSE
       )
@@ -276,7 +277,34 @@ mod_network_inference_server <- function(input, output, session, r){
     
   })
   
+  output$input_cluster_genes <- shiny::renderUI({
+    shinyWidgets::checkboxGroupButtons(
+        inputId = ns('input_cluster_genes_net'),
+        label = "Use only specific clusters (from previous clustering tab) :",
+        choices = unique(coseq_membership()), direction = "vertical",
+        justified = TRUE, status = "success",
+        selected = unique(coseq_membership()),
+        checkIcon = list(yes = shiny::icon("ok",
+                                           lib = "glyphicon"))
+      )
+  })
   
+  
+  #   ____________________________________________________________________________
+  #   input genes reactive                                                    ####
+  
+  
+  input_net <- shiny::reactive({
+    shiny::req(input$input_deg_genes_net)
+    if(is.null(r$current_comparison))
+      r$DEGs[[input$input_deg_genes_net]]
+    else{
+      if(input$input_deg_genes_net != r$current_comparison)
+        r$DEGs[[input$input_deg_genes_net]]
+      else
+        names(coseq_membership()[coseq_membership() %in% input$input_cluster_genes_net])
+    }
+  })
 #   ____________________________________________________________________________
 #   conditions selection                                                    ####
 
@@ -288,7 +316,7 @@ mod_network_inference_server <- function(input, output, session, r){
       inputId = ns('input_conditions_net'),
       label = "Conditions used to infer network edges :",
       choices = unique(r$conditions),
-      justified = TRUE,
+      justified = TRUE, direction =  "vertical",
       checkIcon = list(yes = shiny::icon("ok",
                                          lib = "glyphicon")),
       selected = unique(r$conditions)
@@ -307,7 +335,6 @@ mod_network_inference_server <- function(input, output, session, r){
       d <- regulators_per_organism[[r$organism]]
     }
     
-
     if(!is.null(input$TFs_list_input)){
       path = input$TFs_list_input$datapath
       
@@ -318,18 +345,14 @@ mod_network_inference_server <- function(input, output, session, r){
           stringsAsFactors = FALSE,
           check.names = FALSE
         )
-      
       d <- as.vector(d[,1])
     }
-    
-
 
     if(r$splicing_aware){
       r$aggregated_normalized_counts <- 
         aggregate_splice_variants(data.frame(r$normalized_counts, 
                                              check.names = FALSE))
     }
-    
       else {
         if(!is.null(d)){
           
@@ -344,8 +367,6 @@ mod_network_inference_server <- function(input, output, session, r){
       }
       }
     }
-
-    
     d
     })
   
@@ -354,8 +375,8 @@ mod_network_inference_server <- function(input, output, session, r){
   
   
   output$input_summary <- shiny::renderUI({
-    shiny::req(input$input_deg_genes_net, r$DEGs)
-    if (is.null(input$input_deg_genes_net)) {
+    shiny::req(input$input_deg_genes_net, r$DEGs, input_net())
+    if (is.null(input_net())) {
       numberColor = "orange"
       number = "Please input genes"
       header = ""
@@ -363,7 +384,7 @@ mod_network_inference_server <- function(input, output, session, r){
     }
     else{
       numberColor = "olive"
-      number = length(r$DEGs[[input$input_deg_genes_net]])
+      number = length(input_net())
       numberIcon = "fa fa-check"
       header = "input genes"
     }
@@ -412,13 +433,13 @@ mod_network_inference_server <- function(input, output, session, r){
   
   output$regulators_intersect_summary <- shiny::renderUI({
     shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs,
-               r$networks)
+               r$networks, input_net())
     shiny::req(r$regulators)
     
     if(r$splicing_aware) 
       genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
     else
-      genes <- r$DEGs[[input$input_deg_genes_net]]
+      genes <- input_net()
       
     tfs <- intersect(genes, r$regulators)
 
@@ -433,7 +454,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$inference_summary <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
-    shiny::req(input$input_deg_genes_net)
+    shiny::req(input$input_deg_genes_net, input_net())
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(input$input_deg_genes_net, r$regulators, r$DEGs)
@@ -461,7 +482,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$thr_summary <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
-    shiny::req(input$input_deg_genes_net)
+    shiny::req(input$input_deg_genes_net, input_net())
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$graph)
@@ -519,8 +540,7 @@ mod_network_inference_server <- function(input, output, session, r){
 
   
 #   ____________________________________________________________________________
-
-  #   button threshold                                                        ####
+#   button threshold                                                        ####
 
   
   output$btn_thr_label <- shiny::renderUI({
@@ -557,7 +577,7 @@ mod_network_inference_server <- function(input, output, session, r){
   output$estimation_summary <- shiny::renderUI({
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
-    shiny::req(input$input_deg_genes_net)
+    shiny::req(input$input_deg_genes_net, input_net())
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
@@ -580,7 +600,7 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$normalized_counts)
     shiny::req(r$DEGs)
     shiny::req(input$input_deg_genes_net)
-    shiny::req(r$DEGs[[input$input_deg_genes_net]])
+    shiny::req(r$DEGs[[input$input_deg_genes_net]], input_net())
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
     #proposition = 1.5*length(r$DEGs[[input$input_deg_genes_net]])
@@ -605,18 +625,30 @@ mod_network_inference_server <- function(input, output, session, r){
 
   
   shiny::observeEvent((input$launch_genie_btn), {
-    shiny::req(r$normalized_counts, input$input_deg_genes_net, r$regulators, r$DEGs)
+    shiny::req(r$normalized_counts, input$input_deg_genes_net, 
+               r$regulators, r$DEGs, input_net(),input$input_conditions_net)
     
     
     if(r$splicing_aware) {
-      targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+      all_genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+      targets <- get_locus(input_net())
       data <- r$aggregated_normalized_counts
     }
     else {
-      targets <- r$DEGs[[input$input_deg_genes_net]]
+      all_genes <- r$DEGs[[input$input_deg_genes_net]]
+      targets <- input_net()
       data <- r$normalized_counts
     }
-    regressors = intersect(targets, r$regulators)
+    
+    # only desired conditions
+    conditions <- colnames(data)[
+      stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% 
+        input$input_conditions_net]
+    
+    data <- data[,conditions]
+    
+    # even if only clusters were chosen, we take regulators from all deg list
+    regressors = intersect(all_genes, r$regulators)
     
     if(input$grouping){
       
@@ -667,7 +699,8 @@ mod_network_inference_server <- function(input, output, session, r){
     
     if(sum(is.na(mat)) > 0){
       shinyalert::shinyalert(
-        paste("NA importance values were produced :", sum(is.na(mat)), "Nan over", length(c(mat))),
+        paste("NA importance values were produced :", sum(is.na(mat)), 
+              "Nan over", length(c(mat))),
         "It may be caused by too few samples. You can run the
       network inference again with the node purity importance metric
       instead of OOB MSE increase, to avoid this issue.",
@@ -696,7 +729,7 @@ mod_network_inference_server <- function(input, output, session, r){
   #shiny::observeEvent((input$thr_btn), {
   shiny::observeEvent((input$thr_btn), {
     shiny::req(r$normalized_counts)
-    shiny::req(r$DEGs)
+    shiny::req(r$DEGs, input$input_conditions_net)
     shiny::req(r$DEGs[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]])
     shiny::req(r$networks[[input$input_deg_genes_net]]$mat)
@@ -732,6 +765,13 @@ mod_network_inference_server <- function(input, output, session, r){
         else
           data = r$normalized_counts
         
+        # only desired conditions
+        conditions <- colnames(data)[
+          stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% 
+            input$input_conditions_net]
+        
+        data <- data[,conditions]
+
         mat <- r$networks[[input$input_deg_genes_net]]$mat
         
         time_estimation$estimation <- estimate_test_edges_time(mat,
@@ -751,6 +791,13 @@ mod_network_inference_server <- function(input, output, session, r){
           data = r$grouped_normalized_counts
         else
           data = r$normalized_counts
+        
+        # only desired conditions
+        conditions <- colnames(data)[
+          stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% 
+            input$input_conditions_net]
+        
+        data <- data[,conditions]
         
         mat <- r$networks[[input$input_deg_genes_net]]$mat
         

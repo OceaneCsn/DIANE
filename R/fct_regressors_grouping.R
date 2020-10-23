@@ -56,6 +56,9 @@ group_regressors <-
            genes,
            regressors,
            corr_thr = 0.9) {
+    if(length(regressors) <= 2){
+      stop("More than 2 regressors are required for grouping")
+    }
     #calculating correlations for each TF pairs
     pairs <- data.frame(t(combn(regressors, 2)))
     pairs$cor <- sapply(paste(pairs[, 1], pairs[, 2]), get_correlation,
@@ -63,7 +66,8 @@ group_regressors <-
     top <- pairs[pairs$cor > corr_thr, ]
     
     if (nrow(top) == 0) {
-      warning("No grouping was performed as no regulators pair was correlated over the threshold.")
+      warning("No grouping was performed as no regulators pair 
+              was correlated over the threshold.")
       return(
         list(
           counts = normalized.count,
