@@ -446,7 +446,8 @@ mod_cluster_exploration_server <-
       
       }
       
-      loggit::loggit(custom_log_lvl = TRUE,
+      if(golem::get_golem_options("server_version"))
+        loggit::loggit(custom_log_lvl = TRUE,
                      log_lvl = r$session_id,
                      log_msg = "GO enrichment cluster")
     })

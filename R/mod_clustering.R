@@ -354,7 +354,8 @@ mod_clustering_server <- function(input, output, session, r) {
       input_genes_conditions()
     r$current_comparison <- input_genes_conditions()
     
-    loggit::loggit(custom_log_lvl = TRUE,
+    if(golem::get_golem_options("server_version"))
+      loggit::loggit(custom_log_lvl = TRUE,
                    log_lvl = r$session_id,
                    log_msg = "clustering")
     
