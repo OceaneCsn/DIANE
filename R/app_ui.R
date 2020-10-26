@@ -125,34 +125,74 @@ app_ui <- function(request) {
         #img(src='myImage.png', align = "right"),
         
         tags$style(HTML("
-            @import url('//fonts.googleapis.com/css?family=Prociono|Cabin:400,700');
-            
+
             h1 {
-              font-family: 'Prociono', cursive;
+              font-family: Verdana;
               font-weight: 500;
               line-height: 1.1;
-              color: #369358;
+              color: #2f6f46 ;
             }
             
             h2 {
-              font-family: 'Prociono', cursive;
+              font-family: Verdana;
               font-weight: 500;
               line-height: 1.1;
             }
             
             li {
-              font-family: 'Prociono', cursive;
+              font-family: Verdana;
               font-weight: 500;
               line-height: 1.1;
             }
             
             .box-title {
-              font-family: 'Prociono', cursive;
+              font-family: Verdana;
               font-weight: 500;
               line-height: 1.1;
             }
+            
+            text {
+              font-family: Verdana;
+              font-weight: 500;
+              line-height: 1.1;
+            }
+            
+            body {
+              font-family: Verdana;
+            }
       
           ")),
+        
+        
+        #' tags$style(HTML("
+        #'     @import url('//fonts.googleapis.com/css?family=Prociono|Cabin:400,700');
+        #'     
+        #'     h1 {
+        #'       font-family: 'Prociono', cursive;
+        #'       font-weight: 500;
+        #'       line-height: 1.1;
+        #'       color: #369358;
+        #'     }
+        #'     
+        #'     h2 {
+        #'       font-family: 'Prociono', cursive;
+        #'       font-weight: 500;
+        #'       line-height: 1.1;
+        #'     }
+        #'     
+        #'     li {
+        #'       font-family: 'Prociono', cursive;
+        #'       font-weight: 500;
+        #'       line-height: 1.1;
+        #'     }
+        #'     
+        #'     .box-title {
+        #'       font-family: 'Prociono', cursive;
+        #'       font-weight: 500;
+        #'       line-height: 1.1;
+        #'     }
+        #' 
+        #'   ")),
         
         shinydashboard::tabItems(
           shinydashboard::tabItem(tabName = "context_tab",

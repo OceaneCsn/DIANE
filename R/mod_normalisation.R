@@ -59,11 +59,11 @@ mod_normalisation_ui <- function(id) {
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
         ),
         
-        shiny::h4("Prior removal of differentially expressed genes:"),
         
         shiny::fluidRow(col_12(
           shinyWidgets::switchInput(
             inputId = ns("prior_removal"),
+            label = "Prior removal of differentially expressed genes:",
             value = FALSE,
             onLabel = "ON",
             offLabel = "OFF",
@@ -392,7 +392,7 @@ mod_normalisation_server <- function(input, output, session, r) {
       shiny::hr(),
       shinyWidgets::downloadBttn(
         ns("report"), "Generate html report",
-        style = "material-flat")
+        style = "material-flat", color = "default")
     ))
     )
     

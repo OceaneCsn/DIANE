@@ -953,7 +953,7 @@ mod_network_inference_server <- function(input, output, session, r){
     tagList(
       shinyWidgets::downloadBttn(
         ns("report"), "Generate html report",
-        style = "material-flat")
+        style = "material-flat", color = "default")
     
     )
   })

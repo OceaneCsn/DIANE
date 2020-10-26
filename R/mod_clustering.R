@@ -375,7 +375,7 @@ mod_clustering_server <- function(input, output, session, r) {
       
       shinyWidgets::downloadBttn(
         ns("report"), "Generate html report",
-        style = "material-flat")
+        style = "material-flat", color = "default")
     )
   })
 
