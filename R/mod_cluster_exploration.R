@@ -39,7 +39,7 @@ mod_cluster_exploration_ui <- function(id) {
           shinyWidgets::downloadBttn(
             outputId = ns("download_genes_in_cluster"),
             label = "Download genes in this cluster as a csv table",
-            style = "bordered",
+            style = "material-flat",
             color = "success"
           ))
         )
@@ -496,7 +496,7 @@ mod_cluster_exploration_server <-
           shinyWidgets::downloadBttn(
             outputId = ns("download_go_table"),
             label = "Download enriched GO term as a csv table",
-            style = "bordered",
+            style = "material-flat",
             color = "success"
           )
         )

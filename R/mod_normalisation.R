@@ -44,10 +44,10 @@ mod_normalisation_ui <- function(id) {
         width = 12,
         
         
-        shiny::h2("Normalisation"),
+        col_8(shiny::h2("Normalisation")),
         
         
-        shinyWidgets::dropdownButton(
+        col_4(shinyWidgets::dropdownButton(
           size = 'xs',
           shiny::includeMarkdown(
             system.file("extdata", "normalisation.md", package = "DIANE")
@@ -57,7 +57,7 @@ mod_normalisation_ui <- function(id) {
           icon = shiny::icon("question"),
           width = "600px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        ),
+        )),
         
         
         shiny::fluidRow(col_12(
@@ -304,7 +304,8 @@ mod_normalisation_server <- function(input, output, session, r) {
   })
   
   output$tcc_summary <- shiny::renderPrint({
-    print(r$tcc)
+    if(input$norm_method != 'none') print(r$tcc)
+    else print("No normalization was performed, all normalization factors equal 1.")
   })
   
  # toDownload <- shiny::reactiveVal()

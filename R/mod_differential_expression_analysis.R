@@ -599,6 +599,7 @@ mod_differential_expression_analysis_server <-
     
     output$dl_bttn_venn <- shiny::renderUI({
       shiny::req(venn_list)
+      shiny::req(length(input$venn_genes) >= 2 & length(input$venn_genes) <= 4)
       tagList(
         shiny::fluidRow(col_12(
           shinyWidgets::downloadBttn(
@@ -878,7 +879,7 @@ mod_differential_expression_analysis_server <-
             shinyWidgets::downloadBttn(
               outputId = ns("download_go_table"),
               label = "Download enriched GO term as a csv table",
-              style = "bordered",
+              style = "material-flat",
               color = "success"
             )
           

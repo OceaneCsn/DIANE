@@ -27,14 +27,14 @@ mod_module_levels_ui <- function(id){
     shinydashboard::tabBox(
       title = "Explore normalized data",
       width = 12,
-      height = "1100px",
+      height = "900px",
       
         
       shiny::tabPanel(title = "PCA",
-                      shiny::plotOutput(ns('pca_plot'), height = "1000px")),
+                      shiny::plotOutput(ns('pca_plot'), height = "800px")),
       
       shiny::tabPanel(title = "MDS",
-                      shiny::plotOutput(ns('mds_plot'), height = "1000px")),
+                      shiny::plotOutput(ns('mds_plot'), height = "800px")),
       
       shiny::tabPanel(title = "Visualize gene expression levels",
                       shinydashboardPlus::boxPlus(
@@ -57,7 +57,7 @@ mod_module_levels_ui <- function(id){
                                                   collapsible = TRUE,
                                                   closable = FALSE,
                                                   width = 12,
-                                                  shiny::plotOutput(ns("expression_plot"), height = "900px"))
+                                                  shiny::plotOutput(ns("expression_plot"), height = "700px"))
                       
       ))
   )

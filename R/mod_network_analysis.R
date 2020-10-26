@@ -71,13 +71,13 @@ mod_network_analysis_ui <- function(id) {
           shinyWidgets::downloadBttn(
             outputId = ns("download_node_table"),
             label = "Download nodes as csv table",
-            style = "bordered",
+            style = "material-flat",
             color = "success"
           ),
           shinyWidgets::downloadBttn(
             outputId = ns("download_edges_table"),
             label = "Download edges as csv table",
-            style = "bordered",
+            style = "material-flat",
             color = "success"
           )
           
@@ -822,7 +822,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
         shinyWidgets::downloadBttn(
           outputId = ns("download_go_table"),
           label = "Download enriched GO term as a csv table",
-          style = "bordered",
+          style = "material-flat",
           color = "success"
         )
       )
