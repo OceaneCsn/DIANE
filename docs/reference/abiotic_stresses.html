@@ -104,6 +104,12 @@ the stress level." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -144,12 +150,12 @@ the soil. Each factors has two levels, one of them considered as the reference, 
 the stress level.</p>
     </div>
 
-    <pre class="usage"><span class='no'>abiotic_stresses</span></pre>
+    <pre class="usage"><span class='va'>abiotic_stresses</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A named list with the following elements:</p><dl'>
+    <p>A named list with the following elements:</p><dl>
  <dt>raw_counts</dt><dd><p>Dataframe of positive values. Raw transcript aboundances 
  as obtained after mapping and quantifying RNASeq reads. Rows are transcripts, and
  columns are experimental triplicate conditions</p></dd>
@@ -176,7 +182,7 @@ the stress level.</p>
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     
-<dl'>
+<dl>
  <dt>Data download : </dt><dd><p><a href='https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE146206'>GEO accession</a></p></dd>
  <dt>Publication :  </dt><dd><p><a href='https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392'>Molecular 
  plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes</a></p></dd>
@@ -184,11 +190,12 @@ the stress level.</p>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>{
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>raw_counts</span>))
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>design</span>)
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>conditions</span>)
-}</div><div class='output co'>#&gt;               C_1   C_2   C_3   S_1   S_2   S_3   M_1   M_2   M_3   H_1   H_2
+    <pre class="examples"><div class='input'><span class='op'>{</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>raw_counts</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>design</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt;               C_1   C_2   C_3   S_1   S_2   S_3   M_1   M_2   M_3   H_1   H_2
 #&gt; AT1G01010.1 127.0  67.9  65.5  94.0  88.1  95.9  65.1 100.3 126.8  95.4 135.0
 #&gt; AT1G01020.1 207.9 220.8 186.8 192.5 225.1 197.8 234.2 196.9 179.4 312.9 366.0
 #&gt; AT1G01030.1  32.7  34.4  55.8  33.6  15.9  31.3  21.4  29.8  33.5  47.7  39.0
@@ -235,7 +242,7 @@ the stress level.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -98,6 +98,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,13 +138,13 @@
     <p>draw_coseq_run : displays the indications of clustering</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_coseq_run</span>(<span class='no'>run_pois</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</pre>
+    <pre class="usage"><span class='fu'>draw_coseq_run</span><span class='op'>(</span><span class='va'>clustering_run</span>, plot <span class='op'>=</span> <span class='st'>"ICL"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>run_pois</th>
+      <th>clustering_run</th>
       <td><p>result of a coseq run</p></td>
     </tr>
     <tr>
@@ -153,36 +159,18 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
     <p>plot describing the quality of the clustering process</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs</span>
-<span class='no'>clustering</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span>(<span class='kw'>conds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"C"</span>, <span class='st'>"H"</span>, <span class='st'>"SH"</span>, <span class='st'>"MH"</span>, <span class='st'>"SMH"</span>),
-<span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='no'>genes</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>6</span>:<span class='fl'>9</span>)</div><div class='output co'>#&gt; ****************************************
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>heat_DEGs</span>
+<span class='va'>clustering</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='run_coseq.html'>run_coseq</a></span><span class='op'>(</span>conds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"C"</span>, <span class='st'>"H"</span>, <span class='st'>"SH"</span>, <span class='st'>"MH"</span>, <span class='st'>"SMH"</span><span class='op'>)</span>, 
+data <span class='op'>=</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span>, genes <span class='op'>=</span> <span class='va'>genes</span>, K <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ****************************************
 #&gt; coseq analysis: Poisson approach &amp; none transformation
 #&gt; K = 6 to 9 
 #&gt; Use set.seed() prior to running coseq for reproducible results.
 #&gt; ****************************************
-#&gt; Running K = 6 ...
-#&gt; [1] "Initialization: 1"
-#&gt; [1] "Log-like diff: 0.0412174002696979"
-#&gt; [1] "Log-like diff: 0.00816919578990039"
-#&gt; [1] "Log-like diff: 0.00192461009646205"
-#&gt; [1] "Log-like diff: 0.000456460812024773"
-#&gt; [1] "Log-like diff: 0.00010861241324811"</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 2.93307060568182e-05"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 6.38488159676598e-06"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.642264368364783"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0539969521528381"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00626048330588969"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000914902135499496"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000150762818463157"</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span>
-#&gt; <span class='message'>[1] "Initialization: 1"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.10968700187122"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.0409193448303311"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.00622139741342753"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 0.000797762020243731"</span>
-#&gt; <span class='message'>[1] "Log-like diff: 9.83163532080056e-05"</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"barplots"</span>)</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>draw_coseq_run</span>(<span class='no'>clustering</span>$<span class='no'>model</span>, <span class='kw'>plot</span> <span class='kw'>=</span> <span class='st'>"ICL"</span>)</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
+#&gt; Running K = 6 ...</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div><div class='input'><span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>draw_coseq_run</span><span class='op'>(</span><span class='va'>clustering</span><span class='op'>$</span><span class='va'>model</span>, plot <span class='op'>=</span> <span class='st'>"barplots"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $probapost_barplots</div><div class='img'><img src='draw_coseq_run-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div><div class='input'><span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>draw_coseq_run</span><span class='op'>(</span><span class='va'>clustering</span><span class='op'>$</span><span class='va'>model</span>, plot <span class='op'>=</span> <span class='st'>"ICL"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ICL</div><div class='img'><img src='draw_coseq_run-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -198,7 +186,7 @@ of the posterior probabilities for the clustering. Value must be "ICL" or "barpl
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

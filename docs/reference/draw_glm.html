@@ -98,6 +98,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,7 +138,7 @@
     <p>Plots the value of a Poisson generalized linear model coefficients</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</pre>
+    <pre class="usage"><span class='fu'>draw_glm</span><span class='op'>(</span><span class='va'>glm</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,12 +151,13 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='no'>genes_cluster</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span>(
-<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fl'>3</span>)
-<span class='no'>glm</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>, <span class='no'>genes_cluster</span>,
-<span class='no'>abiotic_stresses</span>$<span class='no'>design</span>)
-<span class='fu'>draw_glm</span>(<span class='no'>glm</span>)</div><div class='img'><img src='draw_glm-1.png' alt='' width='700' height='433' /></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='va'>genes_cluster</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='get_genes_in_cluster.html'>get_genes_in_cluster</a></span><span class='op'>(</span>
+<span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>heat_DEGs_coseq_membership</span>, cluster <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
+<span class='va'>glm</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='fit_glm.html'>fit_glm</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span>, <span class='va'>genes_cluster</span>, 
+<span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>design</span><span class='op'>)</span>
+<span class='fu'>draw_glm</span><span class='op'>(</span><span class='va'>glm</span><span class='op'>)</span>
+</div><div class='img'><img src='draw_glm-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -166,7 +173,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

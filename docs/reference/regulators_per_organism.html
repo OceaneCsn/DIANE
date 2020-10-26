@@ -99,6 +99,12 @@ and are needed to infer gene regulatory networks in DIANE." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -134,34 +140,54 @@ and are needed to infer gene regulatory networks in DIANE." />
 and are needed to infer gene regulatory networks in DIANE.</p>
     </div>
 
-    <pre class="usage"><span class='no'>regulators_per_organism</span></pre>
+    <pre class="usage"><span class='va'>regulators_per_organism</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A named list with the following elements:</p><dl'>
- <dt>Arabidopsis thaliana</dt><dd><p>Character vector of the known regulators in Arabidopsis thaliana</p></dd>
+    <p>A named list with the following elements:</p><dl>
+ <dt>Arabidopsis thaliana</dt><dd><p>Character vector of the known transcriptional regulators in Arabidopsis thaliana</p></dd>
  <dt>Homo sapiens</dt><dd><p>Character vector of the known transcription factors in Human</p></dd>
+ <dt>Mus musculus</dt><dd><p>Character vector of the known transcription factors in Mouse</p></dd>
+ <dt>Drosophilia melanogaster</dt><dd><p>Character vector of the known transcription factors in Drosophilia melanogaster</p></dd>
+ <dt>Caenorhabditis elegans</dt><dd><p>Character vector of the known transcription factors in C elegans</p></dd>
+ <dt>Escherichia coli</dt><dd><p>Character vector of the known transcription factors and sigma elements in E coli K12</p></dd>
 
 </dl>
 
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     
-<dl'>
+<dl>
  <dt>For Arabidopsis thaliana</dt><dd><p><a href='http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH'>http://plntfdb.bio.uni-potsdam.de/v3.0/index.php?sp_id=ATH</a></p></dd>
  <dt>For Human</dt><dd><p><a href='http://humantfs.ccbr.utoronto.ca/download.php'>http://humantfs.ccbr.utoronto.ca/download.php</a></p></dd>
+ <dt>Mus musculus</dt><dd><p><a href='http://bioinfo.life.hust.edu.cn/AnimalTFDB/#!/download'>http://bioinfo.life.hust.edu.cn/AnimalTFDB/#!/download</a></p></dd>
+ <dt>Drosophilia melanogaster</dt><dd><p><a href='https://flybase.org/reports/FBgg0000745.html'>https://flybase.org/reports/FBgg0000745.html</a></p></dd>
+ <dt>C elegans</dt><dd><p><a href='http://www.wormbook.org/chapters/www_transcriptionalregulation.2/transregulate.html#sec5-1'>http://www.wormbook.org/chapters/www_transcriptionalregulation.2/transregulate.html#sec5-1</a></p></dd>
+ <dt>E coli</dt><dd><p><a href='http://regulondb.ccg.unam.mx/menu/download/datasets/index.jsp'>http://regulondb.ccg.unam.mx/menu/download/datasets/index.jsp</a></p></dd>
  
 </dl>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>{
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]]))
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Homo sapiens"</span>]]))
-}</div><div class='output co'>#&gt; [1] "AT1G04880" "AT1G20910" "AT1G55650" "AT1G76110" "AT1G76510" "AT2G17410"
+    <pre class="examples"><div class='input'><span class='op'>{</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Arabidopsis thaliana"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Homo sapiens"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Mus musculus"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Drosophilia melanogaster"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Caenorhabditis elegans"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Escherichia coli"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt; [1] "AT1G04880" "AT1G20910" "AT1G55650" "AT1G76110" "AT1G76510" "AT2G17410"
 #&gt; [1] "ENSG00000004848" "ENSG00000005073" "ENSG00000005102" "ENSG00000005513"
-#&gt; [5] "ENSG00000005801" "ENSG00000005889"</div></pre>
+#&gt; [5] "ENSG00000005801" "ENSG00000005889"
+#&gt; [1] "ENSMUSG00000037029" "ENSMUSG00000032035" "ENSMUSG00000021485"
+#&gt; [4] "ENSMUSG00000097200" "ENSMUSG00000098022" "ENSMUSG00000027985"
+#&gt; [1] "FBgn0002522" "FBgn0051481" "FBgn0004054" "FBgn0004053" "FBgn0000166"
+#&gt; [6] "FBgn0000439"
+#&gt; [1] "WBGene00019424" "WBGene00009202" "WBGene00009203" "WBGene00013383"
+#&gt; [5] "WBGene00000476" "WBGene00002717"
+#&gt; [1] "accB" "acrR" "ada"  "adiY" "agaR" "aidB"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -177,7 +203,7 @@ and are needed to infer gene regulatory networks in DIANE.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

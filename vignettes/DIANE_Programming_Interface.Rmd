@@ -3,8 +3,11 @@ title: "DIANE Programming Interface"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{DIANE_Programming_Interface}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r, include = FALSE}
@@ -18,31 +21,27 @@ library(ggplot2)
 
 # Why an application programming interface?
 
-In addition to the Graphical User Interface, DIANE also comes with all it's server-side functions. They can be called from any R environement or scripts, after loading DIANE.
+In addition to the Graphical User Interface, DIANE also comes with all it's server-side functions.
+They can be called from any R environment or scripts, after loading DIANE.
 
 Using DIANE's functions outside of the interface can be an interesting option for several reasons, among which :
 
-+ It allows more flexibility and additional user-specific R analysis
+-   It allows more flexibility and additional user-specific R analysis
 
-+ It can be part of an automated pipeline
+-   It can be part of an automated pipeline
 
 We present in this document how to use those functions on our demo data.
 
 # Input data
 
-The DIANE companion dataset is meant to illustrate its functionality and provide an explicit example of the expected input data.
+DIANE's companion dataset is meant to illustrate its functionalities and provide an explicit example of the expected input data.
 
+The chosen dataset contains the transcriptome of Arabidopsis thaliana plants exposed to global warming related conditions.
+It was generated for the article "Molecular plant responses to combined abiotic stresses put a spotlight on unknown and abundant genes", by Sewelam et Al. in Journal of experimental Botany, 2020.
+(<https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392>).
 
-The chosen dataset contians the transcriptome of Arabidopsis thaliana plants exposed to global warming 
-related conditions. It was generated for the article "Molecular plant responses to combined abiotic 
-stresses put a spotlight on unknown and abundant genes", by Sewelam et Al. in Journal of experimental
-Botany, 2020. (https://academic.oup.com/jxb/advance-article/doi/10.1093/jxb/eraa250/5842162#204457392).
-
-
-The experimental perturbations studied are heat, hight salinity and drought in culture soil. 
-Each factors has two levels, one of them considered as the reference, and the other one as the stress level.
-
-
+The experimental perturbations studied are heat, salinity and drought in culture soil.
+Each factors have two levels, one of them considered as the reference, and the other one as the stress level.
 
 ```{r setup}
 library(DIANE)
@@ -51,23 +50,17 @@ data("gene_annotations")
 data("regulators_per_organism")
 ```
 
-To use all DIANE functions on your data, you should provide r variables that describe it in the similar format.
+To use DIANE's functions on your data, you should provide R variables that describe your dataset the following formats.
 
 ## Raw expression counts
 
-To access most of DIANE features, the raw counts only are required.
-You should feed DIANE the raw counts that were obtained after the bioinformatic pipeline of mapping and quantification of your reads.
-This file gives, for each gene, the transcript aboundance found in each of your experimental condition and repliactes.
-The needed matrix-like variable shoud contain all your gene IDs as rownames.
-
-The other columns should be your sample names, noted as follow : conditionName_replicate (see example below).
-Expression values should be zeros or positive integers.
-
+It must be an R dataframe with gene IDs as rownames, and condition_replicate as columns.
+It contains row or normalized expression levels.
 
 In order for your input to be compatible with the proposed organisms for GO terms and annotation, it should contain gene IDs as follow :
 
-+ For Arabidopsis thaliana : TAIR IDs (ex: AT1G01020, or AT1G01020.1) 
-+ For Human : ensembl IDs (ex: ENSG00000005513) 
+-   For Arabidopsis thaliana : TAIR IDs (ex: AT1G01020, or AT1G01020.1)
+-   For Human : ensembl IDs (ex: ENSG00000005513)
 
 Our demo data have raw counts presented as follow :
 
@@ -77,27 +70,28 @@ kable(head(abiotic_stresses$raw_counts))
 
 ## Experimental design
 
-This is optional, and especially used to fit Poisson Generalized linear models to gene clusters. It is shown here to explain our companion dataset :
+This is optional, and only used to fit Poisson Generalized linear models to gene clusters.
+It is shown here to explain our companion dataset.
 
 For each condition name, the level of the factors corresponding to that condition in your study are to be provided.
 
 The experiement we chose for our demo included 3 factors, heat stress (H), mannitol stress(M), as well as salinity stress (S).
 
-You should first identify which level of each factor can be considered as the **control** level, and which is a **perturbation**. In our demo, the control condition is referred to as C.
-Then, the perturbation are specified by their corresponding letter, from simple to triple stress combination. For example, SH corresponds to salt and heat stresses in the control level of mannitol. As a consequence, its levels would be 1,0,1.
+You should first identify which level of each factor can be considered as the **control** level, and which is a **perturbation**.
+In our demo, the control condition is referred to as C.
+Then, the perturbation are specified by their corresponding letter, from simple to triple stress combination.
+For example, SH corresponds to salt and heat stresses in the control level of mannitol.
+As a consequence, its levels would be 1,0,1.
 
 The design file is thus a matrix with condition names as rownames, and factor names as columns:
-
 
 ```{r design}
 kable(abiotic_stresses$design)
 ```
 
-
-
 ## Gene annotation
 
-We provided gene description for Arabidopsis only for now :
+We provided gene description for Arabidopsis :
 
 ```{r annot}
 kable(tail(gene_annotations[["Arabidopsis thaliana"]], n = 10))
@@ -105,46 +99,57 @@ kable(tail(gene_annotations[["Arabidopsis thaliana"]], n = 10))
 
 This is not required, but it can be convenient to use this information when displaying lists of genes, to have their associated meaning.
 
+The annotations for other organisms known to DIANE can be retrieved for any list of genes as follows :
+
+```{r annot_org}
+knitr::kable(get_gene_information(c("WBGene00000013", "WBGene00000035"), organism = "Caenorhabditis elegans"))
+```
+
 # Data pre-processing
 
 ## Visualization of raw counts
 
-For each condition, we can visualize the distributions of gene counts with boxplots or violin plots. To display violin plots, you can use the argument ```boxplot = FALSE```.
+For each condition, we can visualize the distributions of gene counts with boxplots or distributions.
+To display the distributions, you can use the argument `boxplot = FALSE`.
 
 ```{r vis_raw, fig.width=8, fig.height=5}
 DIANE::draw_distributions(abiotic_stresses$raw_counts, boxplot = TRUE)
 ```
 
-## Normalisation
+## Normalization
 
-The [TCC R package](https://rdrr.io/bioc/TCC) is used for the normalisation step here, to make samples comparable by correcting for their differences in **sequencing depths**. This step is mandatory before further statistical analysis.
+The [TCC R package](https://rdrr.io/bioc/TCC) is used for the normalization step here, to make samples comparable by correcting for their differences in **sequencing depths**.
+This step is mandatory before further statistical analysis.
 
 You can choose to normalize using the methods implemented in edgeR, referenced as 'tmm', or the one used in DESeq, referenced as 'deseq2'.
 
-Those normalisation methods rely on the hypothesis that a very small proportion of genes are differentially expressed between your samples. If you suspect a lot of genes could be differentially expressed in your data, TCC offers the possibility to proceed to a first detection of potential differentially expressed genes, to remove them, and then provide a final less biased normalization.
+Those normalization methods rely on the hypothesis that a very small proportion of genes are differentially expressed between your samples.
+If you suspect a lot of genes could be differentially expressed in your data, TCC offers the possibility to proceed to a first detection of potential differentially expressed genes, to remove them, and then provide a final less biased normalization.
 
 In that case, enable "prior removal of deferentially expressed genes".
 TCC will perform the following setp, depending on the normalization method you chose :
-+ tmm/deseq2 temporary normalisation
-+ potential DEG identification and removal using edgeR test method
-+ tmm/deseq2 definitive normalisation   
 
-We use here the default parameters :
+\+ tmm/deseq2 temporary normalization
+
+\+ potential DEG identification and removal using edgeR test method
+
+\+ tmm/deseq2 definitive normalization
+
+We use here the default parameters (no prior removal of differentially expressed genes, and TMM method) :
 
 ```{r normalize, fig.width=8, fig.height=5}
-tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, iteration = FALSE)
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, norm_method = 'tmm', abiotic_stresses$conditions, iteration = FALSE)
 ```
-
 
 ## Low counts removal
 
-Removing genes with very low aboundance is a common practice in RNA-Seq analysis pipelines for several reasons :
+Removing genes with very low abundance is a common practice in RNA-Seq analysis pipelines for several reasons :
 
+-   They have little biological significance, and could be caused either by noise or mapping errors.
+-   The statistical modeling we are planning to perform next is not well suited for low counts, as they make the mean-variance relationship harder to estimate.
 
-+ They have little biological signifiance, and could be caused either by noise or mapping errors.
-+ The statitical modelling we are planning to perform next is not well suited for low counts, as they make the mean-variance relationship harder to estimate.
-
-There is no absolute and commonly accpeted threshold value, but it is recommended to allow only genes with more than 10 counts per sample in average. DIANE thus proposes a threshold at 10*sampleNumber, but feel free to experiment with other values depending on your dataset.
+There is no absolute and commonly accepted threshold value, but it is recommended to allow only genes with more than 10 counts per sample in average.
+DIANE thus proposes a threshold at 10\*sampleNumber, but feel free to experiment with other values depending on your dataset and intensions.
 
 ```{r filter}
 threshold = 10*length(abiotic_stresses$conditions)
@@ -152,8 +157,7 @@ tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 normalized_counts <- TCC::getNormalizedData(tcc_object)
 ```
 
-
-We can really see the difference with the violin plot view of the effect of low count genes removal :
+We can see the difference with the violin plot view of the effect of low count genes removal :
 
 ```{r viz_filter, fig.width=10, fig.height=15}
 pre_process <- DIANE::draw_distributions(abiotic_stresses$raw_counts, boxplot = FALSE) + ggtitle("Before")
@@ -163,18 +167,16 @@ gridExtra::grid.arrange(pre_process, post_process, ncol = 2)
 
 ```
 
-
 ```{r levels, fig.width=10, fig.height=9}
 genes <- sample(abiotic_stresses$heat_DEGs,4)
 DIANE::draw_expression_levels(abiotic_stresses$normalized_counts, genes = genes)
 ```
 
-
 ## Sample homogeneity and global analysis
 
 ### Multi-dimensionnal scaling plot
 
-The multi dimensional scaling plot indicates if the samples are close regarding the expression of the genes, and the colors represent the conditions.
+The multi-dimensional scaling plot indicates if the samples are similar regarding gene expression.
 
 ```{r mds, fig.width=8, fig.height=5}
 DIANE::draw_MDS(normalized.count = normalized_counts)
@@ -182,27 +184,22 @@ DIANE::draw_MDS(normalized.count = normalized_counts)
 
 ### Principal component analysis
 
-Performing PCA on normalized RNA-Seq counts can be really informative about the conditions that are the most influent gene expression.
-During PCA, new variables are computed, as linear combinations of your inital variables (e.g. experimental conditions). Those new variables, also called principal components, are designed to carry the maximum of the data varibility.
+Performing PCA on normalized RNA-Seq counts can be really informative about the conditions that impact gene expression the most.
+During PCA, new variables are computed, as linear combinations of your initial variables (e.g. experimental conditions).
+Those new variables, also called principal components, are designed to carry the maximum of the data variability.
 
-We can plot the correlations of the initial variables to the principal components, to see which one contribute the most to those principal components, and as a consequence, to the overall expression changes.
+We can plot the correlations of the initial variables to the principal components, to see which ones contribute the most to those principal components, and as a consequence, to the overall expression changes.
 
-Each principal component explans a certain amount of the total variability, and those relative percentages are shown in what is called the screeplot.
-
-
+Each principal component explains a certain amount of the total variability, and those relative percentages are shown in what is called the screeplot.
 
 ```{r pca, fig.width=10, fig.height=8}
 DIANE::draw_PCA(data = normalized_counts)
 ```
 
 The first plane, showing the first two components, is striking in the sense that the conditions are segregated by their heat level.
-This supports the findings of the original publictaion, which states in its abstract : 
+Indeed, we find here that 57.3% of gene expression variability can be linked to heat stress.
 
-"We found that in combination with other stresses, heat has a dominant effect on global gene expression and metabolite level patterns."
-
-Indeed, we find here that 57.3\% of gene expression variability can be linked to heat stress.
-
-The second principal axis, is more correlated to osmotic stress, as conditions with mannitol stress are opposed along this axis, carrying 12.2\% of gene expression variance.
+The second principal axis, is more correlated to osmotic stress, as conditions with mannitol stress are opposed along this axis, carrying 12.2% of gene expression variance.
 
 # Differential expression analysis
 
@@ -237,15 +234,29 @@ DIANE::draw_heatmap(normalized_counts, subset = genes,
 
 ```
 
+## Genes lists comparison
+
+If we want to compare genes differentially expressed between Control and Heat stress, to genes differentially expressed between control and double heat and mannitol stresses :
+
+```{r venn, fig.width=8, fig.height=7}
+
+genes_double_stress <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "MH", p.value = 0.01, lfc = 2)$table$genes
+
+
+genes_lists <- list("C - H" = genes, "C - HM" = genes_double_stress)
+
+# if we only want the conditions used for differential expression analysis :
+DIANE::draw_venn(genes_lists)
+```
 
 ## Gene Ontology enrichment analysis
 
-Given any set of gene, for instance here a list of differentially expressed genes, one can compute which ontologies are significantly enriched.
-We compare here our list of genes to all the genes present in our expression matrix, refered to as background genes.
+Given any set of genes, we can compute which ontologies are significantly enriched.
+We compare here our list of heat responsive genes to all the genes present in our expression matrix, referred to as background genes.
 
-If the gene IDs have splicing information (e.g. the transcript number), they must be first transformed to classic AGI terms, with the function ```get_locus```, which is the case here.
+If the gene IDs have splicing information (e.g. the transcript number), they must be first transformed to classic AGI terms, with the function `get_locus`, which is the case here.
 
-The package used behind the enrichment analysis function here is clusterProfiler.
+The package used behind the enrichment analysis function is clusterProfiler.
 The method uses Fischer test to detect significant GO terms, and they can be either seen as a result dataframe, or in an interactive plot :
 
 ```{r go_enrich, fig.width=8, fig.height=6}
@@ -263,62 +274,47 @@ DIANE::draw_enrich_go(go, max_go = 30)
 DIANE::draw_enrich_go_map(go)
 ```
 
-
 We can limit the number of plotted GO terms with the max go parameter.
 
-As expected, the GO term with the higher gene count is "reponse to heat". Then, we also oberse GO terms linked to oxygen levels and hypoxia, protein folding and degradation, and responses to various other stresses or compounds.
-
-The GO terms match to results of Sewelam et Al., as they describe response to heat as follows : "Treatments that include heat stress lead to strongly reduced transcription of genes coding for abundant photosynthetic proteins and proteins regulating the cell life cycle, while genes involved in protein degradation are up-regulated."
+As expected, the GO term with the higher gene count is "response to heat".
+Then, we also observe GO terms linked to oxygen levels and hypoxia, protein folding and degradation, and responses to various other stresses or compounds.
 
 # Expression based clustering
 
-The [coseq package](https://www.bioconductor.org/packages/release/bioc/vignettes/coseq/inst/doc/coseq.html) relies on the statistical framework of **mixture models**. Each cluster of genes is represented by a Poisson distribution, which parameter is estimated using Expectation-Maximisation algorithms. This algorithm ends up with the **Poisson** distributions parameters that are the best fit to the data, as they maximises the complete likelihood of the clustering.
+The [coseq package](https://www.bioconductor.org/packages/release/bioc/vignettes/coseq/inst/doc/coseq.html) relies on the statistical framework of **mixture models**.
+Each cluster of genes is represented by a Poisson or Gaussian distribution, which parameters is estimated using Expectation-Maximisation algorithms.
+In the end of the procedure, the number of clusters that maximizes the clustering quality is chosen.
 
-One EM algorithm is launched for each number of clusters specified in the input range. In the end of the procedure, the number of clusters that maximizes the clustering quality is chosen. The tab "clustering quality" will give more details about this criterion.
+The input genes of a clustering can't be all the genes of the data, we use the output of differential expression analysis instead.
 
-The input genes of a clustering can't be all the genes of the data, we use the output of differential expression analysis instead. Indeed, clustering genes that have similar expression accros conditions would not be very informative, and would increase computation time for no reason.
-
-You can also specify a subset of the conditions to be used during the clustering if you're not interested in all the conditions, but a minimum of three different conditions recommended to expect an interesting result.
-
+You can also specify a subset of the conditions to be used during the clustering if we're not interested in all the conditions.
 
 ```{r coseq, fig.width=8, fig.height=5}
 
 genes <- topTags$table$genes
 
-clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), data = normalized_counts, genes = genes, K = 6:9)
+clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), data = normalized_counts, genes = genes, K = 6:9, transfo = "arcsin", model = "Normal")
 DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 DIANE::draw_coseq_run(clustering$model, plot = "ICL")
 ```
 
-
-
-For each number of cluster, the ICL (Integrated Completed Likelihood) is computed. It combines two elements : 
-
-+ The global **likelihood** of the clustering. It quantifies how accurate the clustering seems, regarding the posterior probability of each element to belong the its predicted cluster. It can be computed using the Poisson probability densities resulting from the proposed clustering, for all the genes.
-
-+ The **number of clusters**. As the likelihood tends to grow monotonously with the number of clusters, resulting in a very big number of groups, that would not be very informative for the user. Thus, the ICL penalizes the clustering quality criteria with the number of clusters.
-
-This is why the maximal value of ICL can be interpreted as an approximation of the ideal number of clusters. 
-
-
 ## Profiles visualization
 
-The user can display either a view of all the clusters, or focus one one in particular :
+The user can display either a view of all the clusters, or focus on one in particular :
 
 ```{r profiles, fig.width=10, fig.height=8}
 DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(abiotic_stresses$conditions)) 
 DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = unique(abiotic_stresses$conditions), k = 3) 
 ```
 
-All genes in one cluster can be reteived with :
+All genes in one cluster can be retrieved with :
 
 ```{r genes_in_k, fig.width=10, fig.height=8}
 
 DIANE::get_genes_in_cluster(membership = clustering$membership, cluster = 3) 
 ```
 
-The named vector membership give you, for each gene, its cluster :
-
+The named vector membership gives, for each gene, its cluster:
 
 ```{r membership, fig.width=10, fig.height=8}
 head(clustering$membership, n = 40)
@@ -328,21 +324,17 @@ head(clustering$membership, n = 40)
 
 The idea is to extract the importance and effect of each factor.
 To do so, the expression of each gene is modeled by a Poisson distribution.
-The log of its parameter (the expected value) is approximated by a linear
-combination of the factors in the experiment. The coefficients associated to 
-each factors are estimated to fit gene expression, and can be insightful to
-characterize genes behavior in a particular cluster.
-The model with interactions is considered. If your design in not a
-complete corssed design, the interaction term will be null.
+The log of its parameter (the expected value) is approximated by a linear combination of the factors in the experiment.
+The coefficients associated to each factors are estimated to fit gene expression, and can be insightful to characterize genes behavior in a particular cluster.
+The model with interactions is considered automatically.
+If your design in not a complete crossed design, the interaction term will be null.
 
-The absolute value of a coefficient gives information about the intensity of
-its effect on gene expression. The highest coefficient(s) thus are the one(s) 
-driving the profiles in a specific cluster. The genes in this cluster are potentially
-involved in the response to that factor.
-                           
+The absolute value of a coefficient gives information about the intensity of its effect on gene expression.
+The highest coefficient(s) are thus the one(s) having the greater impact on a cluster's expression profile.
+
 The sign of a coefficient gives information about the way it impacts expression.
-If it is positive it increases the expression when the factor is in its perturbation
-level. If negative, it decreases it.
+If it is positive, it increases the expression when the factor is in its perturbation level.
+If negative, it decreases it.
 
 ```{r glm, fig.width=8, fig.height=6}
 genes_cluster <- DIANE::get_genes_in_cluster(
@@ -353,58 +345,34 @@ summary(glm)
 draw_glm(glm)
 ```
 
-
 # Network inference
 
-
-We want to build a Gene Regulatory Network, a graph connecting regulator genes to any other gene of interest. 
+We want to build a Gene Regulatory Network, a graph connecting regulator genes to any other genes (targets or other regulators).
 
 ## Regulators for your organism
 
-A list of regulators are provided in DIANE for human and Arabidopsis :
+A list of regulators are provided in DIANE for a number of model organisms.
+For example, here are the ones for Human and Arabidopsis :
 
 ```{r reg, fig.width=8, fig.height=6}
 print(head(regulators_per_organism[["Arabidopsis thaliana"]]))
 print(head(regulators_per_organism[["Homo sapiens"]]))
 ```
 
-If your gene IDs are splicing aware, this is not of any use to the inference method, so we want to agregate the data first.
-For each gene, we sum all its transcripts to have its final expression levels.
+If your gene IDs are splicing aware, this is not of any use to the inference method, so we want to aggregate the data first.
+For each gene, we sum all its transcripts to have the final expression levels.
 
 ```{r aggregate, fig.width=8, fig.height=6}
 aggregated_data <- aggregate_splice_variants(data = normalized_counts)
 ```
 
-
-
-<!-- ```{r genie3, fig.width=10, fig.height=8} -->
-
-
-
-<!-- mat <- DIANE::network_inference(aggregated_data, conds = abiotic_stresses$conditions, targets = genes, -->
-<!--                          regressors = regressors) -->
-
-<!-- network <- DIANE::network_thresholding(mat, n_edges = length(genes)) -->
-
-<!-- data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`) -->
-
-<!-- knitr::kable(head(data$nodes)) -->
-
-<!-- DIANE::draw_network(data$nodes, data$edges) -->
-
-<!-- DIANE::draw_network_degrees(data$nodes, network) -->
-
-<!-- ``` -->
-
-
-
 ## Grouping highly correlated regulators
 
-This step is optional, but highly recommended, before the network inference step. Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges. For example, if two  regulators are extremely correlated, one could "steal" targets from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
+This step is optional, but highly recommended, before the network inference step.
+Indeed, to leave strong correlations between the inference variables (the regulators), can lead to lose edges.
+For example, if two regulators are extremely correlated, one could "steal" targets from the other one, that would lose connections to potential target genes, that would be made if the first regulator was not in the dataset.
 
 The information of strongly correlated regulators, is already, in itself, quite insightful and can lead to interesting biological interpretation.
-
-The dark green nodes represent the highly correlated grouped regulators.
 
 ```{r grouping, fig.width=8, fig.height=6}
 
@@ -425,29 +393,28 @@ grouped_regressors <- grouping$grouped_regressors
 
 ```
 
+## Inference and visualization
 
-## Inference and visualisation
-
-The inference can now be performed, using either the GENIE3 approach, or our proposed method improvment.
+The inference can now be performed.
 
 ### Classic GENIE3 inference
 
-The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0012776) is a method mased on machine learning to infer regulatory links between genes and regulators.
+Network inference takes as input a list of genes, generated by differential expression tests, that will be the nodes of the inferred network.
+Among those genes, some must be identified as potential transcriptional regulators.
+It is also possible to use a subset of genes for network inference, as clusters determined in the expression based clustering tab.
 
+The [GENIE3 package](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0012776) is a method based on Machine Learning (Random Forests) to infer regulatory links between target genes and regulator genes.
+The advantages of this method is that it returns oriented edges from regulators to targets, which is desired in the context of regulatory networks, and can capture high order interactions between regulators.
 
-GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. Among those genes, some must be considered as potential regulators. 
-
-GENIE3 can determine the influence if every regulators over each input genes, using their respective expression profiles. You can specify which conditions you want to be considered for those profiles during the network inference.
-
-For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression. This ranking is then merged across all targets, giving a global regulatory links ranking.
+For each target gene, the methods uses Random Forests to provide a ranking of all regulators based on their influence on the target expression.
+This ranking is then merged across all targets, giving a global regulatory links ranking.
+Settings relative to regulatory weights inference are presented in the left pane.
 
 The idea is then to keep the strongest links to build the gene regulatory network.
-
-GENIE3 was among the best performers of the [DREAM challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70350), designed to benchmarck state of the art network inference methods of simulated and validated biological data. The advantages of the method is that it only gives oriented edges from regulators to targets, which is desired in the context of regultory networks, and captures regulators interactions and combinatorics. 
-
+The way of determining the right number of final edges in the network can be based on a desired network density alone, or followed by edges statistical testing.
 
 ```{r genie, fig.width=8, fig.height=6}
-mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets, regressors = grouped_regressors, nCores = 1)
+mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets, regressors = grouped_regressors, nCores = 1, verbose = FALSE)
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
@@ -458,14 +425,11 @@ knitr::kable(head(data$nodes))
 DIANE::draw_network(data$nodes, data$edges)
 ```
 
-The ```network``` object is an ```igraph``` object, and can be analyzed with all the possibilities offered by this complete package about graphs algorithms.
+`network` is an `igraph` object, and can be analyzed with all the possibilities offered by this complete package about graphs algorithms.
 
 ### DIANE's edges testing procedure
 
-
-
 A matrix of importances is computed, just as in the previous section, but we prefer to use another importance metric for consistency reasons.
-
 
 ```{r sigGENIE, eval=FALSE}
 
@@ -478,14 +442,13 @@ mat <- DIANE::network_inference(grouped_counts,
 
 ```
 
-
 ```{r sigGENIEload, include=FALSE}
 mat <- abiotic_stresses$heat_DEGs_regulatory_links
 ```
 
 Then, we are going to generate a first network, by considering only the number of pairs offering a state of the art density value.
-The density is usually between 0.1 and 0.001, as reviewed in several papers (refs here) about biological network topology.
-This step is crucial, as it prevents from testing all possible pairs, which will useless for a huge majority of pairs, as well as extremely costly.
+The density is usually between 0.1 and 0.001, as reviewed in several papers about biological network topology.
+This step is crucial, as it prevents from testing all possible pairs, which would be useless for a huge majority of pairs, as well as extremely costly.
 
 ```{r testing, fig.width=10, fig.height=8}
 
@@ -501,6 +464,7 @@ ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) +
 ```
 
 Given this graph, we can consider that a density value of 0.3 would be a good compromise between a small enough subset of edges to test, and a coherent density value, not too restrictive.
+This step will take a certain time to run, from a few minutes to tens of minutes depending on your hardware.
 
 ```{r testingexpr, eval=FALSE}
 
@@ -522,19 +486,23 @@ res$fdr_nEdges_curve
 
 res$pvalues_distributions + xlim(0,0.1)
 
+kable(head(res$links))
+
 net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+
+
 ```
 
 Alright, the network is ready to be analyzed!
 
-
-## Visualisation
-
-A community discovery is performed using the Louvain algorithm, so we can extract highly connected genes modules.
-You can see those communities on the graph and plot their profiles:
+## Visualization
 
 ```{r communities, fig.width=10, fig.height=8}
 net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+
+
+draw_discarded_edges(res$links, net_data)
+
 
 draw_network(net_data$nodes, net_data$edges)
 
@@ -549,8 +517,13 @@ print(head(louvain_membership, n = 10))
 draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_stresses$conditions)
 ```
 
-Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes. If there is too few genes, GO enrichment tests may not be significant.
+The first graph shows, in red, the edges that were not significant according to our perumtation tests.
 
+A community discovery is performed using the Louvain algorithm, so we can extract highly connected genes modules.
+You can see those communities on the graph and plot their profiles:
+
+Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes.
+If there is too few genes, GO enrichment tests may not be significant.
 
 ## Analysis
 
@@ -565,4 +538,3 @@ gene_of_interest <- nodes$id[1]
 print(DIANE::describe_node(network, node = gene_of_interest))
 
 ```
-

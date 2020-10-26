@@ -98,6 +98,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,7 +138,7 @@
     <p>get_genes_in_cluster</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_genes_in_cluster</span>(<span class='no'>membership</span>, <span class='no'>cluster</span>)</pre>
+    <pre class="usage"><span class='fu'>get_genes_in_cluster</span><span class='op'>(</span><span class='va'>membership</span>, <span class='va'>cluster</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,8 +158,9 @@
     <p>genes belonging to the desired cluster</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='fu'>get_genes_in_cluster</span>(<span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_coseq_membership</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;  [1] "AT4G27670.1" "AT5G59320.1" "AT5G59310.1" "AT1G62515.1" "AT1G62510.1"
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='fu'>get_genes_in_cluster</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>heat_DEGs_coseq_membership</span>, <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  [1] "AT4G27670.1" "AT5G59320.1" "AT5G59310.1" "AT1G62515.1" "AT1G62510.1"
 #&gt;  [6] "AT5G15250.1" "AT5G53710.2" "AT1G60970.1" "AT5G59220.1" "AT5G24080.2"
 #&gt; [11] "AT2G21820.1" "AT5G13170.1" "AT5G05220.1" "AT2G42560.1" "AT2G47770.1"
 #&gt; [16] "AT2G19900.1"</div></pre>
@@ -172,7 +179,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

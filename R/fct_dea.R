@@ -1,7 +1,7 @@
 #' estimateDispersion
 #'
 #' @description This function computes the common, trended, and tag-wise dispersions of 
-#' the gene expression dataset. Once, the dispersion is estimated,
+#' the gene expression dataset. Once the dispersion is estimated,
 #' it fits a negative binomial model for each gene using default design : ~group+0.
 #' In this configuration, the log average expression of each gene is approximated
 #' by a linear combination of each of the conditions.

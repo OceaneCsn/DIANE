@@ -104,6 +104,12 @@ all variants for the same gene" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,7 +138,7 @@ all variants for the same gene" />
     <h1>Merge all splice variants of an expression dataset into 
 unique locus, unaware of alternative splicing, by summing
 all variants for the same gene</h1>
-    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_normalisation.R'><code>R/fct_normalisation.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_geneIDs.R'><code>R/fct_geneIDs.R</code></a></small>
     <div class="hidden name"><code>aggregate_splice_variants.Rd</code></div>
     </div>
 
@@ -142,7 +148,7 @@ unique locus, unaware of alternative splicing, by summing
 all variants for the same gene</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aggregate_splice_variants</span>(<span class='no'>data</span>)</pre>
+    <pre class="usage"><span class='fu'>aggregate_splice_variants</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,8 +164,9 @@ all variants for the same gene</p>
     <p>dataframe with agregated rows</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>aggregate_splice_variants</span>(<span class='no'>abiotic_stresses</span>$<span class='no'>normalized_counts</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>aggregate_splice_variants</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span><span class='op'>)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -175,7 +182,7 @@ all variants for the same gene</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

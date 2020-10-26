@@ -98,6 +98,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,7 +138,7 @@
     <p>Targets and regulators of a gene in a network</p>
     </div>
 
-    <pre class="usage"><span class='fu'>describe_node</span>(<span class='no'>graph</span>, <span class='no'>node</span>)</pre>
+    <pre class="usage"><span class='fu'>describe_node</span><span class='op'>(</span><span class='va'>graph</span>, <span class='va'>node</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,14 +158,15 @@
     <p>list with targets and regulators attributes</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"abiotic_stresses"</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='st'>"regulators_per_organism"</span>)
-<span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='no'>abiotic_stresses</span>$<span class='no'>heat_DEGs_regulatory_links</span>
-<span class='no'>network</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'><a href='network_thresholding.html'>network_thresholding</a></span>(<span class='no'>mat</span>, <span class='kw'>n_edges</span> <span class='kw'>=</span> <span class='fl'>600</span>)
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='network_data.html'>network_data</a></span>(<span class='no'>network</span>, <span class='no'>regulators_per_organism</span><span class='kw'>[[</span><span class='st'>"Arabidopsis thaliana"</span>]])
-<span class='no'>nodes</span> <span class='kw'>&lt;-</span> <span class='no'>data</span>$<span class='no'>nodes</span>[<span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(-<span class='no'>data</span>$<span class='no'>nodes</span>$<span class='no'>degree</span>),]
-<span class='no'>gene_of_interest</span> <span class='kw'>&lt;-</span> <span class='no'>nodes</span>$<span class='no'>id</span>[<span class='fl'>1</span>]
-<span class='kw pkg'>DIANE</span><span class='kw ns'>::</span><span class='fu'>describe_node</span>(<span class='no'>network</span>, <span class='kw'>node</span> <span class='kw'>=</span><span class='no'>gene_of_interest</span>)</div><div class='output co'>#&gt; $targets
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"regulators_per_organism"</span><span class='op'>)</span> 
+<span class='va'>mat</span> <span class='op'>&lt;-</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>heat_DEGs_regulatory_links</span>
+<span class='va'>network</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='network_thresholding.html'>network_thresholding</a></span><span class='op'>(</span><span class='va'>mat</span>, n_edges <span class='op'>=</span> <span class='fl'>600</span><span class='op'>)</span>
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='network_data.html'>network_data</a></span><span class='op'>(</span><span class='va'>network</span>, <span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Arabidopsis thaliana"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>nodes</span> <span class='op'>&lt;-</span> <span class='va'>data</span><span class='op'>$</span><span class='va'>nodes</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>data</span><span class='op'>$</span><span class='va'>nodes</span><span class='op'>$</span><span class='va'>degree</span><span class='op'>)</span>,<span class='op'>]</span>
+<span class='va'>gene_of_interest</span> <span class='op'>&lt;-</span> <span class='va'>nodes</span><span class='op'>$</span><span class='va'>id</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span> 
+<span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>describe_node</span><span class='op'>(</span><span class='va'>network</span>, node <span class='op'>=</span><span class='va'>gene_of_interest</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $targets
 #&gt;  [1] "AT1G44830" "AT3G23230" "AT2G41070" "AT1G75040" "AT2G43590" "AT1G72920"
 #&gt;  [7] "AT4G11470" "AT1G21120" "AT1G35230" "AT4G18253" "AT3G57240" "AT1G60750"
 #&gt; [13] "AT1G05675" "AT5G25910" "AT1G16090" "AT4G19975" "AT4G37400" "AT4G39610"
@@ -195,7 +202,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

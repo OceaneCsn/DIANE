@@ -101,6 +101,12 @@ gene symbol or description" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -137,7 +143,7 @@ gene symbol or description</h1>
 gene symbol or description</p>
     </div>
 
-    <pre class="usage"><span class='fu'>convert_from_agi</span>(<span class='no'>ids</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"entrez"</span>)</pre>
+    <pre class="usage"><span class='fu'>convert_from_agi</span><span class='op'>(</span><span class='va'>ids</span>, to <span class='op'>=</span> <span class='st'>"entrez"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,10 +163,13 @@ gene symbol or description</p>
     <p>named vector</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>genes</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AT2G05940"</span>, <span class='st'>"AT4G16480"</span>, <span class='st'>"AT4G04570"</span>, <span class='st'>"AT2G30130"</span>, <span class='st'>"AT1G56300"</span>)
-<span class='no'>entrez_ids</span> <span class='kw'>&lt;-</span> <span class='fu'>convert_from_agi</span>(<span class='no'>genes</span>)</div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>entrez_ids</span>)</div><div class='output co'>#&gt; AT2G05940 AT4G16480 AT4G04570 AT2G30130 AT1G56300 
-#&gt;  "815147"  "827346"  "825789"  "817565"  "842083" </div><div class='input'><span class='no'>symbols</span> <span class='kw'>&lt;-</span> <span class='fu'>convert_from_agi</span>(<span class='no'>genes</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"symbol"</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>symbols</span>)</div><div class='output co'>#&gt;  AT2G05940 AT4G164801 AT4G164802  AT4G04570 AT2G301301 AT2G301302 AT2G301303 
+    <pre class="examples"><div class='input'><span class='va'>genes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AT2G05940"</span>, <span class='st'>"AT4G16480"</span>, <span class='st'>"AT4G04570"</span>, <span class='st'>"AT2G30130"</span>, <span class='st'>"AT1G56300"</span><span class='op'>)</span>
+<span class='va'>entrez_ids</span> <span class='op'>&lt;-</span> <span class='fu'>convert_from_agi</span><span class='op'>(</span><span class='va'>genes</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>entrez_ids</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; AT2G05940 AT4G16480 AT4G04570 AT2G30130 AT1G56300 
+#&gt;  "815147"  "827346"  "825789"  "817565"  "842083" </div><div class='input'><span class='va'>symbols</span> <span class='op'>&lt;-</span> <span class='fu'>convert_from_agi</span><span class='op'>(</span><span class='va'>genes</span>, to <span class='op'>=</span> <span class='st'>"symbol"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>symbols</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  AT2G05940 AT4G164801 AT4G164802  AT4G04570 AT2G301301 AT2G301302 AT2G301303 
 #&gt;     "RIPK"   "ATINT4"     "INT4"    "CRK40"     "ASL5"    "LBD12"     "PCK1" </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -177,7 +186,7 @@ gene symbol or description</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

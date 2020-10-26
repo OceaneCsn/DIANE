@@ -298,9 +298,7 @@ mod_import_data_server <- function(input, output, session, r) {
         stop()
       }
     }
-    #shiny::req("Gene" %in% colnames(d))
-    
-   
+
     ############### checking organism compatibility
     shiny::req(r$organism)
     if(r$organism != "Other"){
@@ -323,6 +321,9 @@ mod_import_data_server <- function(input, output, session, r) {
         
         if(r$organism == "Lupinus albus")
           ex = "Lalb_Chr00c02g0404151"
+        
+        if(r$organism == "Escherichia coli")
+          ex = "acpS"
         
         shinyalert::shinyalert(
           "Invalid gene IDs",

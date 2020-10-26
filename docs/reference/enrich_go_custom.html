@@ -98,6 +98,12 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/DIANE_Input_data.html">Data upload</a>
+    </li>
+    <li>
+      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+    </li>
+    <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
@@ -132,13 +138,13 @@
     <p>Enriched custom Gene Ontology terms in a set of genes</p>
     </div>
 
-    <pre class="usage"><span class='fu'>enrich_go_custom</span>(
-  <span class='no'>genes</span>,
-  <span class='kw'>universe</span> <span class='kw'>=</span> <span class='no'>genes_to_GO</span>[, <span class='fl'>1</span>],
-  <span class='no'>genes_to_GO</span>,
-  <span class='kw'>qvalue</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>pvalue</span> <span class='kw'>=</span> <span class='fl'>0.05</span>
-)</pre>
+    <pre class="usage"><span class='fu'>enrich_go_custom</span><span class='op'>(</span>
+  <span class='va'>genes</span>,
+  universe <span class='op'>=</span> <span class='va'>genes_to_GO</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>,
+  <span class='va'>genes_to_GO</span>,
+  qvalue <span class='op'>=</span> <span class='fl'>0.1</span>,
+  pvalue <span class='op'>=</span> <span class='fl'>0.05</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,7 +191,7 @@ contained in genesto_GO</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
