@@ -2,7 +2,7 @@
 
 ## Application presentation
 
-DIANE is a R-Shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
+[DIANE](https://diane.bpmp.inrae.fr) is a R-Shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
 
 Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on **multifactorial expression data** using state of the art methods. It includes :
 
@@ -14,11 +14,11 @@ Given the popularity of combinatorial approaches in experimental biology, we des
 
 + Expression based clustering in the framework of Mixture Models, and individual characterisation of those clusters (generalized linar models and GO enrichment analysis).
 
-+ Machine learning based Gene regulatory network inference and interactive network analysis, communi
++ Machine learning based Gene Regulatory Network inference and interactive network analysis, community discovery, transcription factor ranking...
 
-+ Session reporting and results download
++ Session reporting and results to download at each step of the pipeline
 
-+ Demonstration dataset and other ready to be explored datasets on several organisms
++ Demonstration on a published dataset, and other ready to explore datasets on several organisms
 
 All of the features in DIANE are accessible via a signle page Shiny application that can be locally launched, or used online at https://diane.bpmp.inrae.fr.
 
