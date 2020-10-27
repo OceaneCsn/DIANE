@@ -1,4 +1,4 @@
-#' For Arabdopsis thaliana, converts TAIR IDs to entrez IDs, 
+#' For A. thaliana, converts TAIR IDs to entrez IDs, 
 #' gene symbol or description
 #'
 #' @param ids vector of AGI gene IDs
@@ -26,13 +26,13 @@ convert_from_agi <- function(ids, to = "entrez"){
 }
 
 
-#' For Homo sapiens, converts ensembl IDs to entrez IDs, 
-#' symbol or name, 
+#' For H. sapiens, converts ensembl IDs to entrez IDs, 
+#' symbol or name
 #'
 #' @param ids genes to convert, ensembl
 #' @param to value in c("entrez", "symbol", "name")
 #'
-#' @return named list
+#' @return named vector
 #' @export
 #' @examples
 #' if(require("org.Hs.eg.db")){
@@ -58,13 +58,13 @@ convert_from_ensembl <- function(ids, to = "entrez"){
   }
 }
 
-#' For Mus musculus, converts ensembl IDs to entrez IDs, 
-#' symbol or name, 
+#' For M. musculus, converts ensembl IDs to entrez IDs, 
+#' symbol or name
 #'
 #' @param ids genes to convert, ensembl
 #' @param to value in c("entrez", "symbol", "name")
 #'
-#' @return named list
+#' @return named vector
 #' @export
 #' @examples
 #' if(require("org.Mm.eg.db")){
@@ -93,13 +93,13 @@ convert_from_ensembl_mus <- function(ids, to = "entrez"){
 }
 
 
-#' For drosophilia, converts ensembl IDs to entrez IDs, 
-#' symbol or name, 
+#' For D. melanogaster, converts ensembl IDs to entrez IDs, 
+#' symbol or name
 #'
 #' @param ids genes to convert, ensembl
 #' @param to value in c("entrez", "symbol", "name")
 #'
-#' @return named list
+#' @return named vector
 #' @export
 #' @examples
 #' if(require("org.Dm.eg.db")){
@@ -128,13 +128,13 @@ convert_from_ensembl_dm <- function(ids, to = "entrez"){
 }
 
 
-#' For c elegans, converts ensembl IDs to entrez IDs, 
-#' symbol or name, 
+#' For C. elegans, converts ensembl IDs to entrez IDs, 
+#' symbol or name
 #'
 #' @param ids genes to convert, ensembl
 #' @param to value in c("entrez", "symbol", "name")
 #'
-#' @return named list
+#' @return named vector
 #' @export
 #' @examples
 #' if(require("org.Ce.eg.db")){
@@ -166,12 +166,12 @@ convert_from_ensembl_ce <- function(ids, to = "entrez"){
 
 
 #' For E coli, converts ensembl IDs to entrez IDs, 
-#' symbol or name, 
+#' symbol or name
 #'
 #' @param ids genes to convert, ensembl
 #' @param to value in c("entrez", "symbol", "name")
 #'
-#' @return named list
+#' @return named vector
 #' @export
 #' @examples
 #' if(require("org.Ce.eg.db")){
@@ -200,7 +200,7 @@ convert_from_ensembl_eck12 <- function(ids, to = "entrez"){
 
 
 
-#' Enriched Gene Ontology terms in a set of genes
+#' Enriched ontologies for recognized organisms
 #' 
 #' @description This function returns the enriched biological processes
 #' in a set of genes, as compared to a background set of genes.
@@ -213,16 +213,29 @@ convert_from_ensembl_eck12 <- function(ids, to = "entrez"){
 #' dataframe containing, for each significant GO, their gene count, gene symbols,
 #' adjusted pvalue, description, etc. 
 #'
-#' @param genes gene set of interest. MUST be entrez IDs.
+#' @param genes gene set of interest. MUST be entrez IDs, that can be obtained from DIANE's
+#'  functions \code{convert_from_X(gene_IDs)} depending on your organism.
+#'  If your gene IDs are splicing aware, remove this information before with 
+#'  \code{get_locus(gene_IDs)}.
 #' @param background gene set considered as the "universe" against which perfom 
-#' the tests. MUST be entrez IDS.
+#' the tests. MUST be entrez IDS that can be obtained from DIANE's
+#'  functions \code{convert_from_X(gene_IDs)} depending on your organism.
+#'  If your gene IDs are splicing aware, remove this information before with 
+#'  \code{get_locus(gene_IDs)}.
+#'  
 #' @param org organism, in the format of bioconductor organisms databases (e.g 
-#' org.xx.xx.db)
+#' org.xx.xx.db). Possible values are, for DIANE's recognized organisms :
+#' org.Mm.eg.db, org.Hs.eg.db, org.Dm.eg.db, org.Ce.eg.db, org.EcK12.eg.db,
+#' org.At.tair.db
 #' @param sim_cutoff similarity cutoff to use for pooling similar GO terms
 #' @param GO_type character between BP (Biological Process), CC(Cellular Component) 
 #' or MF (Molecular Function), depending on the GO subtype
 #' to use in the analysis
-#' @return data.frame
+#' @param fdr adjusted pvalues threshold, default id 0.05
+#' @param pval pvalues threshold, default id 0.05
+#' @return data.frame with gene significant gene ontologies, and their characteristics
+#'  as columns 
+#'  
 #' @export
 #' @examples 
 #' data("abiotic_stresses")
@@ -238,7 +251,8 @@ convert_from_ensembl_eck12 <- function(ids, to = "entrez"){
 #' head(go)
 enrich_go <- function(genes, background,
                       org = org.At.tair.db::org.At.tair.db,
-                      sim_cutoff = 0.85, GO_type = "BP"){
+                      sim_cutoff = 0.85, GO_type = "BP", fdr = 0.05,
+                      pval = 0.05){
   
   if(!GO_type %in% c("BP", "CC", "MF")){
     stop("GO_type must be either BP, CC or MF.")
@@ -249,8 +263,8 @@ enrich_go <- function(genes, background,
                                    ont = GO_type,
                                    universe = background,
                                    pAdjustMethod = "BH",
-                                   pvalueCutoff  = 0.05,
-                                   qvalueCutoff  = 0.05,
+                                   pvalueCutoff  = pval,
+                                   qvalueCutoff  = fdr,
                                    readable = TRUE)
   if(!is.null(ego)){
     simpOnt <- clusterProfiler::simplify(ego, cutoff=sim_cutoff, 
@@ -262,12 +276,16 @@ enrich_go <- function(genes, background,
   
 }
 
-#' Enriched custom Gene Ontology terms in a set of genes
+#' Enriched ontologies for a custom organism
+#' 
+#' @description Enriched custom Gene Ontology terms in a set of genes, from a dataframe
+#' giving Go terms to genes matching
 #'
 #' @param genes list of gene IDs, as present in the first column od genes_to_GO
 #' @param universe list of gene IDs as background, default is set to all the genes 
 #' contained in genesto_GO
-#' @param genes_to_GO dataframe with gene IDs as first column, and GO IDs as second column
+#' @param genes_to_GO dataframe with gene IDs as first column, and GO IDs as second column.
+#' gene IDs must be the IDs present in your gene expresion file
 #' @param qvalue qvalue cutoff for enriched GO terms, default to 0.1
 #' @param pvalue qvalue cutoff for enriched GO terms, default to 0.05
 #'
@@ -322,7 +340,6 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qva
 #' draw_enrich_go(go)
 #' draw_enrich_go(go, max_go = 20)
 #' }
-
 draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
   
   go_data <- go_data[order(go_data$p.adjust),]
@@ -343,17 +360,23 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 
 
 
-#' Gives gene information (common name and description) for a specific organism
+#' Get genes information
+#' 
+#' @description Gives gene information (common name and description) for a specific organism
 #'
 #' @param ids vector of genes, AGI for Arabidopsis and ensembl for Human
-#' @param organism value in c("Arabidopsis thaliana", "Homo sapiens", "Mus musculus")
+#' @param organism value must be between "Arabidopsis thaliana", "Homo sapiens", "Mus musculus", 
+#' "Caenorhabditis elegans", "Escherichia coli", "Drosophilia melanogaster"
 #'
-#' @return a dataframe with input genes as rownames, and columns label and desciption
+#' @return Dataframe with input genes as rownames, with their label and description as columns
 #' @export
 #' 
 #' @examples 
 #' genes <-  c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 #' get_gene_information(genes, organism = "Arabidopsis thaliana")
+#' 
+#' get_gene_information(c("WBGene00000013", "WBGene00000035"), 
+#' organism = "Caenorhabditis elegans")
 get_gene_information <- function(ids, organism){
   if(organism == "Arabidopsis thaliana"){
    data("gene_annotations", package = "DIANE")
@@ -415,7 +438,7 @@ interGO <- function(go_pair, go_table){
 
 #' Draw GO enrichment map
 #' 
-#' This plots each enriched GO term, with its pvalue and gene count 
+#' @description This plots each enriched GO term, with its pvalue and gene count 
 #' as color and size aesthetics.
 #' Two GO terms are linked by an edges if they share common genes
 #' in the input gene list given for enrichment analysis. The width 

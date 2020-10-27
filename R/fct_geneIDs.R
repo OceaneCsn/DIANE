@@ -1,4 +1,6 @@
-#' Detects weather or not the data contains splice variants 
+#' Are splice variants
+#' 
+#' @description Detects weather or not the data contains splice variants 
 #' instead of unique locus. Returns TRUE if all genes ids match 
 #' the regex for splice variants
 #'
@@ -10,13 +12,15 @@ are_splice_variants <- function(gene_ids){
   return(sum(stringr::str_detect( gene_ids, pattern = "\\.[[:digit:]]+$")) > 0)
 }
 
-#' Merge all splice variants of an expression dataset into 
+#' Aggregate splice variants 
+#' 
+#' @description Merge all splice variants of an expression dataset into 
 #' unique locus, unaware of alternative splicing, by summing
-#' all variants for the same gene
+#' all variants of the same gene
 #'
-#' @param data dataframe : expression data with splice variants as rownames
-#'
-#' @return dataframe with agregated rows
+#' @param data expression dataframe with splice variants as rownames
+#' and samples as columns
+#' @return dataframe with aggregated rows
 #' @export
 #' @examples 
 #' data("abiotic_stresses")
@@ -38,8 +42,10 @@ aggregate_splice_variants <- function(data){
 }
 
 
-#' Get the locus ids from splice variants ids
-#'
+#' Get gene IDs loci, without splicing information
+#' 
+#' @description Get the locus IDs from splice variants IDs
+#' (remove the .1, .2 from a list of gene IDs)
 #' @param gene_ids list of gene ids with splice variants information
 #' @param unique boolean, weather or not to return unique locus vector
 #' @return character vector
@@ -62,13 +68,15 @@ get_locus <- function(gene_ids, unique = TRUE){
 
 
 
-#' Check compatibility between gene IDs and organism
+#' Check compatibility between gene IDs and an organism
 #'
 #' @param ids character vector of gene identifiers to be tested
-#' @param organism organism, should be betwwen Arabidopsis thaliana,
-#' Homo sapiens and Mus musculus.
+#' @param organism organism, should be betwwen "Arabidopsis thaliana", "Homo sapiens", "Mus musculus", 
+#' "Caenorhabditis elegans", "Escherichia coli", "Drosophilia melanogaster",
+#' "Lupinus albus"
 #'
-#' @return boolean, true if all of the gene IDs match the expected regex.
+#' @return boolean, TRUE if all of the gene IDs match the expected regex for
+#' the specified organism.
 #' @export
 #'
 #' @examples 
@@ -88,7 +96,6 @@ check_IDs <- function(ids, organism){
     pattern = "^ENSMUSG[[:digit:]]{11}"
   
   if(organism == "Lupinus albus")
-    #pattern = "Lalb_Chr[[:digit:]]{2}c*[[:digit:]]*g[[:digit:]]"
     pattern = "^Lalb_Chr[[:digit:]]{2}(c[[:digit:]]{2})?g[[:digit:]]{7}"
   
   if(organism == "Drosophilia melanogaster")

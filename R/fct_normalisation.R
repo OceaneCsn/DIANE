@@ -8,18 +8,20 @@
 #' factors in the second normalization step. It returns a TCC object,
 #' with an element norm_factors containing the computed normalization factors. 
 #'
-#' @param data raw counts to be normalized (data frame or matrix)
-#' @param conditions condition of each column of the data argument
+#' @param data raw counts to be normalized (data frame or matrix), with genes as rownames and
+#' conditions as columns.
+#' @param conditions condition of each column of the data argument.
 #' @param norm_method method used for normalization, between tmm or deseq2
-#' @param deg_method method used for deg detection, between edgeR ou deseq2
-#' @param fdr pvalue threshold for adjusted pvalues for degs
+#' @param deg_method method used for DEGs detection if chosen, between edgeR ou deseq2
+#' @param fdr pvalue threshold for adjusted pvalues for DEGs detection if chosen
 #' @param iteration weather or not to perform a prior removal of DEGs (TRUE or FALSE)
-#' @details # Warning
-#' Filtering is highly recommended after normalization, consider using the DIANE::filter_low_counts
-#' function just after.
-#' @details # Note
-#' You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
-#' tcc being the result of DIANE::normalize or DIANE::filter_low_counts
+#' @details 
+#' Filtering low counts is highly recommended after normalization, 
+#' consider using the \code{DIANE::filter_low_counts}
+#' function just after this function.
+#' 
+#' You can get the normalized expression matrix with \code{TCC::getNormalizedData(tcc)},
+#' tcc being the result of \code{DIANE::normalize()} or \code{DIANE::filter_low_counts()}
 #' @importFrom TCC calcNormFactors TCC
 #' @return a TCC-Class object
 #' @export
@@ -30,15 +32,16 @@
 normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
                       iteration = TRUE){
   tcc <- TCC::TCC(count =  data, group = conditions)
-  tcc <- TCC::calcNormFactors(tcc, norm.method = norm_method, test.method = deg_method, 
-                              iteration = iteration, FDR = 0.01, floorPDEG = 0.05)
+  tcc <- suppressMessages(TCC::calcNormFactors(tcc, norm.method = norm_method, 
+                                               test.method = deg_method, 
+                              iteration = iteration, FDR = fdr, floorPDEG = 0.05))
   return(tcc)
 }
 
 #' Remove low count genes
 #' 
-#' @description Removes genes having a sum of counts accross all sample
-#' inferior to the specified threshold. It returns un aupdated TCC object,
+#' @description Removes genes having a sum of counts accross all samples
+#' lesser than the specified threshold. It returns un aupdated TCC object,
 #' which count element contains the filtered expression matrix.
 #'
 #' @param tcc data to be filtered to remove low count genes
