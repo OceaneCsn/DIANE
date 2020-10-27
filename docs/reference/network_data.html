@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates data compatible with visNetwork from an igraph object — network_data • DIANE</title>
+<title>Creates data describing a gene regulatory network — network_data • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,13 @@
 
 
 
-<meta property="og:title" content="Creates data compatible with visNetwork from an igraph object — network_data" />
-<meta property="og:description" content="Creates dataframe that describe the network.
+<meta property="og:title" content="Creates data describing a gene regulatory network — network_data" />
+<meta property="og:description" content="Creates dataframe that describe the network
+compatible with visNetwork, from an igraph object.
 The degree and community of each node are computed.
 Communities are defined by the louvain algorithm, that 
-maximizes local modularity. The gene type is asssigned to
-eacg gene, either a regulator or a target gene." />
+maximizes local modularity. A type is assigned to
+each gene, either a regulator or a target gene." />
 
 
 
@@ -133,17 +134,18 @@ eacg gene, either a regulator or a target gene." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates data compatible with visNetwork from an igraph object</h1>
+    <h1>Creates data describing a gene regulatory network</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_network_inference.R'><code>R/fct_network_inference.R</code></a></small>
     <div class="hidden name"><code>network_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates dataframe that describe the network.
+    <p>Creates dataframe that describe the network
+compatible with visNetwork, from an igraph object.
 The degree and community of each node are computed.
 Communities are defined by the louvain algorithm, that 
-maximizes local modularity. The gene type is asssigned to
-eacg gene, either a regulator or a target gene.</p>
+maximizes local modularity. A type is assigned to
+each gene, either a regulator or a target gene.</p>
     </div>
 
     <pre class="usage"><span class='fu'>network_data</span><span class='op'>(</span><span class='va'>graph</span>, <span class='va'>regulators</span>, gene_info <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
@@ -153,7 +155,8 @@ eacg gene, either a regulator or a target gene.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>graph</th>
-      <td><p>igraph object</p></td>
+      <td><p>igraph object, as returned by <code><a href='network_thresholding.html'>DIANE::network_thresholding()</a></code>,
+or <code><a href='network_from_tests.html'>DIANE::network_from_tests()</a></code>.</p></td>
     </tr>
     <tr>
       <th>regulators</th>
@@ -163,13 +166,14 @@ as special nodes in the network</p></td>
     <tr>
       <th>gene_info</th>
       <td><p>dataframe with gene IDs as rownames, containing
-additional info on genes, in columns named label and description</p></td>
+additional info on genes, in columns named label and description.
+For known organisms, it can be obtained from <code><a href='get_gene_information.html'>DIANE::get_gene_information()</a></code></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list of dataframes containing nodes and edges information</p>
+    <p>Named list of dataframes containing nodes and edges information.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

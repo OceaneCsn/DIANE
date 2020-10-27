@@ -2,28 +2,31 @@
 % Please edit documentation in R/fct_network_inference.R
 \name{network_data}
 \alias{network_data}
-\title{Creates data compatible with visNetwork from an igraph object}
+\title{Creates data describing a gene regulatory network}
 \usage{
 network_data(graph, regulators, gene_info = NULL)
 }
 \arguments{
-\item{graph}{igraph object}
+\item{graph}{igraph object, as returned by \code{DIANE::network_thresholding()},
+or \code{DIANE::network_from_tests()}.}
 
 \item{regulators}{list of regulators, so they can be marked
 as special nodes in the network}
 
 \item{gene_info}{dataframe with gene IDs as rownames, containing
-additional info on genes, in columns named label and description}
+additional info on genes, in columns named label and description.
+For known organisms, it can be obtained from \code{DIANE::get_gene_information()}}
 }
 \value{
-list of dataframes containing nodes and edges information
+Named list of dataframes containing nodes and edges information.
 }
 \description{
-Creates dataframe that describe the network.
+Creates dataframe that describe the network
+compatible with visNetwork, from an igraph object.
 The degree and community of each node are computed.
 Communities are defined by the louvain algorithm, that 
-maximizes local modularity. The gene type is asssigned to
-eacg gene, either a regulator or a target gene.
+maximizes local modularity. A type is assigned to
+each gene, either a regulator or a target gene.
 }
 \examples{
 \dontrun{

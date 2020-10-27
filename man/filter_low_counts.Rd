@@ -15,8 +15,8 @@ filter_low_counts(tcc, thr)
 a TCC-Class object
 }
 \description{
-Removes genes having a sum of counts accross all sample
-inferior to the specified threshold. It returns un aupdated TCC object,
+Removes genes having a sum of counts accross all samples
+lesser than the specified threshold. It returns un aupdated TCC object,
 which count element contains the filtered expression matrix.
 }
 \examples{

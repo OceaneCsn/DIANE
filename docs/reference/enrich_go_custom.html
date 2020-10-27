@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Enriched custom Gene Ontology terms in a set of genes — enrich_go_custom • DIANE</title>
+<title>Enriched ontologies for a custom organism — enrich_go_custom • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Enriched custom Gene Ontology terms in a set of genes — enrich_go_custom" />
-<meta property="og:description" content="Enriched custom Gene Ontology terms in a set of genes" />
+<meta property="og:title" content="Enriched ontologies for a custom organism — enrich_go_custom" />
+<meta property="og:description" content="Enriched custom Gene Ontology terms in a set of genes, from a dataframe
+giving Go terms to genes matching" />
 
 
 
@@ -129,13 +130,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Enriched custom Gene Ontology terms in a set of genes</h1>
+    <h1>Enriched ontologies for a custom organism</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
     <div class="hidden name"><code>enrich_go_custom.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Enriched custom Gene Ontology terms in a set of genes</p>
+    <p>Enriched custom Gene Ontology terms in a set of genes, from a dataframe
+giving Go terms to genes matching</p>
     </div>
 
     <pre class="usage"><span class='fu'>enrich_go_custom</span><span class='op'>(</span>
@@ -160,7 +162,8 @@ contained in genesto_GO</p></td>
     </tr>
     <tr>
       <th>genes_to_GO</th>
-      <td><p>dataframe with gene IDs as first column, and GO IDs as second column</p></td>
+      <td><p>dataframe with gene IDs as first column, and GO IDs as second column.
+gene IDs must be the IDs present in your gene expresion file</p></td>
     </tr>
     <tr>
       <th>qvalue</th>

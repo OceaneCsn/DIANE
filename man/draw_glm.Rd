@@ -2,15 +2,15 @@
 % Please edit documentation in R/fct_glm.R
 \name{draw_glm}
 \alias{draw_glm}
-\title{Plots the value of a Poisson generalized linear model coefficients}
+\title{Plots the coefficients value of a Poisson generalized linear model}
 \usage{
 draw_glm(glm)
 }
 \arguments{
-\item{glm}{glm object returned by ```DIANE::fit_glm()```}
+\item{glm}{glm object returned by \code{DIANE::fit_glm()}}
 }
 \description{
-Plots the value of a Poisson generalized linear model coefficients
+Plots the coefficients value of a Poisson generalized linear model
 }
 \examples{
 data("abiotic_stresses")

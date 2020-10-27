@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw heatmap — draw_heatmap • DIANE</title>
+<title>Draw expression heatmap — draw_heatmap • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Draw heatmap — draw_heatmap" />
-<meta property="og:description" content="Draw heatmap" />
+<meta property="og:title" content="Draw expression heatmap — draw_heatmap" />
+<meta property="og:description" content="Draw expression heatmap" />
 
 
 
@@ -129,20 +129,20 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw heatmap</h1>
+    <h1>Draw expression heatmap</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_heatmap.R'><code>R/fct_heatmap.R</code></a></small>
     <div class="hidden name"><code>draw_heatmap.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Draw heatmap</p>
+    <p>Draw expression heatmap</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_heatmap</span><span class='op'>(</span>
   <span class='va'>data</span>,
   subset <span class='op'>=</span> <span class='cn'>NULL</span>,
   show_rownames <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  title <span class='op'>=</span> <span class='st'>"Random preview heatmap"</span>,
+  title <span class='op'>=</span> <span class='st'>"Expression dataset"</span>,
   log <span class='op'>=</span> <span class='cn'>TRUE</span>,
   profiles <span class='op'>=</span> <span class='cn'>FALSE</span>,
   conditions <span class='op'>=</span> <span class='cn'>NULL</span>
@@ -153,11 +153,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>data to plot</p></td>
+      <td><p>expression dataframe, with genes as rownames and samples as columns</p></td>
     </tr>
     <tr>
       <th>subset</th>
-      <td><p>subset of rows to display</p></td>
+      <td><p>subset of genes to be display</p></td>
     </tr>
     <tr>
       <th>show_rownames</th>

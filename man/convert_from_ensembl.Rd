@@ -2,8 +2,8 @@
 % Please edit documentation in R/fct_go.R
 \name{convert_from_ensembl}
 \alias{convert_from_ensembl}
-\title{For Homo sapiens, converts ensembl IDs to entrez IDs, 
-symbol or name,}
+\title{For H. sapiens, converts ensembl IDs to entrez IDs, 
+symbol or name}
 \usage{
 convert_from_ensembl(ids, to = "entrez")
 }
@@ -13,11 +13,11 @@ convert_from_ensembl(ids, to = "entrez")
 \item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
-named list
+named vector
 }
 \description{
-For Homo sapiens, converts ensembl IDs to entrez IDs, 
-symbol or name,
+For H. sapiens, converts ensembl IDs to entrez IDs, 
+symbol or name
 }
 \examples{
 if(require("org.Hs.eg.db")){

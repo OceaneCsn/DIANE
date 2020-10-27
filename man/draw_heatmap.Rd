@@ -2,22 +2,22 @@
 % Please edit documentation in R/fct_heatmap.R
 \name{draw_heatmap}
 \alias{draw_heatmap}
-\title{Draw heatmap}
+\title{Draw expression heatmap}
 \usage{
 draw_heatmap(
   data,
   subset = NULL,
   show_rownames = FALSE,
-  title = "Random preview heatmap",
+  title = "Expression dataset",
   log = TRUE,
   profiles = FALSE,
   conditions = NULL
 )
 }
 \arguments{
-\item{data}{data to plot}
+\item{data}{expression dataframe, with genes as rownames and samples as columns}
 
-\item{subset}{subset of rows to display}
+\item{subset}{subset of genes to be display}
 
 \item{show_rownames}{show rownames or not}
 
@@ -30,7 +30,7 @@ draw_heatmap(
 \item{conditions}{if NULL, shows all the conditions, else if character vector, shows only the required ones}
 }
 \description{
-Draw heatmap
+Draw expression heatmap
 }
 \examples{
 data("abiotic_stresses")

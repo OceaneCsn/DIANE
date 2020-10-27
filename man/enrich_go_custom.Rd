@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_go.R
 \name{enrich_go_custom}
 \alias{enrich_go_custom}
-\title{Enriched custom Gene Ontology terms in a set of genes}
+\title{Enriched ontologies for a custom organism}
 \usage{
 enrich_go_custom(
   genes,
@@ -18,7 +18,8 @@ enrich_go_custom(
 \item{universe}{list of gene IDs as background, default is set to all the genes 
 contained in genesto_GO}
 
-\item{genes_to_GO}{dataframe with gene IDs as first column, and GO IDs as second column}
+\item{genes_to_GO}{dataframe with gene IDs as first column, and GO IDs as second column.
+gene IDs must be the IDs present in your gene expresion file}
 
 \item{qvalue}{qvalue cutoff for enriched GO terms, default to 0.1}
 
@@ -28,5 +29,6 @@ contained in genesto_GO}
 dataframe containing enriched go terms and their description
 }
 \description{
-Enriched custom Gene Ontology terms in a set of genes
+Enriched custom Gene Ontology terms in a set of genes, from a dataframe
+giving Go terms to genes matching
 }

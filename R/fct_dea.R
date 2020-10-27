@@ -151,7 +151,7 @@ draw_DEGs <- function(tags,
 #' Venn diagram
 #' 
 #' @description Draws a Venn diagram between lists of DEGs.
-#' Possible number of lists handled by the function are 2, 3 or 4.
+#' Possible numbers of lists handled by the function are 2, 3 or 4.
 #'
 #' @param gene_list named list of genes
 #'
@@ -164,12 +164,12 @@ draw_DEGs <- function(tags,
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
 #' genes_heat <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H",
 #'  p.value = 0.05)$table$genes
-#' genes_heat_mannitol <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "HM", 
+#' genes_heat_mannitol <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "MH", 
 #' p.value = 0.05)$table$genes
-#' draw_venn(list("C - H" = genes_heat, "C - HM" = genes_heat_mannitol))
+#' draw_venn(list("C - H" = genes_heat, "C - MH" = genes_heat_mannitol))
 draw_venn <- function(gene_list){
   if (length(gene_list) < 2 | length(gene_list)>4)
     stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
   venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888")
-  venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45")
+  suppressMessages(venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45"))
 }

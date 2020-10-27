@@ -1,23 +1,35 @@
 
 
-#' run_coseq
+#' Mixture Model clustering
+#' 
+#' @description Performs expression based clustering on genes.
+#' Uses the coseq package to fit either Poisson or Gaussian 
+#' mixtures to genes clusters, estimating their multivariate distribution
+#' parameters via an EM algorithm.
+#' Several numbers of clusters can be tested, and evaluated in terms of
+#' of likelihood to help the user in the decision
 #'
-#' @param conds Condition names to be used for clustering
-#' @param genes Genes used as an input for the clustering
-#' @param data normalized counts (MUST be normalized!)
-#' @param K number of clusters range
-#' @param model Model to use for clustering : to choose between
+#' @param conds Condition names to be used for clustering.
+#' Must be a unique vector containing the conditions you want to consider
+#' for gene clustering, without the replicate information 
+#' (string before the underscore in sample names)
+#' @param genes Genes used as an input for the clustering. They must be present 
+#' in the row names of data.
+#' @param data normalized counts with genes as rownames and samples as columns
+#' @param K range of number of clusters to test.
+#' @param model Model to use for mixture models : to choose between
 #' Poisson or Normal.
-#' @param transfo transformation to apply to normalized counts
-#' before modelling with "Normal" Mixture Models. For "Poisson",
-#' no tranfsormation will be used, this argument will be ignored.
+#' @param transfo Transformation to apply to normalized counts
+#' before modeling with "Normal" Mixture Models. 
 #' It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
-#'  “clr”, “alr”, “ilr”, or “none”
+#'  “clr”, “alr”, “ilr”, or “none”. For "Poisson",
+#' no transformation will be used, this argument will be ignored.
+#' 
 #'
 #' @importFrom coseq coseq clusters
 #'
-#' @return named list containing the coseq run result as "model", and the cluster membership 
-#' for each gene as "membership"
+#' @return Named list containing the coseq run result as "model", and the cluster membership 
+#' for each gene as "membership".
 #' @export
 #' @examples
 #' data("abiotic_stresses")
@@ -48,7 +60,7 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
   groups <- stringr::str_split_fixed(conditions, '_', 2)[, 1]
   dataC <- round(data[genes, conditions], 0)
   clustering_run <-
-    coseq::coseq(
+    suppressMessages(coseq::coseq(
       dataC,
       conds = groups,
       K = K,
@@ -59,7 +71,7 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
       parallel = TRUE, #to avoid singular covariance matrices :
       GaussianModel = "Gaussian_pk_Lk_Bk",
       verbose = FALSE
-    )
+    ))
   return(list(
     membership = coseq::clusters(clustering_run),
     model = clustering_run
@@ -68,10 +80,10 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
 
 
 
-#' draw_coseq_run : displays the indications of clustering
+#' Displays clustering results and quality
 #'
 #' @param clustering_run result of a coseq run
-#' @param plot plot to display, eather integrated Complete Likelihood, or barplots
+#' @param plot plot to display, either Integrated Complete Likelihood, or barplots
 #' of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".
 #' @return plot describing the quality of the clustering process
 #'
@@ -94,7 +106,7 @@ draw_coseq_run <- function(clustering_run, plot = "ICL") {
 }
 
 
-#' get_genes_in_cluster
+#' Get genes in a specific cluster
 #'
 #' @param membership named vector from run_coseq
 #' @param cluster desired cluster number
@@ -109,13 +121,18 @@ get_genes_in_cluster <- function(membership, cluster) {
 }
 
 
-#' Draw profiles of a clustering
+#' Draw expression profiles of a clustering
 #'
-#' @param data normalized counts
-#' @param membership membership item of the coseq object returned by run_coseq object
-#' @param expression if it is set to "profiles" (default), plots expression/sum(expression). if "counts", plots log(Counts+1)
-#' @param k if NULL (default), plot all the clusters. Else, plot the clusters in the vetcor k.
-#' @param conds conditions on which to perform clustering, ingoring the others
+#' @param data normalized counts with genes as rownames and samples as columns
+#' @param membership membership item of the coseq object returned by 
+#' \code{run_coseq()} object
+#' @param expression if it is set to "profiles" (default), 
+#' plots expression/sum(expression). if "counts", plots log(Counts+1)
+#' @param k if NULL (default), plots all the clusters. Else, plot the clusters in the vetcor k.
+#' @param conds conditions on which to display clustering profiles.
+#' Must be a unique vector containing the conditions you want to consider
+#' for gene clustering, without the replicate information 
+#' (string before the underscore in sample names)
 #' @param nrow on how many rows display the cluster profiles if k is NULL
 #'
 #' @importFrom reshape2 melt
@@ -138,7 +155,8 @@ draw_profiles <-
            nrow = 3) {
     clusters <- membership
     
-    conditions <- colnames(data)[stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
+    conditions <- colnames(data)[stringr::str_split_fixed(colnames(data), 
+                                                          '_',2)[,1] %in% conds]
     
     
     data <- data[names(clusters), conditions]
@@ -170,7 +188,8 @@ draw_profiles <-
     else{
       k <- as.vector(k)
       g <-
-        ggplot2::ggplot(data = d[d$cluster %in% k,], ggplot2::aes(x = group, y = value)) +
+        ggplot2::ggplot(data = d[d$cluster %in% k,], 
+                        ggplot2::aes(x = group, y = value)) +
         ggplot2::facet_wrap(~ cluster, scales = "free")
       leg <- "none"
     }
@@ -187,7 +206,8 @@ draw_profiles <-
       g <-
         g + ggplot2::geom_line(alpha = 0.08,
                                lwd = 0.9,
-                               ggplot2::aes(group = geneRep, color = as.factor(cluster)))
+                               ggplot2::aes(group = geneRep, 
+                                            color = as.factor(cluster)))
     }
     g <-
       g + ggplot2::geom_boxplot(

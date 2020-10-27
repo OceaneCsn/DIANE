@@ -2,28 +2,33 @@
 % Please edit documentation in R/fct_dea.R
 \name{estimateDEGs}
 \alias{estimateDEGs}
-\title{estimateDEGs}
+\title{Estimates Differentially Expression Genes}
 \usage{
 estimateDEGs(fit, reference, perturbation, p.value = 1, lfc = 0)
 }
 \arguments{
 \item{fit}{edgeR glmFit}
 
-\item{reference}{condition being considered as teh reference for differential analysis}
+\item{reference}{condition being considered as the reference for differential analysis.
+It should corresponds to a condition name, e.g. the string before the underscore and 
+replicate number in your sample names.}
 
-\item{perturbation}{condition we compared to the reference for differential analysis}
+\item{perturbation}{condition we compared to the reference for differential analysis.
+It should corresponds to a condition name, e.g. the string before the underscore and 
+replicate number in your sample names.}
 
 \item{p.value}{numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
 lower than specified are returned}
 
 \item{lfc}{minimal absolute log fold change required for a gene to be considered as 
-differnetially expressed.}
+differentially expressed.}
 }
 \value{
 topTags object, which table element contains DEGs dataframe.
 }
 \description{
-Given a glmFit, performs a log ratio test using edgeR function glmLRT and
+Given a glmFit model, performs log ratio tests using edgeR 
+function glmLRT and
 returns the genes that are differentially expressed
 between the reference and perturbation conditions.
 log ratios are expressed as log(perturbation/reference)
@@ -38,4 +43,5 @@ fit <- DIANE::estimateDispersion(tcc = tcc_object,
 conditions = abiotic_stresses$conditions)
 topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 DEGs <- topTags$table
+head(DEGs)
 }

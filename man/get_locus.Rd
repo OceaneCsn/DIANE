@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_geneIDs.R
 \name{get_locus}
 \alias{get_locus}
-\title{Get the locus ids from splice variants ids}
+\title{Get gene IDs loci, without splicing information}
 \usage{
 get_locus(gene_ids, unique = TRUE)
 }
@@ -12,10 +12,12 @@ get_locus(gene_ids, unique = TRUE)
 \item{unique}{boolean, weather or not to return unique locus vector}
 }
 \value{
-character vector
+character vector of gene IDs without alternative transcripts 
+information
 }
 \description{
-Get the locus ids from splice variants ids
+Get the locus IDs from splice variants IDs
+(remove the .1, .2 from a list of gene IDs)
 }
 \examples{
 splice_variants <- rownames(abiotic_stresses$normalized_counts)[1:20]

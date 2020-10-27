@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Check compatibility between gene IDs and organism — check_IDs • DIANE</title>
+<title>Check compatibility between gene IDs and an organism — check_IDs • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Check compatibility between gene IDs and organism — check_IDs" />
-<meta property="og:description" content="Check compatibility between gene IDs and organism" />
+<meta property="og:title" content="Check compatibility between gene IDs and an organism — check_IDs" />
+<meta property="og:description" content="Check compatibility between gene IDs and an organism" />
 
 
 
@@ -129,13 +129,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Check compatibility between gene IDs and organism</h1>
+    <h1>Check compatibility between gene IDs and an organism</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_geneIDs.R'><code>R/fct_geneIDs.R</code></a></small>
     <div class="hidden name"><code>check_IDs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Check compatibility between gene IDs and organism</p>
+    <p>Check compatibility between gene IDs and an organism</p>
     </div>
 
     <pre class="usage"><span class='fu'>check_IDs</span><span class='op'>(</span><span class='va'>ids</span>, <span class='va'>organism</span><span class='op'>)</span></pre>
@@ -149,14 +149,16 @@
     </tr>
     <tr>
       <th>organism</th>
-      <td><p>organism, should be betwwen Arabidopsis thaliana,
-Homo sapiens and Mus musculus.</p></td>
+      <td><p>organism, should be betwwen "Arabidopsis thaliana", "Homo sapiens", "Mus musculus", 
+"Caenorhabditis elegans", "Escherichia coli", "Drosophilia melanogaster",
+"Lupinus albus"</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>boolean, true if all of the gene IDs match the expected regex.</p>
+    <p>boolean, TRUE if all of the gene IDs match the expected regex for
+the specified organism.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>

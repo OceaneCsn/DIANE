@@ -2,17 +2,18 @@
 % Please edit documentation in R/fct_go.R
 \name{get_gene_information}
 \alias{get_gene_information}
-\title{Gives gene information (common name and description) for a specific organism}
+\title{Get genes information}
 \usage{
 get_gene_information(ids, organism)
 }
 \arguments{
 \item{ids}{vector of genes, AGI for Arabidopsis and ensembl for Human}
 
-\item{organism}{value in c("Arabidopsis thaliana", "Homo sapiens", "Mus musculus")}
+\item{organism}{value must be between "Arabidopsis thaliana", "Homo sapiens", "Mus musculus", 
+"Caenorhabditis elegans", "Escherichia coli", "Drosophilia melanogaster"}
 }
 \value{
-a dataframe with input genes as rownames, and columns label and desciption
+Dataframe with input genes as rownames, with their label and description as columns
 }
 \description{
 Gives gene information (common name and description) for a specific organism
@@ -20,4 +21,7 @@ Gives gene information (common name and description) for a specific organism
 \examples{
 genes <-  c("AT2G05940", "AT4G16480", "AT4G04570", "AT2G30130", "AT1G56300")
 get_gene_information(genes, organism = "Arabidopsis thaliana")
+
+get_gene_information(c("WBGene00000013", "WBGene00000035"), 
+organism = "Caenorhabditis elegans")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_network_inference.R
 \name{network_inference}
 \alias{network_inference}
-\title{Genie3 regulatory importances estimation}
+\title{Regulatory importances estimation via Random Forests}
 \usage{
 network_inference(
   normalized.count,
@@ -17,9 +17,11 @@ network_inference(
 )
 }
 \arguments{
-\item{normalized.count}{normalized expression matrix containing the regressors and target genes}
+\item{normalized.count}{normalized expression matrix containing the regressors and target genes
+in its rows, and samples a columns}
 
-\item{conds}{condition names to be used in the inference}
+\item{conds}{condition names to be used in the inference (not columns names, conditions names
+before the underscore)}
 
 \item{regressors}{genes to be taken as regressors during the inference procedures (regulator genes)}
 
@@ -36,17 +38,18 @@ minus one.}
 computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
 the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
 to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
- regulators and to over-fitting.}
+ regulators and to over-fitting. Too few samples will lead to NA in MSEincrease_oob, so in that case, it is
+ advised to used GENIE3's default one.}
 }
 \value{
-matrix object
+Matrix filled with regulator-target regulatory weights
 }
 \description{
-GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+GENIE3 needs to be given a list of genes, that will be the nodes of the inferred network. 
 Among those genes, some must be considered as potential regulators. 
 GENIE3 can determine the influence if every regulators over each input genes, 
 using their respective expression profiles. You can specify which conditions 
-you want to be consired for those profiles during the network inference.
+you want to be considered for those profiles during the network inference.
 For each target gene, the methods uses Random Forests to provide a ranking of all 
 regulators based on their influence on the target expression. This ranking is then merged 
 across all targets, giving a global regulatory links ranking stored in the result matrix.
@@ -62,6 +65,6 @@ genes <- get_locus(abiotic_stresses$heat_DEGs)
 regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
 
 mat <- network_inference(aggregated_data, conds = abiotic_stresses$conditions, 
-targets = genes, regressors = regressors)
+targets = genes, regressors = regressors, nTrees = 1000, nCores = 4)
 }
 }

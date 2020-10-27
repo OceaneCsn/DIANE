@@ -10,7 +10,7 @@ draw_discarded_edges(links, net_data)
 \item{links}{dataframe of edges containing their adjusted pvalues, as returned 
 by the \code{test_edges} function}
 
-\item{net_data}{network data of the thresholded network}
+\item{net_data}{network data of the thresholded network, given by \code{DIANE::network_data()}}
 }
 \description{
 Draw network with removed edges in red

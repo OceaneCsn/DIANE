@@ -2,24 +2,23 @@
 % Please edit documentation in R/fct_geneIDs.R
 \name{aggregate_splice_variants}
 \alias{aggregate_splice_variants}
-\title{Merge all splice variants of an expression dataset into 
-unique locus, unaware of alternative splicing, by summing
-all variants for the same gene}
+\title{Aggregate splice variants}
 \usage{
 aggregate_splice_variants(data)
 }
 \arguments{
-\item{data}{dataframe : expression data with splice variants as rownames}
+\item{data}{expression dataframe with splice variants as rownames
+and samples as columns}
 }
 \value{
-dataframe with agregated rows
+dataframe with aggregated rows
 }
 \description{
 Merge all splice variants of an expression dataset into 
 unique locus, unaware of alternative splicing, by summing
-all variants for the same gene
+all variants of the same gene
 }
 \examples{
 data("abiotic_stresses")
-d <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+head(aggregate_splice_variants(abiotic_stresses$normalized_counts))
 }

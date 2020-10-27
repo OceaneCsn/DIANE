@@ -7,7 +7,7 @@
 draw_MDS(normalized.count)
 }
 \arguments{
-\item{normalized.count}{data to plot for MDS}
+\item{normalized.count}{data to plot for MDS, with samples as columns and genes as rows}
 }
 \description{
 Multi-dimensional scaling plot

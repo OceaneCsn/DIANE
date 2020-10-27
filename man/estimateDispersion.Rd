@@ -2,24 +2,26 @@
 % Please edit documentation in R/fct_dea.R
 \name{estimateDispersion}
 \alias{estimateDispersion}
-\title{estimateDispersion}
+\title{Estimates gene dispersions prior to differential expression testing}
 \usage{
 estimateDispersion(tcc, conditions = NULL)
 }
 \arguments{
-\item{tcc}{TCC-class object countaining counts, and norm factors, such as obtained after 
-DIANE::normalize() and DIANE::filter_low_counts()}
+\item{tcc}{TCC-class object containing counts, and norm factors, such as obtained after 
+\code{DIANE::normalize()} and \code{DIANE::filter_low_counts()} functions}
 
-\item{conditions}{if NULL (default), takes the split before the character '_' as condition names.
-else, the conditions specified by the user, as a character vector. Its order should match the 
+\item{conditions}{if NULL (default), takes the split before the character '_' in 
+your expression data column names as condition names.
+(This is how condition names should be formatted to be used in DIANE.)
+Else, the conditions are specified by the user, as a character vector. Its order should match the 
 columns names of the expression matrix used to build the tcc object.}
 }
 \value{
-glmFit
+glmFit object from edgeR, which is the resulting model estimation
 }
 \description{
 This function computes the common, trended, and tag-wise dispersions of 
-the gene expression dataset. Once the dispersion is estimated,
+the genes in an expression dataset. Once the dispersion is estimated,
 it fits a negative binomial model for each gene using default design : ~group+0.
 In this configuration, the log average expression of each gene is approximated
 by a linear combination of each of the conditions.
@@ -27,10 +29,10 @@ It returns a the value of a glmFit object from the package edgeR, containing the
 of the tcc object given, plus fitted values and GLM coefficients, among other indicators of the 
 fitting procedure.
 }
-\section{# Note}{
+\section{Note}{
 
 The return value is meant to be used directly as the parameter of
-DIANE::estimateDEGs()
+\code{DIANE::estimateDEGs()}
 }
 
 \examples{
@@ -40,5 +42,4 @@ abiotic_stresses$conditions, iteration = FALSE)
 threshold = 10*length(abiotic_stresses$conditions)
 tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
 fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
-
 }

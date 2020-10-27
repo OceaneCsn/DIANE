@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_go.R
 \name{convert_from_agi}
 \alias{convert_from_agi}
-\title{For Arabdopsis thaliana, converts TAIR IDs to entrez IDs, 
+\title{For A. thaliana, converts TAIR IDs to entrez IDs, 
 gene symbol or description}
 \usage{
 convert_from_agi(ids, to = "entrez")
@@ -16,7 +16,7 @@ convert_from_agi(ids, to = "entrez")
 named vector
 }
 \description{
-For Arabdopsis thaliana, converts TAIR IDs to entrez IDs, 
+For A. thaliana, converts TAIR IDs to entrez IDs, 
 gene symbol or description
 }
 \examples{

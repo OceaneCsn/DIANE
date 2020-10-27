@@ -1,7 +1,7 @@
-#' Draw heatmap
+#' Draw expression heatmap
 #'
-#' @param data data to plot
-#' @param subset subset of rows to display
+#' @param data expression dataframe, with genes as rownames and samples as columns 
+#' @param subset subset of genes to be display
 #' @param show_rownames show rownames or not
 #' @param title plot title
 #' @param log Show log(expression+1) in the heatmap if TRUE, expression if FALSE
@@ -20,7 +20,7 @@ draw_heatmap <-
   function(data,
            subset = NULL,
            show_rownames = FALSE,
-           title = "Random preview heatmap",
+           title = "Expression dataset",
            log = TRUE,
            profiles = FALSE,
            conditions = NULL) {
@@ -38,7 +38,8 @@ draw_heatmap <-
       conds <- colnames(data)
     else
       conds <-
-        colnames(data)[stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
+        colnames(data)[
+          stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
     
     if (log)
       data <- log(data + 1)
@@ -66,14 +67,15 @@ draw_heatmap <-
 
 
 
-#' draw_distributions of count data
+#' Draw distributions of expression data
 #'
-#' @param data count data, as a numeric dataframe with condition names as columns and genes as rows
-#' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot
+#' @param data expression dataframe, with samples as columns and genes as rows
+#' @param boxplot if TRUE, plot each sample as a boxplot, else, it is shown as distributions
 #' @export
 #' @examples
 #' data("abiotic_stresses")
 #' DIANE::draw_distributions(abiotic_stresses$normalized_counts, boxplot = FALSE)
+#' DIANE::draw_distributions(abiotic_stresses$raw_counts)
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     reshape2::melt(log(data[sample(rownames(data),
@@ -123,7 +125,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
 
 #' Multi-dimensional scaling plot
 #'
-#' @param normalized.count data to plot for MDS
+#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
 #' @importFrom limma plotMDS
 #' @export
 #' @examples
@@ -171,9 +173,14 @@ draw_MDS <- function(normalized.count) {
 
 
 
-#' Draw variables along principal PCA components
-#'
-#' @param data normalized expression data
+#' Draw PCA results
+#' 
+#' 
+#' @description Draws variables contributions to principal components,
+#' as well as the PCA screeplot.
+#' First to fourth principal components are shown.
+#' 
+#' @param data normalized expression data with samples as columns and genes as rows.
 #'
 #' @export
 #' @import ggplot2
@@ -297,13 +304,13 @@ draw_PCA <- function(data) {
 
 #' Draw gene expression levels
 #'
-#' The normalized counts of the required genes in the required conditions are
+#' The normalized counts of the desired genes in the specified conditions are
 #' shown. Please limit the number of input genes for readability reasons (up to 10 genes).
 #'
 #' @param data normalized expression dataframe, with genes as rownames and
 #' conditions as colnames.
 #' @param genes character vector of genes to be plotted (must be contained in
-#' the rownames of data, entierly or as a substring)
+#' the rownames of data)
 #' @param conds conditions to be shown on expression levels (must be contained in
 #' the column names of data before the _rep suffix). Default : all conditions.
 #' @param gene.name.size size of the facet plot title font for each gene. Default : 12 
@@ -340,10 +347,7 @@ draw_expression_levels <-
     
     data <- as.data.frame(data)
     data$gene <- rownames(data)
-    
-    
-      #reshape2::melt(as.data.frame(data[stringr::str_detect(
-        #rownames(data), paste0(genes, collapse = '|')), c(conditions, 'gene')]))
+
     d <-
       reshape2::melt(as.data.frame(data[intersect(
         rownames(data), genes), c(conditions, 'gene')]))

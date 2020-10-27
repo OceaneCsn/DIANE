@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Displays an interactive network view, with regulators as green sqaure nodes. — draw_network • DIANE</title>
+<title>Interactive network view — draw_network • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Displays an interactive network view, with regulators as green sqaure nodes. — draw_network" />
-<meta property="og:description" content="Displays an interactive network view, with regulators as green sqaure nodes." />
+<meta property="og:title" content="Interactive network view — draw_network" />
+<meta property="og:description" content="Visualize the GRN with regulators as green square nodes,
+and targets as gray discs." />
 
 
 
@@ -129,13 +130,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Displays an interactive network view, with regulators as green sqaure nodes.</h1>
+    <h1>Interactive network view</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_network_inference.R'><code>R/fct_network_inference.R</code></a></small>
     <div class="hidden name"><code>draw_network.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Displays an interactive network view, with regulators as green sqaure nodes.</p>
+    <p>Visualize the GRN with regulators as green square nodes,
+and targets as gray discs.</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_network</span><span class='op'>(</span><span class='va'>nodes</span>, <span class='va'>edges</span><span class='op'>)</span></pre>
@@ -145,11 +147,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>nodes</th>
-      <td><p>dataframe containing nodes</p></td>
+      <td><p>dataframe containing nodes, from <code>DIANE::network_data()$nodes</code></p></td>
     </tr>
     <tr>
       <th>edges</th>
-      <td><p>dataframe containing edges</p></td>
+      <td><p>dataframe containing edges, from <code>DIANE::network_data()$edges</code></p></td>
     </tr>
     </table>
 

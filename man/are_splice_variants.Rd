@@ -2,9 +2,7 @@
 % Please edit documentation in R/fct_geneIDs.R
 \name{are_splice_variants}
 \alias{are_splice_variants}
-\title{Detects weather or not the data contains splice variants 
-instead of unique locus. Returns TRUE if all genes ids match 
-the regex for splice variants}
+\title{Are splice variants}
 \usage{
 are_splice_variants(gene_ids)
 }

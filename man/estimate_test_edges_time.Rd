@@ -59,6 +59,7 @@ number of edges in the final network
 }
 \description{
 Estimates to running time for test_edges function, depending on its arguments.
+This is useful as the test_edges function can be quite long to complete.
 }
 \examples{
 \dontrun{
@@ -80,7 +81,7 @@ mat <- DIANE::network_inference(r$counts,
                                 regressors = r$grouped_regressors, 
                                 importance_metric = "MSEincrease_oob", 
                                 verbose = TRUE) 
-res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+res <- DIANE::estimate_test_edges_time(mat, normalized_counts = r$counts, density = 0.02,
                         nGenes = length(r$grouped_genes), 
                         nRegulators = length(r$grouped_regressors), 
                         nTrees = 1000, verbose = TRUE)

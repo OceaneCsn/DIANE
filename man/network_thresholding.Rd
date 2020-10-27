@@ -7,12 +7,13 @@
 network_thresholding(mat, n_edges)
 }
 \arguments{
-\item{mat}{matrix containing the importance values for each target and regulator}
+\item{mat}{matrix containing the importance values for each target and regulator,
+as returned by \code{DIANE::network_inference()}}
 
-\item{n_edges}{number of edges top edges (based on their weight) to keep in the final network}
+\item{n_edges}{number of edges top edges to keep in the final network.}
 }
 \value{
-igraph object
+igraph object representing the Gene Regulatory Network
 }
 \description{
 Without thresholding, we would obtain a fully connected weighted 
@@ -20,6 +21,10 @@ graph from GENIE3, with far too many links to be interpretable.
 In order build a meaningful network, this weighted adjacency matrix between 
 regulators and targets has to be sparsified, and we have to determine the regulatory 
 weights that we consider significant.
+
+This method is a nice exploratory way to threshold complete networks,
+but to get more robust and significant results, consider using 
+the \code{DIANE::test_edges()} function.
 }
 \examples{
 \dontrun{

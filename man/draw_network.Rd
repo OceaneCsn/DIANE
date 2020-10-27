@@ -2,17 +2,18 @@
 % Please edit documentation in R/fct_network_inference.R
 \name{draw_network}
 \alias{draw_network}
-\title{Displays an interactive network view, with regulators as green sqaure nodes.}
+\title{Interactive network view}
 \usage{
 draw_network(nodes, edges)
 }
 \arguments{
-\item{nodes}{dataframe containing nodes}
+\item{nodes}{dataframe containing nodes, from \code{DIANE::network_data()$nodes}}
 
-\item{edges}{dataframe containing edges}
+\item{edges}{dataframe containing edges, from \code{DIANE::network_data()$edges}}
 }
 \description{
-Displays an interactive network view, with regulators as green sqaure nodes.
+Visualize the GRN with regulators as green square nodes,
+and targets as gray discs.
 }
 \examples{
 \dontrun{

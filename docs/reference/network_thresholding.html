@@ -44,7 +44,10 @@
 graph from GENIE3, with far too many links to be interpretable.
 In order build a meaningful network, this weighted adjacency matrix between 
 regulators and targets has to be sparsified, and we have to determine the regulatory 
-weights that we consider significant." />
+weights that we consider significant.
+This method is a nice exploratory way to threshold complete networks,
+but to get more robust and significant results, consider using 
+the DIANE::test_edges() function." />
 
 
 
@@ -144,6 +147,9 @@ graph from GENIE3, with far too many links to be interpretable.
 In order build a meaningful network, this weighted adjacency matrix between 
 regulators and targets has to be sparsified, and we have to determine the regulatory 
 weights that we consider significant.</p>
+<p>This method is a nice exploratory way to threshold complete networks,
+but to get more robust and significant results, consider using 
+the <code><a href='test_edges.html'>DIANE::test_edges()</a></code> function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>network_thresholding</span><span class='op'>(</span><span class='va'>mat</span>, <span class='va'>n_edges</span><span class='op'>)</span></pre>
@@ -153,17 +159,18 @@ weights that we consider significant.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mat</th>
-      <td><p>matrix containing the importance values for each target and regulator</p></td>
+      <td><p>matrix containing the importance values for each target and regulator,
+as returned by <code><a href='network_inference.html'>DIANE::network_inference()</a></code></p></td>
     </tr>
     <tr>
       <th>n_edges</th>
-      <td><p>number of edges top edges (based on their weight) to keep in the final network</p></td>
+      <td><p>number of edges top edges to keep in the final network.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>igraph object</p>
+    <p>igraph object representing the Gene Regulatory Network</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

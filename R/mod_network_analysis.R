@@ -360,6 +360,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
   shiny::observe({
     shiny::req(r$current_network, r$networks)
     shiny::req(r$networks[[r$current_network]]$nodes)
+    shiny::req(input$gene_to_zoom)
     
     nodes <- r$networks[[r$current_network]]$nodes
     

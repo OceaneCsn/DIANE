@@ -2,8 +2,8 @@
 % Please edit documentation in R/fct_go.R
 \name{convert_from_ensembl_ce}
 \alias{convert_from_ensembl_ce}
-\title{For c elegans, converts ensembl IDs to entrez IDs, 
-symbol or name,}
+\title{For C. elegans, converts ensembl IDs to entrez IDs, 
+symbol or name}
 \usage{
 convert_from_ensembl_ce(ids, to = "entrez")
 }
@@ -13,11 +13,11 @@ convert_from_ensembl_ce(ids, to = "entrez")
 \item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
-named list
+named vector
 }
 \description{
-For c elegans, converts ensembl IDs to entrez IDs, 
-symbol or name,
+For C. elegans, converts ensembl IDs to entrez IDs, 
+symbol or name
 }
 \examples{
 if(require("org.Ce.eg.db")){

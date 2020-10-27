@@ -3,7 +3,7 @@
 \name{convert_from_ensembl_eck12}
 \alias{convert_from_ensembl_eck12}
 \title{For E coli, converts ensembl IDs to entrez IDs, 
-symbol or name,}
+symbol or name}
 \usage{
 convert_from_ensembl_eck12(ids, to = "entrez")
 }
@@ -13,11 +13,11 @@ convert_from_ensembl_eck12(ids, to = "entrez")
 \item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
-named list
+named vector
 }
 \description{
 For E coli, converts ensembl IDs to entrez IDs, 
-symbol or name,
+symbol or name
 }
 \examples{
 if(require("org.Ce.eg.db")){

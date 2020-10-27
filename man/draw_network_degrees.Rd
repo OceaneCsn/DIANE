@@ -2,8 +2,7 @@
 % Please edit documentation in R/fct_network_analysis.R
 \name{draw_network_degrees}
 \alias{draw_network_degrees}
-\title{Plots the histogram of in and out degrees, betweeness of 
-regultors and target genes.}
+\title{Draw a network's degree distributions}
 \usage{
 draw_network_degrees(nodes, graph)
 }
@@ -13,8 +12,8 @@ draw_network_degrees(nodes, graph)
 \item{graph}{igraph object}
 }
 \description{
-Plots the histogram of in and out degrees, betweeness of 
-regultors and target genes.
+Plots the histograms of in and out degrees of 
+regulators and target genes, with regulators betweeness.
 }
 \examples{
 data("abiotic_stresses")

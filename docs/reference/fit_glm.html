@@ -41,13 +41,13 @@
 
 <meta property="og:title" content="Fits a Poisson generalized linear model to a set of genes — fit_glm" />
 <meta property="og:description" content="The idea is to extract the importance and effect of each factor.
-To do so, the expression of each gene is modelled as a Poisson distribution.
+To do so, the expression of each gene is modeled as a Poisson distribution.
 The log of its parameter (the expected value) is approximated by a linear
 combination of the factors in the experiment. The coefficients associated to 
 each factors are estimated to fit gene expression, and can be insightful to
 characterize genes behavior in a particular cluster.
 The model with interactions is considered. It your design in not a
-complete corssed design, the interaction term will be null." />
+complete crossed design, the interaction term will be null." />
 
 
 
@@ -143,13 +143,13 @@ complete corssed design, the interaction term will be null." />
 
     <div class="ref-description">
     <p>The idea is to extract the importance and effect of each factor.
-To do so, the expression of each gene is modelled as a Poisson distribution.
+To do so, the expression of each gene is modeled as a Poisson distribution.
 The log of its parameter (the expected value) is approximated by a linear
 combination of the factors in the experiment. The coefficients associated to 
 each factors are estimated to fit gene expression, and can be insightful to
 characterize genes behavior in a particular cluster.
 The model with interactions is considered. It your design in not a
-complete corssed design, the interaction term will be null.</p>
+complete crossed design, the interaction term will be null.</p>
     </div>
 
     <pre class="usage"><span class='fu'>fit_glm</span><span class='op'>(</span><span class='va'>normalized_counts</span>, <span class='va'>genes</span>, <span class='va'>design</span>, factors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>design</span><span class='op'>)</span><span class='op'>)</span></pre>

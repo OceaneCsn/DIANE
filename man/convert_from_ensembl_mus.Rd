@@ -2,8 +2,8 @@
 % Please edit documentation in R/fct_go.R
 \name{convert_from_ensembl_mus}
 \alias{convert_from_ensembl_mus}
-\title{For Mus musculus, converts ensembl IDs to entrez IDs, 
-symbol or name,}
+\title{For M. musculus, converts ensembl IDs to entrez IDs, 
+symbol or name}
 \usage{
 convert_from_ensembl_mus(ids, to = "entrez")
 }
@@ -13,11 +13,11 @@ convert_from_ensembl_mus(ids, to = "entrez")
 \item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
-named list
+named vector
 }
 \description{
-For Mus musculus, converts ensembl IDs to entrez IDs, 
-symbol or name,
+For M. musculus, converts ensembl IDs to entrez IDs, 
+symbol or name
 }
 \examples{
 if(require("org.Mm.eg.db")){

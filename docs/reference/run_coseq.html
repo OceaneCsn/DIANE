@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>run_coseq — run_coseq • DIANE</title>
+<title>Mixture Model clustering — run_coseq • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="run_coseq — run_coseq" />
-<meta property="og:description" content="run_coseq" />
+<meta property="og:title" content="Mixture Model clustering — run_coseq" />
+<meta property="og:description" content="Performs expression based clustering on genes.
+Uses the coseq package to fit either Poisson or Gaussian 
+mixtures to genes clusters, estimating their multivariate distribution
+parameters via an EM algorithm.
+Several numbers of clusters can be tested, and evaluated in terms of
+of likelihood to help the user in the decision" />
 
 
 
@@ -129,13 +134,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>run_coseq</h1>
+    <h1>Mixture Model clustering</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_coseq.R'><code>R/fct_coseq.R</code></a></small>
     <div class="hidden name"><code>run_coseq.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>run_coseq</p>
+    <p>Performs expression based clustering on genes.
+Uses the coseq package to fit either Poisson or Gaussian 
+mixtures to genes clusters, estimating their multivariate distribution
+parameters via an EM algorithm.
+Several numbers of clusters can be tested, and evaluated in terms of
+of likelihood to help the user in the decision</p>
     </div>
 
     <pre class="usage"><span class='fu'>run_coseq</span><span class='op'>(</span><span class='va'>conds</span>, <span class='va'>genes</span>, <span class='va'>data</span>, K <span class='op'>=</span> <span class='fl'>6</span><span class='op'>:</span><span class='fl'>12</span>, transfo <span class='op'>=</span> <span class='st'>"none"</span>, model <span class='op'>=</span> <span class='st'>"Poisson"</span><span class='op'>)</span></pre>
@@ -145,39 +155,43 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>conds</th>
-      <td><p>Condition names to be used for clustering</p></td>
+      <td><p>Condition names to be used for clustering.
+Must be a unique vector containing the conditions you want to consider
+for gene clustering, without the replicate information 
+(string before the underscore in sample names)</p></td>
     </tr>
     <tr>
       <th>genes</th>
-      <td><p>Genes used as an input for the clustering</p></td>
+      <td><p>Genes used as an input for the clustering. They must be present 
+in the row names of data.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>normalized counts (MUST be normalized!)</p></td>
+      <td><p>normalized counts with genes as rownames and samples as columns</p></td>
     </tr>
     <tr>
       <th>K</th>
-      <td><p>number of clusters range</p></td>
+      <td><p>range of number of clusters to test.</p></td>
     </tr>
     <tr>
       <th>transfo</th>
-      <td><p>transformation to apply to normalized counts
-before modelling with "Normal" Mixture Models. For "Poisson",
-no tranfsormation will be used, this argument will be ignored.
+      <td><p>Transformation to apply to normalized counts
+before modeling with "Normal" Mixture Models. 
 It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
- “clr”, “alr”, “ilr”, or “none”</p></td>
+ “clr”, “alr”, “ilr”, or “none”. For "Poisson",
+no transformation will be used, this argument will be ignored.</p></td>
     </tr>
     <tr>
       <th>model</th>
-      <td><p>Model to use for clustering : to choose between
+      <td><p>Model to use for mixture models : to choose between
 Poisson or Normal.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>named list containing the coseq run result as "model", and the cluster membership 
-for each gene as "membership"</p>
+    <p>Named list containing the coseq run result as "model", and the cluster membership 
+for each gene as "membership".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
@@ -189,7 +203,7 @@ data <span class='op'>=</span> <span class='va'>abiotic_stresses</span><span cla
 #&gt; K = 6 to 9 
 #&gt; Use set.seed() prior to running coseq for reproducible results.
 #&gt; ****************************************
-#&gt; Running K = 6 ...</div><div class='output co'>#&gt; <span class='message'>Running K = 7 ...</span></div><div class='output co'>#&gt; <span class='message'>Running K = 8 ...</span></div><div class='output co'>#&gt; <span class='message'>Running K = 9 ...</span></div><div class='output co'>#&gt; <span class='message'>Note: slope heuristics for model selection only applied if &gt; 10 models are fit.</span></div></pre>
+#&gt; Running K = 6 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

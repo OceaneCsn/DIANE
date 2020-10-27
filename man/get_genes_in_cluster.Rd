@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_coseq.R
 \name{get_genes_in_cluster}
 \alias{get_genes_in_cluster}
-\title{get_genes_in_cluster}
+\title{Get genes in a specific cluster}
 \usage{
 get_genes_in_cluster(membership, cluster)
 }
@@ -15,7 +15,7 @@ get_genes_in_cluster(membership, cluster)
 genes belonging to the desired cluster
 }
 \description{
-get_genes_in_cluster
+Get genes in a specific cluster
 }
 \examples{
 data("abiotic_stresses")

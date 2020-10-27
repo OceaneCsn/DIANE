@@ -2,34 +2,43 @@
 % Please edit documentation in R/fct_coseq.R
 \name{run_coseq}
 \alias{run_coseq}
-\title{run_coseq}
+\title{Mixture Model clustering}
 \usage{
 run_coseq(conds, genes, data, K = 6:12, transfo = "none", model = "Poisson")
 }
 \arguments{
-\item{conds}{Condition names to be used for clustering}
+\item{conds}{Condition names to be used for clustering.
+Must be a unique vector containing the conditions you want to consider
+for gene clustering, without the replicate information 
+(string before the underscore in sample names)}
 
-\item{genes}{Genes used as an input for the clustering}
+\item{genes}{Genes used as an input for the clustering. They must be present 
+in the row names of data.}
 
-\item{data}{normalized counts (MUST be normalized!)}
+\item{data}{normalized counts with genes as rownames and samples as columns}
 
-\item{K}{number of clusters range}
+\item{K}{range of number of clusters to test.}
 
-\item{transfo}{transformation to apply to normalized counts
-before modelling with "Normal" Mixture Models. For "Poisson",
-no tranfsormation will be used, this argument will be ignored.
+\item{transfo}{Transformation to apply to normalized counts
+before modeling with "Normal" Mixture Models. 
 It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
- “clr”, “alr”, “ilr”, or “none”}
+ “clr”, “alr”, “ilr”, or “none”. For "Poisson",
+no transformation will be used, this argument will be ignored.}
 
-\item{model}{Model to use for clustering : to choose between
+\item{model}{Model to use for mixture models : to choose between
 Poisson or Normal.}
 }
 \value{
-named list containing the coseq run result as "model", and the cluster membership 
-for each gene as "membership"
+Named list containing the coseq run result as "model", and the cluster membership 
+for each gene as "membership".
 }
 \description{
-run_coseq
+Performs expression based clustering on genes.
+Uses the coseq package to fit either Poisson or Gaussian 
+mixtures to genes clusters, estimating their multivariate distribution
+parameters via an EM algorithm.
+Several numbers of clusters can be tested, and evaluated in terms of
+of likelihood to help the user in the decision
 }
 \examples{
 data("abiotic_stresses")

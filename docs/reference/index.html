@@ -187,15 +187,13 @@
         <td>
           <p><code><a href="aggregate_splice_variants.html">aggregate_splice_variants()</a></code> </p>
         </td>
-        <td><p>Merge all splice variants of an expression dataset into 
-unique locus, unaware of alternative splicing, by summing
-all variants for the same gene</p></td>
+        <td><p>Aggregate splice variants</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_locus.html">get_locus()</a></code> </p>
         </td>
-        <td><p>Get the locus ids from splice variants ids</p></td>
+        <td><p>Get gene IDs loci, without splicing information</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -214,19 +212,13 @@ all variants for the same gene</p></td>
         <td>
           <p><code><a href="estimateDEGs.html">estimateDEGs()</a></code> </p>
         </td>
-        <td><p>estimateDEGs</p></td>
+        <td><p>Estimates Differentially Expression Genes</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="estimateDispersion.html">estimateDispersion()</a></code> </p>
         </td>
-        <td><p>estimateDispersion</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="estimate_test_edges_time.html">estimate_test_edges_time()</a></code> </p>
-        </td>
-        <td><p>Estimates time spent for statistical testing</p></td>
+        <td><p>Estimates gene dispersions prior to differential expression testing</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -245,13 +237,13 @@ all variants for the same gene</p></td>
         <td>
           <p><code><a href="run_coseq.html">run_coseq()</a></code> </p>
         </td>
-        <td><p>run_coseq</p></td>
+        <td><p>Mixture Model clustering</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_genes_in_cluster.html">get_genes_in_cluster()</a></code> </p>
         </td>
-        <td><p>get_genes_in_cluster</p></td>
+        <td><p>Get genes in a specific cluster</p></td>
       </tr><tr>
         
         <td>
@@ -276,61 +268,61 @@ all variants for the same gene</p></td>
         <td>
           <p><code><a href="enrich_go.html">enrich_go()</a></code> </p>
         </td>
-        <td><p>Enriched Gene Ontology terms in a set of genes</p></td>
+        <td><p>Enriched ontologies for recognized organisms</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="enrich_go_custom.html">enrich_go_custom()</a></code> </p>
         </td>
-        <td><p>Enriched custom Gene Ontology terms in a set of genes</p></td>
+        <td><p>Enriched ontologies for a custom organism</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_agi.html">convert_from_agi()</a></code> </p>
         </td>
-        <td><p>For Arabdopsis thaliana, converts TAIR IDs to entrez IDs, 
+        <td><p>For A. thaliana, converts TAIR IDs to entrez IDs, 
 gene symbol or description</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_ensembl.html">convert_from_ensembl()</a></code> </p>
         </td>
-        <td><p>For Homo sapiens, converts ensembl IDs to entrez IDs, 
-symbol or name,</p></td>
+        <td><p>For H. sapiens, converts ensembl IDs to entrez IDs, 
+symbol or name</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_ensembl_ce.html">convert_from_ensembl_ce()</a></code> </p>
         </td>
-        <td><p>For c elegans, converts ensembl IDs to entrez IDs, 
-symbol or name,</p></td>
+        <td><p>For C. elegans, converts ensembl IDs to entrez IDs, 
+symbol or name</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_ensembl_dm.html">convert_from_ensembl_dm()</a></code> </p>
         </td>
-        <td><p>For drosophilia, converts ensembl IDs to entrez IDs, 
-symbol or name,</p></td>
+        <td><p>For D. melanogaster, converts ensembl IDs to entrez IDs, 
+symbol or name</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_ensembl_eck12.html">convert_from_ensembl_eck12()</a></code> </p>
         </td>
         <td><p>For E coli, converts ensembl IDs to entrez IDs, 
-symbol or name,</p></td>
+symbol or name</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="convert_from_ensembl_mus.html">convert_from_ensembl_mus()</a></code> </p>
         </td>
-        <td><p>For Mus musculus, converts ensembl IDs to entrez IDs, 
-symbol or name,</p></td>
+        <td><p>For M. musculus, converts ensembl IDs to entrez IDs, 
+symbol or name</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="get_gene_information.html">get_gene_information()</a></code> </p>
         </td>
-        <td><p>Gives gene information (common name and description) for a specific organism</p></td>
+        <td><p>Get genes information</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -349,7 +341,7 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="network_data.html">network_data()</a></code> </p>
         </td>
-        <td><p>Creates data compatible with visNetwork from an igraph object</p></td>
+        <td><p>Creates data describing a gene regulatory network</p></td>
       </tr><tr>
         
         <td>
@@ -361,7 +353,7 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="network_inference.html">network_inference()</a></code> </p>
         </td>
-        <td><p>Genie3 regulatory importances estimation</p></td>
+        <td><p>Regulatory importances estimation via Random Forests</p></td>
       </tr><tr>
         
         <td>
@@ -373,7 +365,13 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="test_edges.html">test_edges()</a></code> </p>
         </td>
-        <td><p>test_edges</p></td>
+        <td><p>Statistical edges testing by permutations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="estimate_test_edges_time.html">estimate_test_edges_time()</a></code> </p>
+        </td>
+        <td><p>Estimates time spent for statistical testing</p></td>
       </tr><tr>
         
         <td>
@@ -404,13 +402,13 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="draw_coseq_run.html">draw_coseq_run()</a></code> </p>
         </td>
-        <td><p>draw_coseq_run : displays the indications of clustering</p></td>
+        <td><p>Displays clustering results and quality</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="draw_DEGs.html">draw_DEGs()</a></code> </p>
         </td>
-        <td><p>MA or volcano plot for Differential expression</p></td>
+        <td><p>MA or volcano plot for differential expression results</p></td>
       </tr><tr>
         
         <td>
@@ -422,7 +420,7 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="draw_distributions.html">draw_distributions()</a></code> </p>
         </td>
-        <td><p>draw_distributions of count data</p></td>
+        <td><p>Draw distributions of expression data</p></td>
       </tr><tr>
         
         <td>
@@ -446,13 +444,13 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="draw_glm.html">draw_glm()</a></code> </p>
         </td>
-        <td><p>Plots the value of a Poisson generalized linear model coefficients</p></td>
+        <td><p>Plots the coefficients value of a Poisson generalized linear model</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="draw_heatmap.html">draw_heatmap()</a></code> </p>
         </td>
-        <td><p>Draw heatmap</p></td>
+        <td><p>Draw expression heatmap</p></td>
       </tr><tr>
         
         <td>
@@ -464,26 +462,25 @@ symbol or name,</p></td>
         <td>
           <p><code><a href="draw_network.html">draw_network()</a></code> </p>
         </td>
-        <td><p>Displays an interactive network view, with regulators as green sqaure nodes.</p></td>
+        <td><p>Interactive network view</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="draw_network_degrees.html">draw_network_degrees()</a></code> </p>
         </td>
-        <td><p>Plots the histogram of in and out degrees, betweeness of 
-regultors and target genes.</p></td>
+        <td><p>Draw a network's degree distributions</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="draw_PCA.html">draw_PCA()</a></code> </p>
         </td>
-        <td><p>Draw variables along principal PCA components</p></td>
+        <td><p>Draw PCA results</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="draw_profiles.html">draw_profiles()</a></code> </p>
         </td>
-        <td><p>Draw profiles of a clustering</p></td>
+        <td><p>Draw expression profiles of a clustering</p></td>
       </tr><tr>
         
         <td>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>draw_distributions of count data — draw_distributions • DIANE</title>
+<title>Draw distributions of expression data — draw_distributions • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="draw_distributions of count data — draw_distributions" />
-<meta property="og:description" content="draw_distributions of count data" />
+<meta property="og:title" content="Draw distributions of expression data — draw_distributions" />
+<meta property="og:description" content="Draw distributions of expression data" />
 
 
 
@@ -129,13 +129,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>draw_distributions of count data</h1>
+    <h1>Draw distributions of expression data</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_heatmap.R'><code>R/fct_heatmap.R</code></a></small>
     <div class="hidden name"><code>draw_distributions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>draw_distributions of count data</p>
+    <p>Draw distributions of expression data</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_distributions</span><span class='op'>(</span><span class='va'>data</span>, boxplot <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -145,11 +145,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>count data, as a numeric dataframe with condition names as columns and genes as rows</p></td>
+      <td><p>expression dataframe, with samples as columns and genes as rows</p></td>
     </tr>
     <tr>
       <th>boxplot</th>
-      <td><p>if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot</p></td>
+      <td><p>if TRUE, plot each sample as a boxplot, else, it is shown as distributions</p></td>
     </tr>
     </table>
 
@@ -157,7 +157,8 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
 <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>draw_distributions</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span>, boxplot <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>No id variables; using all as measure variables</span></div><div class='output co'>#&gt; <span class='message'>Picking joint bandwidth of 0.24</span></div><div class='img'><img src='draw_distributions-1.png' alt='' width='700' height='433' /></div></pre>
+</div><div class='output co'>#&gt; <span class='message'>No id variables; using all as measure variables</span></div><div class='output co'>#&gt; <span class='message'>Picking joint bandwidth of 0.24</span></div><div class='img'><img src='draw_distributions-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>draw_distributions</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>raw_counts</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>No id variables; using all as measure variables</span></div><div class='img'><img src='draw_distributions-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

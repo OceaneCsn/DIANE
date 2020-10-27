@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Genie3 regulatory importances estimation — network_inference • DIANE</title>
+<title>Regulatory importances estimation via Random Forests — network_inference • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,12 @@
 
 
 
-<meta property="og:title" content="Genie3 regulatory importances estimation — network_inference" />
-<meta property="og:description" content="GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+<meta property="og:title" content="Regulatory importances estimation via Random Forests — network_inference" />
+<meta property="og:description" content="GENIE3 needs to be given a list of genes, that will be the nodes of the inferred network. 
 Among those genes, some must be considered as potential regulators. 
 GENIE3 can determine the influence if every regulators over each input genes, 
 using their respective expression profiles. You can specify which conditions 
-you want to be consired for those profiles during the network inference.
+you want to be considered for those profiles during the network inference.
 For each target gene, the methods uses Random Forests to provide a ranking of all 
 regulators based on their influence on the target expression. This ranking is then merged 
 across all targets, giving a global regulatory links ranking stored in the result matrix." />
@@ -136,17 +136,17 @@ across all targets, giving a global regulatory links ranking stored in the resul
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Genie3 regulatory importances estimation</h1>
+    <h1>Regulatory importances estimation via Random Forests</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_network_inference.R'><code>R/fct_network_inference.R</code></a></small>
     <div class="hidden name"><code>network_inference.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+    <p>GENIE3 needs to be given a list of genes, that will be the nodes of the inferred network. 
 Among those genes, some must be considered as potential regulators. 
 GENIE3 can determine the influence if every regulators over each input genes, 
 using their respective expression profiles. You can specify which conditions 
-you want to be consired for those profiles during the network inference.
+you want to be considered for those profiles during the network inference.
 For each target gene, the methods uses Random Forests to provide a ranking of all 
 regulators based on their influence on the target expression. This ranking is then merged 
 across all targets, giving a global regulatory links ranking stored in the result matrix.</p>
@@ -169,11 +169,13 @@ across all targets, giving a global regulatory links ranking stored in the resul
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>normalized.count</th>
-      <td><p>normalized expression matrix containing the regressors and target genes</p></td>
+      <td><p>normalized expression matrix containing the regressors and target genes
+in its rows, and samples a columns</p></td>
     </tr>
     <tr>
       <th>conds</th>
-      <td><p>condition names to be used in the inference</p></td>
+      <td><p>condition names to be used in the inference (not columns names, conditions names
+before the underscore)</p></td>
     </tr>
     <tr>
       <th>regressors</th>
@@ -202,13 +204,14 @@ minus one.</p></td>
 computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
 the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
 to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
- regulators and to over-fitting.</p></td>
+ regulators and to over-fitting. Too few samples will lead to NA in MSEincrease_oob, so in that case, it is
+ advised to used GENIE3's default one.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>matrix object</p>
+    <p>Matrix filled with regulator-target regulatory weights</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
@@ -221,7 +224,7 @@ to statistical edges testing. The default one is around 4 times fatser, but more
 <span class='va'>regressors</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span><span class='op'>(</span><span class='va'>genes</span>, <span class='va'>regulators_per_organism</span><span class='op'>[[</span><span class='st'>"Arabidopsis thaliana"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 
 <span class='va'>mat</span> <span class='op'>&lt;-</span> <span class='fu'>network_inference</span><span class='op'>(</span><span class='va'>aggregated_data</span>, conds <span class='op'>=</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span>, 
-targets <span class='op'>=</span> <span class='va'>genes</span>, regressors <span class='op'>=</span> <span class='va'>regressors</span><span class='op'>)</span>
+targets <span class='op'>=</span> <span class='va'>genes</span>, regressors <span class='op'>=</span> <span class='va'>regressors</span>, nTrees <span class='op'>=</span> <span class='fl'>1000</span>, nCores <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>

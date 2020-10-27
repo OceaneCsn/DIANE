@@ -6,9 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Merge all splice variants of an expression dataset into 
-unique locus, unaware of alternative splicing, by summing
-all variants for the same gene — aggregate_splice_variants • DIANE</title>
+<title>Aggregate splice variants — aggregate_splice_variants • DIANE</title>
 
 
 <!-- jquery -->
@@ -41,12 +39,10 @@ all variants for the same gene — aggregate_splice_variants • DIANE</title>
 
 
 
-<meta property="og:title" content="Merge all splice variants of an expression dataset into 
-unique locus, unaware of alternative splicing, by summing
-all variants for the same gene — aggregate_splice_variants" />
+<meta property="og:title" content="Aggregate splice variants — aggregate_splice_variants" />
 <meta property="og:description" content="Merge all splice variants of an expression dataset into 
 unique locus, unaware of alternative splicing, by summing
-all variants for the same gene" />
+all variants of the same gene" />
 
 
 
@@ -135,9 +131,7 @@ all variants for the same gene" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Merge all splice variants of an expression dataset into 
-unique locus, unaware of alternative splicing, by summing
-all variants for the same gene</h1>
+    <h1>Aggregate splice variants</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_geneIDs.R'><code>R/fct_geneIDs.R</code></a></small>
     <div class="hidden name"><code>aggregate_splice_variants.Rd</code></div>
     </div>
@@ -145,7 +139,7 @@ all variants for the same gene</h1>
     <div class="ref-description">
     <p>Merge all splice variants of an expression dataset into 
 unique locus, unaware of alternative splicing, by summing
-all variants for the same gene</p>
+all variants of the same gene</p>
     </div>
 
     <pre class="usage"><span class='fu'>aggregate_splice_variants</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
@@ -155,18 +149,46 @@ all variants for the same gene</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>dataframe : expression data with splice variants as rownames</p></td>
+      <td><p>expression dataframe with splice variants as rownames
+and samples as columns</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>dataframe with agregated rows</p>
+    <p>dataframe with aggregated rows</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
-<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>aggregate_splice_variants</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span><span class='op'>)</span>
-</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>aggregate_splice_variants</span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                 C_1       C_2       C_3       S_1      S_2       S_3       M_1
+#&gt; AT1G01010 126.67770  68.11023  65.42961  93.86575  87.5764  94.94861  65.05674
+#&gt; AT1G01020 207.37239 221.48363 186.59926 192.22508 223.7622 195.83770 234.04437
+#&gt; AT1G01030  32.61701  34.50651  55.74004  33.55201  15.8055  30.98948  21.38578
+#&gt; AT1G01040 857.11927 981.83053 987.53763 896.31808 832.9201 939.18927 948.16950
+#&gt; AT1G01050 844.65099 842.80140 836.30033 834.90591 813.9337 784.34086 801.46705
+#&gt; AT1G01060 656.52962 700.96360 635.81601 531.93922 408.5573 514.54424 741.10719
+#&gt;                 M_2       M_3       H_1       H_2       H_3      SM_1      SM_2
+#&gt; AT1G01010 100.40712 126.60277  95.94273 135.09481 117.88109  95.26083 103.22907
+#&gt; AT1G01020 197.11029 179.12095 314.68009 366.25704 319.84802 166.48480 177.58564
+#&gt; AT1G01030  29.83183  33.44789  47.97137  39.02739  51.39696  24.82495  30.85007
+#&gt; AT1G01040 904.16462 988.55996 802.84153 701.59237 908.14710 881.28582 870.42671
+#&gt; AT1G01050 762.21318 718.78024 927.44640 969.98073 936.20924 853.99808 796.16902
+#&gt; AT1G01060 783.03539 876.33479  36.90879  20.81461  20.61913 844.83649 843.43290
+#&gt;                SM_3      SH_1      SH_2      SH_3      MH_1      MH_2      MH_3
+#&gt; AT1G01010  96.93197  95.62140  96.96100 101.98612  83.07132 107.83420  97.72878
+#&gt; AT1G01020 184.27943 344.11588 355.75908 347.33674 332.28529 317.07673 329.62076
+#&gt; AT1G01030  33.99041  61.59351  66.08684  61.61452  45.14746  36.34635  56.26199
+#&gt; AT1G01040 827.23183 790.21445 783.35607 702.72766 846.06337 813.47552 782.73606
+#&gt; AT1G01050 830.09730 903.91001 790.21700 855.25379 692.26103 705.64132 722.44818
+#&gt; AT1G01060 867.94128  29.78703  39.95479  19.22937  33.81043  40.06131  16.80814
+#&gt;               SMH_1     SMH_2     SMH_3
+#&gt; AT1G01010 100.03786  96.92257 122.39208
+#&gt; AT1G01020 267.53381 314.42203 320.85215
+#&gt; AT1G01030  45.97144  42.79828  57.07611
+#&gt; AT1G01040 806.69890 787.80910 857.84991
+#&gt; AT1G01050 835.28114 971.53100 841.26970
+#&gt; AT1G01060  48.96958  33.77757  26.12639</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

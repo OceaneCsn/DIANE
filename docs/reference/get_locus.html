@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the locus ids from splice variants ids — get_locus • DIANE</title>
+<title>Get gene IDs loci, without splicing information — get_locus • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Get the locus ids from splice variants ids — get_locus" />
-<meta property="og:description" content="Get the locus ids from splice variants ids" />
+<meta property="og:title" content="Get gene IDs loci, without splicing information — get_locus" />
+<meta property="og:description" content="Get the locus IDs from splice variants IDs
+(remove the .1, .2 from a list of gene IDs)" />
 
 
 
@@ -129,13 +130,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the locus ids from splice variants ids</h1>
+    <h1>Get gene IDs loci, without splicing information</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_geneIDs.R'><code>R/fct_geneIDs.R</code></a></small>
     <div class="hidden name"><code>get_locus.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get the locus ids from splice variants ids</p>
+    <p>Get the locus IDs from splice variants IDs
+(remove the .1, .2 from a list of gene IDs)</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_locus</span><span class='op'>(</span><span class='va'>gene_ids</span>, unique <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -155,7 +157,8 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>character vector</p>
+    <p>character vector of gene IDs without alternative transcripts 
+information</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>splice_variants</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>normalized_counts</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>]</span>

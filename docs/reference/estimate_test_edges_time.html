@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Estimates time spent for statistical testing — estimate_test_edges_time" />
-<meta property="og:description" content="Estimates to running time for test_edges function, depending on its arguments." />
+<meta property="og:description" content="Estimates to running time for test_edges function, depending on its arguments.
+This is useful as the test_edges function can be quite long to complete." />
 
 
 
@@ -135,7 +136,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Estimates to running time for test_edges function, depending on its arguments.</p>
+    <p>Estimates to running time for test_edges function, depending on its arguments.
+This is useful as the test_edges function can be quite long to complete.</p>
     </div>
 
     <pre class="usage"><span class='fu'>estimate_test_edges_time</span><span class='op'>(</span>
@@ -234,7 +236,7 @@ number of edges in the final network</p></li>
                                 regressors <span class='op'>=</span> <span class='va'>r</span><span class='op'>$</span><span class='va'>grouped_regressors</span>, 
                                 importance_metric <span class='op'>=</span> <span class='st'>"MSEincrease_oob"</span>, 
                                 verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> 
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='test_edges.html'>test_edges</a></span><span class='op'>(</span><span class='va'>mat</span>, normalized_counts <span class='op'>=</span> <span class='va'>r</span><span class='op'>$</span><span class='va'>counts</span>, density <span class='op'>=</span> <span class='fl'>0.02</span>,
+<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>estimate_test_edges_time</span><span class='op'>(</span><span class='va'>mat</span>, normalized_counts <span class='op'>=</span> <span class='va'>r</span><span class='op'>$</span><span class='va'>counts</span>, density <span class='op'>=</span> <span class='fl'>0.02</span>,
                         nGenes <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>$</span><span class='va'>grouped_genes</span><span class='op'>)</span>, 
                         nRegulators <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>r</span><span class='op'>$</span><span class='va'>grouped_regressors</span><span class='op'>)</span>, 
                         nTrees <span class='op'>=</span> <span class='fl'>1000</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>

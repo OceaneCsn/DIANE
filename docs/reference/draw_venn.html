@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Venn diagram — draw_venn" />
-<meta property="og:description" content="Venn diagram" />
+<meta property="og:description" content="Draws a Venn diagram between lists of DEGs.
+Possible number of lists handled by the function are 2, 3 or 4." />
 
 
 
@@ -135,7 +136,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Venn diagram</p>
+    <p>Draws a Venn diagram between lists of DEGs.
+Possible number of lists handled by the function are 2, 3 or 4.</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_venn</span><span class='op'>(</span><span class='va'>gene_list</span><span class='op'>)</span></pre>
@@ -150,6 +152,18 @@
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
+<span class='va'>tcc_object</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>raw_counts</span>, <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span>, 
+iteration <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='va'>tcc_object</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span><span class='op'>(</span><span class='va'>tcc_object</span>, <span class='fl'>10</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span><span class='op'>(</span>tcc <span class='op'>=</span> <span class='va'>tcc_object</span>, conditions <span class='op'>=</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='va'>genes_heat</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span><span class='op'>(</span><span class='va'>fit</span>, reference <span class='op'>=</span> <span class='st'>"C"</span>, perturbation <span class='op'>=</span> <span class='st'>"H"</span>,
+ p.value <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>$</span><span class='va'>table</span><span class='op'>$</span><span class='va'>genes</span>
+<span class='va'>genes_heat_mannitol</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='estimateDEGs.html'>estimateDEGs</a></span><span class='op'>(</span><span class='va'>fit</span>, reference <span class='op'>=</span> <span class='st'>"C"</span>, perturbation <span class='op'>=</span> <span class='st'>"MH"</span>, 
+p.value <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span><span class='op'>$</span><span class='va'>table</span><span class='op'>$</span><span class='va'>genes</span>
+<span class='fu'>draw_venn</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"C - H"</span> <span class='op'>=</span> <span class='va'>genes_heat</span>, <span class='st'>"C - MH"</span> <span class='op'>=</span> <span class='va'>genes_heat_mannitol</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='draw_venn-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

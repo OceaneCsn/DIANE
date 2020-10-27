@@ -14,15 +14,16 @@ normalize(
 )
 }
 \arguments{
-\item{data}{raw counts to be normalized (data frame or matrix)}
+\item{data}{raw counts to be normalized (data frame or matrix), with genes as rownames and
+conditions as columns.}
 
-\item{conditions}{condition of each column of the data argument}
+\item{conditions}{condition of each column of the data argument.}
 
 \item{norm_method}{method used for normalization, between tmm or deseq2}
 
-\item{deg_method}{method used for deg detection, between edgeR ou deseq2}
+\item{deg_method}{method used for DEGs detection if chosen, between edgeR ou deseq2}
 
-\item{fdr}{pvalue threshold for adjusted pvalues for degs}
+\item{fdr}{pvalue threshold for adjusted pvalues for DEGs detection if chosen}
 
 \item{iteration}{weather or not to perform a prior removal of DEGs (TRUE or FALSE)}
 }
@@ -39,13 +40,12 @@ factors in the second normalization step. It returns a TCC object,
 with an element norm_factors containing the computed normalization factors.
 }
 \details{
-# Warning
-Filtering is highly recommended after normalization, consider using the DIANE::filter_low_counts
-function just after.
+Filtering low counts is highly recommended after normalization, 
+consider using the \code{DIANE::filter_low_counts}
+function just after this function.
 
-# Note
-You can get the normalized expression matrix with TCC::getNormalizedData(tcc),
-tcc being the result of DIANE::normalize or DIANE::filter_low_counts
+You can get the normalized expression matrix with \code{TCC::getNormalizedData(tcc)},
+tcc being the result of \code{DIANE::normalize()} or \code{DIANE::filter_low_counts()}
 }
 \examples{
 data("abiotic_stresses")

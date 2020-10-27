@@ -1,6 +1,6 @@
-#' Get the number of a edges 
+#' Get the number of a edges in a graph, given a desired density
 #' 
-#' Returns the number of edges of a Gene Regulatory
+#' @description Returns the number of edges of a Gene Regulatory
 #' Network from its density.
 #'
 #' @param density network density (usually between 0.001 and 0.1)
@@ -20,13 +20,13 @@ get_nEdges <- function(density, nGenes, nRegulators){
 }
 
 
-#' test_edges
+#' Statistical edges testing by permutations
 #'
 #' @description
 #' We designed a method to perform statistical testing on TF-target gene pairs
-#' from the GENIE3 approach.
+#' from the Random Forest regulatory weights inference.
 #' The idea is to build a first biologically relevant network with the
-#' strongest importances diven by a prior GENIE3 run, that would then be
+#' strongest importances given by a prior GENIE3 run, that would then be
 #' refined by statistical testing.
 #' Those tests are performed by the rfPermute package, providing empirical
 #' pvalues on observed importance values from response variable permutations.
@@ -232,6 +232,7 @@ test_edges <-
 #'
 #' @description
 #' Estimates to running time for test_edges function, depending on its arguments.
+#' This is useful as the test_edges function can be quite long to complete.
 #'
 #' @param mat matrix containing the importance values for each target and regulator
 #' (preferably computed with GENIE3 and the OOB importance metric)
@@ -284,7 +285,7 @@ test_edges <-
 #'                                 regressors = r$grouped_regressors, 
 #'                                 importance_metric = "MSEincrease_oob", 
 #'                                 verbose = TRUE) 
-#' res <- DIANE::test_edges(mat, normalized_counts = r$counts, density = 0.02,
+#' res <- DIANE::estimate_test_edges_time(mat, normalized_counts = r$counts, density = 0.02,
 #'                         nGenes = length(r$grouped_genes), 
 #'                         nRegulators = length(r$grouped_regressors), 
 #'                         nTrees = 1000, verbose = TRUE)
@@ -375,11 +376,11 @@ estimate_test_edges_time <-
 #' Create network from edges statistical tests
 #'
 #' @param links dataframe of the network edges and associated pvalues,
-#' as in the links attribute of the \code{test_edges} method.
-#' @param fdr threshold value such as all edges wit hadjusted pvalues lesser than
-#' the argument will be discarded for the final network construction
+#' as in the links attribute of the \code{test_edges()} method result.
+#' @param fdr threshold value such as all edges with adjusted pvalues lesser than
+#' the argument are be discarded for the final network construction
 #'
-#' @return an oriented weighted network as an igraph object
+#' @return Oriented weighted network as an igraph object
 #' @export
 #'
 #' @examples
@@ -427,7 +428,7 @@ network_from_tests <- function(links, fdr) {
 #'
 #' @param links dataframe of edges containing their adjusted pvalues, as returned 
 #' by the \code{test_edges} function
-#' @param net_data network data of the thresholded network
+#' @param net_data network data of the thresholded network, given by \code{DIANE::network_data()}
 #' @export
 #'
 #' @examples

@@ -2,15 +2,17 @@
 % Please edit documentation in R/fct_heatmap.R
 \name{draw_PCA}
 \alias{draw_PCA}
-\title{Draw variables along principal PCA components}
+\title{Draw PCA results}
 \usage{
 draw_PCA(data)
 }
 \arguments{
-\item{data}{normalized expression data}
+\item{data}{normalized expression data with samples as columns and genes as rows.}
 }
 \description{
-Draw variables along principal PCA components
+Draws variables contributions to principal components,
+as well as the PCA screeplot.
+First to fourth principal components are shown.
 }
 \examples{
 data("abiotic_stresses")

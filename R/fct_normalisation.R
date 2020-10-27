@@ -32,9 +32,9 @@
 normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
                       iteration = TRUE){
   tcc <- TCC::TCC(count =  data, group = conditions)
-  tcc <- suppressMessages(TCC::calcNormFactors(tcc, norm.method = norm_method, 
+  tcc <- suppressWarnings(suppressMessages(TCC::calcNormFactors(tcc, norm.method = norm_method, 
                                                test.method = deg_method, 
-                              iteration = iteration, FDR = fdr, floorPDEG = 0.05))
+                              iteration = iteration, FDR = fdr, floorPDEG = 0.05)))
   return(tcc)
 }
 

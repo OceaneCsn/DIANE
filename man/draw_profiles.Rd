@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_coseq.R
 \name{draw_profiles}
 \alias{draw_profiles}
-\title{Draw profiles of a clustering}
+\title{Draw expression profiles of a clustering}
 \usage{
 draw_profiles(
   data,
@@ -14,20 +14,25 @@ draw_profiles(
 )
 }
 \arguments{
-\item{data}{normalized counts}
+\item{data}{normalized counts with genes as rownames and samples as columns}
 
-\item{membership}{membership item of the coseq object returned by run_coseq object}
+\item{membership}{membership item of the coseq object returned by 
+\code{run_coseq()} object}
 
-\item{conds}{conditions on which to perform clustering, ingoring the others}
+\item{conds}{conditions on which to display clustering profiles.
+Must be a unique vector containing the conditions you want to consider
+for gene clustering, without the replicate information 
+(string before the underscore in sample names)}
 
-\item{expression}{if it is set to "profiles" (default), plots expression/sum(expression). if "counts", plots log(Counts+1)}
+\item{expression}{if it is set to "profiles" (default), 
+plots expression/sum(expression). if "counts", plots log(Counts+1)}
 
-\item{k}{if NULL (default), plot all the clusters. Else, plot the clusters in the vetcor k.}
+\item{k}{if NULL (default), plots all the clusters. Else, plot the clusters in the vetcor k.}
 
 \item{nrow}{on how many rows display the cluster profiles if k is NULL}
 }
 \description{
-Draw profiles of a clustering
+Draw expression profiles of a clustering
 }
 \examples{
 data("abiotic_stresses")

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>estimateDEGs — estimateDEGs • DIANE</title>
+<title>Estimates Differentially Expression Genes — estimateDEGs • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="estimateDEGs — estimateDEGs" />
-<meta property="og:description" content="Given a glmFit, performs a log ratio test using edgeR function glmLRT and
+<meta property="og:title" content="Estimates Differentially Expression Genes — estimateDEGs" />
+<meta property="og:description" content="Given a glmFit model, performs log ratio tests using edgeR 
+function glmLRT and
 returns the genes that are differentially expressed
 between the reference and perturbation conditions.
 log ratios are expressed as log(perturbation/reference)" />
@@ -132,13 +133,14 @@ log ratios are expressed as log(perturbation/reference)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>estimateDEGs</h1>
+    <h1>Estimates Differentially Expression Genes</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_dea.R'><code>R/fct_dea.R</code></a></small>
     <div class="hidden name"><code>estimateDEGs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Given a glmFit, performs a log ratio test using edgeR function glmLRT and
+    <p>Given a glmFit model, performs log ratio tests using edgeR 
+function glmLRT and
 returns the genes that are differentially expressed
 between the reference and perturbation conditions.
 log ratios are expressed as log(perturbation/reference)</p>
@@ -155,11 +157,15 @@ log ratios are expressed as log(perturbation/reference)</p>
     </tr>
     <tr>
       <th>reference</th>
-      <td><p>condition being considered as teh reference for differential analysis</p></td>
+      <td><p>condition being considered as the reference for differential analysis.
+It should corresponds to a condition name, e.g. the string before the underscore and 
+replicate number in your sample names.</p></td>
     </tr>
     <tr>
       <th>perturbation</th>
-      <td><p>condition we compared to the reference for differential analysis</p></td>
+      <td><p>condition we compared to the reference for differential analysis.
+It should corresponds to a condition name, e.g. the string before the underscore and 
+replicate number in your sample names.</p></td>
     </tr>
     <tr>
       <th>p.value</th>
@@ -169,7 +175,7 @@ lower than specified are returned</p></td>
     <tr>
       <th>lfc</th>
       <td><p>minimal absolute log fold change required for a gene to be considered as 
-differnetially expressed.</p></td>
+differentially expressed.</p></td>
     </tr>
     </table>
 
@@ -181,13 +187,20 @@ differnetially expressed.</p></td>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>
 <span class='va'>tcc_object</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='normalize.html'>normalize</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>raw_counts</span>, 
 <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span>, iteration <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Calculating normalization factors using tmm ...</span></div><div class='output co'>#&gt; <span class='message'>TCC::INFO: Done.</span></div><div class='input'><span class='va'>threshold</span> <span class='op'>=</span> <span class='fl'>10</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span>
+<span class='va'>threshold</span> <span class='op'>=</span> <span class='fl'>10</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span>
 <span class='va'>tcc_object</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='filter_low_counts.html'>filter_low_counts</a></span><span class='op'>(</span><span class='va'>tcc_object</span>, <span class='va'>threshold</span><span class='op'>)</span>
 <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'><a href='estimateDispersion.html'>estimateDispersion</a></span><span class='op'>(</span>tcc <span class='op'>=</span> <span class='va'>tcc_object</span>, 
 conditions <span class='op'>=</span> <span class='va'>abiotic_stresses</span><span class='op'>$</span><span class='va'>conditions</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: norm factors don't multiply to 1</span></div><div class='input'><span class='va'>topTags</span> <span class='op'>&lt;-</span> <span class='fu'>DIANE</span><span class='fu'>::</span><span class='fu'>estimateDEGs</span><span class='op'>(</span><span class='va'>fit</span>, reference <span class='op'>=</span> <span class='st'>"C"</span>, perturbation <span class='op'>=</span> <span class='st'>"H"</span>, p.value <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>
 <span class='va'>DEGs</span> <span class='op'>&lt;-</span> <span class='va'>topTags</span><span class='op'>$</span><span class='va'>table</span>
-</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>DEGs</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                   genes    logFC   logCPM       LR        PValue           FDR
+#&gt; AT4G12400.2 AT4G12400.2 7.756985 7.564179 2272.130  0.000000e+00  0.000000e+00
+#&gt; AT5G48570.1 AT5G48570.1 7.067740 8.853736 1970.131  0.000000e+00  0.000000e+00
+#&gt; AT5G12110.1 AT5G12110.1 5.939006 7.952267 2202.123  0.000000e+00  0.000000e+00
+#&gt; AT5G64510.1 AT5G64510.1 5.879518 6.067228 2228.044  0.000000e+00  0.000000e+00
+#&gt; AT2G19310.1 AT2G19310.1 4.212070 7.686615 1389.691 3.651876e-304 1.406410e-300
+#&gt; AT2G29500.1 AT2G29500.1 7.731411 9.482692 1260.703 3.919280e-276 1.257828e-272</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

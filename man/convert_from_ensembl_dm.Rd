@@ -2,8 +2,8 @@
 % Please edit documentation in R/fct_go.R
 \name{convert_from_ensembl_dm}
 \alias{convert_from_ensembl_dm}
-\title{For drosophilia, converts ensembl IDs to entrez IDs, 
-symbol or name,}
+\title{For D. melanogaster, converts ensembl IDs to entrez IDs, 
+symbol or name}
 \usage{
 convert_from_ensembl_dm(ids, to = "entrez")
 }
@@ -13,11 +13,11 @@ convert_from_ensembl_dm(ids, to = "entrez")
 \item{to}{value in c("entrez", "symbol", "name")}
 }
 \value{
-named list
+named vector
 }
 \description{
-For drosophilia, converts ensembl IDs to entrez IDs, 
-symbol or name,
+For D. melanogaster, converts ensembl IDs to entrez IDs, 
+symbol or name
 }
 \examples{
 if(require("org.Dm.eg.db")){

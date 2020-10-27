@@ -2,21 +2,21 @@
 % Please edit documentation in R/fct_coseq.R
 \name{draw_coseq_run}
 \alias{draw_coseq_run}
-\title{draw_coseq_run : displays the indications of clustering}
+\title{Displays clustering results and quality}
 \usage{
 draw_coseq_run(clustering_run, plot = "ICL")
 }
 \arguments{
 \item{clustering_run}{result of a coseq run}
 
-\item{plot}{plot to display, eather integrated Complete Likelihood, or barplots
+\item{plot}{plot to display, either Integrated Complete Likelihood, or barplots
 of the posterior probabilities for the clustering. Value must be "ICL" or "barplots".}
 }
 \value{
 plot describing the quality of the clustering process
 }
 \description{
-draw_coseq_run : displays the indications of clustering
+Displays clustering results and quality
 }
 \examples{
 data("abiotic_stresses")

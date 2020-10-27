@@ -1,6 +1,6 @@
 
 is.unique <- function(vector){
-  if (length(unique(vector))==1) return(TRUE)
+  if (length(unique(vector)) == 1) return(TRUE)
   return(FALSE)
 }
 
@@ -27,13 +27,13 @@ get_factors_from_conditions <- function(conditions, design){
 #' Fits a Poisson generalized linear model to a set of genes
 #'
 #' @description The idea is to extract the importance and effect of each factor.
-#' To do so, the expression of each gene is modelled as a Poisson distribution.
+#' To do so, the expression of each gene is modeled as a Poisson distribution.
 #' The log of its parameter (the expected value) is approximated by a linear
 #' combination of the factors in the experiment. The coefficients associated to 
 #' each factors are estimated to fit gene expression, and can be insightful to
 #' characterize genes behavior in a particular cluster.
 #' The model with interactions is considered. It your design in not a
-#' complete corssed design, the interaction term will be null.
+#' complete crossed design, the interaction term will be null.
 #'
 #' @param normalized_counts normalized counts
 #' @param genes genes belonging to a specific expression-based clusters
@@ -73,9 +73,9 @@ fit_glm <-
   }
 
 
-#' Plots the value of a Poisson generalized linear model coefficients
+#' Plots the coefficients value of a Poisson generalized linear model 
 #'
-#' @param glm glm object returned by ```DIANE::fit_glm()```
+#' @param glm glm object returned by \code{DIANE::fit_glm()}
 #' @export
 #' @examples 
 #' data("abiotic_stresses")

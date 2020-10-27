@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_edge_testing.R
 \name{get_nEdges}
 \alias{get_nEdges}
-\title{Get the number of a edges}
+\title{Get the number of a edges in a graph, given a desired density}
 \usage{
 get_nEdges(density, nGenes, nRegulators)
 }

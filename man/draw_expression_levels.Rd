@@ -16,7 +16,7 @@ draw_expression_levels(
 conditions as colnames.}
 
 \item{genes}{character vector of genes to be plotted (must be contained in
-the rownames of data, entierly or as a substring)}
+the rownames of data)}
 
 \item{conds}{conditions to be shown on expression levels (must be contained in
 the column names of data before the _rep suffix). Default : all conditions.}
@@ -24,7 +24,7 @@ the column names of data before the _rep suffix). Default : all conditions.}
 \item{gene.name.size}{size of the facet plot title font for each gene. Default : 12}
 }
 \description{
-The normalized counts of the required genes in the required conditions are
+The normalized counts of the desired genes in the specified conditions are
 shown. Please limit the number of input genes for readability reasons (up to 10 genes).
 }
 \examples{

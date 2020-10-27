@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gives gene information (common name and description) for a specific organism — get_gene_information • DIANE</title>
+<title>Get genes information — get_gene_information • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Gives gene information (common name and description) for a specific organism — get_gene_information" />
+<meta property="og:title" content="Get genes information — get_gene_information" />
 <meta property="og:description" content="Gives gene information (common name and description) for a specific organism" />
 
 
@@ -129,7 +129,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Gives gene information (common name and description) for a specific organism</h1>
+    <h1>Get genes information</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_go.R'><code>R/fct_go.R</code></a></small>
     <div class="hidden name"><code>get_gene_information.Rd</code></div>
     </div>
@@ -149,13 +149,14 @@
     </tr>
     <tr>
       <th>organism</th>
-      <td><p>value in c("Arabidopsis thaliana", "Homo sapiens", "Mus musculus")</p></td>
+      <td><p>value must be between "Arabidopsis thaliana", "Homo sapiens", "Mus musculus", 
+"Caenorhabditis elegans", "Escherichia coli", "Drosophilia melanogaster"</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a dataframe with input genes as rownames, and columns label and desciption</p>
+    <p>Dataframe with input genes as rownames, with their label and description as columns</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>genes</span> <span class='op'>&lt;-</span>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AT2G05940"</span>, <span class='st'>"AT4G16480"</span>, <span class='st'>"AT4G04570"</span>, <span class='st'>"AT2G30130"</span>, <span class='st'>"AT1G56300"</span><span class='op'>)</span>
@@ -171,7 +172,12 @@
 #&gt; AT4G16480                  Encodes a high affinity H+:&lt;i&gt;myo&lt;/i&gt;-inositol symporter. The only other compound shown to be transported was pinitol, a methylated derivative of &lt;i&gt;myo&lt;/i&gt;-inositol. The mRNA is cell-to-cell mobile.
 #&gt; AT4G04570                                                                                                                                   Encodes a cysteine-rich receptor-like protein kinase. The mRNA is cell-to-cell mobile.
 #&gt; AT2G30130 Overexpression/activation tagged allele has epinastic leaves, reduced apical dominance and is sterile. Gene is similar to asymmetric leaves (AS)/lateral organ boundary (LOB) genes  which repress KNOX gene expression.
-#&gt; AT1G56300                                                                                                                                                                                Chaperone DnaJ-domain superfamily protein</div></pre>
+#&gt; AT1G56300                                                                                                                                                                                Chaperone DnaJ-domain superfamily protein</div><div class='input'>
+<span class='fu'>get_gene_information</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"WBGene00000013"</span>, <span class='st'>"WBGene00000035"</span><span class='op'>)</span>, 
+organism <span class='op'>=</span> <span class='st'>"Caenorhabditis elegans"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                label                            description
+#&gt; WBGene00000013 abf-2 Antibacterial factor-related peptide 2
+#&gt; WBGene00000035 ace-1                 Acetylcholinesterase 1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

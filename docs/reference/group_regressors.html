@@ -41,10 +41,14 @@
 
 <meta property="og:title" content="Group correlated regulators — group_regressors" />
 <meta property="og:description" content="During network inference, the importance of regressors is assessed for aech target gene.
-But in the case of highly correlated regulators, only one of them could be captured by the random
-forests, stealing importance from the others, and leave the other ones with no edge, which would be incorrect.
+But regression methods are very sensitive to correlation between predictive variables, that should be 
+dealt with for stability reasons.
 To account for this, this function summarizes the expression of the regulators being correlated above
-a certain threshold in new variables with the mean of their profiles." />
+a certain threshold as new variables, being the mean of several correlated profiles.
+To do so, a graph of all regressors correlated (spearman) above the threshold id built, and groups
+are formed with a community detection algorithm. Each group is then averaged in a single variable.
+Strongly negatively correlated regressors are added to the group it is correlated to, but their expression
+is not taken into account in the summary mean profile." />
 
 
 
@@ -140,10 +144,14 @@ a certain threshold in new variables with the mean of their profiles." />
 
     <div class="ref-description">
     <p>During network inference, the importance of regressors is assessed for aech target gene.
-But in the case of highly correlated regulators, only one of them could be captured by the random
-forests, stealing importance from the others, and leave the other ones with no edge, which would be incorrect.
+But regression methods are very sensitive to correlation between predictive variables, that should be 
+dealt with for stability reasons.
 To account for this, this function summarizes the expression of the regulators being correlated above
-a certain threshold in new variables with the mean of their profiles.</p>
+a certain threshold as new variables, being the mean of several correlated profiles.</p>
+<p>To do so, a graph of all regressors correlated (spearman) above the threshold id built, and groups
+are formed with a community detection algorithm. Each group is then averaged in a single variable.
+Strongly negatively correlated regressors are added to the group it is correlated to, but their expression
+is not taken into account in the summary mean profile.</p>
     </div>
 
     <pre class="usage"><span class='fu'>group_regressors</span><span class='op'>(</span><span class='va'>normalized.count</span>, <span class='va'>genes</span>, <span class='va'>regressors</span>, corr_thr <span class='op'>=</span> <span class='fl'>0.9</span><span class='op'>)</span></pre>
@@ -161,7 +169,7 @@ a certain threshold in new variables with the mean of their profiles.</p>
     </tr>
     <tr>
       <th>regressors</th>
-      <td><p>regressor genes that want to be used in the inference process.</p></td>
+      <td><p>regressor genes to be used in the inference process.</p></td>
     </tr>
     <tr>
       <th>corr_thr</th>
@@ -171,18 +179,17 @@ a certain threshold in new variables with the mean of their profiles.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a named list.
-counts : the normalized expression data containing the new summarized variables, in
-the format mean_geneID1-geneID2... The individual genes that were grouped are removed.
-correlated_regressors_graph : visNetwork interactive plot of the correlated regulators
-grouped_genes : new vector of target genes, with individual correlated genes replaced by groups
-grouped_regressors : new vector of regressors, with individual correlated genes replaced by groups</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a named list.</p>
 
-    <p>To do so, a graph of all regressors correlated (spearman) above the threshold id built, and groups
-are formed with a community detection algorithm. Each group is then averaged in a single variable.
-Strongly negatively correlated regressors are added to the group it is correlated to, but their expression
-is not taken into account in the summary profile.</p>
+<p>counts : the normalized expression data containing the new summarized variables, in
+the format mean_geneID1-geneID2... The individual genes that were grouped are removed.</p>
+
+<p>correlated_regressors_graph : visNetwork data
+ of the correlated regulators</p>
+
+<p>grouped_genes : new vector of target genes, with individual correlated genes replaced by groups</p>
+
+<p>grouped_regressors : new vector of regressors, with individual correlated genes replaced by groups</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>abiotic_stresses</span><span class='op'>)</span>

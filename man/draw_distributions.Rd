@@ -2,19 +2,20 @@
 % Please edit documentation in R/fct_heatmap.R
 \name{draw_distributions}
 \alias{draw_distributions}
-\title{draw_distributions of count data}
+\title{Draw distributions of expression data}
 \usage{
 draw_distributions(data, boxplot = TRUE)
 }
 \arguments{
-\item{data}{count data, as a numeric dataframe with condition names as columns and genes as rows}
+\item{data}{expression dataframe, with samples as columns and genes as rows}
 
-\item{boxplot}{if TRUE, plot each sample as a boxplot, else, it is shown as a violin plot}
+\item{boxplot}{if TRUE, plot each sample as a boxplot, else, it is shown as distributions}
 }
 \description{
-draw_distributions of count data
+Draw distributions of expression data
 }
 \examples{
 data("abiotic_stresses")
 DIANE::draw_distributions(abiotic_stresses$normalized_counts, boxplot = FALSE)
+DIANE::draw_distributions(abiotic_stresses$raw_counts)
 }

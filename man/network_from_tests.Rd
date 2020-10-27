@@ -8,13 +8,13 @@ network_from_tests(links, fdr)
 }
 \arguments{
 \item{links}{dataframe of the network edges and associated pvalues,
-as in the links attribute of the \code{test_edges} method.}
+as in the links attribute of the \code{test_edges()} method result.}
 
-\item{fdr}{threshold value such as all edges wit hadjusted pvalues lesser than
-the argument will be discarded for the final network construction}
+\item{fdr}{threshold value such as all edges with adjusted pvalues lesser than
+the argument are be discarded for the final network construction}
 }
 \value{
-an oriented weighted network as an igraph object
+Oriented weighted network as an igraph object
 }
 \description{
 Create network from edges statistical tests

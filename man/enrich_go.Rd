@@ -2,33 +2,48 @@
 % Please edit documentation in R/fct_go.R
 \name{enrich_go}
 \alias{enrich_go}
-\title{Enriched Gene Ontology terms in a set of genes}
+\title{Enriched ontologies for recognized organisms}
 \usage{
 enrich_go(
   genes,
   background,
   org = org.At.tair.db::org.At.tair.db,
   sim_cutoff = 0.85,
-  GO_type = "BP"
+  GO_type = "BP",
+  fdr = 0.05,
+  pval = 0.05
 )
 }
 \arguments{
-\item{genes}{gene set of interest. MUST be entrez IDs.}
+\item{genes}{gene set of interest. MUST be entrez IDs, that can be obtained from DIANE's
+functions \code{convert_from_X(gene_IDs)} depending on your organism.
+If your gene IDs are splicing aware, remove this information before with 
+\code{get_locus(gene_IDs)}.}
 
 \item{background}{gene set considered as the "universe" against which perfom 
-the tests. MUST be entrez IDS.}
+the tests. MUST be entrez IDS that can be obtained from DIANE's
+ functions \code{convert_from_X(gene_IDs)} depending on your organism.
+ If your gene IDs are splicing aware, remove this information before with 
+ \code{get_locus(gene_IDs)}.}
 
 \item{org}{organism, in the format of bioconductor organisms databases (e.g 
-org.xx.xx.db)}
+org.xx.xx.db). Possible values are, for DIANE's recognized organisms :
+org.Mm.eg.db, org.Hs.eg.db, org.Dm.eg.db, org.Ce.eg.db, org.EcK12.eg.db,
+org.At.tair.db}
 
 \item{sim_cutoff}{similarity cutoff to use for pooling similar GO terms}
 
 \item{GO_type}{character between BP (Biological Process), CC(Cellular Component) 
 or MF (Molecular Function), depending on the GO subtype
 to use in the analysis}
+
+\item{fdr}{adjusted pvalues threshold, default id 0.05}
+
+\item{pval}{pvalues threshold, default id 0.05}
 }
 \value{
-data.frame
+data.frame with gene significant gene ontologies, and their characteristics
+ as columns
 }
 \description{
 This function returns the enriched biological processes

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fct_edge_testing.R
 \name{test_edges}
 \alias{test_edges}
-\title{test_edges}
+\title{Statistical edges testing by permutations}
 \usage{
 test_edges(
   mat,
@@ -60,9 +60,9 @@ number of edges in the final network
 }
 \description{
 We designed a method to perform statistical testing on TF-target gene pairs
-from the GENIE3 approach.
+from the Random Forest regulatory weights inference.
 The idea is to build a first biologically relevant network with the
-strongest importances diven by a prior GENIE3 run, that would then be
+strongest importances given by a prior GENIE3 run, that would then be
 refined by statistical testing.
 Those tests are performed by the rfPermute package, providing empirical
 pvalues on observed importance values from response variable permutations.

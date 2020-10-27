@@ -1,17 +1,19 @@
 
-#' Genie3 regulatory importances estimation
+#' Regulatory importances estimation via Random Forests
 #' 
-#' @description GENIE3 needs to be fed a list of genes, that will be the nodes of the inferred network. 
+#' @description GENIE3 needs to be given a list of genes, that will be the nodes of the inferred network. 
 #' Among those genes, some must be considered as potential regulators. 
 #' GENIE3 can determine the influence if every regulators over each input genes, 
 #' using their respective expression profiles. You can specify which conditions 
-#' you want to be consired for those profiles during the network inference.
+#' you want to be considered for those profiles during the network inference.
 #' For each target gene, the methods uses Random Forests to provide a ranking of all 
 #' regulators based on their influence on the target expression. This ranking is then merged 
 #' across all targets, giving a global regulatory links ranking stored in the result matrix.
 #' 
 #' @param normalized.count normalized expression matrix containing the regressors and target genes
-#' @param conds condition names to be used in the inference
+#' in its rows, and samples a columns
+#' @param conds condition names to be used in the inference (not columns names, conditions names
+#' before the underscore)
 #' @param regressors genes to be taken as regressors during the inference procedures (regulator genes)
 #' @param targets genes to be included in the inferred network. Regressors can also be in the targets
 #' @param nTrees Number of trees by Random Forest
@@ -22,9 +24,10 @@
 #' computed for the regulator-gene pairs, as returned by the randomForest package.  Default is node_purity,
 #' the metric used in GENIE3. Our improvement of the method uses MSEincrease_oob for consistency reasons regarding
 #' to statistical edges testing. The default one is around 4 times fatser, but more sensitive to the number of
-#'  regulators and to over-fitting.
+#'  regulators and to over-fitting. Too few samples will lead to NA in MSEincrease_oob, so in that case, it is
+#'  advised to used GENIE3's default one.
 #'
-#' @return matrix object
+#' @return Matrix filled with regulator-target regulatory weights
 #' @export
 #' @examples
 #' \dontrun{
@@ -37,7 +40,7 @@
 #' regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]])
 #' 
 #' mat <- network_inference(aggregated_data, conds = abiotic_stresses$conditions, 
-#' targets = genes, regressors = regressors)
+#' targets = genes, regressors = regressors, nTrees = 1000, nCores = 4)
 #' }
 
 network_inference <- function(normalized.count, conds, regressors, targets, nTrees=1000, 
@@ -45,7 +48,8 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
                                               1, max(parallel::detectCores() - 1, 1)),
                               verbose = TRUE, importance_metric = "node_purity"){
 
-  conditions <- colnames(normalized.count)[stringr::str_split_fixed(colnames(normalized.count), '_',2)[,1] %in% conds]
+  conditions <- colnames(normalized.count)[stringr::str_split_fixed(
+    colnames(normalized.count), '_',2)[,1] %in% conds]
   
   
   if (length(conditions) == 0) {
@@ -87,11 +91,16 @@ network_inference <- function(normalized.count, conds, regressors, targets, nTre
 #' In order build a meaningful network, this weighted adjacency matrix between 
 #' regulators and targets has to be sparsified, and we have to determine the regulatory 
 #' weights that we consider significant.
+#' 
+#' This method is a nice exploratory way to threshold complete networks,
+#' but to get more robust and significant results, consider using 
+#' the \code{DIANE::test_edges()} function.
 #'
-#' @param mat matrix containing the importance values for each target and regulator
-#' @param n_edges number of edges top edges (based on their weight) to keep in the final network
+#' @param mat matrix containing the importance values for each target and regulator,
+#' as returned by \code{DIANE::network_inference()}
+#' @param n_edges number of edges top edges to keep in the final network.
 #'
-#' @return igraph object
+#' @return igraph object representing the Gene Regulatory Network
 #' @export
 #' @examples
 #' \dontrun{
@@ -109,21 +118,25 @@ network_thresholding <- function(mat, n_edges){
 }
 
 
-#' Creates data compatible with visNetwork from an igraph object
+#' Creates data describing a gene regulatory network
 #' 
-#' @description Creates dataframe that describe the network.
+#' 
+#' @description Creates dataframe that describe the network
+#' compatible with visNetwork, from an igraph object.
 #' The degree and community of each node are computed.
 #' Communities are defined by the louvain algorithm, that 
-#' maximizes local modularity. The gene type is asssigned to
-#' eacg gene, either a regulator or a target gene.
+#' maximizes local modularity. A type is assigned to
+#' each gene, either a regulator or a target gene.
 #'
-#' @param graph igraph object
+#' @param graph igraph object, as returned by \code{DIANE::network_thresholding()},
+#' or \code{DIANE::network_from_tests()}.
 #' @param regulators list of regulators, so they can be marked
 #' as special nodes in the network
 #' @param gene_info dataframe with gene IDs as rownames, containing
-#' additional info on genes, in columns named label and description
+#' additional info on genes, in columns named label and description.
+#' For known organisms, it can be obtained from \code{DIANE::get_gene_information()}
 #'
-#' @return list of dataframes containing nodes and edges information
+#' @return Named list of dataframes containing nodes and edges information.
 #' @export
 #' @examples
 #' \dontrun{
@@ -174,15 +187,17 @@ network_data <- function(graph, regulators, gene_info = NULL){
       }
     }
   }
-  
   return(data)
 }
 
 
-#' Displays an interactive network view, with regulators as green sqaure nodes.
+#' Interactive network view
+#' 
+#' Visualize the GRN with regulators as green square nodes,
+#' and targets as gray discs.
 #'
-#' @param nodes dataframe containing nodes
-#' @param edges dataframe containing edges
+#' @param nodes dataframe containing nodes, from \code{DIANE::network_data()$nodes}
+#' @param edges dataframe containing edges, from \code{DIANE::network_data()$edges}
 #' 
 #' @import visNetwork
 #' @export

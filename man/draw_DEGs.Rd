@@ -2,21 +2,22 @@
 % Please edit documentation in R/fct_dea.R
 \name{draw_DEGs}
 \alias{draw_DEGs}
-\title{MA or volcano plot for Differential expression}
+\title{MA or volcano plot for differential expression results}
 \usage{
 draw_DEGs(tags, fdr = 0.01, lfc = 0, MA = TRUE)
 }
 \arguments{
-\item{tags}{tags returned bu estimateDEGs, function, that is to say topTags from edgeR}
+\item{tags}{tags returned bu estimateDEGs, function, that is to say topTags from edgeR, 
+used with \code{p.value = 1}}
 
-\item{fdr}{pvalue for DEGs}
+\item{fdr}{pvalue for DEGs detection}
 
 \item{lfc}{absolute log fold change threshold for differentially expressed genes, default is 0.}
 
 \item{MA}{TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.}
 }
 \description{
-MA or volcano plot for Differential expression
+MA or volcano plot for differential expression results
 }
 \examples{
 data("abiotic_stresses")

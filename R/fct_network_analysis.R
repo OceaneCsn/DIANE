@@ -7,8 +7,10 @@ community_structure <- function(graph) {
   return(igraph::membership(igraph::cluster_louvain(g)))
 }
 
-#' Plots the histogram of in and out degrees, betweeness of 
-#' regultors and target genes.
+#' Draw a network's degree distributions
+#' 
+#' Plots the histograms of in and out degrees of 
+#' regulators and target genes, with regulators betweeness.
 #'
 #' @param nodes dataframe containing the nodes information
 #' @param graph igraph object

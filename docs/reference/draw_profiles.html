@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw profiles of a clustering — draw_profiles • DIANE</title>
+<title>Draw expression profiles of a clustering — draw_profiles • DIANE</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Draw profiles of a clustering — draw_profiles" />
-<meta property="og:description" content="Draw profiles of a clustering" />
+<meta property="og:title" content="Draw expression profiles of a clustering — draw_profiles" />
+<meta property="og:description" content="Draw expression profiles of a clustering" />
 
 
 
@@ -129,13 +129,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw profiles of a clustering</h1>
+    <h1>Draw expression profiles of a clustering</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_coseq.R'><code>R/fct_coseq.R</code></a></small>
     <div class="hidden name"><code>draw_profiles.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Draw profiles of a clustering</p>
+    <p>Draw expression profiles of a clustering</p>
     </div>
 
     <pre class="usage"><span class='fu'>draw_profiles</span><span class='op'>(</span>
@@ -152,23 +152,28 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>normalized counts</p></td>
+      <td><p>normalized counts with genes as rownames and samples as columns</p></td>
     </tr>
     <tr>
       <th>membership</th>
-      <td><p>membership item of the coseq object returned by run_coseq object</p></td>
+      <td><p>membership item of the coseq object returned by 
+<code><a href='run_coseq.html'>run_coseq()</a></code> object</p></td>
     </tr>
     <tr>
       <th>conds</th>
-      <td><p>conditions on which to perform clustering, ingoring the others</p></td>
+      <td><p>conditions on which to display clustering profiles.
+Must be a unique vector containing the conditions you want to consider
+for gene clustering, without the replicate information 
+(string before the underscore in sample names)</p></td>
     </tr>
     <tr>
       <th>expression</th>
-      <td><p>if it is set to "profiles" (default), plots expression/sum(expression). if "counts", plots log(Counts+1)</p></td>
+      <td><p>if it is set to "profiles" (default), 
+plots expression/sum(expression). if "counts", plots log(Counts+1)</p></td>
     </tr>
     <tr>
       <th>k</th>
-      <td><p>if NULL (default), plot all the clusters. Else, plot the clusters in the vetcor k.</p></td>
+      <td><p>if NULL (default), plots all the clusters. Else, plot the clusters in the vetcor k.</p></td>
     </tr>
     <tr>
       <th>nrow</th>
