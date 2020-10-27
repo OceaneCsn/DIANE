@@ -1,8 +1,8 @@
 ---
-title: "Normalisation"
+title: "Normalization"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DIANE}
+  %\VignetteIndexEntry{Normalization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

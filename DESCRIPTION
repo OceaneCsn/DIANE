@@ -50,7 +50,9 @@ Imports:
     rmarkdown,
     tictoc,
     future,
-    promises
+    promises,
+    ggVennDiagram,
+    loggit
 Suggests: 
     org.Hs.eg.db,
     org.Dm.eg.db,

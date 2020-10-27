@@ -2,7 +2,7 @@
 title: "DIANE Programming Interface"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DIANE_Programming_Interface}
+  %\VignetteIndexEntry{DIANE Programming Interface}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

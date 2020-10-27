@@ -2,7 +2,7 @@
 title: "Data upload"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{DIANE}
+  %\VignetteIndexEntry{Data upload}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
