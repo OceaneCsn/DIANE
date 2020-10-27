@@ -21,7 +21,7 @@ mod_differential_expression_analysis_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Dispersion estimation                                                   ####
     
-    col_3(
+    col_4(
       shinydashboardPlus::boxPlus(
         title = "Settings",
         solidHeader = FALSE,
@@ -101,7 +101,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         title = "Results",
         width = 12,
         shiny::tabPanel(title = "Results table",
-                        DT::dataTableOutput(ns("deg_table"))),
+                        shiny::uiOutput(ns("table_ui"))),
         shiny::tabPanel(
           title = "MA - Vulcano plots",
           
@@ -523,6 +523,19 @@ mod_differential_expression_analysis_server <-
     
     #   ____________________________________________________________________________
     #   Result plots                                                            ####
+    
+    
+    
+    output$table_ui <- shiny::renderUI({
+      if(is.null(r$normalized_counts)) {
+        shinydashboardPlus::descriptionBlock(
+          number = "Please normalize and filter raw data in normalization tab",
+          numberColor = "orange",
+          rightBorder = FALSE
+        )
+      }
+      else DT::dataTableOutput(ns("deg_table"))
+    })
     
     output$deg_table <- DT::renderDataTable({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)

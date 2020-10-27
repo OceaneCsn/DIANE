@@ -25,14 +25,10 @@ mod_normalisation_ui <- function(id) {
     
     shiny::h1("Data filtering and normalisation"),
     shiny::hr(),
-    # shiny::h2(
-    #   "Because low count genes and differences in sequencing depths are a 
-    #   source of bias, we want to perform some data cleaning and transformation."
-    # ),
-    # shiny::hr(),
+    
     
     #   ____________________________________________________________________________
-    #   Normalisation settings                                                  ####
+    #   Normalization settings                                                  ####
     
     col_3(
       shinydashboardPlus::boxPlus(
@@ -44,7 +40,7 @@ mod_normalisation_ui <- function(id) {
         width = 12,
         
         
-        col_8(shiny::h2("Normalisation")),
+        col_8(shiny::h2("Normalization")),
         
         
         col_4(shinyWidgets::dropdownButton(
@@ -141,7 +137,7 @@ mod_normalisation_ui <- function(id) {
     #   ____________________________________________________________________________
     #   plot results ui                                                         ####
     
-    col_8(
+    column(width = 9,
       shinydashboard::tabBox(
         title = "Data exploration",
         width = 12,

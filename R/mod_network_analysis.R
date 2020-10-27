@@ -50,7 +50,7 @@ mod_network_analysis_ui <- function(id) {
     
     column(
       width = 5,
-      shiny::textInput(ns("gene_to_zoom"), label = "Gene ID to focus on :"),
+      shiny::uiOutput(ns("zoom_ui")),
       visNetwork::visNetworkOutput(ns("network_view"), height = "900px")
     ),
     
@@ -166,6 +166,16 @@ mod_network_analysis_ui <- function(id) {
 mod_network_analysis_server <- function(input, output, session, r) {
   ns <- session$ns
   
+  output$zoom_ui <- shiny::renderUI({
+    if(is.null(r$current_network)) {
+      shinydashboardPlus::descriptionBlock(
+        number = "Please infer a network in previous tab",
+        numberColor = "orange",
+        rightBorder = FALSE
+      )
+    }
+    else shiny::textInput(ns("gene_to_zoom"), label = "Gene ID to focus on :")
+  })
   
   #   ____________________________________________________________________________
   #   network view                                                            ####

@@ -31,7 +31,8 @@ mod_module_levels_ui <- function(id){
       
         
       shiny::tabPanel(title = "PCA",
-                      shiny::plotOutput(ns('pca_plot'), height = "800px")),
+                      shiny::uiOutput(ns("pca_ui"))),
+                      #shiny::plotOutput(ns('pca_plot'), height = "800px")),
       
       shiny::tabPanel(title = "MDS",
                       shiny::plotOutput(ns('mds_plot'), height = "800px")),
@@ -69,6 +70,16 @@ mod_module_levels_ui <- function(id){
 mod_module_levels_server <- function(input, output, session, r){
   ns <- session$ns
   
+  output$pca_ui <- shiny::renderUI({
+    if(is.null(r$normalized_counts)) {
+      shinydashboardPlus::descriptionBlock(
+        number = "Please normalize and filter raw data in previous tab",
+        numberColor = "orange",
+        rightBorder = FALSE
+      )
+    }
+    else shiny::plotOutput(ns('pca_plot'), height = "800px")
+  })
   
   output$condition_choice <- shiny::renderUI({
     shiny::req(r$normalized_counts, r$conditions)

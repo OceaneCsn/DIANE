@@ -141,7 +141,7 @@ mod_import_data_ui <- function(id) {
     
     shinydashboardPlus::boxPlus(
       title = "Preview of the expression matrix",
-      width = 4,
+      width = 5,
       solidHeader = FALSE,
       status = "success",
       collapsible = TRUE,
