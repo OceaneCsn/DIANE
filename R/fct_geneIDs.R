@@ -24,7 +24,7 @@ are_splice_variants <- function(gene_ids){
 #' @export
 #' @examples 
 #' data("abiotic_stresses")
-#' d <- aggregate_splice_variants(abiotic_stresses$normalized_counts)
+#' head(aggregate_splice_variants(abiotic_stresses$normalized_counts))
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
     
@@ -48,7 +48,8 @@ aggregate_splice_variants <- function(data){
 #' (remove the .1, .2 from a list of gene IDs)
 #' @param gene_ids list of gene ids with splice variants information
 #' @param unique boolean, weather or not to return unique locus vector
-#' @return character vector
+#' @return character vector of gene IDs without alternative transcripts 
+#' information
 #' @export
 #' @examples 
 #' splice_variants <- rownames(abiotic_stresses$normalized_counts)[1:20]

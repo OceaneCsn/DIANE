@@ -25,7 +25,7 @@ reference:
 
 - title: Differential expression analysis
 - contents:
-  - starts_with("estimate")
+  - starts_with("estimateD")
 
 - title: Expression based clustering
 - contents:
@@ -44,8 +44,10 @@ reference:
 - contents:
   - starts_with("network_")
   - test_edges
+  - estimates_test_edges_time
   - group_regressors
   - describe_node
+  
  
 - title: Visualization functions
 - contents:
