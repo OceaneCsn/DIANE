@@ -492,7 +492,7 @@ mod_differential_expression_analysis_server <-
                   tempImage, overwrite = TRUE)
         
         # Set up parameters to pass to Rmd document
-        params <- list(r_dea = r_dea)
+        params <- list(r_dea = r_dea, r = r)
         
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
