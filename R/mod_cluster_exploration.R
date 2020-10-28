@@ -145,7 +145,7 @@ mod_cluster_exploration_server <-
     
     membership <- shiny::reactive({
       shiny::req(r$clusterings, r$current_comparison)
-      req(r$clusterings[[r$current_comparison]])
+      shiny::req(r$clusterings[[r$current_comparison]])
       r$clusterings[[r$current_comparison]]$membership
     })
     
@@ -198,11 +198,9 @@ mod_cluster_exploration_server <-
     
     table <- shiny::reactive({
       req(r$top_tags, r$current_comparison, membership())
-      
       genes <- get_genes_in_cluster(membership = membership(),
                                     cluster = input$cluster_to_explore)
       table <- data.frame(Genes = genes)
-      
       if (!is.null(r$gene_info)) {
         if (r$splicing_aware) ids <- get_locus(genes, unique = FALSE)
         else ids <- genes

@@ -27,6 +27,12 @@ It contains the main settings and results for the DEA tab of the application, re
 
 # Your settings
 
+Normalization method :
+
+```{r}
+print(the_r$norm_method)
+```
+
 Reference and perturbation condition :
 
 ```{r}
@@ -40,12 +46,6 @@ paste("FDR =", r$fdr, "LFC = ", r$lfc)
 ```
 
 # Results
-
-EdgeR statistical model:
-
-```{r}
-r$fit
-```
 
 Number of up-regulated genes :
 
@@ -72,7 +72,15 @@ The entire table is downloadable from the application as a csv file.
 ```{r, fig.width=10, fig.height=8}
 DIANE::draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = TRUE)
 DIANE::draw_DEGs(r$tags, fdr = r$fdr, lfc = r$lfc, MA = FALSE)
-DIANE::draw_heatmap(r$gene_table$genes, data = the_r$normalized_counts, title = paste(r$ref, "versus", r$trt))
+DIANE::draw_heatmap(r$gene_table$genes, data = the_r$normalized_counts, title = paste(r$ref, "versus", r$trt), conditions = c(r$ref, r$trt))
+```
+
+# Fitted model
+
+EdgeR statistical model:
+
+```{r}
+r$fit
 ```
 
 ## GO enrichment analysis
