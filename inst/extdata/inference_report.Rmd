@@ -47,9 +47,11 @@ paste(input$input_deg_genes_net, ",", length(r$DEGs[[input$input_deg_genes_net]]
 Those DEGs were studied via clustering :
 
 ```{r}
-print(input$input_deg_genes_net == r$current_comparison)
-if (input$input_deg_genes_net == r$current_comparison)
-  print(paste(paste(input$input_cluster_genes_net, collapse = ', '), " were the clusters chosen for inference"))
+if(!is.null(r$current_comparison)){
+  print(input$input_deg_genes_net == r$current_comparison)
+  if (input$input_deg_genes_net == r$current_comparison)
+    print(paste(paste(input$input_cluster_genes_net, collapse = ', '), " were the clusters chosen for     inference"))
+} else print(FALSE)
 ```
 
 Conditions used for the inference :
