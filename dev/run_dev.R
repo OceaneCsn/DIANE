@@ -16,6 +16,4 @@ run_app()
 
 # TODO : ajouter des ? pour acp, et poisson regression
 
-# TDO ajouter dans le rapport d'inference l'info des clusters
-
 # Dire dans la vignette qu'en fait il faut pas normaliser les données de démo

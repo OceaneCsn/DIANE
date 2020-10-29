@@ -261,8 +261,9 @@ mod_network_inference_server <- function(input, output, session, r){
             choices = names(r$DEGs),
             choicesOpt = list(subtext = paste(lengths(r$DEGs), "genes"))
           ),
-          col_6(shiny::uiOutput(ns("input_cluster_genes"))),
-          col_6(shiny::uiOutput(ns("input_conditions_choice_net")))
+          col_6(shiny::uiOutput(ns("input_conditions_choice_net"))),
+          col_6(shiny::uiOutput(ns("input_cluster_genes")))
+          
           
       )
     }
