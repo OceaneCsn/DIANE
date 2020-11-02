@@ -13,3 +13,4 @@ $run_dev.*
 ^app\.R$
 ^rsconnect$
 inst/extdata/datasets/*.csv
+^Dockerfile$

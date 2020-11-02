@@ -112,6 +112,17 @@ mod_cluster_exploration_ui <- function(id) {
                           width = "600px",
                           label = "Glm summary")
                         ),
+                        
+                        col_2(shinyWidgets::dropdownButton(
+                          size = 'xs',
+                          shiny::includeMarkdown(system.file("extdata", "pglm.md", package = "DIANE")),
+                          circle = TRUE,
+                          status = "success",
+                          icon = shiny::icon("question"),
+                          width = "600px",
+                          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+                        )),
+                        
                         shiny::plotOutput(ns("glm_plot"), height = "700px"),
                         shiny::hr(),
                         shiny::h5("The absolute value of a coefficient gives information about the intensity of

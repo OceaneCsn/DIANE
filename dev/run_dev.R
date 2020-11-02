@@ -12,10 +12,4 @@ golem::document_and_reload()
 run_app()
 
 
-# NOTE : fix point d'interrogation (coseq, poisson, ew!)
-
-# TODO : ajouter des ? pour acp, et poisson regression
-
-# TDO ajouter dans le rapport d'inference l'info des clusters
-
 # Dire dans la vignette qu'en fait il faut pas normaliser les données de démo

@@ -31,9 +31,10 @@ mod_module_levels_ui <- function(id){
       
         
       shiny::tabPanel(title = "PCA",
-                      shiny::uiOutput(ns("pca_ui"))),
-                      #shiny::plotOutput(ns('pca_plot'), height = "800px")),
-      
+                      shiny::uiOutput(ns("pca_ui")),
+                      shiny::includeMarkdown(system.file(
+                        "extdata", "pca.md", package = "DIANE"))),
+
       shiny::tabPanel(title = "MDS",
                       shiny::plotOutput(ns('mds_plot'), height = "800px")),
       
