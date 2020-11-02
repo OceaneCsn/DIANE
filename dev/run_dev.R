@@ -12,4 +12,5 @@ golem::document_and_reload()
 run_app()
 
 
+
 # Dire dans la vignette qu'en fait il faut pas normaliser les données de démo

@@ -398,7 +398,8 @@ mod_clustering_server <- function(input, output, session, r) {
       file.copy(system.file("extdata", "favicon.ico", package = "DIANE"),
                 tempImage, overwrite = TRUE)      
       # Set up parameters to pass to Rmd document
-      params <- list(r = r$clusterings[[input_genes_conditions()]],
+      params <- list(r_clust = r$clusterings[[input_genes_conditions()]],
+                     r = r,
                      input = input, normalized_counts = r$normalized_counts)
       
       # Knit the document, passing in the `params` list, and eval it in a

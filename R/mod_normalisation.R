@@ -234,6 +234,8 @@ mod_normalisation_server <- function(input, output, session, r) {
   shiny::observeEvent(input$normalize_btn, {
     shiny::req(r$raw_counts)
     shiny::req(input$norm_method)
+    
+    r$norm_method <- input$norm_method
     if(input$norm_method != "none"){
       r$tcc <-
         normalize(
@@ -268,8 +270,6 @@ mod_normalisation_server <- function(input, output, session, r) {
       loggit::loggit(custom_log_lvl = TRUE,
                    log_lvl = r$session_id,
                    log_msg = "normalisation")
-    
-    
   })
   
   
