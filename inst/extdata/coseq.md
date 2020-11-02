@@ -1,5 +1,5 @@
 
-# Poisson mixture models for clustering
+# Mixture models for clustering
 
 ---
 
