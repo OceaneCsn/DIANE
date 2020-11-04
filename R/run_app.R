@@ -14,8 +14,7 @@ run_app <- function(server_version = FALSE,
   golem::with_golem_options(
     app = shinyApp(
       ui = app_ui, 
-      server = app_server,
-      options = list(host = "0.0.0.0")
+      server = app_server
     ),
     golem_opts = list("server_version" = server_version , ...)
   )

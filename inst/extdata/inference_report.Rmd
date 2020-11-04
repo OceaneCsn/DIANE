@@ -72,7 +72,7 @@ How many regulators were found among the input genes :
 
 ```{r}
 if(r$splicing_aware) {
-  targets <- get_locus(r$DEGs[[input$input_deg_genes_net]])
+  targets <- DIANE::get_locus(r$DEGs[[input$input_deg_genes_net]])
 }else {
   targets <- r$DEGs[[input$input_deg_genes_net]]
 }

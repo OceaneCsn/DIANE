@@ -392,3 +392,31 @@ tfs <- read.table("D:/These/DIANE_inputs/TFSet.txt", h = F, sep = '\t')
 tfs <- unique(tfs$V3)
 tfs <- c(stringr::str_split_fixed(tfs, ', ', 2)[,1], stringr::str_split_fixed(tfs, ', ', 2)[,2][stringr::str_split_fixed(tfs, ', ', 2)[,2] != ""])
 regulators_per_organism[["Escherichia coli"]] <- tfs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+data("abiotic_stresses")
+DIANE::draw_profiles(data = abiotic_stresses$normalized_counts, 
+membership = abiotic_stresses$heat_DEGs_coseq_membership,
+conds = unique(abiotic_stresses$conditions)) 
+DIANE::draw_profiles(data = abiotic_stresses$normalized_counts, 
+                      membership = abiotic_stresses$heat_DEGs_coseq_membership, 
+                      conds = unique(abiotic_stresses$conditions), k = 3) + 
+  gghighlight::gghighlight() 
+
+
+gene <- sample(get_genes_in_cluster(abiotic_stresses$heat_DEGs_coseq_membership,  3),1)
