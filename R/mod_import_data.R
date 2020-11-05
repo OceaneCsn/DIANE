@@ -563,7 +563,10 @@ mod_import_data_server <- function(input, output, session, r) {
     shiny::req(r$organism)
     
     if(r$organism== "Other") txt <- "No gene ID requirement"
-    else txt <- regulators_per_organism[[r$organism]]
+    else {
+      data("regulators_per_organism", package = "DIANE")
+      txt <- regulators_per_organism[[r$organism]]
+    }
     
     shinydashboardPlus::descriptionBlock(
       number = "Expected gene IDs are in the form",
