@@ -60,7 +60,19 @@ It contains row or normalized expression levels.
 In order for your input to be compatible with the proposed organisms for GO terms and annotation, it should contain gene IDs as follow :
 
 -   For Arabidopsis thaliana : TAIR IDs (ex: AT1G01020, or AT1G01020.1)
+
 -   For Human : ensembl IDs (ex: ENSG00000005513)
+
+-   For Mus musculus : ENSMUSG00000087910
+
+-   For Drosophilia : FBgn0000036
+
+-   For C.
+    elegans : WBGene00000042
+
+-   For Lupinus albus : Lalb_Chr00c02g0404151
+
+-   For E-coli : acpS
 
 Our demo data have raw counts presented as follow :
 
@@ -140,6 +152,9 @@ We use here the default parameters (no prior removal of differentially expressed
 ```{r normalize, fig.width=8, fig.height=5}
 tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, norm_method = 'tmm', abiotic_stresses$conditions, iteration = FALSE)
 ```
+
+**Note** : here, our data should not be normalized, as it is already given as TPMs.
+Normalization is shown for the purpose of demonstration.
 
 ## Low counts removal
 
@@ -463,7 +478,7 @@ ggplot(res, aes(x = density, y = nEdges)) + geom_line(size = 1) +
   geom_vline(xintercept = 0.03, color = "darkgreen", lty = 2, size = 1.2)
 ```
 
-Given this graph, we can consider that a density value of 0.3 would be a good compromise between a small enough subset of edges to test, and a coherent density value, not too restrictive.
+Given this graph, we can consider that a density value of 0.03 would be a good compromise between a small enough subset of edges to test, and a coherent density value, not too restrictive.
 This step will take a certain time to run, from a few minutes to tens of minutes depending on your hardware.
 
 ```{r testingexpr, eval=FALSE}

@@ -29,7 +29,7 @@ mod_datasets_server <- function(input, output, session){
       shiny::includeMarkdown(
         system.file("extdata", "ex_datasets.md", package = "DIANE"))
     else
-      h4("Dataset examples on human, mouse, drosophilia and more are 
+      shiny::h4("Dataset examples on human, mouse, drosophilia and more are 
          available for download in this tab at diane.bpmp.inrae.fr")
     
   })

@@ -1,4 +1,5 @@
-FROM rocker/r-ver:4.0.2
+FROM rocker/shiny:4.0.2
+
 RUN apt-get update && apt-get install -y  gdal-bin git-core libcurl4-openssl-dev libgdal-dev libgeos-dev libgeos++-dev libgit2-dev libglpk-dev libgmp-dev libssh2-1-dev libssl-dev libudunits2-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev && rm -rf /var/lib/apt/lists/*
 RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/', Bioc = 'http://www.bioconductor.org/packages/release/bioc'), download.file.method = 'libcurl')" >> /usr/local/lib/R/etc/Rprofile.site
 RUN R -e 'install.packages("remotes")'
@@ -58,9 +59,15 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.15")
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.2.1")'
 RUN Rscript -e 'remotes::install_github("ryapric/loggit@8293ba322c86a80b81b07a81e1ae4f9a64b395a7")'
 RUN Rscript -e 'remotes::install_github("rstudio/rmarkdown@7239ceacb759d46a015aa688f0df7f674b7485be")'
+RUN Rscript -e 'remotes::install_version("lubridate",upgrade="never")'
+RUN Rscript -e 'remotes::install_version("shinythemes",upgrade="never")'
+RUN Rscript -e 'remotes::install_version("patchwork",upgrade="never")'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
-EXPOSE 3838
-CMD  ["R", "-e", "options('shiny.port'=3838,shiny.host='0.0.0.0');DIANE::run_app()"]
+EXPOSE 8086
+
+COPY shiny-customized.config /etc/shiny-server/shiny-server.conf
+
+CMD ["/usr/bin/shiny-server"]
