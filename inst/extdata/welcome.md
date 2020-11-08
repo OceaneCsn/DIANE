@@ -16,7 +16,7 @@ We designed this tool to process, explore, and perform advanced statistical anal
 
 + Machine learning based Gene regulatory network inference
 
-All of the features in DIANE are accessible via a signle page shiny application that can be locally launched. 
+All of the features in DIANE are accessible via a signle page shiny application that can be locally launched, or accessed online at https://diane.bpmp.inrae.fr. 
 
 The steps should be performed in the order of the different tabs. For instance, before running clustering or network inference, differential expression should be performed first. The figure above summarizes DIANE's main workflow.
 
