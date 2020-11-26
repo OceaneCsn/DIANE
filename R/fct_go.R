@@ -307,6 +307,9 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qva
   
   go <- clusterProfiler::enricher(gene = genes, universe = universe, 
                                   TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
+  
+  if(is.null(go))
+    stop("custom GO did not work, maybe not enough genes in ontology file?")
   go <- go@result
   go <- go[go$qvalue < qvalue & go$p.adjust < pvalue,]
   
