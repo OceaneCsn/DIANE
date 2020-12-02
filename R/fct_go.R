@@ -305,17 +305,25 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qva
     stop("The genes are not in the first column of the custom dataframe")
   }
   
+
   go <- clusterProfiler::enricher(gene = genes, universe = universe, 
                                   TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
+
   
   if(is.null(go))
     stop("custom GO did not work, maybe not enough genes in ontology file?")
   go <- go@result
+  
+
   go <- go[go$qvalue < qvalue & go$p.adjust < pvalue,]
   
-  xx <- as.list(GO.db::GOTERM)
-  goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
+  #to precent crashes when GO ids not trimmed
+  go$ID <- stringr::str_trim(go$ID)
   
+  xx <- as.list(GO.db::GOTERM)
+  
+  goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
+
   go$Description <- goTerms[match(go$ID, names(goTerms))]
   return(go)
 }
