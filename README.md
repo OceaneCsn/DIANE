@@ -57,14 +57,20 @@ Get DIANE source code via Git :
 
 Install Docker engine, as described in the [Docker docs](https://docs.docker.com/engine/install/).
 
-Go to DIANE's folder, and build the image, that we'll name diane, from the Dockerfile (superuser rights required).
+Go to DIANE's folder.
+
+First, you can change the default settings for the dockeried shiny-server by editing the file shiny-customized.config (like changing the port, the user to run with, and more)
+
+Now let's build the image, that we'll name diane, from the Dockerfile (superuser rights required).
 
 ```
 cd DIANE
 docker build -t diane .
 ```
 
-This might take a while. Then, you can start the container diane : 
+This might take a while.
+You can check that the container image was built with `docker images`.
+Then, you can start the container diane : 
 
 ```
 docker run -d --cpus 16 --user shiny --rm -p 8086:8086 -v /path/to/app/on/host/:/srv/shiny-server/ -v /path/to/logs/on/host/:/var/log/shiny-server/ diane

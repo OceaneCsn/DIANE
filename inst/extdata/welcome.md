@@ -10,11 +10,11 @@ We designed this tool to process, explore, and perform advanced statistical anal
 
 -   Gene ontology enrichment analysis for model organisms
 
--   Expression based clustering in the framework of Poisson Mixture Models, and characterisation of those clusters with generalized linar models and GO enrichment analysis
+-   Expression based clustering in the framework of Poisson Mixture Models, and characterization of those clusters with generalized linar models and GO enrichment analysis
 
 -   Machine learning based Gene regulatory network inference
 
-All of the features in DIANE are accessible via a signle page shiny application that can be locally launched, or accessed online at <https://diane.bpmp.inrae.fr>.
+All of the features in DIANE are accessible via a single page shiny application that can be locally launched, or accessed online at <https://diane.bpmp.inrae.fr>.
 
 The steps should be performed in the order of the different tabs. For instance, before running clustering or network inference, differential expression should be performed first. The figure above summarizes DIANE's main workflow.
 
@@ -55,7 +55,11 @@ Get DIANE source code via Git :
 
 Install Docker engine, as described in the [Docker docs](https://docs.docker.com/engine/install/).
 
-Go to DIANE's folder, and build the image, that we'll name diane, from the Dockerfile (superuser rights required).
+Go to DIANE's folder.
+
+First, you can change the default settings for the dockeried shiny-server by editing the file shiny-customized.config (like changing the port, the user to run with, and more)
+
+Now let's build the image, that we'll name diane, from the Dockerfile (superuser rights required).
 
     cd DIANE
     docker build -t diane .
