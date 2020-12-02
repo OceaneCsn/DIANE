@@ -68,6 +68,6 @@ WORKDIR /build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 EXPOSE 8086
 
-#COPY shiny-customized.config /etc/shiny-server/shiny-server.conf
+COPY shiny-customized.config /etc/shiny-server/shiny-server.conf
 
 CMD ["/usr/bin/shiny-server"]
