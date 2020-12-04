@@ -65,7 +65,7 @@ app_server <- function(input, output, session) {
   
   #session_id <- as.character(floor(runif(1)*1e20))
   
-  
+  set.seed(1)
 
 #   ____________________________________________________________________________
 #   Server modules                                                          ####
