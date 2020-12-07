@@ -156,7 +156,7 @@ group_regressors <-
         counts = normalized.count,
         correlated_regressors_graph = graph_plot,
         grouped_genes = c(intersect(genes, rownames(normalized.count)),
-                          rownames(normalized.count)[grepl("means_", rownames(normalized.count))]),
+                          rownames(normalized.count)[grepl("mean_", rownames(normalized.count))]),
         grouped_regressors = c(new_reg, regressors[!regressors %in% grouped_tfs])
       )
     )
