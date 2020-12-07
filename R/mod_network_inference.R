@@ -18,6 +18,7 @@ mod_network_inference_ui <- function(id){
       margins = c(70, 1200)
     ),
     
+    
     shiny::h1("Network inference"),
     shiny::hr(),
     
