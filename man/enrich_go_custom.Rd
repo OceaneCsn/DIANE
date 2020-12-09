@@ -9,7 +9,8 @@ enrich_go_custom(
   universe = genes_to_GO[, 1],
   genes_to_GO,
   qvalue = 0.1,
-  pvalue = 0.05
+  pvalue = 0.05,
+  GO_type = "BP"
 )
 }
 \arguments{
@@ -24,6 +25,10 @@ gene IDs must be the IDs present in your gene expresion file}
 \item{qvalue}{qvalue cutoff for enriched GO terms, default to 0.1}
 
 \item{pvalue}{qvalue cutoff for enriched GO terms, default to 0.05}
+
+\item{GO_type}{character between BP (Biological Process), CC(Cellular Component) 
+or MF (Molecular Function), depending on the GO type
+to use in the analysis}
 }
 \value{
 dataframe containing enriched go terms and their description

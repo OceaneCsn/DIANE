@@ -581,8 +581,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
         }
         else{
           shinyalert::shinyalert("Please input Gene to GO term file. ", 
-                                 "For now, only Arabidopsis thaliana, mus musculus, and 
-        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                 "You input your own gene - GO terms matching.",
                                  type = "error")
         }
       }
@@ -621,7 +620,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       universe <- intersect(rownames(r$normalized_counts), GOs[,1])
       
-      r_mod$go <- enrich_go_custom(genes, universe, GOs)
+      r_mod$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
       
     }
     else{

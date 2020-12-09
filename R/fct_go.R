@@ -288,10 +288,13 @@ enrich_go <- function(genes, background,
 #' gene IDs must be the IDs present in your gene expresion file
 #' @param qvalue qvalue cutoff for enriched GO terms, default to 0.1
 #' @param pvalue qvalue cutoff for enriched GO terms, default to 0.05
-#'
+#' @param GO_type character between BP (Biological Process), CC(Cellular Component) 
+#' or MF (Molecular Function), depending on the GO type
+#' to use in the analysis
 #' @return dataframe containing enriched go terms and their description
 #' @export
-enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qvalue = 0.1, pvalue = 0.05){
+enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, 
+                             qvalue = 0.1, pvalue = 0.05, GO_type = "BP"){
   
   if (length(genes) == 0) {
     stop("Empty list of genes")
@@ -323,9 +326,12 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO, qva
   xx <- as.list(GO.db::GOTERM)
   
   goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
+  goType <- sapply(go$ID, function(id){return(AnnotationDbi::Ontology(xx[[id]]))})
 
   go$Description <- goTerms[match(go$ID, names(goTerms))]
-  return(go)
+  go$GOType <- goType[match(go$ID, names(goType))]
+  
+  return(go[go$GOType == GO_type,])
 }
 
 #' Plot the enriched go terms of an enrich_go result

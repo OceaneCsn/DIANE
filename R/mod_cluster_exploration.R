@@ -431,7 +431,7 @@ mod_cluster_exploration_server <-
         universe <-
           intersect(rownames(r$normalized_counts), GOs[, 1])
         
-        r_clust$go <- enrich_go_custom(genes, universe, GOs)
+        r_clust$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
         
       } else{
         genes <- get_genes_in_cluster(membership = membership(),

@@ -755,14 +755,31 @@ mod_differential_expression_analysis_server <-
               type = "error"
             )
           }
-          
-          shiny::req(ncol(r$custom_go) == 2)
 
+          shiny::req(ncol(r$custom_go) == 2)
+        
           GOs <- r$custom_go
           genes <- r_dea$top_tags$genes
           universe <- intersect(rownames(r$normalized_counts), GOs[,1])
           
-          r_dea$go <- enrich_go_custom(genes, universe, GOs)
+          
+          
+          
+          if (length(universe) == 0) {
+            r$custom_go <- NULL
+            shinyalert::shinyalert(
+              "Invalid first column",
+              "The first column did not match any gene ID from differential expression analysis",
+              type = "error"
+            )
+          }
+          # shinyalert::shinyalert(
+          #   "Valid file",
+          #   type = "success"
+          # )
+          
+          shiny::req(length(universe) > length(genes))
+          r_dea$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
           
           
       ################# known organisms
