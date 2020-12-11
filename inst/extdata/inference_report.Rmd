@@ -171,6 +171,14 @@ DIANE::draw_network_degrees(nodes = r$networks[[r$current_network]]$nodes,
                      graph = r$networks[[r$current_network]]$graph)
 ```
 
+
+To reproduce this result on identical data, specify this seed in DIANE's interface (data import tab), or just before network inference and edge testing in command line.
+
+```{r}
+r$seed
+```
+
+
 ## Highly connected genes
 
 Here are the genes of the network, ranked by degree. The full table, as well as the edges table, can be downloaded directly from the app as a csv file.

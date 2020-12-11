@@ -94,6 +94,13 @@ DIANE::draw_profiles(
     )
 ```
 
+
+To reproduce this result on identical data, specify this seed in DIANE's interface (data import tab), or as the seed argument to run_coseq() in command line.
+
+```{r}
+r$seed
+```
+
 # Clusters exploration
 
 Let's go for a tour of the different clusters, by visualizing their profiles and gene members.
