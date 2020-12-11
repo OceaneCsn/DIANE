@@ -11,7 +11,7 @@ app_server <- function(input, output, session) {
   
 #   ____________________________________________________________________________
 #   reactive values                                                         ####
-  
+
   r <- shiny::reactiveValues(
     raw_counts = NULL,
     normalized_counts = NULL,
@@ -34,6 +34,7 @@ app_server <- function(input, output, session) {
     session_id = as.character(floor(runif(1)*1e20)),
     seed = golem::get_golem_options("seed")
   )
+  
   
   
   #   ____________________________________________________________________________

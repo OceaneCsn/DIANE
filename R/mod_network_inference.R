@@ -690,7 +690,7 @@ mod_network_inference_server <- function(input, output, session, r){
       importance = "node_purity"
     
 
-    
+    set.seed(r$seed)
     mat <- network_inference(normalized.count = data, targets = targets, 
                              conds = input$input_conditions_net,
                       regressors = regressors,
@@ -821,6 +821,7 @@ mod_network_inference_server <- function(input, output, session, r){
         density = input$density
         
         # async version :)
+        set.seed(r$seed)
         promise <- future::future({test_edges(
                    mat,
                    normalized_counts = data, 
