@@ -4,10 +4,14 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(server_version = FALSE, seed = 123, ...)
+run_app(
+  server_version = FALSE,
+  seed = round(runif(n = 1, min = 0, max = 2^7)),
+  ...
+)
 }
 \arguments{
-\item{server_version}{TRUE if the app is deployed on web server, 
+\item{server_version}{TRUE if the app is deployed on web server,
 else (default), FALSE}
 
 \item{seed}{seed for random state to ensure reproducible runs
