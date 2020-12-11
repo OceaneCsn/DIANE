@@ -830,7 +830,7 @@ mod_network_inference_server <- function(input, output, session, r){
                    nRegulators = dim(mat)[1], 
                    nTrees = nTrees, 
                    verbose = TRUE,
-                   nCores = nCores)})
+                   nCores = nCores)}, seed = r$seed)
         
         
         promises::then(promise, function(value) {
