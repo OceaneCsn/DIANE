@@ -4,11 +4,14 @@
 \alias{run_app}
 \title{Run the Shiny Application}
 \usage{
-run_app(server_version = FALSE, ...)
+run_app(server_version = FALSE, seed = 123, ...)
 }
 \arguments{
 \item{server_version}{TRUE if the app is deployed on web server, 
 else (default), FALSE}
+
+\item{seed}{seed for random state to ensure reproducible runs
+along DIANE's pipeline}
 
 \item{...}{A series of options to be used inside the app.}
 }

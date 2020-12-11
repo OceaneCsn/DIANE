@@ -31,7 +31,8 @@ app_server <- function(input, output, session) {
     gene_info = NULL,
     organism = NULL,
     custom_go = NULL,
-    session_id = as.character(floor(runif(1)*1e20))
+    session_id = as.character(floor(runif(1)*1e20)),
+    seed = golem::get_golem_options("seed")
   )
   
   
@@ -63,10 +64,6 @@ app_server <- function(input, output, session) {
     r$session_id <- session_id
   }
   
-  #session_id <- as.character(floor(runif(1)*1e20))
-  
-  set.seed(1)
-
 #   ____________________________________________________________________________
 #   Server modules                                                          ####
 

@@ -78,9 +78,9 @@ draw_heatmap <-
 #' DIANE::draw_distributions(abiotic_stresses$raw_counts)
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
-    reshape2::melt(log(data[sample(rownames(data),
+    suppressMessages(reshape2::melt(log(data[sample(rownames(data),
                                    replace = FALSE,
-                                   size = round(dim(data)[1] / 4, 0)), ] + 1))
+                                   size = round(dim(data)[1] / 4, 0)), ] + 1)))
   
   colnames(d)[c(length(colnames(d)) - 1, length(colnames(d)))] <-
     c("sample", "logCount")
@@ -349,8 +349,8 @@ draw_expression_levels <-
     data$gene <- rownames(data)
 
     d <-
-      reshape2::melt(as.data.frame(data[intersect(
-        rownames(data), genes), c(conditions, 'gene')]))
+      suppressMessages(reshape2::melt(as.data.frame(data[intersect(
+        rownames(data), genes), c(conditions, 'gene')])))
     d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
     d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
     

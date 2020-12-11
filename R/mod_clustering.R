@@ -292,14 +292,19 @@ mod_clustering_server <- function(input, output, session, r) {
   })
   
   
+  # rep <- shiny::reactiveValues(
+  #   coseq = shiny::repeatable(DIANE::run_coseq, seed = 123)
+  # )
+  
+  
   #   ____________________________________________________________________________
+  
   #   Bttn reactive                                                           ####
   
   shiny::observeEvent((input$launch_coseq_btn), {
     shiny::req(r$normalized_counts, r$conditions)
     
-    print(input$input_deg_genes)
-    
+
     if(is.null(input$input_deg_genes)){
       shinyalert::shinyalert(
         "Please select an input gene list in the menu above",
@@ -336,6 +341,7 @@ mod_clustering_server <- function(input, output, session, r) {
       mod <- "Normal"
       transfo <- input$transfo
     }
+    
     run <-
       run_coseq(
         data = r$normalized_counts,
@@ -343,8 +349,10 @@ mod_clustering_server <- function(input, output, session, r) {
         conds = input$input_conditions,
         transfo = transfo,
         model = mod,
-        K = seq(input$min_k, input$max_k)
+        K = seq(input$min_k, input$max_k),
+        seed = r$seed
       )
+    
     r$clusterings[[input_genes_conditions()]]$model <- run$model
     r$clusterings[[input_genes_conditions()]]$membership <-
       run$membership

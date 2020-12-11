@@ -25,7 +25,7 @@ Imports:
     dashboardthemes,
     shinyalert,
     RColorBrewer,
-    coseq,
+    coseq (>= 1.14.0),
     utils,
     parallel,
     GENIE3,

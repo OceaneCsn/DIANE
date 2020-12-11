@@ -24,8 +24,7 @@
 #' It must be : “arcsin”, “logit”, “logMedianRef”, “profile”, “logclr”, 
 #'  “clr”, “alr”, “ilr”, or “none”. For "Poisson",
 #' no transformation will be used, this argument will be ignored.
-#' 
-#'
+#' @param seed seed for random state to ensure reproducible runs
 #' @importFrom coseq coseq clusters
 #'
 #' @return Named list containing the coseq run result as "model", and the cluster membership 
@@ -37,7 +36,7 @@
 #' clustering <- run_coseq(conds = unique(abiotic_stresses$conditions), 
 #' data = abiotic_stresses$normalized_counts, genes = genes, K = 6:9)
 run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
-                      model = "Poisson") {
+                      model = "Poisson", seed = NULL) {
 
   conditions <- colnames(data)[
     stringr::str_split_fixed(colnames(data), '_',2)[,1] %in% conds]
@@ -59,6 +58,7 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
   
   groups <- stringr::str_split_fixed(conditions, '_', 2)[, 1]
   dataC <- round(data[genes, conditions], 0)
+
   clustering_run <-
     suppressMessages(coseq::coseq(
       dataC,
@@ -67,10 +67,11 @@ run_coseq <- function(conds, genes, data, K = 6:12, transfo = "none",
       model = model,
       iter = 5,
       transformation = transfo,
-      normFactors = "none",
-      parallel = TRUE, #to avoid singular covariance matrices :
-      GaussianModel = "Gaussian_pk_Lk_Bk",
-      verbose = FALSE
+      normFactors = "none", # norm already done in DIANE
+      parallel = FALSE, #to ensure reproducibility
+      GaussianModel = "Gaussian_pk_Lk_Bk", #to avoid singular covariance matrices
+      verbose = FALSE,
+      seed = seed
     ))
   return(list(
     membership = coseq::clusters(clustering_run),
@@ -172,7 +173,7 @@ draw_profiles <-
     }
     
     profiles$gene <- rownames(profiles)
-    d <- reshape2::melt(profiles)
+    d <- suppressMessages(reshape2::melt(profiles))
     d$group <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
     d$cluster <- clusters[match(d$gene, names(clusters))]
     d$geneRep <-

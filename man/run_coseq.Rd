@@ -4,7 +4,15 @@
 \alias{run_coseq}
 \title{Mixture Model clustering}
 \usage{
-run_coseq(conds, genes, data, K = 6:12, transfo = "none", model = "Poisson")
+run_coseq(
+  conds,
+  genes,
+  data,
+  K = 6:12,
+  transfo = "none",
+  model = "Poisson",
+  seed = NULL
+)
 }
 \arguments{
 \item{conds}{Condition names to be used for clustering.
@@ -27,6 +35,8 @@ no transformation will be used, this argument will be ignored.}
 
 \item{model}{Model to use for mixture models : to choose between
 Poisson or Normal.}
+
+\item{seed}{seed for random state to ensure reproducible runs}
 }
 \value{
 Named list containing the coseq run result as "model", and the cluster membership 
