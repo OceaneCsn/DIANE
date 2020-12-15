@@ -164,7 +164,19 @@ mod_import_data_ui <- function(id) {
           style = "material-flat",
           color = "success"
           
-        )
+        ),
+      col_4(shinyWidgets::dropdownButton(
+        size = 'xs',
+        label = "Input file requirements",
+        shiny::includeMarkdown(
+          system.file("extdata", "seed.md", package = "DIANE")
+        ),
+        circle = TRUE,
+        status = "primary",
+        icon = shiny::icon("question"),
+        width = "1200px",
+        tooltip = shinyWidgets::tooltipOptions(title = "More details")
+      ))
     ),
     
     
@@ -289,7 +301,7 @@ mod_import_data_server <- function(input, output, session, r) {
       ns("seed"),
       min = 0,
       max = 2 ^ 8,
-      label = "Seed (initial random state) ensuring reproducibility :",
+      label = "Seed ensuring reproducibility (optional, can be left as default value) :",
       value = r$seed,
       width = "100%"
     )

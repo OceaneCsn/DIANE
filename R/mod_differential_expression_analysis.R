@@ -61,14 +61,14 @@ mod_differential_expression_analysis_ui <- function(id) {
           min = 0,
           max = 1,
           value = 0.05,
-          label = "Adjusted pvalue (fdr)"
+          label = "Adjusted pvalue ( FDR )"
         ),
         shiny::numericInput(
           ns("dea_lfc"),
           min = 0,
           max = Inf,
           value = 1,
-          label = "Minimum absolute log Fold Change :"
+          label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
         ),
         
         shinyWidgets::actionBttn(
