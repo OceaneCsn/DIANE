@@ -483,7 +483,7 @@ mod_import_data_server <- function(input, output, session, r) {
         shinyalert::shinyalert(
           "Invalid design rownames...",
           paste(
-            "The conditions in your design file should be the experimental
+            "The Condition column in your design file should be the experimental
                 conditions:",
             paste(r$conditions, collapse = ', ')
           ),
@@ -622,9 +622,16 @@ mod_import_data_server <- function(input, output, session, r) {
           path,
           header = TRUE,
           stringsAsFactors = FALSE,
-          row.names = "Gene",
-          quote = ""
+          row.names = "Gene"
         )
+
+        if (length(unique(rownames(d))) < length(rownames(d))) {
+          shinyalert::shinyalert(
+            "Duplicated genes are not allowed in gene information file",
+            type = "error"
+          )
+          stop()
+        }
       }
       else{
         d <- NULL

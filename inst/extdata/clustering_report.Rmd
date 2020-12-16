@@ -134,7 +134,13 @@ for(k in K){
   if (!is.null(r$gene_info)) {
     if (r$splicing_aware) ids <- DIANE::get_locus(genes, unique = FALSE)
     else ids <- genes
-    print( htmltools::tagList(DT::datatable(table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),])) )
+    
+    table <- data.frame(Genes = ids)
+    table[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
+    
+    print(htmltools::tagList(
+      DT::datatable(table
+    )))
 
   }
   else{
