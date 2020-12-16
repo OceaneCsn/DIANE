@@ -184,6 +184,10 @@ mod_normalisation_ui <- function(id) {
 mod_normalisation_server <- function(input, output, session, r) {
   ns <- session$ns
   
+  
+  #   ____________________________________________________________________________
+  #   norm choice                                                             ####
+  
   output$norm_choice <-  shiny::renderUI({
     shiny::req(!is.null(r$use_demo))
     if(!r$use_demo) sel <- 'tmm'
@@ -193,7 +197,7 @@ mod_normalisation_server <- function(input, output, session, r) {
       shinyWidgets::awesomeRadio(
         inputId = ns("norm_method"),
         label = "Normalisation method:",
-        choices = c("tmm", "deseq", "none"),
+        choices = c("tmm", "deseq2", "none"),
         inline = TRUE,
         selected = sel,
         status = "success"
