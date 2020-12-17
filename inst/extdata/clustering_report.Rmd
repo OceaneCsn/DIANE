@@ -122,7 +122,6 @@ for(k in K){
   
   genes <- get_genes_in_cluster(membership = membership, cluster = k)
   
-  message(paste("--------------------------------------", k,"--------------------------------------" ))
   print(DIANE::draw_profiles(
       data = params$normalized_counts,
       conds = r_clust$conditions,
