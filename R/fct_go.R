@@ -325,6 +325,15 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO,
   
   xx <- as.list(GO.db::GOTERM)
   
+  # case when some GO terms have become obsolete
+  if (!all(go$ID %in% names(xx))){
+    absent_go_term = go$ID[!go$ID %in% names(xx)]
+    go = go[go$ID %in% names(xx),]
+    warning("Some enriched GO terms may be outdated and will be removed. 
+            You can try to update your GO annotation. 
+            Concerned GO terms are : ", paste0(absent_go_term, collapse = ', ' ))
+  }
+  
   goTerms <- sapply(go$ID, function(id){return(AnnotationDbi::Term(xx[[id]]))})
   goType <- sapply(go$ID, function(id){return(AnnotationDbi::Ontology(xx[[id]]))})
 
