@@ -393,22 +393,6 @@ tfs <- unique(tfs$V3)
 tfs <- c(stringr::str_split_fixed(tfs, ', ', 2)[,1], stringr::str_split_fixed(tfs, ', ', 2)[,2][stringr::str_split_fixed(tfs, ', ', 2)[,2] != ""])
 regulators_per_organism[["Escherichia coli"]] <- tfs
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 data("abiotic_stresses")
 DIANE::draw_profiles(data = abiotic_stresses$normalized_counts, 
 membership = abiotic_stresses$heat_DEGs_coseq_membership,
@@ -420,3 +404,29 @@ DIANE::draw_profiles(data = abiotic_stresses$normalized_counts,
 
 
 gene <- sample(get_genes_in_cluster(abiotic_stresses$heat_DEGs_coseq_membership,  3),1)
+
+
+
+####################### rice
+
+## annotations
+
+
+data("gene_annotations")
+
+d <- read.csv("D:/These/DIANE_inputs/OSativa_rapdb/OSativa_annotation_rapdb.tsv", sep = '\t', h = T, row.names = "Gene")
+colnames(d) <- c("description", "label")
+
+
+gene_annotations[["Oryza sativa rapdb"]] <- d
+
+
+d <- read.csv("D:/These/DIANE_inputs/OSativa_msu/OSativa_msu_annotation.tsv", sep = '\t', h = T, row.names = "Gene")
+colnames(d) <- c("description")
+gene_annotations[["Oryza sativa msu"]] <- d
+
+
+d <- read.csv("D:/These/DIANE_inputs/OGlaberrima/OGlaberrima_name_product.tsv", sep = '\t', h = T, row.names = "Gene")
+colnames(d) <- c("description")
+rownames(d) <- stringr::str_split_fixed(rownames(d), '\\.1', 2)[,1]
+gene_annotations[["Oryza glaberrima"]] <- d
