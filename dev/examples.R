@@ -430,3 +430,14 @@ d <- read.csv("D:/These/DIANE_inputs/OGlaberrima/OGlaberrima_name_product.tsv", 
 colnames(d) <- c("description")
 rownames(d) <- stringr::str_split_fixed(rownames(d), '\\.1', 2)[,1]
 gene_annotations[["Oryza glaberrima"]] <- d
+
+
+## go terms
+
+DIANE::lupine$go_list
+
+go_matchings <- list()
+
+
+d <- read.csv("D:/These/DIANE_inputs/OSativa_rapdb/OSativa_go.tsv", sep = '\t', h = T)
+go_matchings[["Oryza sativa (rapdb)"]] <- d

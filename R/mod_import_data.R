@@ -408,6 +408,8 @@ mod_import_data_server <- function(input, output, session, r) {
         
         if (r$organism == "Escherichia coli")
           ex = "acpS"
+        if (r$organism == "Oryza sativa (rapdb)")
+          ex = "Os01g0100600"
         
         shinyalert::shinyalert(
           "Invalid gene IDs",
@@ -503,7 +505,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   
   org_choices <- shiny::reactive({
-    choices = c("Arabidopsis thaliana", "Lupinus albus")
+    choices = c("Arabidopsis thaliana", "Lupinus albus", "Oryza sativa (rapdb)")
     if (requireNamespace("org.Mm.eg.db", quietly = TRUE))
       choices <- c(choices, "Mus musculus")
     
@@ -666,10 +668,14 @@ mod_import_data_server <- function(input, output, session, r) {
     if (r$organism == "Other")
       txt <- "No gene ID requirement"
     else {
-      data("regulators_per_organism", package = "DIANE")
-      txt <- regulators_per_organism[[r$organism]]
+      if (r$organism == "Oryza sativa (rapdb)")
+        txt <- c("Os01g0100600")
+      else{
+        data("regulators_per_organism", package = "DIANE")
+        txt <- regulators_per_organism[[r$organism]]
+      }
     }
-    
+    print(txt)
     shinydashboardPlus::descriptionBlock(
       number = "Expected gene IDs are in the form",
       numberColor = "teal",

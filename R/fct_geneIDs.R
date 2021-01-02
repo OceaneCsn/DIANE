@@ -108,10 +108,10 @@ check_IDs <- function(ids, organism){
   if(organism == "Escherichia coli")
     pattern = "^[a-z]{3}"
   
-  if(organism == "Oryza sativa rapdb")
+  if(organism == "Oryza sativa (rapdb)")
     pattern = "^Os[[:digit:]]{2}g[[:digit:]]{7}"
   
-  if(organism == "Oryza sativa msu")
+  if(organism == "Oryza sativa (msu)")
     pattern = "^LOC_Os[[:digit:]]{2}g[[:digit:]]{5}|^ChrUn.fgenesh.mRNA"
   
   if(organism == "Oryza glaberrima")

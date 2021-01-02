@@ -740,8 +740,8 @@ mod_differential_expression_analysis_server <-
           }
           else{
             shinyalert::shinyalert("Please input Gene to GO term file. ", 
-                                   "For now, only Arabidopsis thaliana, mus musculus, and 
-        Homo sapiens are supported, but you can input your own gene - GO terms matching.",
+                                   "Only some main model organisms are supported, 
+                                   but you can input your own gene - GO terms matching.",
                                    type = "error")
           }
         }
@@ -761,23 +761,18 @@ mod_differential_expression_analysis_server <-
           GOs <- r$custom_go
           genes <- r_dea$top_tags$genes
           universe <- intersect(rownames(r$normalized_counts), GOs[,1])
-          
-          
-          
+   
           
           if (length(universe) == 0) {
             r$custom_go <- NULL
             shinyalert::shinyalert(
               "Invalid first column",
-              "The first column did not match any gene ID from differential expression analysis",
+              "The first column did not match any gene ID from 
+              differential expression analysis",
               type = "error"
             )
           }
-          # shinyalert::shinyalert(
-          #   "Valid file",
-          #   type = "success"
-          # )
-          
+
           shiny::req(length(universe) > length(genes))
           r_dea$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
           
@@ -794,14 +789,28 @@ mod_differential_expression_analysis_server <-
             genes <- get_locus(genes)
             background <- get_locus(background)
           }
-
           GOs <- DIANE:::lupine$go_list
+          universe <- intersect(background, GOs[,1])
+          r_dea$go <- enrich_go_custom(genes, universe, GOs)
+        }
+        
+        else if(stringr::str_detect(r$organism, "Oryza")){
+          data("go_matchings", package = "DIANE")
+          genes <- r_dea$top_tags$genes
+          background <- rownames(r$normalized_counts)
+          
+          if (r$splicing_aware) {
+            genes <- get_locus(genes)
+            background <- get_locus(background)
+          }
+          GOs <- go_matchings[[r$organism]]
+          
+          print(head(GOs))
+          print(head(background))
           
           universe <- intersect(background, GOs[,1])
           r_dea$go <- enrich_go_custom(genes, universe, GOs)
-          
         }
-        
         
         else{
           genes <- r_dea$top_tags$genes

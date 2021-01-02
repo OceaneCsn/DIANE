@@ -7,8 +7,10 @@
 \format{
 A named list with the following elements:
 \describe{
- \item{Arabidopsis thaliana}{Dataframe with AGI terms as rownames, and columns two columns :
+ \item{Arabidopsis thaliana}{Dataframe with AGI terms as rownames, and two columns :
  description and name.}
+ \item{Oryza sativa rapdb}{Dataframe with IDs as rownames, and two columns :
+ description and label}
 }
 }
 \source{

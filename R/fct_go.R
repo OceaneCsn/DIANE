@@ -307,12 +307,10 @@ enrich_go_custom <- function(genes, universe = genes_to_GO[,1], genes_to_GO,
   if (length(intersect(genes, universe)) == 0) {
     stop("The genes are not in the first column of the custom dataframe")
   }
-  
 
   go <- clusterProfiler::enricher(gene = genes, universe = universe, 
                                   TERM2GENE = genes_to_GO[,order(ncol(genes_to_GO):1)])
 
-  
   if(is.null(go))
     stop("custom GO did not work, maybe not enough genes in ontology file?")
   go <- go@result
@@ -409,7 +407,16 @@ get_gene_information <- function(ids, organism){
     d <- gene_annotations$`Arabidopsis thaliana`[
       match(ids, rownames(gene_annotations$`Arabidopsis thaliana`)),]
   }
+  
+  else if (organism == "Oryza sativa (rapdb)"){
+    data("gene_annotations", package = "DIANE")
+    d <- gene_annotations$`Oryza sativa rapdb`[
+      match(ids, rownames(gene_annotations$`Oryza sativa rapdb`)),]
+  }
+  
   else{
+    
+
     annotate_org <- function(organism){
       
       mapping <- setNames(c(convert_from_ensembl, convert_from_ensembl_mus,
@@ -417,7 +424,6 @@ get_gene_information <- function(ids, organism){
                             convert_from_ensembl_eck12), 
                           nm = c("Homo sapiens", "Mus musculus", "Drosophilia melanogaster",
                                  "Caenorhabditis elegans", "Escherichia coli"))
-      
       
       FUN <- mapping[[organism]]
       
@@ -440,8 +446,11 @@ get_gene_information <- function(ids, organism){
     
     d <- annotate_org(organism)
   }
+  
+  if ("label" %in% colnames(d))
+    return(d[,c("label", "description")])
+  return(d)
 
-  return(d[,c("label", "description")])
 }
 
 
