@@ -112,7 +112,7 @@ check_IDs <- function(ids, organism){
     pattern = "^Os[[:digit:]]{2}g[[:digit:]]{7}"
   
   if(organism == "Oryza sativa (msu)")
-    pattern = "^LOC_Os[[:digit:]]{2}g[[:digit:]]{5}|^ChrUn.fgenesh.mRNA"
+    pattern = "^LOC_Os[[:digit:]]{2}g[[:digit:]]{5}|fgenesh.gene"
   
   if(organism == "Oryza glaberrima")
     pattern = "^ORGLA[[:digit:]]{2}G[[:digit:]]{7}"

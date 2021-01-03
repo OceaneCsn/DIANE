@@ -421,10 +421,26 @@ colnames(d) <- c("description", "label")
 gene_annotations[["Oryza sativa rapdb"]] <- d
 
 
-d <- read.csv("D:/These/DIANE_inputs/OSativa_msu/OSativa_msu_annotation.tsv", sep = '\t', h = T, row.names = "Gene")
+d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OSativa_msu_gene_level/OSativa_msu_annotation_gene_level.tsv", sep = '\t', h = T, row.names = "Gene")
 colnames(d) <- c("description")
 gene_annotations[["Oryza sativa msu"]] <- d
 
+
+
+#d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OGlaberrima_gene_level/OGlaberrima_name_product_gene_level.tsv", sep = '\t', h = T, row.names = "Gene")
+#colnames(d) <- c("description")
+#gene_annotations[["Oryza sativa msu"]] <- d
+
+
+d2 <- gene_annotations$`Oryza sativa msu`
+
+
+splitted <- stringr::str_split_fixed(rownames(d2), '\\.', 2)[,1]
+length(unique(splitted))
+
+
+length(intersect(splitted, rownames(d)))
+rownames(d)[!rownames(d) %in% splitted]
 
 d <- read.csv("D:/These/DIANE_inputs/OGlaberrima/OGlaberrima_name_product.tsv", sep = '\t', h = T, row.names = "Gene")
 colnames(d) <- c("description")
@@ -438,6 +454,18 @@ DIANE::lupine$go_list
 
 go_matchings <- list()
 
+data("go_matchings")
 
 d <- read.csv("D:/These/DIANE_inputs/OSativa_rapdb/OSativa_go.tsv", sep = '\t', h = T)
 go_matchings[["Oryza sativa (rapdb)"]] <- d
+
+
+d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OSativa_msu_gene_level/OSativa_msu_go_gene_level.tsv", sep = '\t', h = T)
+go_matchings[["Oryza sativa (msu)"]] <- d
+
+
+d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OGlaberrima_gene_level/OGlaberrima_go_gene_level.tsv", sep = '\t', h = T)
+go_matchings[["Oryza glaberrima"]] <- d
+
+
+DIANE::check_IDs(go_matchings$`Oryza sativa (msu)`$geneid, organism = "Oryza sativa (msu)")
