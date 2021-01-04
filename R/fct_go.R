@@ -407,16 +407,15 @@ get_gene_information <- function(ids, organism){
     d <- gene_annotations$`Arabidopsis thaliana`[
       match(ids, rownames(gene_annotations$`Arabidopsis thaliana`)),]
   }
-  
-  else if (organism == "Oryza sativa (rapdb)"){
+  else if (stringr::str_detect(organism, "Oryza")){
     data("gene_annotations", package = "DIANE")
-    d <- gene_annotations$`Oryza sativa rapdb`[
-      match(ids, rownames(gene_annotations$`Oryza sativa rapdb`)),]
+    d <- gene_annotations[[organism]][
+      match(ids, rownames(gene_annotations[[organism]])),]
+    if(ncol(gene_annotations[[organism]]) == 1)
+      d <- data.frame(description = d)
+      rownames(d) <- ids
   }
-  
   else{
-    
-
     annotate_org <- function(organism){
       
       mapping <- setNames(c(convert_from_ensembl, convert_from_ensembl_mus,
@@ -446,9 +445,9 @@ get_gene_information <- function(ids, organism){
     
     d <- annotate_org(organism)
   }
-  
   if ("label" %in% colnames(d))
     return(d[,c("label", "description")])
+  print(head(d))
   return(d)
 
 }

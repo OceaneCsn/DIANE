@@ -411,6 +411,12 @@ mod_import_data_server <- function(input, output, session, r) {
         if (r$organism == "Oryza sativa (rapdb)")
           ex = "Os01g0100600"
         
+        if (r$organism == "Oryza sativa (msu)")
+          ex = "LOC_Os01g11460"
+        
+        if (r$organism == "Oryza glaberrima")
+          ex = "ORGLA01G0099700"
+        
         shinyalert::shinyalert(
           "Invalid gene IDs",
           paste(
@@ -505,7 +511,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   
   org_choices <- shiny::reactive({
-    choices = c("Arabidopsis thaliana", "Lupinus albus", "Oryza sativa (rapdb)")
+    choices = c("Arabidopsis thaliana")
     if (requireNamespace("org.Mm.eg.db", quietly = TRUE))
       choices <- c(choices, "Mus musculus")
     
@@ -521,7 +527,8 @@ mod_import_data_server <- function(input, output, session, r) {
     if (requireNamespace("org.EcK12.eg.db", quietly = TRUE))
       choices <- c(choices, "Escherichia coli")
     
-    c("Other", choices)
+    c("Other", choices, "Lupinus albus", "Oryza sativa (rapdb)", 
+      "Oryza sativa (msu)", "Oryza glaberrima")
   })
   
   
@@ -667,15 +674,16 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (r$organism == "Other")
       txt <- "No gene ID requirement"
-    else {
-      if (r$organism == "Oryza sativa (rapdb)")
+    else if (r$organism == "Oryza sativa (rapdb)")
         txt <- c("Os01g0100600")
-      else{
-        data("regulators_per_organism", package = "DIANE")
-        txt <- regulators_per_organism[[r$organism]]
-      }
+    else if (r$organism == "Oryza sativa (msu)")
+      txt <- c("LOC_Os01g11590")
+    else if (r$organism == "Oryza glaberrima")
+      txt <- c("ORGLA01G0099000")
+    else{
+      data("regulators_per_organism", package = "DIANE")
+      txt <- regulators_per_organism[[r$organism]]
     }
-    print(txt)
     shinydashboardPlus::descriptionBlock(
       number = "Expected gene IDs are in the form",
       numberColor = "teal",

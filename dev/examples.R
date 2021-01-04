@@ -418,14 +418,15 @@ d <- read.csv("D:/These/DIANE_inputs/OSativa_rapdb/OSativa_annotation_rapdb.tsv"
 colnames(d) <- c("description", "label")
 
 
-gene_annotations[["Oryza sativa rapdb"]] <- d
+gene_annotations[["Oryza sativa (rapdb)"]] <- d
 
 
 d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OSativa_msu_gene_level/OSativa_msu_annotation_gene_level.tsv", sep = '\t', h = T, row.names = "Gene")
 colnames(d) <- c("description")
-gene_annotations[["Oryza sativa msu"]] <- d
+gene_annotations[["Oryza sativa (msu)"]] <- d
 
-
+gene_annotations$`Oryza sativa rapdb` <- NULL
+gene_annotations$`Oryza sativa msu` <- NULL
 
 #d <- read.csv("D:/These/DIANE_inputs/rice_annotation_gene_level_oceane/OGlaberrima_gene_level/OGlaberrima_name_product_gene_level.tsv", sep = '\t', h = T, row.names = "Gene")
 #colnames(d) <- c("description")
