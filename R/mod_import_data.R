@@ -439,7 +439,6 @@ mod_import_data_server <- function(input, output, session, r) {
       stringr::str_split_fixed(colnames(d), "_", 2)[, 1]
     r$splicing_aware <- are_splice_variants(row.names(d))
     r$raw_counts <- d
-    #r$gene_info <- gene_info()
     d
   })
   

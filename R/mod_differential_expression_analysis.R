@@ -34,9 +34,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         col_2(
           shinyWidgets::dropdownButton(
             size = 'xs',
-            shiny::includeMarkdown(
-              system.file("extdata", "edgeR.md", package = "DIANE")
-            ),
+            shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
             circle = TRUE,
             status = "success",
             icon = shiny::icon("question"),
@@ -122,55 +120,74 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::uiOutput(ns("heatmap_conditions_choice")),
           shiny::plotOutput(ns("heatmap"), height = "700px")
         ),
-        shiny::tabPanel(title = "Gene Ontology enrichment",
-                        
-                        col_4(shinyWidgets::actionBttn(
-                          ns("go_enrich_btn"),
-                          label = "Start GO enrichment analysis",
-                          color = "success",
-                          style = "material-flat"
-                        )),
-                        col_4(
-                          shinyWidgets::radioGroupButtons(ns("draw_go"), 
-                                       choices = c("Dot plot", "Enrichment map", "Data table"), 
-                                       selected = "Dot plot",
-                                       justified = TRUE,
-                                       direction = "vertical",
-                                       checkIcon = list(
-                                         yes = shiny::icon("ok", 
-                                                    lib = "glyphicon")))
-                          
-                        ),
-                        
-                        col_4(shinyWidgets::radioGroupButtons(ns("go_type"), 
-                                                              choiceNames = c("Biological process", 
-                                                                              "Cellular component", 
-                                                                              "Molecular function"),
-                                                              choiceValues = c("BP", "CC", "MF"),
-                                                              selected = "BP",
-                                                              justified = TRUE,
-                                                              direction = "vertical",
-                                                              checkIcon = list(
-                                                                yes = shiny::icon("ok", 
-                                                                           lib = "glyphicon"))),
-                              shiny::uiOutput(ns("max_go_choice"))),
-                        
-                        shiny::uiOutput(ns("custom_data_go")),
-                        
-                        shiny::hr(),
-                        
-                        shiny::fluidRow(col_12(shiny::uiOutput(ns("go_results"))))
+        shiny::tabPanel(
+          title = "Gene Ontology enrichment",
+          
+          col_4(
+            shinyWidgets::actionBttn(
+              ns("go_enrich_btn"),
+              label = "Start GO enrichment analysis",
+              color = "success",
+              style = "material-flat"
+            )
+          ),
+          col_4(
+            shinyWidgets::radioGroupButtons(
+              ns("draw_go"),
+              choices = c("Dot plot", "Enrichment map", "Data table"),
+              selected = "Dot plot",
+              justified = TRUE,
+              direction = "vertical",
+              checkIcon = list(yes = shiny::icon("ok",
+                                                 lib = "glyphicon"))
+            )
+            
+          ),
+          
+          col_4(
+            shinyWidgets::radioGroupButtons(
+              ns("go_type"),
+              choiceNames = c(
+                "Biological process",
+                "Cellular component",
+                "Molecular function"
+              ),
+              choiceValues = c("BP", "CC", "MF"),
+              selected = "BP",
+              justified = TRUE,
+              direction = "vertical",
+              checkIcon = list(yes = shiny::icon("ok",
+                                                 lib = "glyphicon"))
+            ),
+            shiny::uiOutput(ns("max_go_choice"))
+          ),
+          
+          shiny::uiOutput(ns("custom_data_go")),
+          
+          shiny::hr(),
+          
+          shiny::fluidRow(col_12(shiny::uiOutput(ns(
+            "go_results"
+          ))))
         ),
         shiny::tabPanel(
           title = "Compare genes lists (Venn)",
-          shiny::h5("Once more than one differential expression analysis were performed, 
+          shiny::h5(
+            "Once more than one differential expression analysis were performed,
                     you can visualise and compare the different genes lists in a Venn
-                    diagram."),
+                    diagram."
+          ),
           shiny::uiOutput(ns("venn_lists_choice")),
-          shinyWidgets::awesomeRadio(ns("up_down_radio"), label = "Differentially expressed genes to compare :", 
-                                     choices = setNames(object = c("All", "Up", "Down"), 
-                                                        c("All", "Up-regulated", "Down-regulated")),
-                                     inline = TRUE, status = "success"),
+          shinyWidgets::awesomeRadio(
+            ns("up_down_radio"),
+            label = "Differentially expressed genes to compare :",
+            choices = setNames(
+              object = c("All", "Up", "Down"),
+              c("All", "Up-regulated", "Down-regulated")
+            ),
+            inline = TRUE,
+            status = "success"
+          ),
           shiny::plotOutput(ns("venn"), height = "700px"),
           shiny::uiOutput(ns("dl_bttn_venn")),
           
@@ -206,7 +223,7 @@ mod_differential_expression_analysis_server <-
       fdr = NULL,
       gene_table = NULL
     )
-
+    
     
     #   ____________________________________________________________________________
     #   Condition choices ui                                                    ####
@@ -216,46 +233,47 @@ mod_differential_expression_analysis_server <-
     output$condition_choices <- shiny::renderUI({
       req(r$conditions)
       tagList(
+        col_6(
+          shinyWidgets::radioGroupButtons(
+            inputId = ns("reference"),
+            label = "Reference",
+            choices = unique(r$conditions),
+            justified = TRUE,
+            direction = "vertical",
+            checkIcon = list(yes = shiny::icon("ok",
+                                               lib = "glyphicon"))
+          )
+        ),
         
         col_6(
-        shinyWidgets::radioGroupButtons(
-          inputId = ns("reference"),
-          label = "Reference",
-          choices = unique(r$conditions),
-          justified = TRUE, direction = "vertical",
-          checkIcon = list(yes = shiny::icon("ok",
-                                             lib = "glyphicon"))
-        )),
-        
-        col_6(
-        shinyWidgets::radioGroupButtons(
-          inputId = ns("perturbation"),
-          label = "Perturbation",
-          choices = unique(r$conditions),
-          selected = unique(r$conditions)[2],
-          justified = TRUE,direction = "vertical",
-          checkIcon = list(yes = shiny::icon("ok",
-                                             lib = "glyphicon"))
-        ))
+          shinyWidgets::radioGroupButtons(
+            inputId = ns("perturbation"),
+            label = "Perturbation",
+            choices = unique(r$conditions),
+            selected = unique(r$conditions)[2],
+            justified = TRUE,
+            direction = "vertical",
+            checkIcon = list(yes = shiny::icon("ok",
+                                               lib = "glyphicon"))
+          )
+        )
       )
     })
     
     
     
-#   ____________________________________________________________________________
-#   custom go                                                               ####
-
+    #   ____________________________________________________________________________
+    #   custom go                                                               ####
+    
     output$custom_data_go <- shiny::renderUI({
       shiny::req(r$organism == "Other")
       shiny::req(is.null(r$custom_go))
-
+      
       tagList(
         col_2(
           shinyWidgets::dropdownButton(
             size = 'xs',
-            shiny::includeMarkdown(
-              system.file("extdata", "custom_go.md", package = "DIANE")
-            ),
+            shiny::includeMarkdown(system.file("extdata", "custom_go.md", package = "DIANE")),
             circle = TRUE,
             status = "success",
             icon = shiny::icon("question"),
@@ -263,51 +281,58 @@ mod_differential_expression_analysis_server <-
             tooltip = shinyWidgets::tooltipOptions(title = "More details")
           )
         ),
-      col_10(shiny::h4("Your organism is not known to DIANE, but you can provide a matching between 
-         gene IDs and GO IDs.")),
-      
-      
-      col_6(shiny::radioButtons(
-        ns('sep'),
-        
-        'Separator : ',
-        c(
-          Comma = ',',
-          Semicolon = ';',
-          Tab = '\t'
+        col_10(
+          shiny::h4(
+            "Your organism is not known to DIANE, but you can provide a matching between
+         gene IDs and GO IDs."
+          )
         ),
-        inline = TRUE
-      )),
-      
-      col_6(shiny::fileInput(
-        ns('go_data'),
-        'Choose CSV/TXT GO terms file',
-        accept = c(
-          'text/csv',
-          'text/comma-separated-values,text/plain',
-          '.csv',
-          '.txt'
+        
+        
+        col_6(shiny::radioButtons(
+          ns('sep'),
+          
+          'Separator : ',
+          c(
+            Comma = ',',
+            Semicolon = ';',
+            Tab = '\t'
+          ),
+          inline = TRUE
+        )),
+        
+        col_6(
+          shiny::fileInput(
+            ns('go_data'),
+            'Choose CSV/TXT GO terms file',
+            accept = c(
+              'text/csv',
+              'text/comma-separated-values,text/plain',
+              '.csv',
+              '.txt'
+            )
+          )
         )
-      ))
       )
       
     })
-
+    
     #   ____________________________________________________________________________
     #   Buttons reactives                                                       ####
     
-
+    
     shiny::observeEvent((input$deg_test_btn), {
-      
       shiny::req(r$tcc)
-      if(is.null(r$fit)){
+      if (is.null(r$fit)) {
         r_dea$fit <- estimateDispersion(r$tcc)
         r$fit <- r_dea$fit
         
-        if(golem::get_golem_options("server_version"))
-          loggit::loggit(custom_log_lvl = TRUE,
-                       log_lvl = r$session_id,
-                       log_msg = "DEA")
+        if (golem::get_golem_options("server_version"))
+          loggit::loggit(
+            custom_log_lvl = TRUE,
+            log_lvl = r$session_id,
+            log_msg = "DEA"
+          )
       }
       
       shiny::req(r$fit,
@@ -316,7 +341,7 @@ mod_differential_expression_analysis_server <-
                  input$perturbation)
       
       if (input$reference == input$perturbation) {
-        shinyalert::shinyalert("You tried to compare the same conditions! 
+        shinyalert::shinyalert("You tried to compare the same conditions!
                                You may need some coffee...",
                                type = "error")
       }
@@ -324,16 +349,14 @@ mod_differential_expression_analysis_server <-
       
       
       r_dea$tags <-
-        estimateDEGs(
-          r$fit,
-          reference = input$reference,
-          perturbation = input$perturbation
-        )
+        estimateDEGs(r$fit,
+                     reference = input$reference,
+                     perturbation = input$perturbation)
       
       r_dea$top_tags <-
-        r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr, ]
+        r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
       r_dea$top_tags <-
-        r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc, ]
+        r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
       r_dea$DEGs <- r_dea$top_tags$genes
       r_dea$ref <- input$reference
       r_dea$trt <- input$perturbation
@@ -346,15 +369,15 @@ mod_differential_expression_analysis_server <-
       
     })
     
-
     
-
+    
+    
     #   ____________________________________________________________________________
     #   Summaries                                                               ####
     
     output$disp_estimate_summary <- shiny::renderUI({
       shiny::req(is.null(r$normalized_counts))
-
+      
       numberColor = "red"
       number = "Normalisation needed"
       header = ""
@@ -426,7 +449,7 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-
+    
     
     
     #   ____________________________________________________________________________
@@ -440,15 +463,17 @@ mod_differential_expression_analysis_server <-
           shinyWidgets::downloadBttn(
             outputId = ns("download_table_csv"),
             label = "Download result table as .csv",
-            style = "material-flat",            
+            style = "material-flat",
             color = "success"
           )
-        )
-        ),
+        )),
         shiny::hr(),
         shinyWidgets::downloadBttn(
-          ns("report"), "Generate html report",
-          style = "material-flat", color = "default")
+          ns("report"),
+          "Generate html report",
+          style = "material-flat",
+          color = "default"
+        )
       )
     })
     
@@ -456,8 +481,7 @@ mod_differential_expression_analysis_server <-
       shiny::req(r_dea$gene_table)
       df <- r_dea$gene_table
       df$Gene_ID <- rownames(r_dea$gene_table)
-      df[,!stringr::
-           str_detect(colnames(df), "description")]
+      df[, !stringr::str_detect(colnames(df), "description")]
     })
     
     output$download_table_csv <- shiny::downloadHandler(
@@ -465,15 +489,20 @@ mod_differential_expression_analysis_server <-
         paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
       },
       content = function(file) {
-        write.table(to_dl(), file = file, row.names = FALSE, sep = ';',
-          quote = FALSE)
+        write.table(
+          to_dl(),
+          file = file,
+          row.names = FALSE,
+          sep = ';',
+          quote = FALSE
+        )
       }
     )
     
-
     
     
-
+    
+    
     #   ____________________________________________________________________________
     #   report                                                                  ####
     
@@ -486,10 +515,14 @@ mod_differential_expression_analysis_server <-
         # can happen when deployed).
         tempReport <- file.path(tempdir(), "DEA_report.Rmd")
         tempImage <- file.path(tempdir(), "favicon.ico")
-        file.copy(system.file("extdata", "DEA_report.Rmd", package = "DIANE"),
-                  tempReport, overwrite = TRUE)
+        file.copy(
+          system.file("extdata", "DEA_report.Rmd", package = "DIANE"),
+          tempReport,
+          overwrite = TRUE
+        )
         file.copy(system.file("extdata", "favicon.ico", package = "DIANE"),
-                  tempImage, overwrite = TRUE)
+                  tempImage,
+                  overwrite = TRUE)
         
         # Set up parameters to pass to Rmd document
         params <- list(r_dea = r_dea, r = r)
@@ -497,13 +530,15 @@ mod_differential_expression_analysis_server <-
         # Knit the document, passing in the `params` list, and eval it in a
         # child of the global environment (this isolates the code in the document
         # from the code in this app).
-        rmarkdown::render(tempReport, output_file = file,
-                          params = params,
-                          envir = new.env(parent = globalenv())
+        rmarkdown::render(
+          tempReport,
+          output_file = file,
+          params = params,
+          envir = new.env(parent = globalenv())
         )
       }
     )
-  
+    
     
     ### . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ..
     ### download GO                                                             ####
@@ -511,9 +546,17 @@ mod_differential_expression_analysis_server <-
     
     output$download_go_table <- shiny::downloadHandler(
       filename = function() {
-        paste(paste0("enriched_GOterms", input$reference, '_VS_', 
-                    input$perturbation, '_', 
-                    input$go_type, ".csv"))
+        paste(
+          paste0(
+            "enriched_GOterms",
+            input$reference,
+            '_VS_',
+            input$perturbation,
+            '_',
+            input$go_type,
+            ".csv"
+          )
+        )
       },
       content = function(file) {
         write.csv(r_dea$go, file = file, quote = FALSE)
@@ -527,30 +570,34 @@ mod_differential_expression_analysis_server <-
     
     
     output$table_ui <- shiny::renderUI({
-      if(is.null(r$normalized_counts)) {
+      if (is.null(r$normalized_counts)) {
         shinydashboardPlus::descriptionBlock(
           number = "Please normalize and filter raw data in normalization tab",
           numberColor = "orange",
           rightBorder = FALSE
         )
       }
-      else DT::dataTableOutput(ns("deg_table"))
+      else
+        DT::dataTableOutput(ns("deg_table"))
     })
     
     output$deg_table <- DT::renderDataTable({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-
-      top <- r_dea$top_tags 
+      
+      top <- r_dea$top_tags
       top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
       
       columns <- c("logFC", "logCPM", "FDR", "Regulation")
       if (!is.null(r$gene_info)) {
         columns <- c(colnames(r$gene_info), columns)
         
-        if (r$splicing_aware) ids <- get_locus(rownames(top), unique = FALSE)
-        else ids <- rownames(top)
-        top[,colnames(r$gene_info)] <- r$gene_info[match(ids, rownames(r$gene_info)),]
+        if (r$splicing_aware)
+          ids <- get_locus(rownames(top), unique = FALSE)
+        else
+          ids <- rownames(top)
+        top[, colnames(r$gene_info)] <-
+          r$gene_info[match(ids, rownames(r$gene_info)), ]
       }
       
       r_dea$gene_table <- top[, columns]
@@ -568,7 +615,6 @@ mod_differential_expression_analysis_server <-
     
     
     output$venn_lists_choice <- shiny::renderUI({
-      
       shiny::req(length(r$DEGs) > 1)
       
       shinyWidgets::checkboxGroupButtons(
@@ -584,21 +630,20 @@ mod_differential_expression_analysis_server <-
     
     
     venn_list <- shiny::reactive({
-      shiny::req(length(input$venn_genes) >= 2 & length(input$venn_genes) <= 4)
+      shiny::req(length(input$venn_genes) >= 2 &
+                   length(input$venn_genes) <= 4)
       
-      if(input$up_down_radio == "All"){
+      if (input$up_down_radio == "All") {
         venn_list <- r$DEGs[input$venn_genes]
       }
       else{
         venn_list <- list()
-        for(comp in input$venn_genes){
-            if(input$up_down_radio == "Up"){
-            venn_list[[comp]] <- r$top_tags[[comp]][
-              r$top_tags[[comp]]$logFC > 0 , "genes"]
+        for (comp in input$venn_genes) {
+          if (input$up_down_radio == "Up") {
+            venn_list[[comp]] <- r$top_tags[[comp]][r$top_tags[[comp]]$logFC > 0 , "genes"]
           }
           else{
-            venn_list[[comp]] <- r$top_tags[[comp]][
-              r$top_tags[[comp]]$logFC < 0 , "genes"]
+            venn_list[[comp]] <- r$top_tags[[comp]][r$top_tags[[comp]]$logFC < 0 , "genes"]
           }
         }
       }
@@ -612,35 +657,47 @@ mod_differential_expression_analysis_server <-
     
     output$dl_bttn_venn <- shiny::renderUI({
       shiny::req(venn_list)
-      shiny::req(length(input$venn_genes) >= 2 & length(input$venn_genes) <= 4)
-      tagList(
-        shiny::fluidRow(col_12(
-          shinyWidgets::downloadBttn(
-            outputId = ns("download_intersect_venn"),
-            label = "Download the intersection of all sets (central part in the Venn diagram)",
-            style = "material-flat",
-            color = "success"
-          )
+      shiny::req(length(input$venn_genes) >= 2 &
+                   length(input$venn_genes) <= 4)
+      tagList(shiny::fluidRow(col_12(
+        shinyWidgets::downloadBttn(
+          outputId = ns("download_intersect_venn"),
+          label = "Download the intersection of all sets (central part in the Venn diagram)",
+          style = "material-flat",
+          color = "success"
         )
-      )
-      )
+      )))
     })
     
     output$download_intersect_venn <- shiny::downloadHandler(
       filename = function() {
-        paste(paste0("Venn_intersection_", paste(input$venn_genes, collapse = "-"), ".csv"))
+        paste(paste0(
+          "Venn_intersection_",
+          paste(input$venn_genes, collapse = "-"),
+          ".csv"
+        ))
       },
       content = function(file) {
-        write.table(Reduce(intersect, venn_list()), file = file, row.names = FALSE, sep = ';',
-                    quote = FALSE, col.names = FALSE)
+        write.table(
+          Reduce(intersect, venn_list()),
+          file = file,
+          row.names = FALSE,
+          sep = ';',
+          quote = FALSE,
+          col.names = FALSE
+        )
       }
     )
     
     output$venn_spec_comp_choice <- shiny::renderUI({
       shiny::req(venn_list())
       tagList(
-        shiny::selectInput(ns("venn_spec_comp"), label = "Genes specific to a comparison :",
-                           choices = input$venn_genes, selected = input$venn_genes[1])
+        shiny::selectInput(
+          ns("venn_spec_comp"),
+          label = "Genes specific to a comparison :",
+          choices = input$venn_genes,
+          selected = input$venn_genes[1]
+        )
       )
     })
     
@@ -649,7 +706,11 @@ mod_differential_expression_analysis_server <-
       tagList(
         shinyWidgets::downloadBttn(
           outputId = ns("download_specific_venn"),
-          label = paste("Download genes specific to the", input$venn_spec_comp, "list"),
+          label = paste(
+            "Download genes specific to the",
+            input$venn_spec_comp,
+            "list"
+          ),
           style = "material-flat",
           color = "success"
         )
@@ -662,10 +723,15 @@ mod_differential_expression_analysis_server <-
         paste(paste0("Venn_specific_to", input$venn_spec_comp, ".csv"))
       },
       content = function(file) {
-        write.table(setdiff(venn_list()[[input$venn_spec_comp]], 
-                            Reduce(intersect, venn_list())), 
-                    file = file, row.names = FALSE, sep = ';',
-                    quote = FALSE, col.names = FALSE)
+        write.table(
+          setdiff(venn_list()[[input$venn_spec_comp]],
+                  Reduce(intersect, venn_list())),
+          file = file,
+          row.names = FALSE,
+          sep = ';',
+          quote = FALSE,
+          col.names = FALSE
+        )
       }
     )
     
@@ -715,9 +781,9 @@ mod_differential_expression_analysis_server <-
         MA = input$MA_vulcano_switch
       )
     })
-
-#   ____________________________________________________________________________
-#   GO enrich                                                               ####
+    
+    #   ____________________________________________________________________________
+    #   GO enrich                                                               ####
     
     shiny::observeEvent((input$go_enrich_btn), {
       shiny::req(r$normalized_counts)
@@ -726,9 +792,8 @@ mod_differential_expression_analysis_server <-
       
       
       if (r$organism == "Other") {
-        
-        if(is.null(r$custom_go)){
-          if(!is.null(input$go_data)){
+        if (is.null(r$custom_go)) {
+          if (!is.null(input$go_data)) {
             pathName = input$go_data$datapath
             d <- read.csv(
               sep = input$sep,
@@ -739,120 +804,103 @@ mod_differential_expression_analysis_server <-
             r$custom_go <- d
           }
           else{
-            shinyalert::shinyalert("Please input Gene to GO term file. ", 
-                                   "Only some main model organisms are supported, 
+            shinyalert::shinyalert(
+              "Please input Gene to GO term file. ",
+              "Only some main model organisms are supported,
                                    but you can input your own gene - GO terms matching.",
-                                   type = "error")
+              type = "error"
+            )
           }
         }
         shiny::req(r$custom_go)
-          if (ncol(r$custom_go) != 2) {
-            r$custom_go <- NULL
-            shinyalert::shinyalert(
-              "Invalid file",
-              "It must contain two columns as described.
+        if (ncol(r$custom_go) != 2) {
+          r$custom_go <- NULL
+          shinyalert::shinyalert(
+            "Invalid file",
+            "It must contain two columns as described.
             Did you correctly set the separator?",
-              type = "error"
-            )
-          }
-
-          shiny::req(ncol(r$custom_go) == 2)
+            type = "error"
+          )
+        }
         
-          GOs <- r$custom_go
-          genes <- r_dea$top_tags$genes
-          universe <- intersect(rownames(r$normalized_counts), GOs[,1])
-   
-          
-          if (length(universe) == 0) {
-            r$custom_go <- NULL
-            shinyalert::shinyalert(
-              "Invalid first column",
-              "The first column did not match any gene ID from 
+        shiny::req(ncol(r$custom_go) == 2)
+        
+        GOs <- r$custom_go
+        genes <- r_dea$top_tags$genes
+        universe <-
+          intersect(rownames(r$normalized_counts), GOs[, 1])
+        
+        
+        if (length(universe) == 0) {
+          r$custom_go <- NULL
+          shinyalert::shinyalert(
+            "Invalid first column",
+            "The first column did not match any gene ID from
               differential expression analysis",
-              type = "error"
-            )
-          }
-
-          shiny::req(length(universe) > length(genes))
-          r_dea$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
-          
-          
-      ################# known organisms
-          
-      }else{
-        if (r$organism == "Lupinus albus"){
-          genes <- r_dea$top_tags$genes
-          background <- rownames(r$normalized_counts)
-          
-
-          if (r$splicing_aware) {
-            genes <- get_locus(genes)
-            background <- get_locus(background)
-          }
+            type = "error"
+          )
+        }
+        
+        shiny::req(length(universe) > length(genes))
+        r_dea$go <-
+          enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
+        
+        
+        ################# known organisms
+        
+      } else{
+        genes <- r_dea$top_tags$genes
+        background <- rownames(r$normalized_counts)
+        
+        if (r$splicing_aware) {
+          genes <- get_locus(genes)
+          background <- get_locus(background)
+        }
+        
+        if (r$organism == "Lupinus albus") {
           GOs <- DIANE:::lupine$go_list
-          universe <- intersect(background, GOs[,1])
+          universe <- intersect(background, GOs[, 1])
           r_dea$go <- enrich_go_custom(genes, universe, GOs)
         }
-        
-        else if(stringr::str_detect(r$organism, "Oryza")){
+        else if (stringr::str_detect(r$organism, "Oryza")) {
           data("go_matchings", package = "DIANE")
-          genes <- r_dea$top_tags$genes
-          background <- rownames(r$normalized_counts)
           
-          if (r$splicing_aware) {
-            genes <- get_locus(genes)
-            background <- get_locus(background)
-          }
           GOs <- go_matchings[[r$organism]]
-          
-          print(head(GOs))
-          print(head(background))
-          
-          universe <- intersect(background, GOs[,1])
+          universe <- intersect(background, GOs[, 1])
           r_dea$go <- enrich_go_custom(genes, universe, GOs)
         }
-        
         else{
-          genes <- r_dea$top_tags$genes
-          background <- rownames(r$normalized_counts)
-          
-          if (r$splicing_aware) {
-            genes <- get_locus(genes)
-            background <- get_locus(background)
-          }
-          
-        
-          if(r$organism == "Arabidopsis thaliana"){
+          if (r$organism == "Arabidopsis thaliana") {
             genes <- convert_from_agi(genes)
             background <- convert_from_agi(background)
             org = org.At.tair.db::org.At.tair.db
           }
           
-          if(r$organism == "Homo sapiens"){
+          if (r$organism == "Homo sapiens") {
             genes <- convert_from_ensembl(genes)
             background <- convert_from_ensembl(background)
             org = org.Hs.eg.db::org.Hs.eg.db
           }
           
-          if(r$organism == "Mus musculus"){
+          if (r$organism == "Mus musculus") {
             genes <- convert_from_ensembl_mus(genes)
             background <- convert_from_ensembl_mus(background)
             org = org.Mm.eg.db::org.Mm.eg.db
           }
           
-          if(r$organism == "Drosophilia melanogaster"){
+          if (r$organism == "Drosophilia melanogaster") {
             genes <- convert_from_ensembl_dm(genes)
             background <- convert_from_ensembl_dm(background)
             org = org.Dm.eg.db::org.Dm.eg.db
           }
           
-          if(r$organism == "Caenorhabditis elegans"){
+          if (r$organism == "Caenorhabditis elegans") {
             genes <- convert_from_ensembl_ce(genes)
             background <- convert_from_ensembl_ce(background)
             org = org.Ce.eg.db::org.Ce.eg.db
           }
           
-          if(r$organism == "Escherichia coli"){
+          if (r$organism == "Escherichia coli") {
             genes <- convert_from_ensembl_eck12(genes)
             background <- convert_from_ensembl_eck12(background)
             org = org.EcK12.eg.db::org.EcK12.eg.db
@@ -860,37 +908,48 @@ mod_differential_expression_analysis_server <-
           
           # TODO add check if it is entrez with regular expression here
           shiny::req(length(genes) > 0, length(background) > 0)
-          r_dea$go <- enrich_go(genes, background, org = org, GO_type = input$go_type)
+          r_dea$go <-
+            enrich_go(genes,
+                      background,
+                      org = org,
+                      GO_type = input$go_type)
         }
         
       }
-      if(golem::get_golem_options("server_version"))
-        loggit::loggit(custom_log_lvl = TRUE,
-                     log_lvl = r$session_id,
-                     log_msg = "GO enrichment DEA")
+      if (golem::get_golem_options("server_version"))
+        loggit::loggit(
+          custom_log_lvl = TRUE,
+          log_lvl = r$session_id,
+          log_msg = "GO enrichment DEA"
+        )
       
     })
     
-#   ____________________________________________________________________________
-#   go results                                                              ####
+    #   ____________________________________________________________________________
+    #   go results                                                              ####
     
-
+    
     output$go_table <- DT::renderDataTable({
       shiny::req(r_dea$go)
-      r_dea$go[,c("Description", "GeneRatio", "BgRatio", "p.adjust")]
+      r_dea$go[, c("Description", "GeneRatio", "BgRatio", "p.adjust")]
     })
     
     output$max_go_choice <- shiny::renderUI({
       shiny::req(r_dea$go)
-      shiny::req(input$draw_go =="Dot plot")
-     shiny::numericInput(ns("n_go_terms"), 
-                                label = "Top number of GO terms to plot :", 
-                                min = 1, value = dim(r_dea$go)[1])
+      shiny::req(input$draw_go == "Dot plot")
+      shiny::numericInput(
+        ns("n_go_terms"),
+        label = "Top number of GO terms to plot :",
+        min = 1,
+        value = dim(r_dea$go)[1]
+      )
     })
     
     output$go_plot <- plotly::renderPlotly({
       shiny::req(r_dea$go)
-      max = ifelse(is.na(input$n_go_terms), dim(r_dea$go)[1],input$n_go_terms )
+      max = ifelse(is.na(input$n_go_terms),
+                   dim(r_dea$go)[1],
+                   input$n_go_terms)
       draw_enrich_go(r_dea$go, max_go = max)
     })
     
@@ -900,32 +959,33 @@ mod_differential_expression_analysis_server <-
     })
     
     output$go_results <- shiny::renderUI({
-      
       shiny::req(r_dea$go)
       
-      if(nrow(r_dea$go) == 0){
-        shinyalert::shinyalert("No enriched GO terms were found",
-                               "It can happen if input gene list is not big enough",
-                               type = "error")
+      if (nrow(r_dea$go) == 0) {
+        shinyalert::shinyalert(
+          "No enriched GO terms were found",
+          "It can happen if input gene list is not big enough",
+          type = "error"
+        )
       }
       
       shiny::req(nrow(r_dea$go) > 0)
       
-      if (input$draw_go == "Data table"){
+      if (input$draw_go == "Data table") {
         tagList(
           DT::dataTableOutput(ns("go_table")),
           
-            shinyWidgets::downloadBttn(
-              outputId = ns("download_go_table"),
-              label = "Download enriched GO term as a csv table",
-              style = "material-flat",
-              color = "success"
-            )
+          shinyWidgets::downloadBttn(
+            outputId = ns("download_go_table"),
+            label = "Download enriched GO term as a csv table",
+            style = "material-flat",
+            color = "success"
+          )
           
         )
       }
       else{
-        if (input$draw_go == "Enrichment map"){
+        if (input$draw_go == "Enrichment map") {
           shiny::plotOutput(ns("go_map_plot"), height = "800px")
         }
         else

@@ -167,14 +167,15 @@ mod_network_analysis_server <- function(input, output, session, r) {
   ns <- session$ns
   
   output$zoom_ui <- shiny::renderUI({
-    if(is.null(r$current_network)) {
+    if (is.null(r$current_network)) {
       shinydashboardPlus::descriptionBlock(
         number = "Please infer a network in previous tab",
         numberColor = "orange",
         rightBorder = FALSE
       )
     }
-    else shiny::textInput(ns("gene_to_zoom"), label = "Gene ID to focus on :")
+    else
+      shiny::textInput(ns("gene_to_zoom"), label = "Gene ID to focus on :")
   })
   
   #   ____________________________________________________________________________
@@ -197,7 +198,8 @@ mod_network_analysis_server <- function(input, output, session, r) {
                  edges = r$networks[[r$current_network]]$edges) %>%
       visNetwork::visOptions(highlightNearest = list(enabled = TRUE,
                                                      degree = 0),
-                             collapse = FALSE,) %>%
+                             collapse = FALSE,
+      ) %>%
       visEvents(click = "function(nodes){
                   Shiny.onInputChange('network_analysis_ui_1-click', nodes.nodes);
                   ;}")
@@ -415,7 +417,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
     
     nodes <- r$networks[[r$current_network]]$nodes
     n_genes <- dim(nodes)[1]
-    n_tfs <- dim(nodes[nodes$gene_type == "Regulator", ])[1]
+    n_tfs <- dim(nodes[nodes$gene_type == "Regulator",])[1]
     n_edges <- dim(r$networks[[r$current_network]]$edges)[1]
     tagList(shiny::fluidRow(
       col_4(
@@ -462,7 +464,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
     if (!is.null(r$gene_info)) {
       columns <- unique(c(colnames(r$gene_info), columns))
     }
-    data <- data[order(-data$degree), ]
+    data <- data[order(-data$degree),]
     if (input$cluster_to_explore == "All")
       data[, columns]
     else
@@ -485,9 +487,12 @@ mod_network_analysis_server <- function(input, output, session, r) {
     nodes$label <-
       r$gene_info[match(nodes$id, rownames(r$gene_info)), "label"]
     library(visNetwork)
-    visNetwork::visNetwork(nodes, r$cor_network$edges) %>% visNetwork::visNodes(font = list("size" = 35), 
-               color = list("background" = "#1C5435", "border" = "#FFFFCC"),
-               shape = "square", size = 30)
+    visNetwork::visNetwork(nodes, r$cor_network$edges) %>% visNetwork::visNodes(
+      font = list("size" = 35),
+      color = list("background" = "#1C5435", "border" = "#FFFFCC"),
+      shape = "square",
+      size = 30
+    )
   })
   
   output$module <- shiny::renderPrint({
@@ -561,14 +566,13 @@ mod_network_analysis_server <- function(input, output, session, r) {
       shinyalert::shinyalert("Please specify a module to perform the analysis on",
                              type = "error")
     }
-
+    
     shiny::req(input$cluster_to_explore != "All")
     
     
     if (r$organism == "Other") {
-      
-      if(is.null(r$custom_go)){
-        if(!is.null(input$go_data)){
+      if (is.null(r$custom_go)) {
+        if (!is.null(input$go_data)) {
           pathName = input$go_data$datapath
           d <- read.csv(
             sep = input$sep,
@@ -580,9 +584,11 @@ mod_network_analysis_server <- function(input, output, session, r) {
           r$custom_go <- d
         }
         else{
-          shinyalert::shinyalert("Please input Gene to GO term file. ", 
-                                 "You input your own gene - GO terms matching.",
-                                 type = "error")
+          shinyalert::shinyalert(
+            "Please input Gene to GO term file. ",
+            "You input your own gene - GO terms matching.",
+            type = "error"
+          )
         }
       }
       shiny::req(r$custom_go)
@@ -618,9 +624,10 @@ mod_network_analysis_server <- function(input, output, session, r) {
         genes <- individuals
       }
       
-      universe <- intersect(rownames(r$normalized_counts), GOs[,1])
+      universe <- intersect(rownames(r$normalized_counts), GOs[, 1])
       
-      r_mod$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
+      r_mod$go <-
+        enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
       
     }
     else{
@@ -644,22 +651,23 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       background <- rownames(r$normalized_counts)
       
-      if (r$splicing_aware){
+      if (r$splicing_aware) {
         genes <- get_locus(genes)
         background <- get_locus(background)
       }
       
-      if (r$organism == "Lupinus albus"){
-        
+      if (r$organism == "Lupinus albus") {
         GOs <- DIANE:::lupine$go_list
-        
-        
-        universe <- intersect(background, GOs[,1])
-        
+        universe <- intersect(background, GOs[, 1])
+        r_mod$go <- enrich_go_custom(genes, universe, GOs)
+      }
+      else if (stringr::str_detect(r$organism, "Oryza")) {
+        data("go_matchings", package = "DIANE")
+        GOs <- go_matchings[[r$organism]]
+        universe <- intersect(background, GOs[, 1])
         r_mod$go <- enrich_go_custom(genes, universe, GOs)
       }
       else{
-        
         if (r$organism == "Arabidopsis thaliana") {
           genes <- convert_from_agi(genes)
           background <- convert_from_agi(background)
@@ -678,20 +686,20 @@ mod_network_analysis_server <- function(input, output, session, r) {
           org = org.Mm.eg.db::org.Mm.eg.db
         }
         
-        if(r$organism == "Drosophilia melanogaster"){
+        if (r$organism == "Drosophilia melanogaster") {
           genes <- convert_from_ensembl_dm(genes)
           background <- convert_from_ensembl_dm(background)
           org = org.Dm.eg.db::org.Dm.eg.db
         }
         
-        if(r$organism == "Caenorhabditis elegans"){
+        if (r$organism == "Caenorhabditis elegans") {
           genes <- convert_from_ensembl_ce(genes)
           background <- convert_from_ensembl_ce(background)
           org = org.Ce.eg.db::org.Ce.eg.db
         }
         
         
-        if(r$organism == "Escherichia coli"){
+        if (r$organism == "Escherichia coli") {
           genes <- convert_from_ensembl_eck12(genes)
           background <- convert_from_ensembl_eck12(background)
           org = org.EcK12.eg.db::org.EcK12.eg.db
@@ -709,28 +717,12 @@ mod_network_analysis_server <- function(input, output, session, r) {
       }
     }
     
-    if(golem::get_golem_options("server_version"))
-      loggit::loggit(custom_log_lvl = TRUE,
-                   log_lvl = r$session_id,
-                   log_msg = "GO enrichment module")
-    
-    
-      
-      ################# known organisms
-      
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    if (golem::get_golem_options("server_version"))
+      loggit::loggit(
+        custom_log_lvl = TRUE,
+        log_lvl = r$session_id,
+        log_msg = "GO enrichment module"
+      )
     
   })
   
