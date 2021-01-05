@@ -120,8 +120,21 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::uiOutput(ns("heatmap_conditions_choice")),
           shiny::plotOutput(ns("heatmap"), height = "700px")
         ),
+        
+        #   ____________________________________________________________________________
+        #   Go enrichment                                                           ####
+        
         shiny::tabPanel(
           title = "Gene Ontology enrichment",
+          
+          shinyWidgets::radioGroupButtons(
+            ns("up_down_go_radio"),label = "Genes to study :",
+            choices = c("All", "Up-regulated", "Down-regulated"),
+            selected = "All",
+            direction = "horizontal",
+            checkIcon = list(yes = shiny::icon("ok",
+                                               lib = "glyphicon"))
+          ),
           
           col_4(
             shinyWidgets::actionBttn(
@@ -826,7 +839,13 @@ mod_differential_expression_analysis_server <-
         shiny::req(ncol(r$custom_go) == 2)
         
         GOs <- r$custom_go
-        genes <- r_dea$top_tags$genes
+        if(input$up_down_go_radio == "All")
+          genes <- r_dea$top_tags$genes
+        if(input$up_down_go_radio == "Up-regulated")
+          genes <- r_dea$top_tags[r_dea$top_tags$logFC > 0,]$genes
+        if(input$up_down_go_radio == "Down-regulated")
+          genes <- r_dea$top_tags[r_dea$top_tags$logFC < 0,]$genes
+        
         universe <-
           intersect(rownames(r$normalized_counts), GOs[, 1])
         
@@ -849,7 +868,14 @@ mod_differential_expression_analysis_server <-
         ################# known organisms
         
       } else{
-        genes <- r_dea$top_tags$genes
+        
+        if(input$up_down_go_radio == "All")
+          genes <- r_dea$top_tags$genes
+        if(input$up_down_go_radio == "Up-regulated")
+          genes <- r_dea$top_tags[r_dea$top_tags$logFC > 0,]$genes
+        if(input$up_down_go_radio == "Down-regulated")
+          genes <- r_dea$top_tags[r_dea$top_tags$logFC < 0,]$genes
+        
         background <- rownames(r$normalized_counts)
         
         if (r$splicing_aware) {
