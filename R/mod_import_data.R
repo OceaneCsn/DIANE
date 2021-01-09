@@ -368,16 +368,31 @@ mod_import_data_server <- function(input, output, session, r) {
             sep = input$sep,
             header = TRUE,
             stringsAsFactors = FALSE,
-            row.names = "Gene",
             check.names = FALSE
           )
+        if("Gene" %in% colnames(d)){
+          
+          if(length(unique(d$Gene)) == length(d$Gene)){
+            rownames(d) <- d$Gene
+            d <- d[, colnames(d) != "Gene"]
+          }
+          else{
+            shinyalert::shinyalert(
+              "Invalid input data",
+              "It seems that you have duplicated gene/transcripts 
+              IDs in your input file.
+              Please remove duplicates and re-upload your file",
+              type = "error"
+            )
+            stop()
+          }
+        }
       }
       else{
-        #bug here
         shinyalert::shinyalert(
           "Invalid input data",
           "Did you correctly set the separator?
-                               Does your data contains a column named \"Gene\"?",
+           Does your data contains a column named \"Gene\"?",
           type = "error"
         )
         stop()
