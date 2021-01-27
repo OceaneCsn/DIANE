@@ -822,6 +822,7 @@ mod_network_inference_server <- function(input, output, session, r){
         
         # async version :)
         set.seed(r$seed)
+        tictoc::tic()
         promise <- future::future({test_edges(
                    mat,
                    normalized_counts = data, 
@@ -833,9 +834,12 @@ mod_network_inference_server <- function(input, output, session, r){
                    nCores = nCores)}, seed = r$seed)
         
         
+        
         promises::then(promise, function(value) {
                      
             r$edge_tests <- value
+            time <- tictoc::toc(quiet = TRUE)
+            elapsed <- time$toc - time$tic
             
             if(golem::get_golem_options("server_version"))
               loggit::loggit(custom_log_lvl = TRUE,
@@ -846,7 +850,7 @@ mod_network_inference_server <- function(input, output, session, r){
             shiny::showModal(shiny::modalDialog(
               title = "Edge testing procedure complete",
               size = 'l',
-              
+              shiny::h5(paste("Running time :", round(elapsed/60, 0), "minutes")),
               shiny::h5("Now every edge of the pre-buit network is
                   associated to an adjusted pvalue. The only remaining 
                   choice is the fdr threshold to apply to keep significant 

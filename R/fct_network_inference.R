@@ -238,3 +238,33 @@ draw_network <- function(nodes, edges){
                            "border" = "#96E69A")) %>%
     visNetwork::visNodes(borderWidth = 0.5, font = list("size" = 35))
 }
+
+exp_network <- function(nodes, edges){
+  library("visNetwork")
+  v <- visNetwork::visNetwork(nodes = nodes, edges = edges) %>%
+    visNetwork::visEdges(smooth = FALSE, arrows = 'to', color = '#333366') %>%
+    visPhysics(
+      solver = "forceAtlas2Based",
+      timestep = 0.6,
+      minVelocity = 12,
+      maxVelocity = 10,
+      stabilization = F
+    ) %>%
+    visNetwork::visGroups(
+      groupname = "Regulator",
+      size = 28,
+      color = list("background" = "#49A346", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visNetwork::visGroups(
+      groupname = "Grouped Regulators",
+      size = 45,
+      color = list("background" = "#1C5435", "border" = "#FFFFCC"),
+      shape = "square"
+    ) %>%
+    visNetwork::visGroups(groupname = "Target Gene",
+                          color = list("background" = "#B6B3B3", hover = "grey",
+                                       "border" = "#96E69A")) %>%
+    visNetwork::visNodes(borderWidth = 0.5, font = list("size" = 35))
+  return(v)
+}
