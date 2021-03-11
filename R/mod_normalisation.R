@@ -31,7 +31,7 @@ mod_normalisation_ui <- function(id) {
     #   Normalization settings                                                  ####
     
     col_3(
-      shinydashboardPlus::boxPlus(
+      shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
@@ -285,12 +285,12 @@ mod_normalisation_server <- function(input, output, session, r) {
       numberColor = "orange"
       number = "Normalisation needed"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       numberColor = "olive"
       number = "Done"
-      numberIcon = "fa fa-check"
+      numberIcon =icon('check')
       header =  paste(dim(r$normalized_counts_pre_filter)[1],
                       " genes before filtering")
     }
@@ -316,19 +316,19 @@ mod_normalisation_server <- function(input, output, session, r) {
       numberColor = "red"
       number = "Normalisation needed"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       if (is.null(r$normalized_counts)) {
         numberColor = "orange"
         number = "Filtering needed"
         header = ""
-        numberIcon = "fa fa-times"
+        numberIcon = shiny::icon('times')
       }
       else{
         numberColor = "olive"
         number = "Done"
-        numberIcon = "fa fa-check"
+        numberIcon =icon('check')
         header = paste(dim(r$normalized_counts)[1],
                        " genes after filtering")
         #toDownload <<- round(r$normalized_counts, 2)

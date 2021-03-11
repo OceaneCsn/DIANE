@@ -22,7 +22,7 @@ mod_differential_expression_analysis_ui <- function(id) {
     #   Dispersion estimation                                                   ####
     
     col_4(
-      shinydashboardPlus::boxPlus(
+      shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
@@ -394,7 +394,7 @@ mod_differential_expression_analysis_server <-
       numberColor = "red"
       number = "Normalisation needed"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
       
       shinydashboardPlus::descriptionBlock(
         number = number,
@@ -411,19 +411,19 @@ mod_differential_expression_analysis_server <-
         numberColor = "red"
         number = "Normalisation needed"
         header = ""
-        numberIcon = "fa fa-times"
+        numberIcon = shiny::icon('times')
       }
       else{
         if (is.null(r_dea$top_tags)) {
           numberColor = "orange"
           number = "Tests can be performed"
           header = ""
-          numberIcon = "fa fa-times"
+          numberIcon = shiny::icon('times')
         }
         else{
           numberColor = "olive"
           number = "Done"
-          numberIcon = "fa fa-check"
+          numberIcon =icon('check')
           header = "See plots and tables for more details"
         }
       }
@@ -445,7 +445,7 @@ mod_differential_expression_analysis_server <-
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
             numberColor = "olive",
-            numberIcon = "fa fa-caret-up",
+            numberIcon = shiny::icon('caret-up'),
             header = "up regulated",
             text = "genes",
             rightBorder = TRUE
@@ -453,7 +453,7 @@ mod_differential_expression_analysis_server <-
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC < 0),
             numberColor = "red",
-            numberIcon = "fa fa-caret-down",
+            numberIcon = shiny::icon('caret-down'),
             header = "down-regulated",
             text = "genes",
             rightBorder = FALSE

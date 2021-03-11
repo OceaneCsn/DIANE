@@ -22,7 +22,7 @@ mod_clustering_ui <- function(id) {
     #   Clustering settings                                                     ####
     
     col_4(
-      shinydashboardPlus::boxPlus(
+      shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
@@ -274,12 +274,12 @@ mod_clustering_server <- function(input, output, session, r) {
       numberColor = "orange"
       number = "Needed"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       numberColor = "olive"
       number = "Done"
-      numberIcon = "fa fa-check"
+      numberIcon = shiny::icon('check')
       header = "See Coseq summary tab for more details"
     }
     shinydashboardPlus::descriptionBlock(

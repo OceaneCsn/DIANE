@@ -423,7 +423,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
       col_4(
         shinydashboardPlus::descriptionBlock(
           number = n_genes,
-          numberColor = "primary",
+          numberColor = "olive",
           text = "Genes",
           rightBorder = TRUE
         )

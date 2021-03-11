@@ -5,7 +5,7 @@
 #' @description A shiny Module to import expression data.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @importFrom shinydashboardPlus boxPlus
+#' @importFrom shinydashboardPlus box
 #' @importFrom shinydashboard valueBoxOutput
 #' @noRd
 #'
@@ -30,7 +30,7 @@ mod_import_data_ui <- function(id) {
     #   ____________________________________________________________________________
     #   File upload                                                             ####
     
-    shinydashboardPlus::boxPlus(
+    shinydashboardPlus::box(
       title = "Expression file upload",
       width = 4,
       solidHeader = FALSE,
@@ -184,7 +184,7 @@ mod_import_data_ui <- function(id) {
     #   Previews                                                                ####
     
     
-    shinydashboardPlus::boxPlus(
+    shinydashboardPlus::box(
       title = "Preview of the expression matrix",
       width = 4,
       solidHeader = FALSE,
@@ -202,7 +202,7 @@ mod_import_data_ui <- function(id) {
     #   ____________________________________________________________________________
     #   design                                                                  ####
     
-    shinydashboardPlus::boxPlus(
+    shinydashboardPlus::box(
       title = "Design and gene information files",
       width = 4,
       solidHeader = FALSE,
@@ -748,12 +748,12 @@ mod_import_data_server <- function(input, output, session, r) {
       numberColor = "orange"
       number = "No additional gene data provided"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       numberColor = "olive"
       number = "Additional gene data available"
-      numberIcon = "fa fa-check"
+      numberIcon = shiny::icon('check')
       header = paste(colnames(r$gene_info), collapse = ', ')
     }
     shinydashboardPlus::descriptionBlock(

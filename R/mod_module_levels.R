@@ -39,7 +39,7 @@ mod_module_levels_ui <- function(id){
                       shiny::plotOutput(ns('mds_plot'), height = "800px")),
       
       shiny::tabPanel(title = "Visualize gene expression levels",
-                      shinydashboardPlus::boxPlus(
+                      shinydashboardPlus::box(
                         title = "Genes and conditions choice",
                         solidHeader = FALSE,
                         status = "success",
@@ -54,7 +54,7 @@ mod_module_levels_ui <- function(id){
                         shiny::uiOutput(ns("condition_choice"))
                         
                       ),
-                      shinydashboardPlus::boxPlus(solidHeader = FALSE,
+                      shinydashboardPlus::box(solidHeader = FALSE,
                                                   status = "success",
                                                   collapsible = TRUE,
                                                   closable = FALSE,

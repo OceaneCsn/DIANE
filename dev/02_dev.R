@@ -61,8 +61,35 @@ usethis::use_package( "rmarkdown" )
 usethis::use_package( "ggVennDiagram" ) 
 usethis::use_package( "loggit" ) 
 
-#usethis::use_package( "MASS" )
 
+
+# To fix breaking update of shinyDashboardplus 2.0.0
+# boxPlus was changed to box... :( ew
+library(xfun)
+
+gsub_dir(dir = "R", 
+         pattern = "shinydashboardPlus::boxPlus", 
+         replacement = "shinydashboardPlus::box")
+
+gsub_dir(dir = "R", 
+         pattern = "boxPlus", 
+         replacement = "box")
+
+gsub_dir(dir = "R", 
+         pattern = "numberIcon = \"fa fa-check\"", 
+         replacement = "numberIcon = shiny::icon('check')")
+
+gsub_dir(dir = "R", 
+         pattern = "numberIcon = \"fa fa-times\"", 
+         replacement = "numberIcon = shiny::icon('times')")
+
+gsub_dir(dir = "R", 
+         pattern = "numberIcon = \"fa fa-caret-up\"", 
+         replacement = "numberIcon = shiny::icon('caret-up')")
+
+gsub_dir(dir = "R", 
+         pattern = "numberIcon = \"fa fa-caret-down\"", 
+         replacement = "numberIcon = shiny::icon('caret-down')")
 
 ## Add modules ----
 ## Create a module infrastructure in R/

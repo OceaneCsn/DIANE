@@ -28,7 +28,7 @@ mod_network_inference_ui <- function(id){
 #   ____________________________________________________________________________
 #   inference settings                                                      ####
 
-    shinydashboardPlus::boxPlus(
+    shinydashboardPlus::box(
         title = "Inference Settings",
         solidHeader = FALSE,
         status = "success",
@@ -158,7 +158,7 @@ shiny::hr(),
 #   ____________________________________________________________________________
 #   thresholding options                                                    ####
 
-    col_8(shinydashboardPlus::boxPlus(
+    col_8(shinydashboardPlus::box(
       title = "Thresholding settings",
       solidHeader = FALSE,
       status = "success",
@@ -382,12 +382,12 @@ mod_network_inference_server <- function(input, output, session, r){
       numberColor = "orange"
       number = "Please input genes"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       numberColor = "olive"
       number = length(input_net())
-      numberIcon = "fa fa-check"
+      numberIcon = shiny::icon('check')
       header = "input genes"
     }
     shinydashboardPlus::descriptionBlock(
@@ -406,20 +406,20 @@ mod_network_inference_server <- function(input, output, session, r){
     if(is.null(r$regulators)){
       numberColor = "orange"
       number = "Please provide a regulators list"
-      numberIcon = "fa fa-check"
+      numberIcon = shiny::icon('check')
       header = ""
     }
     else{
       if (r$organism != "Other"){
         numberColor = "teal"
         number = length(r$regulators)
-        numberIcon = "fa fa-check"
+        numberIcon = shiny::icon('check')
         header = paste("regulators provided for", r$organism)
       }
       else{
         numberColor = "teal"
         number = length(r$regulators)
-        numberIcon = "fa fa-check"
+        numberIcon = shiny::icon('check')
         header = "Custom regulators provided"
       }
       
@@ -465,12 +465,12 @@ mod_network_inference_server <- function(input, output, session, r){
       numberColor = "orange"
       number = "Inference not performed yet"
       header = ""
-      numberIcon = "fa fa-times"
+      numberIcon = shiny::icon('times')
     }
     else{
       numberColor = "olive"
       number = "Inference successfully completed"
-      numberIcon = "fa fa-check"
+      numberIcon = shiny::icon('check')
       header = "You can now proceed to thresholding"
     }
     shinydashboardPlus::descriptionBlock(
@@ -493,7 +493,7 @@ mod_network_inference_server <- function(input, output, session, r){
     
     numberColor = "olive"
     number = "Your network is ready"
-    numberIcon = "fa fa-check"
+    numberIcon = shiny::icon('check')
     header = "You can explore it in the next tab"
     
     shinydashboardPlus::descriptionBlock(
