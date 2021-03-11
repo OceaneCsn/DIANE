@@ -470,3 +470,4 @@ go_matchings[["Oryza glaberrima"]] <- d
 
 
 DIANE::check_IDs(go_matchings$`Oryza sativa (msu)`$geneid, organism = "Oryza sativa (msu)")
+
