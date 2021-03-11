@@ -381,9 +381,6 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 
 
 
-
-
-
 #' Get genes information
 #' 
 #' @description Gives gene information (common name and description) for a specific organism
@@ -439,7 +436,6 @@ get_gene_information <- function(ids, organism){
                       description = description)
       
       rownames(d) <- d$genes
-      
       return(d)
     }
     
@@ -447,9 +443,7 @@ get_gene_information <- function(ids, organism){
   }
   if ("label" %in% colnames(d))
     return(d[,c("label", "description")])
-  print(head(d))
   return(d)
-
 }
 
 

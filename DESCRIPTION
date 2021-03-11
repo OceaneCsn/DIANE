@@ -13,7 +13,7 @@ Imports:
     stringr,
     ggplot2,
     shinydashboard,
-    shinydashboardPlus,
+    shinydashboardPlus (>= 2.0.0),
     shinyWidgets,
     stats,
     pheatmap,
