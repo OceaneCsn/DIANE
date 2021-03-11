@@ -5,7 +5,6 @@
 #' @description A shiny Module to import expression data.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @importFrom shinydashboardPlus box
 #' @importFrom shinydashboard valueBoxOutput
 #' @noRd
 #'

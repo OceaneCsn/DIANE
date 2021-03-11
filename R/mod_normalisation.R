@@ -9,7 +9,6 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #' @importFrom shinyWidgets actionBttn dropdownButton switchInput
-#' @import shinydashboard
 #'
 #' @noRd
 #'
