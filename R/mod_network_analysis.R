@@ -51,9 +51,10 @@ mod_network_analysis_ui <- function(id) {
     column(
       width = 5,
       shiny::uiOutput(ns("zoom_ui")),
+      shiny::h5("Click on any node (gene) to get its description 
+                and network information"),
       visNetwork::visNetworkOutput(ns("network_view"), height = "900px")
     ),
-    
     
     
     #   ____________________________________________________________________________
