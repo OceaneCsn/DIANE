@@ -26,7 +26,7 @@ Fore more information, please find full documentation and examples in the github
 
 Once the application is launched, if the resolution poorly fits your screen, you can adjust it with the keyboard shortcuts `ctrl +` or `ctrl -` (use `cmd` on Mac).
 
-**DIANE is in beta version, please report any bug or suggestion via github or at [oceane.cassan\@supagro.fr](mailto:oceane.cassan@supagro.fr){.email}**.
+**DIANE is in beta version, please report any bug or suggestion via github or at oceane.cassan\@cnrs.fr**.
 
 ## Use DIANE locally
 
