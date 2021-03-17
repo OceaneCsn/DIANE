@@ -107,6 +107,11 @@ app_ui <- function(request) {
             "Ready to upload datasets",
             tabName = "datasets_tab",
             icon = shiny::icon("mouse")
+          ),
+          shinydashboard::menuItem(
+            "Legal mentions",
+            tabName = "legal_mentions",
+            icon = shiny::icon("info-circle")
           )
         )
         
@@ -233,14 +238,13 @@ app_ui <- function(request) {
           shinydashboard::tabItem(tabName = "network_analysis_tab",
                                   mod_network_analysis_ui("network_analysis_ui_1")
           ),
-          # shinydashboard::tabItem(tabName = "module_analysis_tab",
-          #                         mod_module_analysis_ui("module_analysis_ui_1")
-          # )
-          #   ____________________________________________________________________________
-          #   clustering                                                              ####
+
           
           shinydashboard::tabItem(tabName = "datasets_tab",
-                                  mod_datasets_ui("datasets_ui_1"))
+                                  mod_datasets_ui("datasets_ui_1")),
+
+          shinydashboard::tabItem(tabName = "legal_mentions",
+                                  mod_legal_mentions_ui("legal_mentions_ui_1"))
 
          
         )

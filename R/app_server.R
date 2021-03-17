@@ -85,5 +85,6 @@ app_server <- function(input, output, session) {
   shiny::callModule(mod_network_analysis_server, "network_analysis_ui_1", r)
 
   shiny::callModule(mod_datasets_server, "datasets_ui_1")
+  shiny::callModule(mod_legal_mentions_server, "legal_mentions_ui_1")
   
 }
