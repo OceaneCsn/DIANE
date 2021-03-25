@@ -380,6 +380,25 @@ mod_differential_expression_analysis_server <-
       r_dea$lfc <- input$dea_lfc
       r_dea$fdr <- input$dea_fdr
       
+      # --- Creating data for table display and download --- #
+      
+      top <- r_dea$top_tags
+      top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
+      
+      columns <- c("logFC", "logCPM", "FDR", "Regulation")
+      if (!is.null(r$gene_info)) {
+        columns <- c(colnames(r$gene_info), columns)
+        
+        if (r$splicing_aware)
+          ids <- get_locus(rownames(top), unique = FALSE)
+        else
+          ids <- rownames(top)
+        top[, colnames(r$gene_info)] <-
+          r$gene_info[match(ids, rownames(r$gene_info)), ]
+      }
+      
+      r_dea$gene_table <- top[, columns]
+      
     })
     
     
@@ -490,20 +509,15 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    to_dl <- shiny::reactive({
-      shiny::req(r_dea$gene_table)
-      df <- r_dea$gene_table
-      df$Gene_ID <- rownames(r_dea$gene_table)
-      df[, !stringr::str_detect(colnames(df), "description")]
-    })
-    
     output$download_table_csv <- shiny::downloadHandler(
       filename = function() {
         paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
       },
       content = function(file) {
+        df <- r_dea$gene_table
+        df$Gene_ID <- rownames(r_dea$gene_table)
         write.table(
-          to_dl(),
+          df[, !stringr::str_detect(colnames(df), "description")],
           file = file,
           row.names = FALSE,
           sep = ';',
@@ -595,28 +609,13 @@ mod_differential_expression_analysis_server <-
     })
     
     output$deg_table <- DT::renderDataTable({
-      shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      shiny::req(r$top_tags, r_dea$ref, r_dea$trt, r_dea$gene_table)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
-      top <- r_dea$top_tags
-      top$Regulation <- ifelse(top$logFC > 0, "Up", "Down")
-      
-      columns <- c("logFC", "logCPM", "FDR", "Regulation")
-      if (!is.null(r$gene_info)) {
-        columns <- c(colnames(r$gene_info), columns)
-        
-        if (r$splicing_aware)
-          ids <- get_locus(rownames(top), unique = FALSE)
-        else
-          ids <- rownames(top)
-        top[, colnames(r$gene_info)] <-
-          r$gene_info[match(ids, rownames(r$gene_info)), ]
-      }
-      
-      r_dea$gene_table <- top[, columns]
+      r_dea$gene_table
       
       DT::formatStyle(
-        DT::datatable(top[, columns]),
+        DT::datatable(r_dea$gene_table),
         columns = c("Regulation"),
         target = c("cell", "row"),
         backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
