@@ -22,6 +22,12 @@ mod_normalisation_ui <- function(id) {
       margins = c(70, 1000)
     ),
     
+    tags$head(tags$style(HTML('
+      .awesome-radio {
+        padding-left: 20px !important;
+      }'
+    ))),
+    
     shiny::h1("Data filtering and normalisation"),
     shiny::hr(),
     
@@ -37,7 +43,6 @@ mod_normalisation_ui <- function(id) {
         collapsible = TRUE,
         closable = FALSE,
         width = 12,
-        
         
         col_8(shiny::h2("Normalization")),
         
@@ -69,18 +74,18 @@ mod_normalisation_ui <- function(id) {
         
         
         
-        shiny::fluidRow(
-          shiny::uiOutput(ns("norm_choice"))
-        ),
+        
+        shiny::uiOutput(ns("norm_choice"))
+        ,
         shiny::fluidRow(  
-          col_4(
-            shinyWidgets::actionBttn(
+          
+            col_8(shinyWidgets::actionBttn(
               ns("normalize_btn"),
               label = "Normalize", 
               style = "material-flat",
               color = "success"
-            )
-          )
+            
+          ))
         ),
         
         shiny::hr(),

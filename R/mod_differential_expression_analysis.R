@@ -190,22 +190,10 @@ mod_differential_expression_analysis_ui <- function(id) {
                     you can visualise and compare the different genes lists in a Venn
                     diagram."
           ),
-          shiny::uiOutput(ns("venn_lists_choice")),
-          shinyWidgets::awesomeRadio(
-            ns("up_down_radio"),
-            label = "Differentially expressed genes to compare :",
-            choices = setNames(
-              object = c("All", "Up", "Down"),
-              c("All", "Up-regulated", "Down-regulated")
-            ),
-            inline = TRUE,
-            status = "success"
-          ),
+          shiny::uiOutput(ns("venn_lists_choice_2")),
           shiny::plotOutput(ns("venn"), height = "700px"),
-          shiny::uiOutput(ns("dl_bttn_venn")),
-          
-          shiny::uiOutput(ns("venn_spec_comp_choice")),
-          shiny::uiOutput(ns("venn_spec_comp_bttn"))
+          shiny::uiOutput(ns("venn_spec_comp_choice_2")),
+          shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
         )
       )
       
@@ -625,6 +613,13 @@ mod_differential_expression_analysis_server <-
     #   ____________________________________________________________________________
     #   Venn                                                                    ####
     
+    ###TODO : changer le nom du fichier tÃ©lÃ©chargeable
+    ###TODO : EmpÃªcher l'utilisateur de faire des intersections qui n'ont pas de sens
+    ###TODO : rendre la partie intersection plus intuitive DONE
+    ###TODO : utiliser de beaux boutons graphiques pour les up/down/all. DONE (mais pas super)
+    ###TODO : Trouver autre chose que FALSE DONE
+    ###TODO : echelle de l'image ! (trouvÃ©! changer simplement le "res"...)
+    ###FIXME : Boutons du choix de la mÃ©thode de normalisation (awesomeRadio) qui foire sur la page normalisation... Si j'ajoute un bouton de mÃªme type quelque part ici Ã§a remarche. En regardant, il manque une propriÃ©tÃ© (un petit padding) si j'ai pas un awesomeRadio (mÃªme inutile) dans cette partie du programme. Je ne comprends pas.
     
     output$venn_lists_choice <- shiny::renderUI({
       shiny::req(length(r$DEGs) > 1)
@@ -638,68 +633,139 @@ mod_differential_expression_analysis_server <-
                                            lib = "glyphicon"))
       )
     })
+
+    
+    output$venn_lists_choice_2 <- shiny::renderUI({
+      shiny::req(length(r$DEGs) > 1)
+      shiny::fluidRow(
+        ###All the buttons containing the list of genes.
+        shiny::column(3,
+                      shinyWidgets::pickerInput(
+                        inputId = ns("venn_list_1"),
+                        label = "Gene list 1",
+                        choices = c("None" = FALSE, names(r$DEGs))
+                      )),
+        shiny::column(3,
+                      shinyWidgets::pickerInput(
+                        inputId = ns("venn_list_2"),
+                        label = "Gene list 2",
+                        choices = c("None" = FALSE, names(r$DEGs))
+                      )),
+        shiny::column(3,
+                      shinyWidgets::pickerInput(
+                        inputId = ns("venn_list_3"),
+                        label = "Gene list 3",
+                        choices = c("None" = FALSE, names(r$DEGs))
+                      )),
+        shiny::column(3,
+                      shinyWidgets::pickerInput(
+                        inputId = ns("venn_list_4"),
+                        label = "Gene list 4",
+                        choices = c("None" = FALSE, names(r$DEGs))
+                      )), 
+        ###All the buttons containg the "up / down" chocices.
+        shiny::column(3,
+                      shinyWidgets::checkboxGroupButtons(
+                        inputId = ns("up_down_button_venn_1"),
+                        label = "Gene subset",
+                        choices = c("Up", "Down"),
+                        selected = c("Up", "Down"),
+                        justified = TRUE,
+                        size = "sm",
+                        checkIcon = list(yes = icon("ok",
+                                                    lib = "glyphicon"))
+                      )
+        ),
+        shiny::column(3,
+                      shinyWidgets::checkboxGroupButtons(
+                        inputId = ns("up_down_button_venn_2"),
+                        label = "Gene subset",
+                        choices = c("Up", "Down"),
+                        selected = c("Up", "Down"),
+                        justified = TRUE,
+                        size = "sm",
+                        checkIcon = list(yes = icon("ok",
+                                                    lib = "glyphicon"))
+                      )
+        ),
+        shiny::column(3,
+                      shinyWidgets::checkboxGroupButtons(
+                        inputId = ns("up_down_button_venn_3"),
+                        label = "Gene subset",
+                        choices = c("Up", "Down"),
+                        selected = c("Up", "Down"),
+                        justified = TRUE,
+                        size = "sm",
+                        checkIcon = list(yes = icon("ok",
+                                                    lib = "glyphicon"))
+                      )
+        ),
+        shiny::column(3,
+                      shinyWidgets::checkboxGroupButtons(
+                        inputId = ns("up_down_button_venn_4"),
+                        label = "Gene subset",
+                        choices = c("Up", "Down"),
+                        selected = c("Up", "Down"),
+                        justified = TRUE,
+                        size = "sm",
+                        checkIcon = list(yes = icon("ok",
+                                                    lib = "glyphicon"))
+                      )
+        ),
+      )
+    })
     
     
-    
+    ###List of input gene list for venn diagram. Based on what user input.
     venn_list <- shiny::reactive({
-      shiny::req(length(input$venn_genes) >= 2 &
-                   length(input$venn_genes) <= 4)
+      shiny::req(sum( ###Check that at least two list have a value != FALSE
+        c(
+          input$venn_list_1,
+          input$venn_list_2,
+          input$venn_list_3,
+          input$venn_list_4
+        ) != FALSE
+      ) >= 2)
+      venn_list <- list()
       
-      if (input$up_down_radio == "All") {
-        venn_list <- r$DEGs[input$venn_genes]
-      }
-      else{
-        venn_list <- list()
-        for (comp in input$venn_genes) {
-          if (input$up_down_radio == "Up") {
-            venn_list[[comp]] <- r$top_tags[[comp]][r$top_tags[[comp]]$logFC > 0 , "genes"]
-          }
-          else{
-            venn_list[[comp]] <- r$top_tags[[comp]][r$top_tags[[comp]]$logFC < 0 , "genes"]
+      for (comp in 1:4) {
+        ###We test the 4 input DE list fields.
+        if (!isFALSE(input[[paste0("venn_list_", comp)]])) {
+          ###If the gene list is set to false, we just go to the next
+          selected_comparison <-
+            input[[paste0("venn_list_", comp)]] ###Extraction of the value.
+          if(all(input[[paste0("up_down_button_venn_", comp)]] == "")){
+            venn_list[[selected_comparison]] <-
+              r$top_tags[[selected_comparison]]$genes
+          } else if (all(input[[paste0("up_down_button_venn_", comp)]] == "Up")) {
+            #Only up is selected
+            venn_list[[paste0(selected_comparison, " up")]] <-
+              r$top_tags[[selected_comparison]][r$top_tags[[selected_comparison]]$logFC > 0 , "genes"]
+          } else if (all(input[[paste0("up_down_button_venn_", comp)]] == "Down")) {
+            #only down is selected
+            venn_list[[paste0(selected_comparison, " down")]] <-
+              r$top_tags[[selected_comparison]][r$top_tags[[selected_comparison]]$logFC < 0 , "genes"]
+          } else {
+            #Up and down are selected.
+            venn_list[[selected_comparison]] <-
+              r$top_tags[[selected_comparison]]$genes
           }
         }
       }
+      # print(head(venn_list))
       venn_list
     })
     
+    
+    ###Venn diagram plot. The res parameter as a direct impact on text size.
     output$venn <- shiny::renderPlot({
       shiny::req(venn_list)
+      validate(
+        need(length(names(venn_list())) > 1, "Please specify between two and four genes list.")
+      )
       draw_venn(venn_list())
-    })
+    }, res = 100)
     
-    output$dl_bttn_venn <- shiny::renderUI({
-      shiny::req(venn_list)
-      shiny::req(length(input$venn_genes) >= 2 &
-                   length(input$venn_genes) <= 4)
-      tagList(shiny::fluidRow(col_12(
-        shinyWidgets::downloadBttn(
-          outputId = ns("download_intersect_venn"),
-          label = "Download the intersection of all sets (central part in the Venn diagram)",
-          style = "material-flat",
-          color = "success"
-        )
-      )))
-    })
-    
-    output$download_intersect_venn <- shiny::downloadHandler(
-      filename = function() {
-        paste(paste0(
-          "Venn_intersection_",
-          paste(input$venn_genes, collapse = "-"),
-          ".csv"
-        ))
-      },
-      content = function(file) {
-        write.table(
-          Reduce(intersect, venn_list()),
-          file = file,
-          row.names = FALSE,
-          sep = ';',
-          quote = FALSE,
-          col.names = FALSE
-        )
-      }
-    )
     
     output$venn_spec_comp_choice <- shiny::renderUI({
       shiny::req(venn_list())
@@ -707,20 +773,115 @@ mod_differential_expression_analysis_server <-
         shiny::selectInput(
           ns("venn_spec_comp"),
           label = "Genes specific to a comparison :",
-          choices = input$venn_genes,
-          selected = input$venn_genes[1]
+          choices = names(venn_list())[!FALSE],
         )
       )
     })
     
-    output$venn_spec_comp_bttn <- shiny::renderUI({
+    ###Part with download intersection.
+    output$venn_spec_comp_choice_2 <- shiny::renderUI({
       shiny::req(venn_list())
+      shiny::req(length(names(venn_list())) > 1)
+      tagList(
+        shiny::h3("Download subsets of genes"),
+        tags$table(style = "width: 100%; text-align: center;",
+                   tags$tr(
+                     tags$td(
+                       style = "width: 30%; ",
+                       shiny::selectInput(
+                         ns("venn_genes_intersection"),
+                         label = "Genes present in the intersection of :",
+                         choices = names(venn_list())[!FALSE],
+                         multiple = TRUE
+                       )
+                     ),
+                     tags$td(style = "width: 40%; padding: 0 5px 0 5px;",
+                             h4(
+                               " Which are also absent from the following lists "
+                             )),
+                     tags$td(
+                       style = "width: 30%",
+                       shiny::selectInput(
+                         ns("venn_genes_union_absent"),
+                         label = "Genes absent in lists :",
+                         choices = names(venn_list())[!FALSE],
+                         multiple = TRUE
+                       )
+                     ),
+                   )),
+      )
+    })
+    
+    output$download_specific_venn_2 <- shiny::downloadHandler(
+      filename = function() {
+        if (!is.null(input$venn_genes_union_absent)) {
+          ###Nom pas encore trÃ¨s sexy :'(
+          stringr::str_replace_all(paste(
+            paste0(
+              "Venn_specific_to ",
+              paste0(input$venn_genes_intersection, collapse = "_and_")
+              ,
+              "_NOT_",
+              paste0(input$venn_genes_union_absent, collapse = "_and_"),
+              ".csv"
+            ),
+            collapse = "_"
+          ),
+          pattern = " ",
+          replacement = "_")
+        } else {
+          stringr::str_replace_all(paste(paste0(
+            "Venn_specific_to ",
+            paste0(input$venn_genes_intersection, collapse = "_and_")
+          )),
+          pattern = " ",
+          replacement = "_")
+        }
+      },
+      
+      content = function(file) {
+        #if (!any(input$venn_genes_intersection == input$venn_genes_union_absent)) {
+        write.table(
+          ###Intersection of the list on the left - union of the list of the rigth.
+          setdiff(Reduce(intersect, venn_list()[input$venn_genes_intersection]),
+                  Reduce(union, venn_list()[input$venn_genes_union_absent])),
+          file = file,
+          row.names = FALSE,
+          sep = ';',
+          quote = FALSE,
+          col.names = FALSE
+        )
+        #} #else {
+        #shinyalert::shinyalert( ###Should just disable the button instead of this, here.
+        #  "You cannot select identical conditions in the gene,
+        #                       list to include and in the gene list to remove",
+        #  type = "error"
+        #)
+        # }
+      }
+    )
+    
+    output$venn_spec_comp_bttn_2 <- shiny::renderUI({
+      shiny::req(venn_list())
+      shiny::req(length(names(venn_list())) > 1)
+      shiny::validate(
+        shiny::need(
+          !any(
+            input$venn_genes_intersection == input$venn_genes_union_absent
+          ),
+          "You cannot select identical conditions in the gene list to include and in the gene list to remove"
+        ),
+        shiny::need(
+          input$venn_genes_intersection != "",
+          "You must select at least one gene list to include."
+        )
+      )
       tagList(
         shinyWidgets::downloadBttn(
-          outputId = ns("download_specific_venn"),
+          outputId = ns("download_specific_venn_2"),
           label = paste(
             "Download genes specific to the",
-            input$venn_spec_comp,
+            paste0(input$venn_genes_intersection, collapse = "/"),
             "list"
           ),
           style = "material-flat",
@@ -728,25 +889,6 @@ mod_differential_expression_analysis_server <-
         )
       )
     })
-    
-    
-    output$download_specific_venn <- shiny::downloadHandler(
-      filename = function() {
-        paste(paste0("Venn_specific_to", input$venn_spec_comp, ".csv"))
-      },
-      content = function(file) {
-        write.table(
-          setdiff(venn_list()[[input$venn_spec_comp]],
-                  Reduce(intersect, venn_list())),
-          file = file,
-          row.names = FALSE,
-          sep = ';',
-          quote = FALSE,
-          col.names = FALSE
-        )
-      }
-    )
-    
     
     #   ____________________________________________________________________________
     #   heatmap                                                               ####
