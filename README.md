@@ -84,6 +84,6 @@ You can check that the container is running with `docker ps`.
 
 ------------------------------------------------------------------------
 
-Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
+Authors : Océane Cassan, Antoine Martin, Sophie Lèbre.
 
-PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.
+Code contributions from Alexandre Soriano.
