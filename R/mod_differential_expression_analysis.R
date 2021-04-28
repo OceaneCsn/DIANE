@@ -504,6 +504,7 @@ mod_differential_expression_analysis_server <-
       content = function(file) {
         df <- r_dea$gene_table
         df$Gene_ID <- rownames(r_dea$gene_table)
+        df$label <- stringr::str_replace(df$label, ';', '-')
         write.table(
           df[, !stringr::str_detect(colnames(df), "description")],
           file = file,
