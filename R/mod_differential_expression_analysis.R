@@ -868,7 +868,7 @@ mod_differential_expression_analysis_server <-
       shiny::validate(
         shiny::need(
           !any(
-            input$venn_genes_intersection == input$venn_genes_union_absent
+            input$venn_genes_intersection %in% input$venn_genes_union_absent
           ),
           "You cannot select identical conditions in the gene list to include and in the gene list to remove"
         ),
