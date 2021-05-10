@@ -61,10 +61,10 @@ mod_clustering_ui <- function(id) {
         shiny::fluidRow(col_12(
           col_6(
             shinyWidgets::numericInputIcon(ns("min_k"),
-                             label = "Min number of clusters :",
-                             value = 6, min = 0, max = 20,
-                             help_text = "Minimum cluster number to test"
-                          )
+                                           label = "Min number of clusters :",
+                                           value = 6, min = 0, max = 20,
+                                           help_text = "Minimum cluster number to test"
+            )
           ),
           col_6(
             shinyWidgets::numericInputIcon(ns("max_k"),
@@ -304,7 +304,7 @@ mod_clustering_server <- function(input, output, session, r) {
   shiny::observeEvent((input$launch_coseq_btn), {
     shiny::req(r$normalized_counts, r$conditions)
     
-
+    
     if(is.null(input$input_deg_genes)){
       shinyalert::shinyalert(
         "Please select an input gene list in the menu above",
@@ -313,22 +313,25 @@ mod_clustering_server <- function(input, output, session, r) {
     }
     
     shiny::req(input$input_deg_genes)
-
-    genes_conditions <- unique(as.vector(
-      stringr::str_split_fixed(input$input_deg_genes, ' ',2)))
+    
+    # genes_conditions <- unique(as.vector(
+    # stringr::str_split_fixed(input$input_deg_genes, ' ',2)))
+    genes_conditions <- unique(unlist(stringr::str_extract_all(
+      input$input_deg_genes, pattern = "\\w+"))
+    )
     
     if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
       shinyalert::shinyalert(
         paste0( "Please select at least the conditions ",
-          
-          paste0(genes_conditions, collapse = ', ')
+                
+                paste0(genes_conditions, collapse = ', ')
         ),
         "The conditions for clustering should contain the conditions
           used to compute the input differentially expressed genes.",
         type = "error"
       )
     }
-
+    
     shiny::req(sum(genes_conditions %in% input$input_conditions) == length(genes_conditions))
     # union of all the input comparisons
     genes <- unique(unlist(r$DEGs[input$input_deg_genes]))
@@ -364,15 +367,15 @@ mod_clustering_server <- function(input, output, session, r) {
     
     if(golem::get_golem_options("server_version"))
       loggit::loggit(custom_log_lvl = TRUE,
-                   log_lvl = r$session_id,
-                   log_msg = "clustering")
+                     log_lvl = r$session_id,
+                     log_msg = "clustering")
     
   })
   
   
-#   ____________________________________________________________________________
-#   dl button                                                               ####
-
+  #   ____________________________________________________________________________
+  #   dl button                                                               ####
+  
   
   output$dl_bttns <- shiny::renderUI({
     shiny::req(r$DEGs)
@@ -386,7 +389,7 @@ mod_clustering_server <- function(input, output, session, r) {
         style = "material-flat", color = "default")
     )
   })
-
+  
   
   
   #   ____________________________________________________________________________
@@ -457,7 +460,7 @@ mod_clustering_server <- function(input, output, session, r) {
     )
   })
   
-
+  
 }
 
 

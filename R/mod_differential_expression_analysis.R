@@ -59,6 +59,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           min = 0,
           max = 1,
           value = 0.05,
+          step = 0.01,
           label = "Adjusted pvalue ( FDR )"
         ),
         shiny::numericInput(
@@ -190,10 +191,11 @@ mod_differential_expression_analysis_ui <- function(id) {
                     you can visualise and compare the different genes lists in a Venn
                     diagram."
           ),
-          shiny::uiOutput(ns("venn_lists_choice_2")),
+          ###Venn diagram
+          shiny::uiOutput(ns("venn_lists_choice")),
           shiny::plotOutput(ns("venn"), height = "700px"),
-          shiny::uiOutput(ns("venn_spec_comp_choice_2")),
-          shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
+          shiny::uiOutput(ns("venn_spec_comp_choice")),
+          shiny::uiOutput(ns("venn_spec_comp_bttn"))
         )
       )
       
@@ -235,10 +237,11 @@ mod_differential_expression_analysis_server <-
       req(r$conditions)
       tagList(
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("reference"),
             label = "Reference",
             choices = unique(r$conditions),
+            selected = unique(r$conditions)[1],
             justified = TRUE,
             direction = "vertical",
             checkIcon = list(yes = shiny::icon("ok",
@@ -247,7 +250,7 @@ mod_differential_expression_analysis_server <-
         ),
         
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("perturbation"),
             label = "Perturbation",
             choices = unique(r$conditions),
@@ -341,26 +344,37 @@ mod_differential_expression_analysis_server <-
                  input$reference,
                  input$perturbation)
       
-      if (input$reference == input$perturbation) {
+      if (any(input$reference %in% input$perturbation) |
+          any(input$perturbation %in% input$reference)) {
         shinyalert::shinyalert("You tried to compare the same conditions!
                                You may need some coffee...",
                                type = "error")
       }
-      shiny::req(!input$reference == input$perturbation)
+      shiny::req(!any(input$reference %in% input$perturbation) | !any(input$perturbation %in% input$reference))
       
       
       r_dea$tags <-
-        estimateDEGs(r$fit,
-                     reference = input$reference,
-                     perturbation = input$perturbation)
+        estimateDEGs_2(r$fit,
+                       reference = input$reference,
+                       perturbation = input$perturbation)
       
       r_dea$top_tags <-
         r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
       r_dea$top_tags <-
         r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
       r_dea$DEGs <- r_dea$top_tags$genes
-      r_dea$ref <- input$reference
-      r_dea$trt <- input$perturbation
+      
+      if(length(input$reference)>1){
+        r_dea$ref <- paste0("(", paste0(input$reference, collapse = " "), ")")
+      } else {
+        r_dea$ref <- input$reference
+      }
+      if(length(input$perturbation)>1){
+        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = " "), ")")
+      } else {
+        r_dea$trt <- input$perturbation
+      }
+      
       r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
       r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
       r_dea$go <- NULL
@@ -455,7 +469,8 @@ mod_differential_expression_analysis_server <-
             numberIcon = shiny::icon('caret-up'),
             header = "up regulated",
             text = "genes",
-            rightBorder = TRUE
+            # rightBorder = TRUE
+            rightBorder = FALSE
           ),
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC < 0),
@@ -504,7 +519,6 @@ mod_differential_expression_analysis_server <-
       content = function(file) {
         df <- r_dea$gene_table
         df$Gene_ID <- rownames(r_dea$gene_table)
-        df$label <- stringr::str_replace(df$label, ';', '-')
         write.table(
           df[, !stringr::str_detect(colnames(df), "description")],
           file = file,
@@ -614,29 +628,8 @@ mod_differential_expression_analysis_server <-
     #   ____________________________________________________________________________
     #   Venn                                                                    ####
     
-    ###TODO : changer le nom du fichier tÃ©lÃ©chargeable
-    ###TODO : EmpÃªcher l'utilisateur de faire des intersections qui n'ont pas de sens
-    ###TODO : rendre la partie intersection plus intuitive DONE
-    ###TODO : utiliser de beaux boutons graphiques pour les up/down/all. DONE (mais pas super)
-    ###TODO : Trouver autre chose que FALSE DONE
-    ###TODO : echelle de l'image ! (trouvÃ©! changer simplement le "res"...)
-    ###FIXME : Boutons du choix de la mÃ©thode de normalisation (awesomeRadio) qui foire sur la page normalisation... Si j'ajoute un bouton de mÃªme type quelque part ici Ã§a remarche. En regardant, il manque une propriÃ©tÃ© (un petit padding) si j'ai pas un awesomeRadio (mÃªme inutile) dans cette partie du programme. Je ne comprends pas.
     
     output$venn_lists_choice <- shiny::renderUI({
-      shiny::req(length(r$DEGs) > 1)
-      
-      shinyWidgets::checkboxGroupButtons(
-        inputId = ns("venn_genes"),
-        label = "Please select between 2 and 4 lists of genes to show in the Venn diagram :",
-        choices = names(r$DEGs),
-        justified = TRUE,
-        checkIcon = list(yes = shiny::icon("ok",
-                                           lib = "glyphicon"))
-      )
-    })
-
-    
-    output$venn_lists_choice_2 <- shiny::renderUI({
       shiny::req(length(r$DEGs) > 1)
       shiny::fluidRow(
         ###All the buttons containing the list of genes.
@@ -768,19 +761,8 @@ mod_differential_expression_analysis_server <-
     }, res = 100)
     
     
-    output$venn_spec_comp_choice <- shiny::renderUI({
-      shiny::req(venn_list())
-      tagList(
-        shiny::selectInput(
-          ns("venn_spec_comp"),
-          label = "Genes specific to a comparison :",
-          choices = names(venn_list())[!FALSE],
-        )
-      )
-    })
-    
     ###Part with download intersection.
-    output$venn_spec_comp_choice_2 <- shiny::renderUI({
+    output$venn_spec_comp_choice <- shiny::renderUI({
       shiny::req(venn_list())
       shiny::req(length(names(venn_list())) > 1)
       tagList(
@@ -813,10 +795,9 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$download_specific_venn_2 <- shiny::downloadHandler(
+    output$download_specific_venn <- shiny::downloadHandler(
       filename = function() {
         if (!is.null(input$venn_genes_union_absent)) {
-          ###Nom pas encore trÃ¨s sexy :'(
           stringr::str_replace_all(paste(
             paste0(
               "Venn_specific_to ",
@@ -852,22 +833,17 @@ mod_differential_expression_analysis_server <-
           quote = FALSE,
           col.names = FALSE
         )
-        #} #else {
-        #shinyalert::shinyalert( ###Should just disable the button instead of this, here.
-        #  "You cannot select identical conditions in the gene,
-        #                       list to include and in the gene list to remove",
-        #  type = "error"
-        #)
-        # }
       }
     )
     
-    output$venn_spec_comp_bttn_2 <- shiny::renderUI({
+    output$venn_spec_comp_bttn <- shiny::renderUI({
       shiny::req(venn_list())
       shiny::req(length(names(venn_list())) > 1)
+      # browser()
       shiny::validate(
         shiny::need(
           !any(
+            # input$venn_genes_intersection == input$venn_genes_union_absent
             input$venn_genes_intersection %in% input$venn_genes_union_absent
           ),
           "You cannot select identical conditions in the gene list to include and in the gene list to remove"
@@ -879,7 +855,7 @@ mod_differential_expression_analysis_server <-
       )
       tagList(
         shinyWidgets::downloadBttn(
-          outputId = ns("download_specific_venn_2"),
+          outputId = ns("download_specific_venn"),
           label = paste(
             "Download genes specific to the",
             paste0(input$venn_genes_intersection, collapse = "/"),
@@ -903,7 +879,8 @@ mod_differential_expression_analysis_server <-
         inputId = ns("conds_heatmap"),
         label = "Conditions :",
         choices = unique(r$conditions),
-        selected = c(r_dea$ref, r_dea$trt),
+        # selected = c(r_dea$ref, r_dea$trt),
+        selected = unlist(stringr::str_extract_all(c(r_dea$ref, r_dea$trt), pattern = "\\w+")),
         justified = TRUE,
         checkIcon = list(yes = shiny::icon("ok",
                                            lib = "glyphicon"))
@@ -913,6 +890,7 @@ mod_differential_expression_analysis_server <-
     output$heatmap <- shiny::renderPlot({
       shiny::req(input$conds_heatmap, r_dea$DEGs, r$normalized_counts)
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
+      #browser()
       draw_heatmap(
         data = r$normalized_counts,
         subset = r_dea$DEGs,

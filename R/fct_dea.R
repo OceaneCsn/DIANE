@@ -44,8 +44,8 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   rownames(design) <- colnames(tcc$count)
   colnames(design) <-
     stringr::str_split_fixed(colnames(design), 'groups', 2)[, 2]
-
-
+  
+  
   dge <- edgeR::DGEList(
     counts = tcc$count,
     lib.size = tcc$norm.factors,
@@ -120,9 +120,9 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
 #' tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
 #' DIANE::draw_DEGs(tags, fdr = 0.01, lfc = 1)
 draw_DEGs <- function(tags,
-                     fdr = 0.01,
-                     lfc = 0,
-                     MA = TRUE) {
+                      fdr = 0.01,
+                      lfc = 0,
+                      MA = TRUE) {
   top <- tags$table
   top$isDE <-
     ifelse(top$FDR < fdr & abs(top$logFC) > lfc, TRUE, FALSE)
@@ -172,4 +172,53 @@ draw_venn <- function(gene_list){
     stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
   venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888")
   suppressMessages(venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45"))
+}
+
+#' create_versus_design
+#'
+#' @param experiment_design a vector containing all the conditions of a studied dataset.
+#' @param reference_point All the points in experiment_design to consider as reference
+#' @param comparison_point All the points in experiment_design to consider as comparison points.
+#'
+#' @return
+#' @export
+#'
+#' @examples create_versus_design(c("reference","condition1","condition2","condition3"), c("condition1", "condition2", "condition3"), "reference")
+create_versus_design <- function(experiment_design, reference_point, comparison_point){
+  experiment_design = unique(experiment_design) ###We just need the name of the different expriment design. We dont care about the replicates or so.
+  reference_point = unique(reference_point)
+  comparison_point = unique(comparison_point)
+  
+  ###Check that all the specified points are in the experiment design
+  if (!all(c(reference_point, comparison_point) %in% experiment_design)) {
+    stop(
+      paste0(
+        c(reference_point, comparison_point)[!c(reference_point, comparison_point) %in% experiment_design],
+        "not in design experiment_design. Please check your input condition list."
+      )
+    )
+  }
+  ###Check that there is no common reference and perturbation.
+  if (any(reference_point %in% comparison_point) | any(comparison_point %in% reference_point)){
+    stop("A condition cannot be used as reference and comparison point. Please check your comparison vector.")
+  }
+  
+  comparison_matrix=rep(0, length(experiment_design))
+  
+  weight_reference=1/length(reference_point) ###We want to have an equel weight for all the points. It means that it must sum up to 1.
+  weight_comparison=1/length(comparison_point)
+  
+  comparison_matrix[which(experiment_design %in% reference_point)] <- -weight_reference
+  comparison_matrix[which(experiment_design %in% comparison_point)] <- weight_comparison
+  
+  return(comparison_matrix)
+}
+
+###En renplacement de l'autre, a juste besoin de "create_versus_design".
+estimateDEGs_2 <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
+  contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
+  lrt <- edgeR::glmLRT(fit, contrast = contrast)
+  top <- edgeR::topTags(lrt, p.value = p.value, n = Inf)
+  top$table <- top$table[abs(top$table$logFC) > lfc,]
+  return(top)
 }
