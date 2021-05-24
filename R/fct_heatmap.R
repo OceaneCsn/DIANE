@@ -190,7 +190,7 @@ draw_MDS <- function(normalized.count) {
 #' draw_PCA(abiotic_stresses$normalized_counts)
 draw_PCA <- function(data) {
   # PCA computation
-  data <- log(data + 2)
+  # data <- log(data + 2)
   data <- data / rowMeans(data)
   acp <-
     ade4::dudi.pca(
