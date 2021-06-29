@@ -8,7 +8,7 @@ normalize(
   data,
   conditions,
   norm_method = "tmm",
-  deg_method = "edgeR",
+  deg_method = "deseq2",
   fdr = 0.01,
   iteration = TRUE
 )

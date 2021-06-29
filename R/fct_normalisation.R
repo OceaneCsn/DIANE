@@ -29,7 +29,7 @@
 #' data("abiotic_stresses")
 #' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
 #' abiotic_stresses$conditions, iteration = FALSE)
-normalize <- function(data, conditions, norm_method = "tmm", deg_method = "edgeR", fdr = 0.01,
+normalize <- function(data, conditions, norm_method = "tmm", deg_method = "deseq2", fdr = 0.01,
                       iteration = TRUE){
   tcc <- TCC::TCC(count =  data, group = conditions)
   tcc <- suppressWarnings(suppressMessages(TCC::calcNormFactors(tcc, norm.method = norm_method, 
