@@ -189,14 +189,6 @@ DIANE::draw_expression_levels(abiotic_stresses$normalized_counts, genes = genes)
 
 ## Sample homogeneity and global analysis
 
-### Multi-dimensionnal scaling plot
-
-The multi-dimensional scaling plot indicates if the samples are similar regarding gene expression.
-
-```{r mds, fig.width=8, fig.height=5}
-DIANE::draw_MDS(normalized.count = normalized_counts)
-```
-
 ### Principal component analysis
 
 Performing PCA on normalized RNA-Seq counts can be really informative about the conditions that impact gene expression the most.

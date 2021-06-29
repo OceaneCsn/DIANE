@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.99.1</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.0</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -60,7 +60,7 @@
       <a href="articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="articles/DIANE_normalize.html">Normalisation</a>
+      <a href="articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
       <a href="articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
@@ -71,7 +71,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/OceaneCsn/DIANE/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -89,7 +89,7 @@
   <div class="contents col-md-9">
 <div id="dashboard-for-the-inference-and-analysis-of-networks-from-expression-data-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#dashboard-for-the-inference-and-analysis-of-networks-from-expression-data-" class="anchor"></a>Dashboard for the Inference and Analysis of Networks from Expression data <img src="reference/figures/hex-DIANE.png" align="right" alt="" width="120">
+<a href="#dashboard-for-the-inference-and-analysis-of-networks-from-expression-data-" class="anchor"></a>Dashboard for the Inference and Analysis of Networks from Expression data <img src="reference/figures/hex-DIANE.png" align="right" width="120">
 </h1></div>
 <div id="application-presentation" class="section level2">
 <h2 class="hasAnchor">
@@ -97,16 +97,16 @@
 <p><a href="https://diane.bpmp.inrae.fr">DIANE</a> is a R-Shiny application for the analysis of high throughput gene expression data (<strong>RNA-Seq</strong>). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.</p>
 <p>Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on <strong>multifactorial expression data</strong> using state of the art methods. It includes :</p>
 <ul>
-<li><p>Raw count data pre-processing and normalisation</p></li>
+<li><p>Raw count data pre-processing and normalization</p></li>
 <li><p>Differential expression analysis and results visualization (Volcano plots, heatmaps, Venn diagrams…)</p></li>
 <li><p>Gene ontology enrichment analysis</p></li>
-<li><p>Expression based clustering in the framework of Mixture Models, and individual characterisation of those clusters (generalized linar models and GO enrichment analysis).</p></li>
+<li><p>Expression based clustering in the framework of Mixture Models, and individual characterization of those clusters (generalized linar models and GO enrichment analysis).</p></li>
 <li><p>Machine learning based Gene Regulatory Network inference and interactive network analysis, community discovery, transcription factor ranking…</p></li>
 <li><p>Session reporting and results to download at each step of the pipeline</p></li>
 <li><p>Demonstration on a published dataset, and other ready to explore datasets on several organisms</p></li>
 </ul>
-<p>All of the features in DIANE are accessible via a signle page Shiny application that can be locally launched, or used online at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>.</p>
-<p><img src="reference/figures/net.PNG" align="center" alt="" width="900"></p>
+<p>All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>.</p>
+<p><img src="reference/figures/net.PNG" align="center" width="900"></p>
 <p>For users more familiar with R programming, all server-side functions in DIANE are exported so they can be called from R scripts. Those functions documentation can be found in the <a href="https://oceanecsn.github.io/DIANE/reference/index.html">Reference</a>, and are illustrated in the <a href="https://oceanecsn.github.io/DIANE/articles/DIANE_Programming_Interface.html">corresponding vignette</a></p>
 </div>
 <div id="use-diane-locally" class="section level2">
@@ -114,16 +114,36 @@
 <a href="#use-diane-locally" class="anchor"></a>Use DIANE locally</h2>
 <p>DIANE relies on R &gt;= 4.0.1, available for all OS at <a href="https://cloud.r-project.org/" class="uri">https://cloud.r-project.org/</a>.</p>
 <p>Download and install DIANE in your R console as follows (you need the remotes package installed <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("remotes")</a></code>) :</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"OceaneCsn/DIANE"</span><span class="op">)</span></pre></div>
+<pre class="{.r}"><code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("OceaneCsn/DIANE")</a></code></pre>
 <p>You can then launch the application :</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OceaneCsn/DIANE">DIANE</a></span><span class="op">)</span>
-<span class="fu">DIANE</span><span class="fu">::</span><span class="fu"><a href="reference/run_app.html">run_app</a></span><span class="op">(</span><span class="op">)</span></pre></div>
+<pre class="{.r}"><code><a href="https://github.com/OceaneCsn/DIANE">library(DIANE)
+DIANE::run_app()</a></code></pre>
 <p>In case your expression input file exceeds 5MB, you may need to run the command <code><a href="https://rdrr.io/r/base/options.html">options(shiny.maxRequestSize=30*1024^2)</a></code> before calling <code><a href="reference/run_app.html">DIANE::run_app()</a></code> to upload up to 30BM.</p>
 <p>Once the application is launched, if the resolution poorly fits your screen, you can adjust it with the keyboard shortcuts <code>ctrl +</code> or <code>ctrl -</code> (use <code>cmd</code> on Mac).</p>
-<p>Authors : Océane Cassan, Antoine Martin, Sophie Lèbre</p>
-<p>PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier.</p>
+</div>
+<div id="deploy-diane-on-your-server" class="section level2">
+<h2 class="hasAnchor">
+<a href="#deploy-diane-on-your-server" class="anchor"></a>Deploy DIANE on your server</h2>
+<p>We provide a <a href="https://hub.docker.com/r/rocker/shiny">solution based on Docker and Shiny server</a> to deploy DIANE on any linux server, just as it is at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>. To do so, see the following command line instructions.</p>
+<p>Get DIANE source code via Git :</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>OceaneCsn<span class="sc">/</span>DIANE.git</span></code></pre></div>
+<p>Install Docker engine, as described in the <a href="https://docs.docker.com/engine/install/">Docker docs</a>.</p>
+<p>Go to DIANE’s folder.</p>
+<p>First, you can change the default settings for the dockerized shiny-server by editing the file shiny-customized.config (like changing the port, the user to run with, and more)</p>
+<p>Now let’s build the image, that we’ll name diane, from the Dockerfile (superuser rights required).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cd DIANE</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>docker build <span class="sc">-</span>t diane .</span></code></pre></div>
+<p>This might take a while. You can check that the container image was built with <code>docker images</code>. Then, you can start the container diane, by setting appropriately the following options in the above command:</p>
+<p><code>/path/to/app/on/host/</code> is the path to DIANE on the host, that is to say the location where you cloned it, containing the app.R file. <code>/path/to/logs/on/host/</code> is the folder you want to store your app logs.</p>
+<p><code>-p 8086:8086</code> is the port to use, change the first 8086 to use another one on the host.</p>
+<p><code>--user shiny</code> allows to run as non root, with the shiny user that must have been created before, and granted rights to the folder <code>/path/to/app/on/host/logs</code> and <code>/path/to/logs/on/host/</code>.</p>
+<p><code>-d --rm</code> are options for the detached mode.</p>
+<p>Plus, in the following example, a session of DIANE will be allowed to use 16 CPU cores :</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>cpus <span class="dv">16</span> <span class="sc">--</span>user shiny <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8086</span><span class="sc">:</span><span class="dv">8086</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>app<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>srv<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>logs<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>var<span class="sc">/</span>log<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> diane</span></code></pre></div>
+<p>You can check that the container is running with <code>docker ps</code>.</p>
+<hr>
+<p>Authors : Océane Cassan, Antoine Martin, Sophie Lèbre.</p>
+<p>Code contributions from Alexandre Soriano.</p>
 </div>
 </div>
   </div>

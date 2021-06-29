@@ -73,7 +73,7 @@ giving Go terms to genes matching" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.99.1</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.0</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ giving Go terms to genes matching" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -102,7 +102,7 @@ giving Go terms to genes matching" />
       <a href="../articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+      <a href="../articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
@@ -113,7 +113,7 @@ giving Go terms to genes matching" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/OceaneCsn/DIANE/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,7 +145,8 @@ giving Go terms to genes matching</p>
   universe <span class='op'>=</span> <span class='va'>genes_to_GO</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span>,
   <span class='va'>genes_to_GO</span>,
   qvalue <span class='op'>=</span> <span class='fl'>0.1</span>,
-  pvalue <span class='op'>=</span> <span class='fl'>0.05</span>
+  pvalue <span class='op'>=</span> <span class='fl'>0.05</span>,
+  GO_type <span class='op'>=</span> <span class='st'>"BP"</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -172,6 +173,12 @@ gene IDs must be the IDs present in your gene expresion file</p></td>
     <tr>
       <th>pvalue</th>
       <td><p>qvalue cutoff for enriched GO terms, default to 0.05</p></td>
+    </tr>
+    <tr>
+      <th>GO_type</th>
+      <td><p>character between BP (Biological Process), CC(Cellular Component) 
+or MF (Molecular Function), depending on the GO type
+to use in the analysis</p></td>
     </tr>
     </table>
 

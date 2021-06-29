@@ -34,10 +34,8 @@ mod_module_levels_ui <- function(id){
                       shiny::uiOutput(ns("pca_ui")),
                       shiny::includeMarkdown(system.file(
                         "extdata", "pca.md", package = "DIANE"))),
-
-      shiny::tabPanel(title = "MDS",
-                      shiny::plotOutput(ns('mds_plot'), height = "800px")),
-      
+      # shiny::tabPanel(title = "MDS",
+      #                 shiny::plotOutput(ns('mds_plot'), height = "800px")),
       shiny::tabPanel(title = "Visualize gene expression levels",
                       shinydashboardPlus::box(
                         title = "Genes and conditions choice",
@@ -126,14 +124,14 @@ mod_module_levels_server <- function(input, output, session, r){
   })
   
   
-  #   ____________________________________________________________________________
-  #   mds                                                                     ####
-  
-  
-  output$mds_plot <- shiny::renderPlot({
-    shiny::req(r$normalized_counts)
-    draw_MDS(r$normalized_counts)
-  })
+  # #   ____________________________________________________________________________
+  # #   mds                                                                     ####
+  # 
+  # 
+  # output$mds_plot <- shiny::renderPlot({
+  #   shiny::req(r$normalized_counts)
+  #   draw_MDS(r$normalized_counts)
+  # })
   
   
   #   ____________________________________________________________________________

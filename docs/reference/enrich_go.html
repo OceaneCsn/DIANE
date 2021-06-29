@@ -81,7 +81,7 @@ adjusted pvalue, description, etc." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">0.99.1</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.0</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@ adjusted pvalue, description, etc." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -110,7 +110,7 @@ adjusted pvalue, description, etc." />
       <a href="../articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="../articles/DIANE_normalize.html">Normalisation</a>
+      <a href="../articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
       <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
@@ -121,7 +121,7 @@ adjusted pvalue, description, etc." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/OceaneCsn/DIANE/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -228,34 +228,34 @@ to use in the analysis</p></td>
 
 <span class='va'>go</span> <span class='op'>&lt;-</span> <span class='fu'>enrich_go</span><span class='op'>(</span><span class='va'>genes</span>, <span class='va'>background</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>go</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                    ID                  Description GeneRatio   BgRatio
-#&gt; GO:0009408 GO:0009408             response to heat    52/498 211/15722
-#&gt; GO:0006457 GO:0006457              protein folding    37/498 170/15722
-#&gt; GO:0042493 GO:0042493             response to drug    36/498 422/15722
-#&gt; GO:0006970 GO:0006970   response to osmotic stress    36/498 490/15722
-#&gt; GO:0006979 GO:0006979 response to oxidative stress    30/498 405/15722
-#&gt; GO:0071456 GO:0071456 cellular response to hypoxia    25/498 223/15722
-#&gt;                  pvalue     p.adjust       qvalue
-#&gt; GO:0009408 7.669228e-32 9.479166e-29 9.332240e-29
-#&gt; GO:0006457 6.570526e-21 4.060585e-18 3.997646e-18
-#&gt; GO:0042493 7.020576e-08 5.784955e-06 5.695289e-06
-#&gt; GO:0006970 2.555805e-06 1.263590e-04 1.244005e-04
-#&gt; GO:0006979 1.512732e-05 6.924951e-04 6.817615e-04
-#&gt; GO:0071456 4.362043e-08 4.492904e-06 4.423265e-06
-#&gt;                                                                                                                                                                                                                                                                                                                                                                     geneID
-#&gt; GO:0009408 Hop3/ATFKBP65/NA/NA/ATHSFA2/ATHS83/ATHSP101/ATMBF1C/NA/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/NA/NA/HLP1/ATFKBP62/CLPB-M/ATERDJ3A/ATHSP70/HSP17.6II/NA/CPN10/AtHsp90.5/AT-HSFB2B/HSP60/HSC70-5/NA/AT-P5C1/NA/SES1/Fes1A/AtHsp90.2/HSA32/BIP1/BIP/AR192/DREB2/AtGolS1/ATHSP22.0/PUB48/HSP21/HSP18.2/Hsp70b/AT-HSFA3/AT-HSFB2A/HTT1/DREB2/AtPARK13/AtERF53/NA/BIP3
-#&gt; GO:0006457                                                                                                             ATFKBP65/NA/NA/NA/ATHS83/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/NA/NA/ATFKBP62/DNAJ/CLPB-M/NA/ATHSP70/HSP17.6II/NA/CPN10/AtHsp90.5/HSP60/HSC70-5/AtHsp90-6/NA/NA/SES1/AtHsp90.2/ATCNX1/BIP1/BIP/AR192/Cpn60beta2/CYP40/ATHSP22.0/HSP18.2/Hsp70b/BIP3
-#&gt; GO:0042493                                                                                                                 NA/NA/ATHSFA2/ATHSP17.4/AT-HSP17.6A/NA/NA/HSP17.6II/NA/AT-HSFB2B/NA/NA/DREB2/ATHSP22.0/ATWRKY54/NA/PCC1/HSP18.2/ATUPS1/AT-HSFA3/AT-HSFB2A/ANAC092/ATWRKY38/LURP1/NA/ARR7/AtERF98/ATWRKY30/AtRLP52/ATFER1/NA/AtERF014/ZAT11/AtSWEET15/AtCAPE9/NA
-#&gt; GO:0006970                                                                                                           NA/NA/ATGRP7/ATHSP17.4/AT-HSP17.6A/NA/NA/ATFKBP62/HSP17.6II/NA/AtHsp90.5/NA/PIP2;3/AT-P5C1/NA/Fes1A/AtHsp90.2/ABX45/AtGolS1/ATHSP22.0/ATWRKY54/HSP18.2/RAP2.4/NA/ANAC092/AtLtpI-11/CCX2/5PTASE11/AtERF53/AtLEA3/FAR5/AtRLP30/NA/ERD7/AtSWEET15/ATTSPO
-#&gt; GO:0006979                                                                                                                                                                                 NA/NA/ATHSFA2/ATHSP17.4/AT-HSP17.6A/NA/NA/HSP17.6II/NA/NA/NA/NA/DREB2/AtGolS1/ATHSP22.0/NA/APX1B/ATWRKY54/AtGolS3/HSP18.2/NA/NA/ANAC092/PRX40/ATFER3/PRX9/ATWRKY30/ATFER1/NA/NA
-#&gt; GO:0071456                                                                                                                                                                                                                  ATHSFA2/ATHSP101/ATMBF1C/ATHSP17.4/AT-HSP17.6A/NA/NA/HLP1/HSP17.6II/AT-HSFB2B/NA/NA/ETR2/DREB2/NA/MPSR1/ATHSP22.0/NA/NA/NA/NA/CYP81F2/NA/NA/NA
+</div><div class='output co'>#&gt;                    ID                                  Description GeneRatio
+#&gt; GO:0009408 GO:0009408                             response to heat    50/499
+#&gt; GO:0006457 GO:0006457                              protein folding    38/499
+#&gt; GO:0006979 GO:0006979                 response to oxidative stress    31/499
+#&gt; GO:0009651 GO:0009651                      response to salt stress    31/499
+#&gt; GO:0071456 GO:0071456                 cellular response to hypoxia    25/499
+#&gt; GO:0036294 GO:0036294 cellular response to decreased oxygen levels    25/499
+#&gt;              BgRatio       pvalue     p.adjust       qvalue
+#&gt; GO:0009408 230/15734 7.272616e-28 8.923500e-25 8.811348e-25
+#&gt; GO:0006457 174/15734 1.761225e-21 1.080512e-18 1.066932e-18
+#&gt; GO:0006979 417/15734 1.041411e-05 5.555703e-04 5.485878e-04
+#&gt; GO:0009651 443/15734 3.378788e-05 1.727405e-03 1.705695e-03
+#&gt; GO:0071456 224/15734 4.885258e-08 4.995176e-06 4.932397e-06
+#&gt; GO:0036294 227/15734 6.356699e-08 5.571193e-06 5.501173e-06
+#&gt;                                                                                                                                                                                                                                                                                                                                                                                             geneID
+#&gt; GO:0009408 Hop3/ATFKBP65/HSP18.5/HSP17.6B/ATHSFA2/ATHS83/ATHSP101/ATMBF1C/DjC53/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/HSP17.6A/HSP17.8/HKL/ATFKBP62/CLPB-M/ATERDJ3A/ATHSP70/HSP17.6II/HSP17.6C/CPN10/AtHsp90.5/HSP60/HSC70-5/HSP17.4B/AT-P5C1/HSP15.7/SES1/Fes1A/AtHsp90.2/HSA32/BIP1/BIP/AR192/DREB2/AtGolS1/ATHSP22.0/PUB48/HSP21/HSP18.2/Hsp70b/AT-HSFA3/HTT1/DREB2/AtPARK13/AtERF53/ERF54/BIP3
+#&gt; GO:0006457                                                                                           ATFKBP65/HSP18.5/HSP17.6B/NA/ATHS83/ATHSP17.4/AT-HSP17.6A/HSP70T-2/ATBAG6/HSP17.6A/HSP17.8/ATFKBP62/DNAJ/CLPB-M/NA/ATHSP70/HSP17.6II/HSP17.6C/CPN10/AtHsp90.5/HSP60/HSC70-5/AtHsp90-6/HSP17.4B/HSP15.7/SES1/AtHsp90.2/ATCNX1/BIP1/BIP/AR192/Cpn60beta2/CYP40/ATHSP22.0/NA/HSP18.2/Hsp70b/BIP3
+#&gt; GO:0006979                                                                                                                                                             HSP18.5/HSP17.6B/ATHSFA2/ATHSP17.4/AT-HSP17.6A/HSP17.6A/HSP17.8/HSP17.6II/HSP17.6C/HSP17.4B/HSP15.7/NA/DREB2/AtGolS1/ATHSP22.0/NA/APX1B/ATWRKY54/AtGolS3/HSP18.2/NA/NA/ANAC092/PRX40/ATFER3/BIP3/PRX9/ATWRKY30/ATFER1/NA/NA
+#&gt; GO:0009651                                                                                                                                    HSP18.5/HSP17.6B/ATGRP7/ATHSP17.4/AT-HSP17.6A/HSP17.6A/HSP17.8/HSP17.6II/HSP17.6C/AtHsp90.5/HSP17.4B/AT-P5C1/HSP15.7/Fes1A/AtHsp90.2/ABX45/AtGolS1/ATHSP22.0/HSP18.2/CFM9/ANAC092/AtLtpI-11/5PTASE11/AtERF53/AtLEA3/FAR5/AtRLP30/NA/ERD7/WSD1/ATTSPO
+#&gt; GO:0071456                                                                                                                                                                                                                  ATHSFA2/ATHSP101/ATMBF1C/ATHSP17.4/AT-HSP17.6A/HSP17.6A/HSP17.8/HKL/HSP17.6II/AT-HSFB2B/HSP17.4B/HSP15.7/ETR2/DREB2/NA/MPSR1/ATHSP22.0/NA/STMP5/NA/NA/CYP81F2/NA/NA/NA
+#&gt; GO:0036294                                                                                                                                                                                                                  ATHSFA2/ATHSP101/ATMBF1C/ATHSP17.4/AT-HSP17.6A/HSP17.6A/HSP17.8/HKL/HSP17.6II/AT-HSFB2B/HSP17.4B/HSP15.7/ETR2/DREB2/NA/MPSR1/ATHSP22.0/NA/STMP5/NA/NA/CYP81F2/NA/NA/NA
 #&gt;            Count
-#&gt; GO:0009408    52
-#&gt; GO:0006457    37
-#&gt; GO:0042493    36
-#&gt; GO:0006970    36
-#&gt; GO:0006979    30
-#&gt; GO:0071456    25</div></pre>
+#&gt; GO:0009408    50
+#&gt; GO:0006457    38
+#&gt; GO:0006979    31
+#&gt; GO:0009651    31
+#&gt; GO:0071456    25
+#&gt; GO:0036294    25</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

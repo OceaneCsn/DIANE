@@ -9,3 +9,4 @@ logs/next_id.txt
 logs/loggit.log
 inst/extdata/datasets/*.csv
 *.DS_Store
+docs
