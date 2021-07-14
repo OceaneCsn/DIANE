@@ -26,7 +26,22 @@ Fore more information, please find full documentation and examples in the github
 
 Once the application is launched, if the resolution poorly fits your screen, you can adjust it with the keyboard shortcuts `ctrl +` or `ctrl -` (use `cmd` on Mac).
 
-**DIANE is in beta version, please report any bug or suggestion via github or at oceane.cassan\@cnrs.fr**.
+**Please report any bug or suggestion via github or at oceane.cassan\@cnrs.fr**.
+
+**To cite DIANE in publications use:**
+
+Cassan, O., Lèbre, S. & Martin, A. Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite. BMC Genomics 22, 387 (2021). <https://doi.org/10.1186/s12864-021-07659-2>
+
+**A BibTeX entry for LaTeX users is**
+
+    @Article{cassan2021Inferring,
+        title = {Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite},
+        author = {Océane Cassan and Sophie Lèbre and Antoine Martin},
+        journal = {BMC Genomics},
+        year = {2021},
+        volume = {22},
+        number = {387},
+        url = {https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-021-07659-2}}
 
 ## Use DIANE locally
 

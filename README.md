@@ -26,6 +26,24 @@ All of the features in DIANE are accessible via a single page Shiny application 
 
 For users more familiar with R programming, all server-side functions in DIANE are exported so they can be called from R scripts. Those functions documentation can be found in the [Reference](https://oceanecsn.github.io/DIANE/reference/index.html), and are illustrated in the [corresponding vignette](https://oceanecsn.github.io/DIANE/articles/DIANE_Programming_Interface.html)
 
+**To cite DIANE in publications use:**
+
+  Cassan, O., Lèbre, S. & Martin, A. Inferring and analyzing gene regulatory networks from multi-factorial expression
+  data: a complete and interactive suite. BMC Genomics 22, 387 (2021). https://doi.org/10.1186/s12864-021-07659-2
+
+**A BibTeX entry for LaTeX users is**
+
+```
+@Article{cassan2021Inferring,
+    title = {Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite},
+    author = {Océane Cassan and Sophie Lèbre and Antoine Martin},
+    journal = {BMC Genomics},
+    year = {2021},
+    volume = {22},
+    number = {387},
+    url = {https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-021-07659-2}}
+```
+
 ## Use DIANE locally
 
 DIANE relies on R \>= 4.0.1, available for all OS at <https://cloud.r-project.org/>.
