@@ -171,6 +171,7 @@ usethis::use_github_action_check_standard()
 usethis::use_travis()
 usethis::use_travis_badge()
 
+usethis::use_citation()
 
 ## Code coverage ----
 ## (You'll need GitHub there)
