@@ -1,0 +1,10 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names:  Cassan, Lèbre, Martin
+given-names: Océane, Sophie, Antoine
+orcid: https://orcid.org/0000-0002-4595-2457
+title: "Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite"
+version: 1.0.1
+doi: https://doi.org/10.1186/s12864-021-07659-2
+date-released: 2021-05-26
