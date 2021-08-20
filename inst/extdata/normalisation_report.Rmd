@@ -112,9 +112,3 @@ if(input$norm_method != 'none') print(r$tcc) else print("No normalization factor
 ```{r, fig.width=10, fig.height=8}
 DIANE::draw_PCA(r$normalized_counts)
 ```
-
-## MDS
-
-```{r, fig.width=10, fig.height=8}
-DIANE::draw_MDS(r$normalized_counts)
-```
