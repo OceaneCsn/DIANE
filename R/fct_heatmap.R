@@ -1,6 +1,6 @@
 #' Draw expression heatmap
 #'
-#' @param data expression dataframe, with genes as rownames and samples as columns 
+#' @param data expression dataframe, with genes as rownames and samples as columns
 #' @param subset subset of genes to be display
 #' @param show_rownames show rownames or not
 #' @param title plot title
@@ -38,8 +38,7 @@ draw_heatmap <-
       conds <- colnames(data)
     else
       conds <-
-        colnames(data)[
-          stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
+        colnames(data)[stringr::str_split_fixed(colnames(data), '_', 2)[, 1] %in% conditions]
     
     if (log)
       data <- log(data + 1)
@@ -79,27 +78,30 @@ draw_heatmap <-
 draw_distributions <- function(data, boxplot = TRUE) {
   d <-
     suppressMessages(reshape2::melt(log(data[sample(rownames(data),
-                                   replace = FALSE,
-                                   size = round(dim(data)[1] / 4, 0)), ] + 1)))
+                                                    replace = FALSE,
+                                                    size = round(dim(data)[1] / 4, 0)),] + 1)))
   
   colnames(d)[c(length(colnames(d)) - 1, length(colnames(d)))] <-
     c("sample", "logCount")
   
   d$condition <- stringr::str_split_fixed(d$sample, "_", 2)[, 1]
   
-    
+  
   
   if (boxplot) {
-    g <- ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
-      g <- g + ggplot2::geom_boxplot(
-        alpha = 0.5,
-        lwd = 1,
-        ggplot2::aes(fill = condition),
-        outlier.color = "black",
-        outlier.alpha = 0.1
-      )
+    g <-
+      ggplot2::ggplot(data = d, ggplot2::aes(x = sample, y = logCount))
+    g <- g + ggplot2::geom_boxplot(
+      alpha = 0.5,
+      lwd = 1,
+      ggplot2::aes(fill = condition),
+      outlier.color = "black",
+      outlier.alpha = 0.1
+    )
   } else{
-    g <- ggplot2::ggplot(data = d, ggplot2::aes(y = sample, x = logCount, color = condition)) +
+    g <-
+      ggplot2::ggplot(data = d,
+                      ggplot2::aes(y = sample, x = logCount, color = condition)) +
       ggridges::geom_density_ridges(size = 2, fill = "#d6dbdf")
   }
   
@@ -120,7 +122,7 @@ draw_distributions <- function(data, boxplot = TRUE) {
       legend.text.align = 1,
       axis.title = ggplot2::element_text(size = 24)
     )
-  g 
+  g
 }
 
 #' Multi-dimensional scaling plot
@@ -143,7 +145,13 @@ draw_MDS <- function(normalized.count) {
       condition = stringr::str_split_fixed(names(mds$x), '_', 2)[, 1]
     )
   g <-
-    ggplot2::ggplot(data = d, ggplot2::aes(x = dim1, y = dim2, color = condition, label = sample)) +
+    ggplot2::ggplot(data = d,
+                    ggplot2::aes(
+                      x = dim1,
+                      y = dim2,
+                      color = condition,
+                      label = sample
+                    )) +
     ggplot2::geom_point(size = 6) + ggplot2::geom_text(
       color = "black",
       size = 6,
@@ -174,12 +182,12 @@ draw_MDS <- function(normalized.count) {
 
 
 #' Draw PCA results
-#' 
-#' 
+#'
+#'
 #' @description Draws variables contributions to principal components,
 #' as well as the PCA screeplot.
 #' First to fourth principal components are shown.
-#' 
+#'
 #' @param data normalized expression data with samples as columns and genes as rows.
 #'
 #' @export
@@ -191,6 +199,19 @@ draw_MDS <- function(normalized.count) {
 draw_PCA <- function(data) {
   # PCA computation
   # data <- log(data + 2)
+
+  
+  nf = 4
+  
+  
+  if (ncol(data) == 4) {
+    message(
+      "The input expression file has few conditions (4), so
+            only 3 principal components will be computed instead of the 4 by default."
+    )
+    nf = 3
+    
+  }
   data <- data / rowMeans(data)
   acp <-
     ade4::dudi.pca(
@@ -198,7 +219,7 @@ draw_PCA <- function(data) {
       center = TRUE,
       scale = TRUE,
       scannf = FALSE,
-      nf = 4
+      nf = nf
     )
   
   acp$co$condition = stringr::str_split_fixed(rownames(acp$co), '_', 2)[, 1]
@@ -211,94 +232,117 @@ draw_PCA <- function(data) {
       explained.variance = round(acp$eig / sum(acp$eig) *
                                    100, 2)
     )
-  scree <- scree[1:min(nrow(scree), 4),]
+  scree <- scree[1:min(nrow(scree), 4), ]
   
   # Plots
   g1_2 <-
-    ggplot2::ggplot(data = acp$co,
-           ggplot2::aes(
-             x = Comp1,
-             y = Comp2,
-             color = condition,
-             label = condition,
-             shape = replicate
-           )) + ggplot2::geom_text(
-             color = "black",
-             size = 6,
-             alpha = 0.5,
-             nudge_x = 0.07,
-             nudge_y = 0.07
-           ) +
+    ggplot2::ggplot(
+      data = acp$co,
+      ggplot2::aes(
+        x = Comp1,
+        y = Comp2,
+        color = condition,
+        label = condition,
+        shape = replicate
+      )
+    ) + ggplot2::geom_text(
+      color = "black",
+      size = 6,
+      alpha = 0.5,
+      nudge_x = 0.07,
+      nudge_y = 0.07
+    ) +
     ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
     ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
+    ggplot2::theme(
+      legend.position = "none",
+      title = ggplot2::element_text(size = 18, face = "bold")
+    ) +
     ggplot2::ggtitle("Principal components 1 and 2") +
     ggplot2::xlab(paste("x-axis : cor. to Comp1 ", scree[1, "explained.variance"], "%")) +
     ggplot2::ylab(paste("y-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%"))
   
   g2_3 <-
-    ggplot2::ggplot(data = acp$co,
-           ggplot2::aes(
-             x = Comp2,
-             y = Comp3,
-             color = condition,
-             label = condition,
-             shape = replicate
-           )) + ggplot2::geom_text(
-             color = "black",
-             size = 6,
-             alpha = 0.5,
-             nudge_x = 0.07,
-             nudge_y = 0.07
-           ) +
+    ggplot2::ggplot(
+      data = acp$co,
+      ggplot2::aes(
+        x = Comp2,
+        y = Comp3,
+        color = condition,
+        label = condition,
+        shape = replicate
+      )
+    ) + ggplot2::geom_text(
+      color = "black",
+      size = 6,
+      alpha = 0.5,
+      nudge_x = 0.07,
+      nudge_y = 0.07
+    ) +
     ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
     ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(legend.position = "none", title = ggplot2::element_text(size = 18, face = "bold")) +
+    ggplot2::theme(
+      legend.position = "none",
+      title = ggplot2::element_text(size = 18, face = "bold")
+    ) +
     ggplot2::ggtitle("Principal components 2 and 3") +
     ggplot2::xlab(paste("x-axis : cor. to Comp2 ", scree[2, "explained.variance"], "%")) +
     ggplot2::ylab(paste("y-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%"))
   
-  g3_4 <-
-    ggplot2::ggplot(data = acp$co,
-           ggplot2::aes(
-             x = Comp3,
-             y = Comp4,
-             color = condition,
-             label = condition,
-             shape = replicate
-           )) + ggplot2::geom_text(
-             color = "black",
-             size = 6,
-             alpha = 0.5,
-             nudge_x = 0.07,
-             nudge_y = 0.07
-           ) +
-    ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
-    ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::theme(
-      legend.position = "bottom", title = ggplot2::element_text(size = 18, face = "bold"),
-      legend.text = ggplot2::element_text(size = 18),
-      legend.text.align = 1
-    ) +
-    ggplot2::ggtitle("Principal components 3 and 4") +
-    ggplot2::xlab(paste("x-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%")) +
-    ggplot2::ylab(paste("y-axis : cor. to Comp4 ", scree[4, "explained.variance"], "%"))
   
-  screeplot <- ggplot2::ggplot(scree,
-                      ggplot2::aes(
-                        y = explained.variance,
-                        x = component,
-                        fill = component,
-                        label = paste(round(explained.variance, 1), '%')
-                      )) +
+  if (ncol(data) > 4) {
+    g3_4 <-
+      ggplot2::ggplot(
+        data = acp$co,
+        ggplot2::aes(
+          x = Comp3,
+          y = Comp4,
+          color = condition,
+          label = condition,
+          shape = replicate
+        )
+      ) + ggplot2::geom_text(
+        color = "black",
+        size = 6,
+        alpha = 0.5,
+        nudge_x = 0.07,
+        nudge_y = 0.07
+      ) +
+      ggplot2::geom_point(size = 6, alpha = 0.7) + ggplot2::xlim(-1, 1) +
+      ggplot2::ylim(-1, 1) + ggplot2::geom_vline(xintercept = 0) + ggplot2::geom_hline(yintercept = 0) +
+      ggplot2::theme(
+        legend.position = "bottom",
+        title = ggplot2::element_text(size = 18, face = "bold"),
+        legend.text = ggplot2::element_text(size = 18),
+        legend.text.align = 1
+      ) +
+      ggplot2::ggtitle("Principal components 3 and 4") +
+      ggplot2::xlab(paste("x-axis : cor. to Comp3 ", scree[3, "explained.variance"], "%")) +
+      ggplot2::ylab(paste("y-axis : cor. to Comp4 ", scree[4, "explained.variance"], "%"))
+  }
+  
+  screeplot <- ggplot2::ggplot(
+    scree,
+    ggplot2::aes(
+      y = explained.variance,
+      x = component,
+      fill = component,
+      label = paste(round(explained.variance, 1), '%')
+    )
+  ) +
     ggplot2::geom_bar(stat = "identity") + ggplot2::geom_text(size = 6,
-                                            vjust = 1.6,
-                                            color = "white") +
-    ggplot2::ggtitle("PCA Screeplot") + ggplot2::theme(legend.position = "none",
-                                     title = ggplot2::element_text(size = 18, face = "bold") )
+                                                              vjust = 1.6,
+                                                              color = "white") +
+    ggplot2::ggtitle("PCA Screeplot") + ggplot2::theme(
+      legend.position = "none",
+      title = ggplot2::element_text(size = 18, face = "bold")
+    )
   
-  
-  gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
+  if (ncol(data) == 4)
+    gridExtra::grid.arrange(g1_2, g2_3, screeplot, ncol = 2)
+    
+  else
+    gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
 }
 
 
@@ -313,8 +357,8 @@ draw_PCA <- function(data) {
 #' the rownames of data)
 #' @param conds conditions to be shown on expression levels (must be contained in
 #' the column names of data before the _rep suffix). Default : all conditions.
-#' @param gene.name.size size of the facet plot title font for each gene. Default : 12 
-#' 
+#' @param gene.name.size size of the facet plot title font for each gene. Default : 12
+#'
 #' @import ggplot2
 #'
 #' @export
@@ -327,10 +371,8 @@ draw_PCA <- function(data) {
 draw_expression_levels <-
   function(data,
            genes,
-           conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[,1]),
+           conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[, 1]),
            gene.name.size = 12) {
-    
-    
     if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0) {
       stop("The required genes were not found in expression data rownames")
     }
@@ -347,24 +389,25 @@ draw_expression_levels <-
     
     data <- as.data.frame(data)
     data$gene <- rownames(data)
-
+    
     d <-
-      suppressMessages(reshape2::melt(as.data.frame(data[intersect(
-        rownames(data), genes), c(conditions, 'gene')])))
+      suppressMessages(reshape2::melt(as.data.frame(data[intersect(rownames(data), genes), c(conditions, 'gene')])))
     d$condition <- stringr::str_split_fixed(d$variable, '_', 2)[, 1]
     d$replicate <- stringr::str_split_fixed(d$variable, '_', 2)[, 2]
     
     ggplot2::ggplot(d,
-             ggplot2::aes(
-             x = condition,
-             y = value,
-             color = replicate
-           )) +
-      ggplot2::geom_point(size = 4, alpha = 0.8) + 
-      ggplot2::facet_wrap( ~ gene, scales = "free") +
+                    ggplot2::aes(x = condition,
+                                 y = value,
+                                 color = replicate)) +
+      ggplot2::geom_point(size = 4, alpha = 0.8) +
+      ggplot2::facet_wrap(~ gene, scales = "free") +
       ggplot2::ggtitle("Normalized expression levels") +
       ggplot2::theme(
-        plot.title = ggplot2::element_text(size = 22, hjust = 0.5, face = "bold"),
+        plot.title = ggplot2::element_text(
+          size = 22,
+          hjust = 0.5,
+          face = "bold"
+        ),
         strip.text.x = ggplot2::element_text(size = gene.name.size),
         legend.title = ggplot2::element_text(size = 20),
         legend.text = ggplot2::element_text(size = 18),
