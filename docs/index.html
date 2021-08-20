@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.1</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.2</span>
       </span>
     </div>
 
@@ -60,10 +60,10 @@
       <a href="articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="articles/DIANE_normalize.html">Normalization</a>
+      <a href="articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
     <li>
-      <a href="articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
+      <a href="articles/DIANE_normalize.html">Normalization</a>
     </li>
   </ul>
 </li>
@@ -108,6 +108,17 @@
 <p>All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>.</p>
 <p><img src="reference/figures/net.PNG" align="center" width="900"></p>
 <p>For users more familiar with R programming, all server-side functions in DIANE are exported so they can be called from R scripts. Those functions documentation can be found in the <a href="https://oceanecsn.github.io/DIANE/reference/index.html">Reference</a>, and are illustrated in the <a href="https://oceanecsn.github.io/DIANE/articles/DIANE_Programming_Interface.html">corresponding vignette</a></p>
+<p><strong>To cite DIANE in publications use:</strong></p>
+<p>Cassan, O., Lèbre, S. &amp; Martin, A. Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite. BMC Genomics 22, 387 (2021). <a href="https://doi.org/10.1186/s12864-021-07659-2" class="uri">https://doi.org/10.1186/s12864-021-07659-2</a></p>
+<p><strong>A BibTeX entry for LaTeX users is</strong></p>
+<pre><code>@Article{cassan2021Inferring,
+    title = {Inferring and analyzing gene regulatory networks from multi-factorial expression data: a complete and interactive suite},
+    author = {Océane Cassan and Sophie Lèbre and Antoine Martin},
+    journal = {BMC Genomics},
+    year = {2021},
+    volume = {22},
+    number = {387},
+    url = {https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-021-07659-2}}</code></pre>
 </div>
 <div id="use-diane-locally" class="section level2">
 <h2 class="hasAnchor">
@@ -126,20 +137,20 @@ DIANE::run_app()</a></code></pre>
 <a href="#deploy-diane-on-your-server" class="anchor"></a>Deploy DIANE on your server</h2>
 <p>We provide a <a href="https://hub.docker.com/r/rocker/shiny">solution based on Docker and Shiny server</a> to deploy DIANE on any linux server, just as it is at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>. To do so, see the following command line instructions.</p>
 <p>Get DIANE source code via Git :</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>OceaneCsn<span class="sc">/</span>DIANE.git</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>git clone https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>OceaneCsn<span class="sc">/</span>DIANE.git</span></code></pre></div>
 <p>Install Docker engine, as described in the <a href="https://docs.docker.com/engine/install/">Docker docs</a>.</p>
 <p>Go to DIANE’s folder.</p>
 <p>First, you can change the default settings for the dockerized shiny-server by editing the file shiny-customized.config (like changing the port, the user to run with, and more)</p>
 <p>Now let’s build the image, that we’ll name diane, from the Dockerfile (superuser rights required).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cd DIANE</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>docker build <span class="sc">-</span>t diane .</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cd DIANE</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>docker build <span class="sc">-</span>t diane .</span></code></pre></div>
 <p>This might take a while. You can check that the container image was built with <code>docker images</code>. Then, you can start the container diane, by setting appropriately the following options in the above command:</p>
 <p><code>/path/to/app/on/host/</code> is the path to DIANE on the host, that is to say the location where you cloned it, containing the app.R file. <code>/path/to/logs/on/host/</code> is the folder you want to store your app logs.</p>
 <p><code>-p 8086:8086</code> is the port to use, change the first 8086 to use another one on the host.</p>
 <p><code>--user shiny</code> allows to run as non root, with the shiny user that must have been created before, and granted rights to the folder <code>/path/to/app/on/host/logs</code> and <code>/path/to/logs/on/host/</code>.</p>
 <p><code>-d --rm</code> are options for the detached mode.</p>
 <p>Plus, in the following example, a session of DIANE will be allowed to use 16 CPU cores :</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>cpus <span class="dv">16</span> <span class="sc">--</span>user shiny <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8086</span><span class="sc">:</span><span class="dv">8086</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>app<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>srv<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>logs<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>var<span class="sc">/</span>log<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> diane</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>cpus <span class="dv">16</span> <span class="sc">--</span>user shiny <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8086</span><span class="sc">:</span><span class="dv">8086</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>app<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>srv<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>logs<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>var<span class="sc">/</span>log<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> diane</span></code></pre></div>
 <p>You can check that the container is running with <code>docker ps</code>.</p>
 <hr>
 <p>Authors : Océane Cassan, Antoine Martin, Sophie Lèbre.</p>
@@ -163,6 +174,12 @@ DIANE::run_app()</a></code></pre>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></small></li>
+</ul>
+</div>
+<div class="citation">
+<h2>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html">Citing DIANE</a></li>
 </ul>
 </div>
 <div class="developers">

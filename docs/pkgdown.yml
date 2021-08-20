@@ -1,10 +1,10 @@
-pandoc: 2.11.4
+pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   DIANE: DIANE.html
   DIANE_Input_data: DIANE_Input_data.html
-  DIANE_normalize: DIANE_normalize.html
   DIANE_Programming_Interface: DIANE_Programming_Interface.html
-last_built: 2021-06-29T18:49Z
+  DIANE_normalize: DIANE_normalize.html
+last_built: 2021-08-20T12:52Z
 
