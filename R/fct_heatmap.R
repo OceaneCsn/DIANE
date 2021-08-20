@@ -199,6 +199,14 @@ draw_MDS <- function(normalized.count) {
 draw_PCA <- function(data) {
   # PCA computation
   # data <- log(data + 2)
+  
+  if (ncol(data) < 4) {
+    stop(
+      "The input expression file has too few conditions 
+      for a PCA to be of interest. It should have at least 4 samples"
+    )
+    nf = 3
+  }
 
   
   nf = 4
