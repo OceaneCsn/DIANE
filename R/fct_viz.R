@@ -186,7 +186,8 @@ draw_MDS <- function(normalized.count) {
 #'
 #' @description Draws variables contributions to principal components,
 #' as well as the PCA screeplot.
-#' First to fourth principal components are shown.
+#' First to fourth principal components are shown, except if there are
+#' only 4 samples. In that case, 3 principal components are computed.
 #'
 #' @param data normalized expression data with samples as columns and genes as rows.
 #'
@@ -203,9 +204,8 @@ draw_PCA <- function(data) {
   if (ncol(data) < 4) {
     stop(
       "The input expression file has too few conditions 
-      for a PCA to be of interest. It should have at least 4 samples"
+      for PCA to be interesting. It should have at least 4 samples."
     )
-    nf = 3
   }
 
   
