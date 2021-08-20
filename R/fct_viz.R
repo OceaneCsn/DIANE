@@ -381,6 +381,10 @@ draw_expression_levels <-
            genes,
            conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[, 1]),
            gene.name.size = 12) {
+    
+    # trimming the gene names to allow more flexible use in the UI
+    genes <- stringr::str_trim(genes)
+    
     if (sum(stringr::str_detect(rownames(data), paste0(genes, collapse = '|'))) == 0) {
       stop("The required genes were not found in expression data rownames")
     }
