@@ -7,7 +7,7 @@
 draw_profiles(
   data,
   membership,
-  conds,
+  conds = unique(stringr::str_split_fixed(colnames(data), "_", 2)[, 1]),
   expression = "profiles",
   k = NULL,
   nrow = 3
@@ -22,7 +22,7 @@ draw_profiles(
 \item{conds}{conditions on which to display clustering profiles.
 Must be a unique vector containing the conditions you want to consider
 for gene clustering, without the replicate information 
-(string before the underscore in sample names)}
+(string before the underscore in sample names). Default is all the conditions.}
 
 \item{expression}{if it is set to "profiles" (default), 
 plots expression/sum(expression). if "counts", plots log(Counts+1)}

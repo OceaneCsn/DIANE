@@ -10,7 +10,8 @@
 #'
 #' @param data raw counts to be normalized (data frame or matrix), with genes as rownames and
 #' conditions as columns.
-#' @param conditions condition of each column of the data argument.
+#' @param conditions condition of each column of the data argument. Default is
+#' all the conditions in the experiment. (as defined by the underscore prefixes).
 #' @param norm_method method used for normalization, between tmm or deseq2
 #' @param deg_method method used for DEGs detection if chosen, between edgeR ou deseq2
 #' @param fdr pvalue threshold for adjusted pvalues for DEGs detection if chosen
@@ -29,7 +30,11 @@
 #' data("abiotic_stresses")
 #' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
 #' abiotic_stresses$conditions, iteration = FALSE)
-normalize <- function(data, conditions, norm_method = "tmm", deg_method = "deseq2", fdr = 0.01,
+normalize <- function(data, 
+                      conditions = unique(stringr::str_split_fixed(colnames(data), '_', 2)[, 1]), 
+                      norm_method = "tmm", 
+                      deg_method = "deseq2", 
+                      fdr = 0.01,
                       iteration = TRUE){
   tcc <- TCC::TCC(count =  data, group = conditions)
   tcc <- suppressWarnings(suppressMessages(TCC::calcNormFactors(tcc, norm.method = norm_method, 

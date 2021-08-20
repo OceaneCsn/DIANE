@@ -133,7 +133,7 @@ get_genes_in_cluster <- function(membership, cluster) {
 #' @param conds conditions on which to display clustering profiles.
 #' Must be a unique vector containing the conditions you want to consider
 #' for gene clustering, without the replicate information 
-#' (string before the underscore in sample names)
+#' (string before the underscore in sample names). Default is all the conditions.
 #' @param nrow on how many rows display the cluster profiles if k is NULL
 #'
 #' @importFrom reshape2 melt
@@ -150,7 +150,7 @@ get_genes_in_cluster <- function(membership, cluster) {
 draw_profiles <-
   function(data,
            membership,
-           conds,
+           conds = unique(stringr::str_split_fixed(colnames(data), '_', 2)[, 1]),
            expression = "profiles",
            k = NULL,
            nrow = 3) {

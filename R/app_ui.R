@@ -112,6 +112,11 @@ app_ui <- function(request) {
             "Legal mentions",
             tabName = "legal_mentions",
             icon = shiny::icon("info-circle")
+          ),
+          shinydashboard::menuItem(
+            "Software versions",
+            tabName = "versions",
+            icon = shiny::icon("list")
           )
         )
         
@@ -239,12 +244,19 @@ app_ui <- function(request) {
                                   mod_network_analysis_ui("network_analysis_ui_1")
           ),
 
+
+#   ____________________________________________________________________________
+#   other tabs                                                              ####
+
           
           shinydashboard::tabItem(tabName = "datasets_tab",
                                   mod_datasets_ui("datasets_ui_1")),
 
           shinydashboard::tabItem(tabName = "legal_mentions",
-                                  mod_legal_mentions_ui("legal_mentions_ui_1"))
+                                  mod_legal_mentions_ui("legal_mentions_ui_1")),
+
+          shinydashboard::tabItem(tabName = "versions",
+                                  mod_versions_ui("versions_ui_1"))
 
          
         )

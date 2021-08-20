@@ -6,7 +6,7 @@
 \usage{
 normalize(
   data,
-  conditions,
+  conditions = unique(stringr::str_split_fixed(colnames(data), "_", 2)[, 1]),
   norm_method = "tmm",
   deg_method = "deseq2",
   fdr = 0.01,
@@ -17,7 +17,8 @@ normalize(
 \item{data}{raw counts to be normalized (data frame or matrix), with genes as rownames and
 conditions as columns.}
 
-\item{conditions}{condition of each column of the data argument.}
+\item{conditions}{condition of each column of the data argument. Default is
+all the conditions in the experiment. (as defined by the underscore prefixes).}
 
 \item{norm_method}{method used for normalization, between tmm or deseq2}
 
