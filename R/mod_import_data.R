@@ -1,5 +1,6 @@
 
 
+
 #' import_data UI Function
 #'
 #' @description A shiny Module to import expression data.
@@ -24,7 +25,7 @@ mod_import_data_ui <- function(id) {
     shiny::h1("Upload expression data and experimental design"),
     shiny::hr(),
     
-
+    
     
     #   ____________________________________________________________________________
     #   File upload                                                             ####
@@ -67,30 +68,34 @@ mod_import_data_ui <- function(id) {
         inline = TRUE
       )),
       
-      shiny::fluidRow(col_4(shinyWidgets::dropdownButton(
-        size = 'xs',
-        label = "Input file requirements",
-        shiny::includeMarkdown(
-          system.file("extdata", "expressionFile.md", package = "DIANE")
-        ),
-        circle = TRUE,
-        status = "primary",
-        icon = shiny::icon("question"),
-        width = "1200px",
-        tooltip = shinyWidgets::tooltipOptions(title = "More details")
-      ))),
-      
-      
-      col_12(shiny::fileInput(
-        ns('raw_data'),
-        'Choose CSV/TXT expression file',
-        accept = c(
-          'text/csv',
-          'text/comma-separated-values,text/plain',
-          '.csv',
-          '.txt'
+      shiny::fluidRow(col_4(
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          label = "Input file requirements",
+          shiny::includeMarkdown(
+            system.file("extdata", "expressionFile.md", package = "DIANE")
+          ),
+          circle = TRUE,
+          status = "primary",
+          icon = shiny::icon("question"),
+          width = "1200px",
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
         )
       )),
+      
+      
+      col_12(
+        shiny::fileInput(
+          ns('raw_data'),
+          'Choose CSV/TXT expression file',
+          accept = c(
+            'text/csv',
+            'text/comma-separated-values,text/plain',
+            '.csv',
+            '.txt'
+          )
+        )
+      ),
       
       
       
@@ -98,22 +103,26 @@ mod_import_data_ui <- function(id) {
       #   gene infos upload                                                           ####
       
       
-      col_8(shiny::radioButtons(ns('sep_gene_info'),
-                          'Separator : ',
-                          c(Tab = '\t'),
-                          inline = TRUE)),
+      col_8(shiny::radioButtons(
+        ns('sep_gene_info'),
+        'Separator : ',
+        c(Tab = '\t'),
+        inline = TRUE
+      )),
       
-      shiny::fluidRow(col_4(shinyWidgets::dropdownButton(
-        size = 'xs',
-        label = "Gene information file requirements",
-        shiny::includeMarkdown(system.file("extdata", "infoFile.md",
-                                           package = "DIANE")),
-        circle = TRUE,
-        status = "primary",
-        icon = shiny::icon("question"),
-        width = "1200px",
-        tooltip = shinyWidgets::tooltipOptions(title = "More details")
-      ))),
+      shiny::fluidRow(col_4(
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          label = "Gene information file requirements",
+          shiny::includeMarkdown(system.file("extdata", "infoFile.md",
+                                             package = "DIANE")),
+          circle = TRUE,
+          status = "primary",
+          icon = shiny::icon("question"),
+          width = "1200px",
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+        )
+      )),
       
       shiny::fileInput(
         ns('gene_info_input'),
@@ -145,37 +154,37 @@ mod_import_data_ui <- function(id) {
       #   ____________________________________________________________________________
       #   seed settings                                                           ####
       
-        
-        shiny::uiOutput(ns("seed_field")),
       
+      shiny::uiOutput(ns("seed_field")),
+      
+      
+      shinyWidgets::actionBttn(
+        ns("change_seed"),
+        label = "Change seed",
+        style = "material-flat",
+        color = "warning"
+      ),
+      
+      
+      shinyWidgets::actionBttn(
+        ns("set_seed"),
+        label = "Set seed",
+        style = "material-flat",
+        color = "success"
         
-        shinyWidgets::actionBttn(
-          ns("change_seed"),
-          label = "Change seed",
-          style = "material-flat",
-          color = "warning"
-        ),
-        
-        
-        shinyWidgets::actionBttn(
-          ns("set_seed"),
-          label = "Set seed",
-          style = "material-flat",
-          color = "success"
-          
-        ),
-      col_4(shinyWidgets::dropdownButton(
-        size = 'xs',
-        label = "Input file requirements",
-        shiny::includeMarkdown(
-          system.file("extdata", "seed.md", package = "DIANE")
-        ),
-        circle = TRUE,
-        status = "primary",
-        icon = shiny::icon("question"),
-        width = "1200px",
-        tooltip = shinyWidgets::tooltipOptions(title = "More details")
-      ))
+      ),
+      col_4(
+        shinyWidgets::dropdownButton(
+          size = 'xs',
+          label = "Input file requirements",
+          shiny::includeMarkdown(system.file("extdata", "seed.md", package = "DIANE")),
+          circle = TRUE,
+          status = "primary",
+          icon = shiny::icon("question"),
+          width = "1200px",
+          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+        )
+      )
     ),
     
     
@@ -196,7 +205,7 @@ mod_import_data_ui <- function(id) {
     ),
     
     
-
+    
     
     #   ____________________________________________________________________________
     #   design                                                                  ####
@@ -243,7 +252,7 @@ mod_import_data_ui <- function(id) {
       ),
       DT::dataTableOutput(ns("design_preview")),
       
-
+      
       
       footer = "Describe the levels of each factors for your conditions"
     ),
@@ -252,7 +261,7 @@ mod_import_data_ui <- function(id) {
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
     
-
+    
   )
 }
 
@@ -275,7 +284,7 @@ mod_import_data_server <- function(input, output, session, r) {
     r$normalized_counts_pre_filter = NULL
     r$conditions = NULL
     r$design = NULL
-    r$DEGs = list() 
+    r$DEGs = list()
     r$tcc = NULL
     r$clusterings = list()
     r$current_comparison = NULL
@@ -369,16 +378,15 @@ mod_import_data_server <- function(input, output, session, r) {
             stringsAsFactors = FALSE,
             check.names = FALSE
           )
-        if("Gene" %in% colnames(d)){
-          
-          if(length(unique(d$Gene)) == length(d$Gene)){
+        if ("Gene" %in% colnames(d)) {
+          if (length(unique(d$Gene)) == length(d$Gene)) {
             rownames(d) <- d$Gene
             d <- d[, colnames(d) != "Gene"]
           }
           else{
             shinyalert::shinyalert(
               "Invalid input data",
-              "It seems that you have duplicated gene/transcripts 
+              "It seems that you have duplicated gene/transcripts
               IDs in your input file.
               Please remove duplicates and re-upload your file",
               type = "error"
@@ -540,8 +548,14 @@ mod_import_data_server <- function(input, output, session, r) {
     if (requireNamespace("org.EcK12.eg.db", quietly = TRUE))
       choices <- c(choices, "Escherichia coli")
     
-    c("Other", choices, "Lupinus albus", "Oryza sativa (rapdb)", 
-      "Oryza sativa (msu)", "Oryza glaberrima")
+    c(
+      "Other",
+      choices,
+      "Lupinus albus",
+      "Oryza sativa (rapdb)",
+      "Oryza sativa (msu)",
+      "Oryza glaberrima"
+    )
   })
   
   
@@ -629,7 +643,7 @@ mod_import_data_server <- function(input, output, session, r) {
       }
       if (r$organism == "Lupinus albus") {
         d <-
-          DIANE:::lupine$annotation[intersect(ids, rownames(DIANE:::lupine$annotation)), ]
+          DIANE:::lupine$annotation[intersect(ids, rownames(DIANE:::lupine$annotation)),]
       }
       else{
         d <- get_gene_information(ids, r$organism)
@@ -639,21 +653,30 @@ mod_import_data_server <- function(input, output, session, r) {
     else{
       if (!is.null(input$gene_info_input)) {
         path = input$gene_info_input$datapath
+        
         d <- read.csv(
           sep = input$sep_gene_info,
           path,
           header = TRUE,
-          stringsAsFactors = FALSE,
-          row.names = "Gene"
+          stringsAsFactors = FALSE
         )
-
-        if (length(unique(rownames(d))) < length(rownames(d))) {
-          shinyalert::shinyalert(
-            "Duplicated genes are not allowed in gene information file",
-            type = "error"
-          )
-          stop()
+        
+        if (!'label' %in% colnames(d) &
+            !'description' %in% colnames(d)) {
+          stop("There should be a label or description field in the
+               annotation file")
         }
+        # takes as rownames only the genes present in the expression file
+        d <- d[d$Gene %in% rownames(r$raw_counts), ]
+        
+        # handles the case where genes are duplicated, and pastes
+        # the annotations for the same genes in one row
+        if (length(unique(d$Gene)) < length(d$Gene)) {
+          new_d <- aggregate(. ~ Gene, data = d, FUN = paste, collapse = ",")
+          d <- new_d
+        }
+        rownames(d) <- d$Gene
+        d <- d[ colnames(d) != "Gene"]
       }
       else{
         d <- NULL
@@ -672,7 +695,7 @@ mod_import_data_server <- function(input, output, session, r) {
   ########## matrix preview
   output$heatmap_preview <- shiny::renderPlot({
     shiny::req(r$raw_counts)
-    d <- r$raw_counts[rowSums(r$raw_counts) > 0, ]
+    d <- r$raw_counts[rowSums(r$raw_counts) > 0,]
     
     draw_heatmap(d, title = "Expression data preview")
   })
@@ -688,7 +711,7 @@ mod_import_data_server <- function(input, output, session, r) {
     if (r$organism == "Other")
       txt <- "No gene ID requirement"
     else if (r$organism == "Oryza sativa (rapdb)")
-        txt <- c("Os01g0100600")
+      txt <- c("Os01g0100600")
     else if (r$organism == "Oryza sativa (msu)")
       txt <- c("LOC_Os01g11590")
     else if (r$organism == "Oryza glaberrima")
