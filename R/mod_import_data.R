@@ -124,14 +124,16 @@ mod_import_data_ui <- function(id) {
         )
       )),
       
-      shiny::fileInput(
-        ns('gene_info_input'),
-        'Choose CSV/TXT gene information file (optional)',
-        accept = c(
-          'text/csv',
-          'text/comma-separated-values,text/plain',
-          '.csv',
-          '.txt'
+      col_12(
+        shiny::fileInput(
+          ns('gene_info_input'),
+          'Choose CSV/TXT gene information file (optional)',
+          accept = c(
+            'text/csv',
+            'text/comma-separated-values,text/plain',
+            '.csv',
+            '.txt'
+          )
         )
       ),
       
