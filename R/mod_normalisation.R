@@ -35,6 +35,7 @@ mod_normalisation_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Normalization settings                                                  ####
     
+    shiny::fluidRow(
     col_3(
       shinydashboardPlus::box(
         title = "Settings",
@@ -43,6 +44,7 @@ mod_normalisation_ui <- function(id) {
         collapsible = TRUE,
         closable = FALSE,
         width = 12,
+        # width = NULL,
         
         col_8(shiny::h2("Normalization")),
         
@@ -145,6 +147,7 @@ mod_normalisation_ui <- function(id) {
       shinydashboard::tabBox(
         title = "Data exploration",
         width = 12,
+        # width = NULL,
         height = "1000px",
         
         shiny::tabPanel(
@@ -177,6 +180,7 @@ mod_normalisation_ui <- function(id) {
       
     ),
     shiny::br()
+    )
     
   )
 }
