@@ -21,6 +21,7 @@ mod_clustering_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Clustering settings                                                     ####
     
+    shiny::fluidRow(
     col_4(
       shinydashboardPlus::box(
         title = "Settings",
@@ -147,6 +148,7 @@ mod_clustering_ui <- function(id) {
         )
       )
     )
+  )
   )
 }
 
