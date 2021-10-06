@@ -48,6 +48,7 @@ mod_network_analysis_ui <- function(id) {
     
     
     
+    shiny::fluidRow(
     column(
       width = 5,
       shiny::uiOutput(ns("zoom_ui")),
@@ -69,6 +70,7 @@ mod_network_analysis_ui <- function(id) {
         shiny::tabPanel(
           title = "Degree-ranked gene list",
           DT::dataTableOutput(ns("gene_ranking")),
+          br(),
           shinyWidgets::downloadBttn(
             outputId = ns("download_node_table"),
             label = "Download nodes as csv table",
@@ -157,6 +159,7 @@ mod_network_analysis_ui <- function(id) {
         )
         
       )
+    )
     )
   )
 }
