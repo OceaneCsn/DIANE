@@ -602,15 +602,41 @@ mod_differential_expression_analysis_server <-
     output$deg_table <- DT::renderDataTable({
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt, r_dea$gene_table)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
-      
-      r_dea$gene_table
+      # 
+      # r_dea$gene_table
       
       DT::formatStyle(
-        DT::datatable(r_dea$gene_table),
+        DT::datatable(r_dea$gene_table, selection = "single"),
         columns = c("Regulation"),
         target = c("cell", "row"),
         backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
       )
+    })
+    
+    ###Display count of clicked genes in the table.
+    # plot_modal_count <- function() {
+    #   modalDialog(
+    #     plotOutput(ns("count_table_plot")), 
+    #     size = "l",
+    #     easyClose = TRUE,
+    #     fade = TRUE
+    #   )
+    # }
+    
+    shiny::observeEvent(input$deg_table_rows_selected, {
+      showModal(
+        modalDialog(
+          plotOutput(ns("count_table_plot")), 
+          size = "l",
+          easyClose = TRUE,
+          fade = TRUE
+        )
+      )
+    })
+    
+    
+    output$count_table_plot <- shiny::renderPlot({
+      DIANE::draw_expression_levels(log2(r$normalized_counts+2), genes = rownames(r_dea$top_tags[input$deg_table_rows_selected,]))
     })
     
     #   ____________________________________________________________________________
