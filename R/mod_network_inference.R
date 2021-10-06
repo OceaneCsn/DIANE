@@ -22,6 +22,7 @@ mod_network_inference_ui <- function(id){
     shiny::h1("Network inference"),
     shiny::hr(),
     
+    shiny::fluidRow(
     col_4(
       
       
@@ -227,10 +228,8 @@ shiny::hr(),
       visNetwork::visNetworkOutput(ns("net_preview"), height = "650px")
       
     ))
-
-
- 
   )
+)
 }
     
 #' network_inference Server Function
