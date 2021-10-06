@@ -24,45 +24,49 @@ mod_module_levels_ui <- function(id){
     ),
     
     
-    shinydashboard::tabBox(
-      title = "Explore normalized data",
-      width = 12,
-      height = "900px",
-      
+    shiny::fluidRow(shiny::column(12,
+      shinydashboard::tabBox(
+        title = "Explore normalized data",
+        width = 12,
+        height = "900px",
         
-      shiny::tabPanel(title = "PCA",
-                      shiny::uiOutput(ns("pca_ui")),
-                      shiny::includeMarkdown(system.file(
-                        "extdata", "pca.md", package = "DIANE"))),
-      # shiny::tabPanel(title = "MDS",
-      #                 shiny::plotOutput(ns('mds_plot'), height = "800px")),
-      shiny::tabPanel(title = "Visualize gene expression levels",
-                      shinydashboardPlus::box(
-                        title = "Genes and conditions choice",
-                        solidHeader = FALSE,
-                        status = "success",
-                        collapsible = TRUE,
-                        closable = FALSE,
-                        width = 12,
-                        
-                        
-                        shiny::uiOutput(ns("gene_choice")),
-                        
-                        
-                        shiny::uiOutput(ns("condition_choice"))
-                        
-                      ),
-                      shinydashboardPlus::box(solidHeader = FALSE,
-                                                  status = "success",
-                                                  collapsible = TRUE,
-                                                  closable = FALSE,
-                                                  width = 12,
-                                                  shiny::plotOutput(ns("expression_plot"), height = "700px"))
-                      
-      ))
+        
+        shiny::tabPanel(title = "PCA",
+                        shiny::uiOutput(ns("pca_ui")),
+                        shiny::fluidRow(shiny::column(12,
+                        shiny::includeMarkdown(system.file(
+                          "extdata", "pca.md", package = "DIANE"))))),
+        # shiny::tabPanel(title = "MDS",
+        #                 shiny::plotOutput(ns('mds_plot'), height = "800px")),
+        shiny::tabPanel(title = "Visualize gene expression levels",
+                        shiny::fluidRow(
+                        shinydashboardPlus::box(
+                          title = "Genes and conditions choice",
+                          solidHeader = FALSE,
+                          status = "success",
+                          collapsible = TRUE,
+                          closable = FALSE,
+                          width = 12,
+                          
+                          
+                          shiny::uiOutput(ns("gene_choice")),
+                          
+                          
+                          shiny::uiOutput(ns("condition_choice"))
+                          
+                        ),
+                        shinydashboardPlus::box(solidHeader = FALSE,
+                                                status = "success",
+                                                collapsible = TRUE,
+                                                closable = FALSE,
+                                                width = 12,
+                                                shiny::plotOutput(ns("expression_plot"), height = "700px"))
+                        )  
+        ))
+    ))
   )
 }
-    
+
 #' module_levels Server Function
 #'
 #' @noRd 
