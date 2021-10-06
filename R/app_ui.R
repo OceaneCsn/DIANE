@@ -29,7 +29,7 @@ dbHeader <- shinydashboard::dashboardHeader(title = logo_diane,
                                                                      text = "Adjust with ctrl/cmd + or -"
                                                                   
                                                          ),
-                                                         shinydashboard::notificationItem(text = "oceane.cassan@supagro.fr",
+                                                         shinydashboard::notificationItem(text = "oceane.cassan@cnrs.fr",
                                                                      icon = shiny::icon("envelope")
                                                          ),
                                                          shinydashboard::notificationItem(text = "Report bugs on github",
