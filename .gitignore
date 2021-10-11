@@ -3,7 +3,7 @@
 .Ruserdata
 int/doc
 inst/doc
-.Rproj
+*.Rproj
 app.R
 logs/next_id.txt
 logs/loggit.log

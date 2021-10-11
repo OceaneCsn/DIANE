@@ -369,7 +369,7 @@ mod_network_inference_server <- function(input, output, session, r){
       }
       }
     }
-    d
+    as.character(d)
     })
   
   #   ____________________________________________________________________________
@@ -650,7 +650,8 @@ mod_network_inference_server <- function(input, output, session, r){
     
     data <- data[,conditions]
     
-    # even if only clusters were chosen, we take regulators from all deg list
+    # even if only clusters were chosen, we take regulators 
+    #from all deg list
     regressors = intersect(all_genes, r$regulators)
     
     if(input$grouping){
