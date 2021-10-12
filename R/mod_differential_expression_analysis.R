@@ -59,6 +59,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           ns("dea_fdr"),
           min = 0,
           max = 1,
+          step = 0.01,
           value = 0.05,
           label = "Adjusted pvalue ( FDR )"
         ),
