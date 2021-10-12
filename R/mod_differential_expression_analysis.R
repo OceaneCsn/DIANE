@@ -437,11 +437,12 @@ mod_differential_expression_analysis_server <-
       r_dea$tags <-
         estimateDEGs(r$fit,
                      reference = input$reference,
-                     perturbation = input$perturbation
+                     perturbation = input$perturbation,
                      systematic_orientation = ifelse(is.null(input$multiple_DE_parameters_selection),
                                                      yes = FALSE,
                                                      no = input$multiple_DE_parameters_selection
                      )
+        )
       
       r_dea$top_tags <-
         r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
