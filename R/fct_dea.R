@@ -137,6 +137,11 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 #' DEGs <- topTags$table
 #' head(DEGs)
+#' 
+#' # For multiple conditions
+#' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = c("H","M","S"), p.value = 0.01)
+#' DEGs <- topTags$table
+#' head(DEGs)
 estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, systematic_orientation = FALSE) {
   contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
   print(contrast)
@@ -144,9 +149,9 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, sys
   top <- edgeR::topTags(lrt, p.value = p.value, n = Inf)
   top$table <- top$table[abs(top$table$logFC) > lfc,]
   
-  ###Complicated case. 
+  ###Systematic orientation case
   if (systematic_orientation == TRUE &&
-      length(reference) + length(perturbation) > 2) {
+      length(reference) + length(perturbation) > 2) { ###Only usefull for multiple condition comparison.
     all_vs_all_deg <- list()
     for (ref in colnames(fit$design)[contrast > 0]) {
       ###Reference

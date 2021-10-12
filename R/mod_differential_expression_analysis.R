@@ -216,9 +216,7 @@ mod_differential_expression_analysis_ui <- function(id) {
 mod_differential_expression_analysis_server <-
   function(input, output, session, r) {
     ns <- session$ns
-    
-    
-    
+   
     r_dea <- shiny::reactiveValues(
       top_tags = NULL,
       DEGs = NULL,
@@ -336,7 +334,6 @@ mod_differential_expression_analysis_server <-
           choices = c("Mean of conditions" = FALSE, "Mean of condition and same orientation DE" = TRUE)
         ))
       } else {
-        print("Noooo")
         NULL
       }
     })
