@@ -53,6 +53,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         
         shiny::uiOutput(ns("condition_choices")),
         
+        shiny::htmlOutput(ns("condition_choices_visualisation_2")),
         
         shiny::numericInput(
           ns("dea_fdr"),
@@ -68,6 +69,8 @@ mod_differential_expression_analysis_ui <- function(id) {
           value = 1,
           label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
         ),
+        
+        shiny::uiOutput(ns("multiple_DE_parameters_ui")),
         
         shinyWidgets::actionBttn(
           ns("deg_test_btn"),
@@ -235,10 +238,11 @@ mod_differential_expression_analysis_server <-
       req(r$conditions)
       tagList(
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("reference"),
             label = "Reference",
             choices = unique(r$conditions),
+            selected = unique(r$conditions)[1],
             justified = TRUE,
             direction = "vertical",
             checkIcon = list(yes = shiny::icon("ok",
@@ -247,7 +251,7 @@ mod_differential_expression_analysis_server <-
         ),
         
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("perturbation"),
             label = "Perturbation",
             choices = unique(r$conditions),
@@ -259,6 +263,81 @@ mod_differential_expression_analysis_server <-
           )
         )
       )
+    })
+    
+    output$condition_choices_visualisation_2 <- shiny::renderText({
+      # req(input$reference, input$perturbation)
+      if(is.null(input$reference)){
+        reference_text = "<span style=\"color: #A52014\">NOTHING SELECTED</span>"
+      } else {
+        reference_text <- ifelse(test = length(input$reference) == 1,
+                                 yes = input$reference,
+                                 no = paste0(input$reference, collapse = " + "))
+      }
+      if(is.null(input$perturbation)){
+        perturbation_text = "<span style=\"color: #A52014\">NOTHING SELECTED</span>"
+      } else {
+        perturbation_text <- ifelse(test = length(input$perturbation) == 1,
+                                    yes = input$perturbation,
+                                    no = paste0(input$perturbation, collapse = " + "))
+      }
+      comparison_type <- ifelse(length(input$reference) > 1 | length(input$perturbation) > 1,
+                                yes = "Multiple comparison",
+                                no = "Simple comparison")
+      as.character(
+        paste0(
+          "<div style=\"text-align: center; font-family: 'Arial';\"> <h4 style=\"text-align: center\"><b>",comparison_type,"</b></h4>",
+          shiny::column(6,
+                        HTML(paste0("<b>Reference</b><br>",reference_text,""))
+          ),
+          shiny::column(6,
+                        HTML(paste0("<b>Perturbation</b><br>",perturbation_text, ""))
+          )," </div>"
+        )
+      )
+    })
+    
+    
+    output$multiple_DE_parameters_ui <- shiny::renderUI({
+      shiny::req(!is.null(r$normalized_counts))
+      if (length(input$reference) > 1 ||
+          length(input$perturbation) > 1) {
+        shiny::tagList(shiny::HTML(
+          paste0(
+            "<span style=\"display: inline-block; margin-right: 5px; max-width: 100%;
+            # margin-bottom: 5px; \"><h5 style=\"display: inline-block; font-weight: 700;\"> Multiple DE comparison method  </h5>",
+            as.character(
+              shinyWidgets::dropdownButton(
+                size = "xs",
+                shiny::HTML(
+                  "<p>There is two methods for multiple condition comparison.<br><b>Mean of conditions</b> :
+                  the default method. Take the mean of all selected coniditions in order to perform differential expression analysis.<br>
+                  <b>Mean of condition and same orientation DE</b> :
+                  Fist perform differentiall expression using mean of conditions.
+                  Then, perform every single possible differential expression analysis using the selected conditions,
+                  and keep only genes that are differentially expressed with the same orientation in all comparison.</p>"
+                ),
+                # shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
+                circle = TRUE,
+                status = "success",
+                icon = shiny::icon("question"),
+                width = "400px",
+                tooltip = shinyWidgets::tooltipOptions(title = "More details"),
+                inline = TRUE
+              )
+            ),
+            "</span>"
+          )
+        ),
+        shinyWidgets::pickerInput(
+          inputId = ns("multiple_DE_parameters_selection"),
+          # label = "Multiple DE comparison method",
+          choices = c("Mean of conditions" = FALSE, "Mean of condition and same orientation DE" = TRUE)
+        ))
+      } else {
+        print("Noooo")
+        NULL
+      }
     })
     
     
@@ -337,30 +416,49 @@ mod_differential_expression_analysis_server <-
       }
       
       shiny::req(r$fit,
-                 input$dea_fdr,
-                 input$reference,
-                 input$perturbation)
+                 input$dea_fdr)
       
-      if (input$reference == input$perturbation) {
+      if (is.null(input$reference) | is.null(input$perturbation)) {
+        shinyalert::shinyalert("You must select at least one reference and one perturbation.",
+                               type = "error")
+      }
+      shiny::req(input$reference, input$perturbation)
+      
+      if (any(input$reference %in% input$perturbation) |
+          any(input$perturbation %in% input$reference)) {
         shinyalert::shinyalert("You tried to compare the same conditions!
                                You may need some coffee...",
                                type = "error")
       }
-      shiny::req(!input$reference == input$perturbation)
+      shiny::req(!any(input$reference %in% input$perturbation) | !any(input$perturbation %in% input$reference))
       
       
       r_dea$tags <-
         estimateDEGs(r$fit,
                      reference = input$reference,
-                     perturbation = input$perturbation)
+                     perturbation = input$perturbation
+                     systematic_orientation = ifelse(is.null(input$multiple_DE_parameters_selection),
+                                                     yes = FALSE,
+                                                     no = input$multiple_DE_parameters_selection
+                     )
       
       r_dea$top_tags <-
         r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
       r_dea$top_tags <-
         r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
       r_dea$DEGs <- r_dea$top_tags$genes
-      r_dea$ref <- input$reference
-      r_dea$trt <- input$perturbation
+      
+      if(length(input$reference)>1){
+        r_dea$ref <- paste0("(", paste0(input$reference, collapse = " "), ")")
+      } else {
+        r_dea$ref <- input$reference
+      }
+      if(length(input$perturbation)>1){
+        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = " "), ")")
+      } else {
+        r_dea$trt <- input$perturbation
+      }
+      
       r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
       r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
       r_dea$go <- NULL
