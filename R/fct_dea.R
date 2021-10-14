@@ -142,12 +142,22 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = c("H","M","S"), p.value = 0.01)
 #' DEGs <- topTags$table
 #' head(DEGs)
-estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, systematic_orientation = FALSE) {
+estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, systematic_orientation = FALSE, diagnostic_plot = FALSE) {
   contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
   print(contrast)
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
-  top <- edgeR::topTags(lrt, p.value = p.value, n = Inf)
-  top$table <- top$table[abs(top$table$logFC) > lfc,]
+  top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
+  
+  if(diagnostic_plot){
+    diag_plot <- ggplot2::ggplot(data=top$table, ggplot2::aes(x=top$table$PValue)) + ggplot2::theme_classic() +
+      ggplot2::geom_histogram(breaks=seq(0, 1, by=0.01), 
+                     fill="#92D9A2", alpha = 1) +
+      ggplot2::labs(title="Histogram of pvalue", x="Pvalue", y="Count") + 
+      ggplot2::xlim(c(0,1))
+      return(diag_plot)
+  }
+  
+  top$table <- top$table[abs(top$table$logFC) > lfc & top$table$FDR <= p.value,]
   
   ###Systematic orientation case
   if (systematic_orientation == TRUE &&
