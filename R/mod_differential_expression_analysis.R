@@ -124,6 +124,11 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::uiOutput(ns("heatmap_conditions_choice")),
           shiny::plotOutput(ns("heatmap"), height = "700px")
         ),
+        shiny::tabPanel(
+          title = "Pval histogram",
+          # shiny::uiOutput(ns("heatmap_conditions_choice")),
+          shiny::plotOutput(ns("pvalue_hist"), height = "400px")
+        ),
         
         #   ____________________________________________________________________________
         #   Go enrichment                                                           ####
@@ -338,7 +343,10 @@ mod_differential_expression_analysis_server <-
       }
     })
     
-    
+    output$pvalue_hist <- shiny::renderPlot({
+      shiny::req(r_dea$tags)
+      draw_raw_pvalue_histogram(r_dea$tags)
+    })
     
     #   ____________________________________________________________________________
     #   custom go                                                               ####

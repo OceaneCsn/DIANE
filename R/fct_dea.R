@@ -148,15 +148,6 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, sys
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
   top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
   
-  if(diagnostic_plot){
-    diag_plot <- ggplot2::ggplot(data=top$table, ggplot2::aes(x=top$table$PValue)) + ggplot2::theme_classic() +
-      ggplot2::geom_histogram(breaks=seq(0, 1, by=0.01), 
-                     fill="#92D9A2", alpha = 1) +
-      ggplot2::labs(title="Histogram of pvalue", x="Pvalue", y="Count") + 
-      ggplot2::xlim(c(0,1))
-      return(diag_plot)
-  }
-  
   top$table <- top$table[abs(top$table$logFC) > lfc & top$table$FDR <= p.value,]
   
   ###Systematic orientation case
@@ -199,9 +190,36 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, sys
   return(top)
 }
 
+#' Draw raw pvalue histogram
+#'
+#' @param tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
+#' used with \code{p.value = 1}
+#' @param bins bins
+#'
+#' @import ggplot2
+#' 
+#' @return ggplot object corresponding to raw pvalue histogram.
+#' @examples
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, 
+#' iteration = FALSE)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(abiotic_stresses$conditions))
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+#' tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
+#' DIANE::draw_raw_pvalue_histogram(tags)
+draw_raw_pvalue_histogram <- function(tags, bins=100){
+  
+  diag_plot <- ggplot2::ggplot(data=tags$table, ggplot2::aes(x=tags$table$PValue)) + ggplot2::theme_classic() +
+    ggplot2::geom_histogram(breaks=seq(0, 1, by=1/bins), 
+                            fill="#92D9A2", alpha = 1) +
+    ggplot2::labs(title="Histogram of pvalue", x="Pvalue", y="Count") + 
+    ggplot2::xlim(c(0,1))
+  return(diag_plot)
+}
+
 #' MA or volcano plot for differential expression results
 #'
-#' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR, 
+#' @param tags tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
 #' used with \code{p.value = 1}
 #' @param fdr pvalue for DEGs detection
 #' @param MA TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.
