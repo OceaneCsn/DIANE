@@ -298,6 +298,7 @@ draw_venn <- function(gene_list){
 #' @param experiment_design A vector containing all the conditions of a studied dataset.
 #' @param reference_point All the points in experiment_design to consider as reference
 #' @param comparison_point All the points in experiment_design to consider as comparison points.
+#' @param equilibrate Indicate if we equilibrate the importance of reference and comparison points.
 #'
 #' @noRd
 #' @return
@@ -324,8 +325,17 @@ create_versus_design <- function(experiment_design, reference_point, comparison_
   
   comparison_matrix=rep(0, length(experiment_design))
   
-  weight_reference=1/length(reference_point) ###We want to have an equel weight for all the points. It means that it must sum up to 1.
-  weight_comparison=1/length(comparison_point)
+  if(length(reference_point) > length(comparison_point)){
+    weight_comparison=1
+    weight_reference=length(comparison_point)/length(reference_point)
+  } else if (length(reference_point) < length(comparison_point)) {
+    weight_reference=1
+    weight_comparison=length(reference_point)/length(comparison_point)
+  } else {
+    weight_comparison=1
+    weight_reference=1
+    
+  }
   
   comparison_matrix[which(experiment_design %in% reference_point)] <- -weight_reference
   comparison_matrix[which(experiment_design %in% comparison_point)] <- weight_comparison
