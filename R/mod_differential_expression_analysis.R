@@ -125,9 +125,8 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::plotOutput(ns("heatmap"), height = "700px")
         ),
         shiny::tabPanel(
-          title = "Pval histogram",
-          # shiny::uiOutput(ns("heatmap_conditions_choice")),
-          shiny::plotOutput(ns("pvalue_hist"), height = "400px")
+          title = "Pvalues histogram",
+          shiny::plotOutput(ns("pvalue_hist"), height = "450px")
         ),
         
         #   ____________________________________________________________________________
@@ -285,9 +284,16 @@ mod_differential_expression_analysis_server <-
                                     yes = input$perturbation,
                                     no = paste0(input$perturbation, collapse = " + "))
       }
-      comparison_type <- ifelse(length(input$reference) > 1 | length(input$perturbation) > 1,
-                                yes = "Multiple comparison",
-                                no = "Simple comparison")
+      
+      if(length(input$reference) == 0 | length(input$perturbation) == 0){
+        comparison_type <- "Invalid comparison"
+      } else if(length(input$reference) == 1 & length(input$perturbation) == 1) {
+        comparison_type <- "Simple comparison"
+      } else {
+        comparison_type <- "Multiple comparison"
+      }
+      
+      
       as.character(
         paste0(
           "<div style=\"text-align: center; font-family: 'Arial';\"> <h4 style=\"text-align: center\"><b>",comparison_type,"</b></h4>",
