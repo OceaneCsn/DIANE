@@ -194,7 +194,7 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, sys
 #'
 #' @param tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
 #' used with \code{p.value = 1}
-#' @param bins bins
+#' @param bins number of bar to display
 #'
 #' @import ggplot2
 #' 
@@ -212,7 +212,7 @@ draw_raw_pvalue_histogram <- function(tags, bins=100){
   diag_plot <- ggplot2::ggplot(data=tags$table, ggplot2::aes(x=tags$table$PValue)) + ggplot2::theme_classic() +
     ggplot2::geom_histogram(breaks=seq(0, 1, by=1/bins), 
                             fill="#92D9A2", alpha = 1) +
-    ggplot2::labs(title="Histogram of pvalue", x="Pvalue", y="Count") + 
+    ggplot2::labs(title="Histogram of raw pvalues", x="Pvalue", y="Count") + 
     ggplot2::xlim(c(0,1))
   return(diag_plot)
 }
@@ -298,7 +298,6 @@ draw_venn <- function(gene_list){
 #' @param experiment_design A vector containing all the conditions of a studied dataset.
 #' @param reference_point All the points in experiment_design to consider as reference
 #' @param comparison_point All the points in experiment_design to consider as comparison points.
-#' @param equilibrate Indicate if we equilibrate the importance of reference and comparison points.
 #'
 #' @noRd
 #' @return
