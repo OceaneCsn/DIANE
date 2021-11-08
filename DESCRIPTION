@@ -52,7 +52,8 @@ Imports:
     future,
     promises,
     ggVennDiagram,
-    loggit
+    loggit,
+    markdown
 Suggests: 
     org.Hs.eg.db,
     org.Dm.eg.db,
