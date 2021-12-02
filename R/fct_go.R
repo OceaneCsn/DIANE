@@ -400,15 +400,14 @@ draw_enrich_go <- function(go_data, max_go = dim(go_data)[1]){
 #' organism = "Caenorhabditis elegans")
 get_gene_information <- function(ids, organism){
   if(organism == "Arabidopsis thaliana"){
-   data("gene_annotations", package = "DIANE")
-    d <- gene_annotations$`Arabidopsis thaliana`[
-      match(ids, rownames(gene_annotations$`Arabidopsis thaliana`)),]
+    DIANE::gene_annotations[["Arabidopsis thaliana"]]
+    d <- DIANE::gene_annotations[["Arabidopsis thaliana"]][
+      match(ids, rownames(DIANE::gene_annotations[["Arabidopsis thaliana"]])),]
   }
   else if (stringr::str_detect(organism, "Oryza")){
-    data("gene_annotations", package = "DIANE")
-    d <- gene_annotations[[organism]][
-      match(ids, rownames(gene_annotations[[organism]])),]
-    if(ncol(gene_annotations[[organism]]) == 1)
+    d <- DIANE::gene_annotations[[organism]][
+      match(ids, rownames(DIANE::gene_annotations[[organism]])),]
+    if(ncol(DIANE::gene_annotations[[organism]]) == 1)
       d <- data.frame(description = d)
       rownames(d) <- ids
   }
