@@ -21,3 +21,8 @@ Bug fixes :
 + Custom annotation/gene information file now allows duplicated genes
 + Custom annotation/gene information now can only have columns named label and/or description
 + DEA csv download does not require annotations any more
+
+### 1.0.3 : Minor bug fixes and improvements.
+
++ Fixed error in DAINE's programming interface (wrong value of the defaut "conditions"" argument in normalize function) 22/11/2021
++ Used namesapce operator in data import module to speed up loading

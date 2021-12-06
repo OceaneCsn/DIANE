@@ -391,8 +391,6 @@ mod_differential_expression_analysis_server <-
     })
     
     
-    
-    
     #   ____________________________________________________________________________
     #   Summaries                                                               ####
     
@@ -483,7 +481,7 @@ mod_differential_expression_analysis_server <-
         shiny::fluidRow(col_12(
           shinyWidgets::downloadBttn(
             outputId = ns("download_table_csv"),
-            label = "Download result table as .csv",
+            label = "Download result table as .tsv",
             style = "material-flat",
             color = "success"
           )
@@ -500,19 +498,19 @@ mod_differential_expression_analysis_server <-
     
     output$download_table_csv <- shiny::downloadHandler(
       filename = function() {
-        paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".csv"))
+        paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".tsv"))
       },
       content = function(file) {
         
         df <- r_dea$gene_table
         df$Gene_ID <- rownames(r_dea$gene_table)
-        if(stringr::str_detect("label", colnames(df)))
-          df$label <- stringr::str_replace(df$label, ';', '-')
-        write.table(
-          df[, !stringr::str_detect(colnames(df), "description")],
+        # if(stringr::str_detect(colnames(df), "label"))
+        #   df$label <- stringr::str_replace(df$label, ';', '-')
+        write.table(#df[, !stringr::str_detect(colnames(df), "description")]
+          df,
           file = file,
           row.names = FALSE,
-          sep = ';',
+          sep = '\t',
           quote = FALSE
         )
       }

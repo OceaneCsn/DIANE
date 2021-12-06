@@ -338,8 +338,7 @@ mod_import_data_server <- function(input, output, session, r) {
   raw_data <- shiny::reactive({
     if (input$use_demo) {
       r$use_demo = input$use_demo
-      data("abiotic_stresses", package = "DIANE")
-      d <- abiotic_stresses$raw_counts
+      d <- DIANE::abiotic_stresses$raw_counts
     }
     else{
       req(input$raw_data)
@@ -496,8 +495,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   design <- shiny::reactive({
     if (input$use_demo) {
-      data("abiotic_stresses", package = "DIANE")
-      d <- abiotic_stresses$design
+      d <- DIANE::abiotic_stresses$design
     }
     else{
       req(r$conditions)
@@ -719,8 +717,7 @@ mod_import_data_server <- function(input, output, session, r) {
     else if (r$organism == "Oryza glaberrima")
       txt <- c("ORGLA01G0099000")
     else{
-      data("regulators_per_organism", package = "DIANE")
-      txt <- regulators_per_organism[[r$organism]]
+      txt <- DIANE::regulators_per_organism[[r$organism]]
     }
     shinydashboardPlus::descriptionBlock(
       number = "Expected gene IDs are in the form",

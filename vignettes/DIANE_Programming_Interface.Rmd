@@ -150,7 +150,7 @@ TCC will perform the following setp, depending on the normalization method you c
 We use here the default parameters (no prior removal of differentially expressed genes, and TMM method) :
 
 ```{r normalize, fig.width=8, fig.height=5}
-tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, norm_method = 'tmm', abiotic_stresses$conditions, iteration = FALSE)
+tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, norm_method = 'tmm', iteration = FALSE)
 ```
 
 **Note** : here, our data should not be normalized, as it is already given as TPMs.
