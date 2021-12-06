@@ -50,6 +50,14 @@ app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    
+    ###Change the position of the busyspinner to 50% of screen width and 10% of screen height.
+    tags$head(tags$style(HTML('
+      .shinybusy {
+        left: 50vw !important;
+        top: 10vh !important;
+      }'
+    ))),
     # List the first level UI elements here
     shinydashboard::dashboardPage(dbHeader,
 
