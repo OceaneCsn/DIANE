@@ -68,26 +68,24 @@ mod_import_data_ui <- function(id) {
           inline = TRUE
         )),
         
-        shiny::fluidRow(col_4(
-          shinyWidgets::dropdownButton(
-            size = 'xs',
-            label = "Input file requirements",
-            shiny::includeMarkdown(
-              system.file("extdata", "expressionFile.md", package = "DIANE")
-            ),
-            circle = TRUE,
-            status = "primary",
-            icon = shiny::icon("question"),
-            width = "1200px",
-            tooltip = shinyWidgets::tooltipOptions(title = "More details")
-          )
-        )),
-        
-        
         col_12(
           shiny::fileInput(
             ns('raw_data'),
-            'Choose CSV/TXT expression file',
+            label = shiny::HTML(paste0('Choose CSV/TXT expression file',
+                                       shinyWidgets::dropdownButton(
+                                         size = 'xs',
+                                         label = "Input file requirements",
+                                         shiny::includeMarkdown(
+                                           system.file("extdata", "expressionFile.md", package = "DIANE")
+                                         ),
+                                         circle = TRUE,
+                                         status = "primary",
+                                         inline = TRUE,
+                                         icon = shiny::icon("question"),
+                                         width = "1200px",
+                                         tooltip = shinyWidgets::tooltipOptions(title = "More details")
+                                       )                     
+            )),
             accept = c(
               'text/csv',
               'text/comma-separated-values,text/plain',
@@ -109,25 +107,24 @@ mod_import_data_ui <- function(id) {
           c(Tab = '\t'),
           inline = TRUE
         )),
-        
-        shiny::fluidRow(col_4(
-          shinyWidgets::dropdownButton(
-            size = 'xs',
-            label = "Gene information file requirements",
-            shiny::includeMarkdown(system.file("extdata", "infoFile.md",
-                                               package = "DIANE")),
-            circle = TRUE,
-            status = "primary",
-            icon = shiny::icon("question"),
-            width = "1200px",
-            tooltip = shinyWidgets::tooltipOptions(title = "More details")
-          )
-        )),
-        
+
         col_12(
           shiny::fileInput(
-            ns('gene_info_input'),
-            'Choose CSV/TXT gene information file (optional)',
+            inputId = ns('gene_info_input'),
+            label = HTML(paste0('Choose CSV/TXT gene information file (optional)',
+                        shinyWidgets::dropdownButton(
+                          size = 'xs',
+                          label = "Gene information file requirements",
+                          shiny::includeMarkdown(system.file("extdata", "infoFile.md",
+                                                             package = "DIANE")),
+                          circle = TRUE,
+                          status = "primary",
+                          inline = TRUE,
+                          icon = shiny::icon("question"),
+                          width = "1200px",
+                          tooltip = shinyWidgets::tooltipOptions(title = "More details")
+                        )
+                        )),
             accept = c(
               'text/csv',
               'text/comma-separated-values,text/plain',
@@ -231,20 +228,25 @@ mod_import_data_ui <- function(id) {
           
           inline = TRUE
         ),
-        shinyWidgets::dropdownButton(
-          size = 'xs',
-          label = "Design file requirements",
-          shiny::includeMarkdown(system.file("extdata", "designFile.md",
-                                             package = "DIANE")),
-          circle = TRUE,
-          status = "primary",
-          icon = shiny::icon("question"),
-          width = "550px",
-          tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        ),
+
         shiny::fileInput(
           ns('design'),
-          'Choose CSV/TXT design file (optional)',
+          label = shiny::HTML(paste0(
+            'Choose CSV/TXT design file (optional)',
+            shinyWidgets::dropdownButton(
+              size = 'xs',
+              label = "Design file requirements",
+              shiny::includeMarkdown(system.file("extdata", "designFile.md",
+                                                 package = "DIANE")),
+              circle = TRUE,
+              status = "primary",
+              inline = TRUE,
+              icon = shiny::icon("question"),
+              width = "550px",
+              tooltip = shinyWidgets::tooltipOptions(title = "More details")
+            )
+            
+          )),
           accept = c(
             'text/csv',
             'text/comma-separated-values,text/plain',
