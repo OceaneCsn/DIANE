@@ -130,21 +130,18 @@ mod_import_data_ui <- function(id) {
             )
         ),
         
-        shiny::fluidRow(
-        shinydashboard::valueBoxOutput(ns("data_dim")),
-        shinydashboard::valueBoxOutput(ns("conditions")),
-        shinydashboard::valueBoxOutput(ns("samples")),
-        
-        col_4(shiny::uiOutput(ns(
-          "variants_summary"
-        ))),
-        col_4(shiny::uiOutput(ns(
-          "organism_summary"
-        ))),
-        col_4(shiny::uiOutput(ns(
-          "gene_info_summary"
-        )))),
-        
+       shiny::fluidRow(
+         shinydashboard::valueBoxOutput(ns("data_dim")),
+         shinydashboard::valueBoxOutput(ns("conditions")),
+         shinydashboard::valueBoxOutput(ns("samples")),
+         
+         col_4(shiny::uiOutput(ns("variants_summary"))),
+         col_4(shiny::uiOutput(ns("organism_summary"))),
+         col_4(shiny::uiOutput(ns(
+           "gene_info_summary"
+         )))
+       ),
+       
         
         #   ____________________________________________________________________________
         #   seed settings                                                           ####
