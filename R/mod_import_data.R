@@ -57,7 +57,7 @@ mod_import_data_ui <- function(id) {
         
         shiny::uiOutput(ns("org_selection")),
         
-        col_8(shiny::radioButtons(
+        shiny::radioButtons(
           ns('sep'),
           'Separator : ',
           c(
@@ -66,9 +66,8 @@ mod_import_data_ui <- function(id) {
             Tab = '\t'
           ),
           inline = TRUE
-        )),
+        ),
         
-        col_12(
           shiny::fileInput(
             ns('raw_data'),
             label = shiny::HTML(paste0('Choose CSV/TXT expression file',
@@ -92,7 +91,6 @@ mod_import_data_ui <- function(id) {
               '.csv',
               '.txt'
             )
-          )
         ),
         
         
@@ -101,14 +99,13 @@ mod_import_data_ui <- function(id) {
         #   gene infos upload                                                           ####
         
         
-        col_8(shiny::radioButtons(
+       shiny::radioButtons(
           ns('sep_gene_info'),
           'Separator : ',
           c(Tab = '\t'),
           inline = TRUE
-        )),
+        ),
 
-        col_12(
           shiny::fileInput(
             inputId = ns('gene_info_input'),
             label = HTML(paste0('Choose CSV/TXT gene information file (optional)',
@@ -131,13 +128,12 @@ mod_import_data_ui <- function(id) {
               '.csv',
               '.txt'
             )
-          )
         ),
         
+        shiny::fluidRow(
         shinydashboard::valueBoxOutput(ns("data_dim")),
         shinydashboard::valueBoxOutput(ns("conditions")),
         shinydashboard::valueBoxOutput(ns("samples")),
-        
         
         col_4(shiny::uiOutput(ns(
           "variants_summary"
@@ -147,7 +143,7 @@ mod_import_data_ui <- function(id) {
         ))),
         col_4(shiny::uiOutput(ns(
           "gene_info_summary"
-        ))),
+        )))),
         
         
         #   ____________________________________________________________________________
