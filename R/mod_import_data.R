@@ -689,7 +689,7 @@ mod_import_data_server <- function(input, output, session, r) {
   output$raw_data_preview <- DT::renderDataTable({
     raw_data()
     shiny::req(r$raw_counts)
-    head(r$raw_counts)
+    DT::datatable(head(r$raw_counts),   options = list(scrollX=TRUE, scrollCollapse=TRUE))
   })
   
   ########## matrix preview
@@ -799,7 +799,7 @@ mod_import_data_server <- function(input, output, session, r) {
   
   ######### render design
   output$design_preview <- DT::renderDataTable({
-    DT::datatable(design())
+    DT::datatable(design(),  options = list(scrollX=TRUE, scrollCollapse=TRUE))
   })
   
 }

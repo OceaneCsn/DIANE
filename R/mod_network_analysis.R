@@ -467,9 +467,11 @@ mod_network_analysis_server <- function(input, output, session, r) {
     }
     data <- data[order(-data$degree),]
     if (input$cluster_to_explore == "All")
-      data[, columns]
+      DT::datatable(data[, columns],
+                    options = list(scrollX=TRUE, scrollCollapse=TRUE))
     else
-      data[data$community == input$cluster_to_explore, columns]
+      DT::datatable(data[data$community == input$cluster_to_explore, columns],
+                    options = list(scrollX=TRUE, scrollCollapse=TRUE))
   })
   
   
