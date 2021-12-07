@@ -29,240 +29,240 @@ mod_import_data_ui <- function(id) {
     
     #   ____________________________________________________________________________
     #   File upload                                                             ####
-    
-    shinydashboardPlus::box(
-      title = "Expression file upload",
-      width = 4,
-      solidHeader = FALSE,
-      status = "success",
-      collapsible = TRUE,
-      closable = FALSE,
-      
-      shiny::fluidRow(
-        col_4(
-          shinyWidgets::switchInput(
-            ns("use_demo"),
-            "Toggle to import your data",
-            value = TRUE,
-            onLabel = "Demo Arabidopsis data",
-            offLabel = "Your dataset",
-            onStatus = "success"
-            
-          )
-        )
-        ,
-        col_8(shiny::uiOutput(ns("gene_ids")))
+    shiny::fluidRow(
+      shinydashboardPlus::box(
+        title = "Expression file upload",
+        width = 4,
+        solidHeader = FALSE,
+        status = "success",
+        collapsible = TRUE,
+        closable = FALSE,
         
-      ),
-      
-      shiny::uiOutput(ns("org_selection")),
-      
-      col_8(shiny::radioButtons(
-        ns('sep'),
-        'Separator : ',
-        c(
-          Comma = ',',
-          Semicolon = ';',
-          Tab = '\t'
+        shiny::fluidRow(
+          col_4(
+            shinyWidgets::switchInput(
+              ns("use_demo"),
+              "Toggle to import your data",
+              value = TRUE,
+              onLabel = "Demo Arabidopsis data",
+              offLabel = "Your dataset",
+              onStatus = "success"
+              
+            )
+          )
+          ,
+          col_8(shiny::uiOutput(ns("gene_ids")))
+          
         ),
-        inline = TRUE
-      )),
-      
-      shiny::fluidRow(col_4(
-        shinyWidgets::dropdownButton(
-          size = 'xs',
-          label = "Input file requirements",
-          shiny::includeMarkdown(
-            system.file("extdata", "expressionFile.md", package = "DIANE")
+        
+        shiny::uiOutput(ns("org_selection")),
+        
+        col_8(shiny::radioButtons(
+          ns('sep'),
+          'Separator : ',
+          c(
+            Comma = ',',
+            Semicolon = ';',
+            Tab = '\t'
           ),
-          circle = TRUE,
-          status = "primary",
-          icon = shiny::icon("question"),
-          width = "1200px",
-          tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        )
-      )),
-      
-      
-      col_12(
-        shiny::fileInput(
-          ns('raw_data'),
-          'Choose CSV/TXT expression file',
-          accept = c(
-            'text/csv',
-            'text/comma-separated-values,text/plain',
-            '.csv',
-            '.txt'
+          inline = TRUE
+        )),
+        
+        shiny::fluidRow(col_4(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Input file requirements",
+            shiny::includeMarkdown(
+              system.file("extdata", "expressionFile.md", package = "DIANE")
+            ),
+            circle = TRUE,
+            status = "primary",
+            icon = shiny::icon("question"),
+            width = "1200px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        )),
+        
+        
+        col_12(
+          shiny::fileInput(
+            ns('raw_data'),
+            'Choose CSV/TXT expression file',
+            accept = c(
+              'text/csv',
+              'text/comma-separated-values,text/plain',
+              '.csv',
+              '.txt'
+            )
+          )
+        ),
+        
+        
+        
+        #   ____________________________________________________________________________
+        #   gene infos upload                                                           ####
+        
+        
+        col_8(shiny::radioButtons(
+          ns('sep_gene_info'),
+          'Separator : ',
+          c(Tab = '\t'),
+          inline = TRUE
+        )),
+        
+        shiny::fluidRow(col_4(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Gene information file requirements",
+            shiny::includeMarkdown(system.file("extdata", "infoFile.md",
+                                               package = "DIANE")),
+            circle = TRUE,
+            status = "primary",
+            icon = shiny::icon("question"),
+            width = "1200px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        )),
+        
+        col_12(
+          shiny::fileInput(
+            ns('gene_info_input'),
+            'Choose CSV/TXT gene information file (optional)',
+            accept = c(
+              'text/csv',
+              'text/comma-separated-values,text/plain',
+              '.csv',
+              '.txt'
+            )
+          )
+        ),
+        
+        shinydashboard::valueBoxOutput(ns("data_dim")),
+        shinydashboard::valueBoxOutput(ns("conditions")),
+        shinydashboard::valueBoxOutput(ns("samples")),
+        
+        
+        col_4(shiny::uiOutput(ns(
+          "variants_summary"
+        ))),
+        col_4(shiny::uiOutput(ns(
+          "organism_summary"
+        ))),
+        col_4(shiny::uiOutput(ns(
+          "gene_info_summary"
+        ))),
+        
+        
+        #   ____________________________________________________________________________
+        #   seed settings                                                           ####
+        
+        
+        shiny::uiOutput(ns("seed_field")),
+        
+        
+        shinyWidgets::actionBttn(
+          ns("change_seed"),
+          label = "Change seed",
+          style = "material-flat",
+          color = "warning"
+        ),
+        
+        
+        shinyWidgets::actionBttn(
+          ns("set_seed"),
+          label = "Set seed",
+          style = "material-flat",
+          color = "success"
+          
+        ),
+        col_4(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Input file requirements",
+            shiny::includeMarkdown(system.file("extdata", "seed.md", package = "DIANE")),
+            circle = TRUE,
+            status = "primary",
+            icon = shiny::icon("question"),
+            width = "1200px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
           )
         )
       ),
+      
+      
+      #   ____________________________________________________________________________
+      #   Previews                                                                ####
+      
+      
+      shinydashboardPlus::box(
+        title = "Preview of the expression matrix",
+        width = 4,
+        solidHeader = FALSE,
+        status = "success",
+        collapsible = TRUE,
+        closable = FALSE,
+        shiny::plotOutput(ns("heatmap_preview"), height = 550),
+        footer = "This might help you visualize the general aspect of the data and different sequencing depths
+      of your conditions."
+      ),
+      
       
       
       
       #   ____________________________________________________________________________
-      #   gene infos upload                                                           ####
+      #   design                                                                  ####
       
-      
-      col_8(shiny::radioButtons(
-        ns('sep_gene_info'),
-        'Separator : ',
-        c(Tab = '\t'),
-        inline = TRUE
-      )),
-      
-      shiny::fluidRow(col_4(
+      shinydashboardPlus::box(
+        title = "Design and gene information files",
+        width = 4,
+        solidHeader = FALSE,
+        status = "success",
+        collapsible = TRUE,
+        closable = FALSE,
+        shiny::radioButtons(
+          ns('sep_design'),
+          
+          'Separator : ',
+          c(
+            Comma = ',',
+            Semicolon = ';',
+            Tab = '\t'
+          ),
+          
+          inline = TRUE
+        ),
         shinyWidgets::dropdownButton(
           size = 'xs',
-          label = "Gene information file requirements",
-          shiny::includeMarkdown(system.file("extdata", "infoFile.md",
+          label = "Design file requirements",
+          shiny::includeMarkdown(system.file("extdata", "designFile.md",
                                              package = "DIANE")),
           circle = TRUE,
           status = "primary",
           icon = shiny::icon("question"),
-          width = "1200px",
+          width = "550px",
           tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        )
-      )),
-      
-      col_12(
+        ),
         shiny::fileInput(
-          ns('gene_info_input'),
-          'Choose CSV/TXT gene information file (optional)',
+          ns('design'),
+          'Choose CSV/TXT design file (optional)',
           accept = c(
             'text/csv',
             'text/comma-separated-values,text/plain',
             '.csv',
             '.txt'
           )
-        )
-      ),
-      
-      shinydashboard::valueBoxOutput(ns("data_dim")),
-      shinydashboard::valueBoxOutput(ns("conditions")),
-      shinydashboard::valueBoxOutput(ns("samples")),
-      
-      
-      col_4(shiny::uiOutput(ns(
-        "variants_summary"
-      ))),
-      col_4(shiny::uiOutput(ns(
-        "organism_summary"
-      ))),
-      col_4(shiny::uiOutput(ns(
-        "gene_info_summary"
-      ))),
-      
-      
-      #   ____________________________________________________________________________
-      #   seed settings                                                           ####
-      
-      
-      shiny::uiOutput(ns("seed_field")),
-      
-      
-      shinyWidgets::actionBttn(
-        ns("change_seed"),
-        label = "Change seed",
-        style = "material-flat",
-        color = "warning"
-      ),
-      
-      
-      shinyWidgets::actionBttn(
-        ns("set_seed"),
-        label = "Set seed",
-        style = "material-flat",
-        color = "success"
-        
-      ),
-      col_4(
-        shinyWidgets::dropdownButton(
-          size = 'xs',
-          label = "Input file requirements",
-          shiny::includeMarkdown(system.file("extdata", "seed.md", package = "DIANE")),
-          circle = TRUE,
-          status = "primary",
-          icon = shiny::icon("question"),
-          width = "1200px",
-          tooltip = shinyWidgets::tooltipOptions(title = "More details")
-        )
-      )
-    ),
-    
-    
-    #   ____________________________________________________________________________
-    #   Previews                                                                ####
-    
-    
-    shinydashboardPlus::box(
-      title = "Preview of the expression matrix",
-      width = 4,
-      solidHeader = FALSE,
-      status = "success",
-      collapsible = TRUE,
-      closable = FALSE,
-      shiny::plotOutput(ns("heatmap_preview"), height = 550),
-      footer = "This might help you visualize the general aspect of the data and different sequencing depths
-      of your conditions."
-    ),
-    
-    
-    
-    
-    #   ____________________________________________________________________________
-    #   design                                                                  ####
-    
-    shinydashboardPlus::box(
-      title = "Design and gene information files",
-      width = 4,
-      solidHeader = FALSE,
-      status = "success",
-      collapsible = TRUE,
-      closable = FALSE,
-      shiny::radioButtons(
-        ns('sep_design'),
-        
-        'Separator : ',
-        c(
-          Comma = ',',
-          Semicolon = ';',
-          Tab = '\t'
         ),
+        DT::dataTableOutput(ns("design_preview")),
         
-        inline = TRUE
-      ),
-      shinyWidgets::dropdownButton(
-        size = 'xs',
-        label = "Design file requirements",
-        shiny::includeMarkdown(system.file("extdata", "designFile.md",
-                                           package = "DIANE")),
-        circle = TRUE,
-        status = "primary",
-        icon = shiny::icon("question"),
-        width = "550px",
-        tooltip = shinyWidgets::tooltipOptions(title = "More details")
-      ),
-      shiny::fileInput(
-        ns('design'),
-        'Choose CSV/TXT design file (optional)',
-        accept = c(
-          'text/csv',
-          'text/comma-separated-values,text/plain',
-          '.csv',
-          '.txt'
-        )
-      ),
-      DT::dataTableOutput(ns("design_preview")),
-      
-      
-      
-      footer = "Describe the levels of each factors for your conditions"
+        
+        
+        footer = "Describe the levels of each factors for your conditions"
+      )
     ),
     
     shiny::br(),
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
-    
     
   )
 }

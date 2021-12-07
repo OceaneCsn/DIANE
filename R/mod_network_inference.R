@@ -23,7 +23,6 @@ mod_network_inference_ui <- function(id){
     shiny::hr(),
     
     shiny::fluidRow(
-    col_4(
       
       
 #   ____________________________________________________________________________
@@ -35,7 +34,7 @@ mod_network_inference_ui <- function(id){
         status = "success",
         collapsible = TRUE,
         closable = FALSE,
-        width = 12,
+        width = 4,
         
         col_10(shiny::h4("GENIE3 Gene regulatory network inference")),
         
@@ -53,7 +52,7 @@ mod_network_inference_ui <- function(id){
         shiny::br(),
         
         shiny::fluidRow(col_12(shiny::uiOutput(ns("input_genes_net")))),
-         
+        
         shiny::hr(),
         
 #   ____________________________________________________________________________
@@ -152,20 +151,19 @@ shiny::hr(),
         shiny::hr()
         #shiny::uiOutput(ns("GENIE3_summary"))
         
-      )
     ),
 
 
 #   ____________________________________________________________________________
 #   thresholding options                                                    ####
 
-    col_8(shinydashboardPlus::box(
+   shinydashboardPlus::box(
       title = "Thresholding settings",
       solidHeader = FALSE,
       status = "success",
       collapsible = TRUE,
       closable = FALSE,
-      width = 12,
+      width = 8,
       
       shiny::fluidRow(
                       col_2(shiny::uiOutput(ns("inference_summary"))),
@@ -227,7 +225,7 @@ shiny::hr(),
       
       visNetwork::visNetworkOutput(ns("net_preview"), height = "650px")
       
-    ))
+    )
   )
 )
 }

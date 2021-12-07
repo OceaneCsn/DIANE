@@ -61,10 +61,8 @@ mod_network_analysis_ui <- function(id) {
     #   ____________________________________________________________________________
     #   network infos                                                           ####
     
-    column(
-      width = 7,
       shinydashboard::tabBox(
-        width = 12,
+        width = 7,
         
         
         shiny::tabPanel(
@@ -159,7 +157,6 @@ mod_network_analysis_ui <- function(id) {
         )
         
       )
-    )
     )
   )
 }

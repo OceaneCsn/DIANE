@@ -22,14 +22,13 @@ mod_differential_expression_analysis_ui <- function(id) {
     #   Dispersion estimation                                                   ####
     
     shiny::fluidRow(
-      col_4(
         shinydashboardPlus::box(
           title = "Settings",
           solidHeader = FALSE,
           status = "success",
           collapsible = TRUE,
           closable = FALSE,
-          width = 12,
+          width = 4,
           
           shiny::h4("Estimation of disperion"),
           col_2(
@@ -89,16 +88,14 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::uiOutput(ns("dl_bttns"))
           
           
-        )
-      ),
+        ),
       
       #   ____________________________________________________________________________
       #   Visualisation of the results                                            ####
       
-      col_8(
         shinydashboard::tabBox(
           title = "Results",
-          width = 12,
+          width = 8,
           shiny::tabPanel(title = "Results table",
                           shiny::uiOutput(ns("table_ui"))),
           shiny::tabPanel(
@@ -196,7 +193,6 @@ mod_differential_expression_analysis_ui <- function(id) {
             shiny::uiOutput(ns("venn_spec_comp_choice_2")),
             shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
           )
-        )
       ) 
     )
   )

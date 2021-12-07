@@ -24,12 +24,11 @@ mod_module_levels_ui <- function(id){
     ),
     
     
-    shiny::fluidRow(shiny::column(12,
+    shiny::fluidRow(
       shinydashboard::tabBox(
         title = "Explore normalized data",
         width = 12,
         height = "900px",
-        
         
         shiny::tabPanel(title = "PCA",
                         shiny::uiOutput(ns("pca_ui")),
@@ -63,7 +62,7 @@ mod_module_levels_ui <- function(id){
                                                 shiny::plotOutput(ns("expression_plot"), height = "700px"))
                         )  
         ))
-    ))
+    )
   )
 }
 
