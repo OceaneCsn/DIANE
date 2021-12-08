@@ -21,3 +21,24 @@ Bug fixes :
 + Custom annotation/gene information file now allows duplicated genes
 + Custom annotation/gene information now can only have columns named label and/or description
 + DEA csv download does not require annotations any more
+
+### 1.0.3 : Minor bug fixes and improvements.
+
++ Fixed error in DAINE's programming interface (wrong value of the defaut "conditions"" argument in normalize function) 22/11/2021
++ Used namesapce operator in data import module to speed up loading
+
+### 1.0.4 : Minor changes, mainly aesthetic, with no impact one DIANE's main functions and backend. Changes are from merging pull [request #36](https://github.com/OceaneCsn/DIANE/pull/36) from Alexandre-So. 
+
++ Some code based on bootstrap grid system has been rewrite. This avoid the grey (anthracite) background to show up at the bottom of some pages, and improve shinydashboardPlus::box alignment between different dashboard tabs. This also increases a little bit the width of most of the shinydashboardPlus::box.
+
++ Numbers in the DEA table show less digits when displayed in DIANE (up to 10-3). The downloaded table is not affected.
+
++ **When a row is clicked in the DEA table, display a popup with RNAseq count associated with the related gene.** (Very cool feature, worth the highlight)
+
++ The little loading square position is now based on user screen resolution. The position can still be improved. Used CSS code is in app_ui.R.
+
++ The little help buttons in the import dataset page have been moved to new locations. This can be done for other tabs.
+
++ Add "y axis" scrollbar to some tables which were exceeded screen boundaries in low resolutions.
+
++ Update contact email to new cnrs one.

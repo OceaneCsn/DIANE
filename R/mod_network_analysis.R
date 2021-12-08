@@ -48,6 +48,7 @@ mod_network_analysis_ui <- function(id) {
     
     
     
+    shiny::fluidRow(
     column(
       width = 5,
       shiny::uiOutput(ns("zoom_ui")),
@@ -60,15 +61,14 @@ mod_network_analysis_ui <- function(id) {
     #   ____________________________________________________________________________
     #   network infos                                                           ####
     
-    column(
-      width = 7,
       shinydashboard::tabBox(
-        width = 12,
+        width = 7,
         
         
         shiny::tabPanel(
           title = "Degree-ranked gene list",
           DT::dataTableOutput(ns("gene_ranking")),
+          br(),
           shinyWidgets::downloadBttn(
             outputId = ns("download_node_table"),
             label = "Download nodes as csv table",
@@ -467,9 +467,11 @@ mod_network_analysis_server <- function(input, output, session, r) {
     }
     data <- data[order(-data$degree),]
     if (input$cluster_to_explore == "All")
-      data[, columns]
+      DT::datatable(data[, columns],
+                    options = list(scrollX=TRUE, scrollCollapse=TRUE))
     else
-      data[data$community == input$cluster_to_explore, columns]
+      DT::datatable(data[data$community == input$cluster_to_explore, columns],
+                    options = list(scrollX=TRUE, scrollCollapse=TRUE))
   })
   
   

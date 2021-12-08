@@ -18,17 +18,18 @@ mod_differential_expression_analysis_ui <- function(id) {
       position = 'top-left',
       margins = c(70, 1200)
     ),
+    
     #   ____________________________________________________________________________
     #   Dispersion estimation                                                   ####
     
-    col_4(
+    shiny::fluidRow(
       shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
         collapsible = TRUE,
         closable = FALSE,
-        width = 12,
+        width = 4,
         
         shiny::h4("Estimation of disperion"),
         col_2(
@@ -92,16 +93,14 @@ mod_differential_expression_analysis_ui <- function(id) {
         shiny::uiOutput(ns("dl_bttns"))
         
         
-      )
-    ),
-    
-    #   ____________________________________________________________________________
-    #   Visualisation of the results                                            ####
-    
-    col_8(
+      ),
+      
+      #   ____________________________________________________________________________
+      #   Visualisation of the results                                            ####
+      
       shinydashboard::tabBox(
         title = "Results",
-        width = 12,
+        width = 8,
         shiny::tabPanel(title = "Results table",
                         shiny::uiOutput(ns("table_ui"))),
         shiny::tabPanel(
@@ -128,6 +127,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           title = "Pvalues histogram",
           shiny::plotOutput(ns("pvalue_hist"), height = "450px")
         ),
+        
         
         #   ____________________________________________________________________________
         #   Go enrichment                                                           ####
@@ -203,8 +203,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::uiOutput(ns("venn_spec_comp_choice_2")),
           shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
         )
-      )
-      
+      ) 
     )
   )
 }
@@ -220,7 +219,7 @@ mod_differential_expression_analysis_ui <- function(id) {
 mod_differential_expression_analysis_server <-
   function(input, output, session, r) {
     ns <- session$ns
-   
+    
     r_dea <- shiny::reactiveValues(
       top_tags = NULL,
       DEGs = NULL,
@@ -712,14 +711,33 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt, r_dea$gene_table)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
-      r_dea$gene_table
-      
-      DT::formatStyle(
-        DT::datatable(r_dea$gene_table),
-        columns = c("Regulation"),
-        target = c("cell", "row"),
-        backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
+      DT::datatable(r_dea$gene_table,
+                    selection = "single",
+                    option = list(scrollX = TRUE)) %>%
+        
+        DT::formatSignif(columns = c("logFC", "logCPM", "FDR"),
+                         digits = 4) %>%
+        DT::formatStyle(
+          columns = c("Regulation"),
+          target = c("cell", "row"),
+          backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035"))),
+        )
+    })
+    
+    shiny::observeEvent(input$deg_table_rows_selected, {
+      showModal(
+        modalDialog(
+          plotOutput(ns("count_table_plot")), 
+          size = "l",
+          easyClose = TRUE,
+          fade = TRUE
+        )
       )
+    })
+    
+    
+    output$count_table_plot <- shiny::renderPlot({
+      DIANE::draw_expression_levels(log2(r$normalized_counts+2), genes = rownames(r_dea$top_tags[input$deg_table_rows_selected,]))
     })
     
     #   ____________________________________________________________________________

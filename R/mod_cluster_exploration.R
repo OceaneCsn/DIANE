@@ -31,9 +31,9 @@ mod_cluster_exploration_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Profiles column                                                         ####
     
-    col_6(
+    shiny::fluidRow(
       shinydashboardPlus::box(
-        width = 12,
+        width = 6,
         closable = FALSE,
         title = "Expression profiles",
         shiny::plotOutput(ns("profiles_to_explore"), height = "700px"),
@@ -46,18 +46,16 @@ mod_cluster_exploration_ui <- function(id) {
             color = "success"
           )
         ))
-      )
-    ),
+      ),
     
     # TODO true reset when toggle demo data
     #   ____________________________________________________________________________
     #   Clusters characteristics                                                ####
     
     
-    col_6(
       shinydashboard::tabBox(
         title = "Genes in that clusters",
-        width = 12,
+        width = 6,
         shiny::tabPanel(title = "Genes table",
                         DT::dataTableOutput(ns(
                           "genes_to_explore"
@@ -160,7 +158,6 @@ mod_cluster_exploration_ui <- function(id) {
         )
       )
     )
-    
   )
 }
 

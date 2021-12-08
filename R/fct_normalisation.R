@@ -31,7 +31,7 @@
 #' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
 #' abiotic_stresses$conditions, iteration = FALSE)
 normalize <- function(data, 
-                      conditions = unique(stringr::str_split_fixed(colnames(data), '_', 2)[, 1]), 
+                      conditions = stringr::str_split_fixed(colnames(data), '_', 2)[, 1], 
                       norm_method = "tmm", 
                       deg_method = "deseq2", 
                       fdr = 0.01,

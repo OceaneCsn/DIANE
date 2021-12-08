@@ -21,14 +21,14 @@ mod_clustering_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Clustering settings                                                     ####
     
-    col_4(
+    shiny::fluidRow(
       shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
         collapsible = TRUE,
         closable = FALSE,
-        width = 12,
+        width = 4,
         
         col_10(shiny::h4("Mixture models clustering")),
         
@@ -58,7 +58,6 @@ mod_clustering_ui <- function(id) {
         )),
         
         shiny::hr(),
-        shiny::fluidRow(col_12(
           col_6(
             shinyWidgets::numericInputIcon(ns("min_k"),
                              label = "Min number of clusters :",
@@ -72,10 +71,8 @@ mod_clustering_ui <- function(id) {
                                            value = 9, min = 0, max = 20,
                                            help_text = "Maximum cluster number to test"
             )
-          )
+          ),
           
-        )),
-        
         shiny::br(),
         
         
@@ -91,7 +88,7 @@ mod_clustering_ui <- function(id) {
         
         col_6(shiny::uiOutput(ns("transfo_ui"))),
         
-        shiny::fluidRow(col_12(
+        shiny::fluidRow(shiny::column(12, align="center",
           shinyWidgets::actionBttn(
             ns("launch_coseq_btn"),
             label = "Launch clustering",
@@ -104,19 +101,18 @@ mod_clustering_ui <- function(id) {
         shiny::hr(),
         shiny::uiOutput(ns("coseq_summary")),
         
+        shiny::fluidRow(shiny::column(12, align="center",
+                                      shiny::uiOutput(ns("dl_bttns"))
+        ))
         
-        shiny::uiOutput(ns("dl_bttns"))
-        
-      )
-    ),
+      ),
     
     #   ____________________________________________________________________________
     #   Visualisation of the results                                            ####
     
-    col_8(
       shinydashboard::tabBox(
         title = "Results",
-        width = 12,
+        width = 8,
         
         
         shiny::tabPanel(
@@ -146,7 +142,7 @@ mod_clustering_ui <- function(id) {
           )
         )
       )
-    )
+  )
   )
 }
 
