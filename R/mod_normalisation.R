@@ -35,14 +35,14 @@ mod_normalisation_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Normalization settings                                                  ####
     
-    col_3(
+    shiny::fluidRow(
       shinydashboardPlus::box(
         title = "Settings",
         solidHeader = FALSE,
         status = "success",
         collapsible = TRUE,
         closable = FALSE,
-        width = 12,
+        width = 3,
         
         col_8(shiny::h2("Normalization")),
         
@@ -134,17 +134,15 @@ mod_normalisation_ui <- function(id) {
         shiny::br(),
         
         shiny::uiOutput(ns("dl_bttns"))
-      )
-    ),
+      ),
     
     
     #   ____________________________________________________________________________
     #   plot results ui                                                         ####
     
-    column(width = 9,
       shinydashboard::tabBox(
         title = "Data exploration",
-        width = 12,
+        width = 9,
         height = "1000px",
         
         shiny::tabPanel(
@@ -177,8 +175,7 @@ mod_normalisation_ui <- function(id) {
       
     ),
     shiny::br()
-    
-  )
+    )
 }
 
 #' normalisation Server Function

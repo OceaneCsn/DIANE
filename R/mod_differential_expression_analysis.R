@@ -21,182 +21,179 @@ mod_differential_expression_analysis_ui <- function(id) {
     #   ____________________________________________________________________________
     #   Dispersion estimation                                                   ####
     
-    col_4(
-      shinydashboardPlus::box(
-        title = "Settings",
-        solidHeader = FALSE,
-        status = "success",
-        collapsible = TRUE,
-        closable = FALSE,
-        width = 12,
-        
-        shiny::h4("Estimation of disperion"),
-        col_2(
-          shinyWidgets::dropdownButton(
-            size = 'xs',
-            shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
-            circle = TRUE,
-            status = "success",
-            icon = shiny::icon("question"),
-            width = "600px",
-            tooltip = shinyWidgets::tooltipOptions(title = "More details")
-          )
-        ),
-        
-        shiny::hr(),
-        
-        #   ____________________________________________________________________________
-        #   DEG parameters                                                          ####
-        
-        
-        shiny::h4("Conditions to compare for differential analysis : "),
-        
-        shiny::uiOutput(ns("condition_choices")),
-        
-        
-        shiny::numericInput(
-          ns("dea_fdr"),
-          min = 0,
-          max = 1,
-          value = 0.05,
-          label = "Adjusted pvalue ( FDR )"
-        ),
-        shiny::numericInput(
-          ns("dea_lfc"),
-          min = 0,
-          max = Inf,
-          value = 1,
-          label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
-        ),
-        
-        shinyWidgets::actionBttn(
-          ns("deg_test_btn"),
-          label = "Detect differentially expressed genes",
-          color = "success",
-          style = "material-flat"
-        ),
-        
-        shiny::hr(),
-        shiny::uiOutput(ns("deg_test_summary")),
-        shiny::hr(),
-        shiny::uiOutput(ns("deg_number_summary")),
-        
-        shiny::hr(),
-        shiny::br(),
-        
-        
-        shiny::uiOutput(ns("dl_bttns"))
-        
-        
-      )
-    ),
-    
-    #   ____________________________________________________________________________
-    #   Visualisation of the results                                            ####
-    
-    col_8(
-      shinydashboard::tabBox(
-        title = "Results",
-        width = 12,
-        shiny::tabPanel(title = "Results table",
-                        shiny::uiOutput(ns("table_ui"))),
-        shiny::tabPanel(
-          title = "MA - Vulcano plots",
+    shiny::fluidRow(
+        shinydashboardPlus::box(
+          title = "Settings",
+          solidHeader = FALSE,
+          status = "success",
+          collapsible = TRUE,
+          closable = FALSE,
+          width = 4,
           
-          shinyWidgets::switchInput(
-            inputId = ns("MA_vulcano_switch"),
-            value = TRUE,
-            onLabel = "MA",
-            offLabel = "Volcano",
-            onStatus = 'success'
-          ),
-          
-          
-          shiny::plotOutput(ns("ma_vulcano"), height = "700px")
-          
-        ),
-        shiny::tabPanel(
-          title = "Heatmap",
-          shiny::uiOutput(ns("heatmap_conditions_choice")),
-          shiny::plotOutput(ns("heatmap"), height = "700px")
-        ),
-        
-        #   ____________________________________________________________________________
-        #   Go enrichment                                                           ####
-        
-        shiny::tabPanel(
-          title = "Gene Ontology enrichment",
-          
-          shinyWidgets::radioGroupButtons(
-            ns("up_down_go_radio"),label = "Genes to study :",
-            choices = c("All", "Up-regulated", "Down-regulated"),
-            selected = "All",
-            direction = "horizontal",
-            checkIcon = list(yes = shiny::icon("ok",
-                                               lib = "glyphicon"))
-          ),
-          
-          col_4(
-            shinyWidgets::actionBttn(
-              ns("go_enrich_btn"),
-              label = "Start GO enrichment analysis",
-              color = "success",
-              style = "material-flat"
+          shiny::h4("Estimation of disperion"),
+          col_2(
+            shinyWidgets::dropdownButton(
+              size = 'xs',
+              shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
+              circle = TRUE,
+              status = "success",
+              icon = shiny::icon("question"),
+              width = "600px",
+              tooltip = shinyWidgets::tooltipOptions(title = "More details")
             )
           ),
-          col_4(
-            shinyWidgets::radioGroupButtons(
-              ns("draw_go"),
-              choices = c("Dot plot", "Enrichment map", "Data table"),
-              selected = "Dot plot",
-              justified = TRUE,
-              direction = "vertical",
-              checkIcon = list(yes = shiny::icon("ok",
-                                                 lib = "glyphicon"))
-            )
-            
-          ),
-          
-          col_4(
-            shinyWidgets::radioGroupButtons(
-              ns("go_type"),
-              choiceNames = c(
-                "Biological process",
-                "Cellular component",
-                "Molecular function"
-              ),
-              choiceValues = c("BP", "CC", "MF"),
-              selected = "BP",
-              justified = TRUE,
-              direction = "vertical",
-              checkIcon = list(yes = shiny::icon("ok",
-                                                 lib = "glyphicon"))
-            ),
-            shiny::uiOutput(ns("max_go_choice"))
-          ),
-          
-          shiny::uiOutput(ns("custom_data_go")),
           
           shiny::hr(),
           
-          shiny::fluidRow(col_12(shiny::uiOutput(ns(
-            "go_results"
-          ))))
+          #   ____________________________________________________________________________
+          #   DEG parameters                                                          ####
+          
+          
+          shiny::h4("Conditions to compare for differential analysis : "),
+          
+          shiny::uiOutput(ns("condition_choices")),
+          
+          
+          shiny::numericInput(
+            ns("dea_fdr"),
+            min = 0,
+            max = 1,
+            value = 0.05,
+            label = "Adjusted pvalue ( FDR )"
+          ),
+          shiny::numericInput(
+            ns("dea_lfc"),
+            min = 0,
+            max = Inf,
+            value = 1,
+            label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
+          ),
+          
+          shinyWidgets::actionBttn(
+            ns("deg_test_btn"),
+            label = "Detect differentially expressed genes",
+            color = "success",
+            style = "material-flat"
+          ),
+          
+          shiny::hr(),
+          shiny::uiOutput(ns("deg_test_summary")),
+          shiny::hr(),
+          shiny::uiOutput(ns("deg_number_summary")),
+          
+          shiny::hr(),
+          shiny::br(),
+          
+          
+          shiny::uiOutput(ns("dl_bttns"))
+          
+          
         ),
-        shiny::tabPanel(
-          title = "Compare genes lists (Venn)",
-          shiny::h5(
-            "Once more than one differential expression analysis were performed,
+      
+      #   ____________________________________________________________________________
+      #   Visualisation of the results                                            ####
+      
+        shinydashboard::tabBox(
+          title = "Results",
+          width = 8,
+          shiny::tabPanel(title = "Results table",
+                          shiny::uiOutput(ns("table_ui"))),
+          shiny::tabPanel(
+            title = "MA - Vulcano plots",
+            
+            shinyWidgets::switchInput(
+              inputId = ns("MA_vulcano_switch"),
+              value = TRUE,
+              onLabel = "MA",
+              offLabel = "Volcano",
+              onStatus = 'success'
+            ),
+            
+            
+            shiny::plotOutput(ns("ma_vulcano"), height = "700px")
+            
+          ),
+          shiny::tabPanel(
+            title = "Heatmap",
+            shiny::uiOutput(ns("heatmap_conditions_choice")),
+            shiny::plotOutput(ns("heatmap"), height = "700px")
+          ),
+          
+          #   ____________________________________________________________________________
+          #   Go enrichment                                                           ####
+          
+          shiny::tabPanel(
+            title = "Gene Ontology enrichment",
+            
+            shinyWidgets::radioGroupButtons(
+              ns("up_down_go_radio"),label = "Genes to study :",
+              choices = c("All", "Up-regulated", "Down-regulated"),
+              selected = "All",
+              direction = "horizontal",
+              checkIcon = list(yes = shiny::icon("ok",
+                                                 lib = "glyphicon"))
+            ),
+            
+            col_4(
+              shinyWidgets::actionBttn(
+                ns("go_enrich_btn"),
+                label = "Start GO enrichment analysis",
+                color = "success",
+                style = "material-flat"
+              )
+            ),
+            col_4(
+              shinyWidgets::radioGroupButtons(
+                ns("draw_go"),
+                choices = c("Dot plot", "Enrichment map", "Data table"),
+                selected = "Dot plot",
+                justified = TRUE,
+                direction = "vertical",
+                checkIcon = list(yes = shiny::icon("ok",
+                                                   lib = "glyphicon"))
+              )
+              
+            ),
+            
+            col_4(
+              shinyWidgets::radioGroupButtons(
+                ns("go_type"),
+                choiceNames = c(
+                  "Biological process",
+                  "Cellular component",
+                  "Molecular function"
+                ),
+                choiceValues = c("BP", "CC", "MF"),
+                selected = "BP",
+                justified = TRUE,
+                direction = "vertical",
+                checkIcon = list(yes = shiny::icon("ok",
+                                                   lib = "glyphicon"))
+              ),
+              shiny::uiOutput(ns("max_go_choice"))
+            ),
+            
+            shiny::uiOutput(ns("custom_data_go")),
+            
+            shiny::hr(),
+            
+            shiny::fluidRow(col_12(shiny::uiOutput(ns(
+              "go_results"
+            ))))
+          ),
+          shiny::tabPanel(
+            title = "Compare genes lists (Venn)",
+            shiny::h5(
+              "Once more than one differential expression analysis were performed,
                     you can visualise and compare the different genes lists in a Venn
                     diagram."
-          ),
-          shiny::uiOutput(ns("venn_lists_choice_2")),
-          shiny::plotOutput(ns("venn"), height = "700px"),
-          shiny::uiOutput(ns("venn_spec_comp_choice_2")),
-          shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
-        )
-      )
-      
+            ),
+            shiny::uiOutput(ns("venn_lists_choice_2")),
+            shiny::plotOutput(ns("venn"), height = "700px"),
+            shiny::uiOutput(ns("venn_spec_comp_choice_2")),
+            shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
+          )
+      ) 
     )
   )
 }
@@ -601,14 +598,33 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt, r_dea$gene_table)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
-      r_dea$gene_table
-      
-      DT::formatStyle(
-        DT::datatable(r_dea$gene_table),
-        columns = c("Regulation"),
-        target = c("cell", "row"),
-        backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035")))
+      DT::datatable(r_dea$gene_table,
+                    selection = "single",
+                    option = list(scrollX = TRUE)) %>%
+        
+        DT::formatSignif(columns = c("logFC", "logCPM", "FDR"),
+                         digits = 4) %>%
+        DT::formatStyle(
+          columns = c("Regulation"),
+          target = c("cell", "row"),
+          backgroundColor = DT::styleEqual(c("Up", "Down"), c("#72F02466", c("#FF000035"))),
+        )
+    })
+    
+    shiny::observeEvent(input$deg_table_rows_selected, {
+      showModal(
+        modalDialog(
+          plotOutput(ns("count_table_plot")), 
+          size = "l",
+          easyClose = TRUE,
+          fade = TRUE
+        )
       )
+    })
+    
+    
+    output$count_table_plot <- shiny::renderPlot({
+      DIANE::draw_expression_levels(log2(r$normalized_counts+2), genes = rownames(r_dea$top_tags[input$deg_table_rows_selected,]))
     })
     
     #   ____________________________________________________________________________
