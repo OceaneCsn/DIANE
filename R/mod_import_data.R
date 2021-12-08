@@ -221,24 +221,24 @@ mod_import_data_ui <- function(id) {
           
           inline = TRUE
         ),
+        
+        
 
         shiny::fileInput(
           ns('design'),
-          label = shiny::HTML(paste0(
-            'Choose CSV/TXT design file (optional)',
-            shinyWidgets::dropdownButton(
-              size = 'xs',
-              label = "Design file requirements",
-              shiny::includeMarkdown(system.file("extdata", "designFile.md",
-                                                 package = "DIANE")),
-              circle = TRUE,
-              status = "primary",
-              inline = TRUE,
-              icon = shiny::icon("question"),
-              width = "550px",
-              tooltip = shinyWidgets::tooltipOptions(title = "More details")
-            )
-            
+          label = shiny::HTML(paste0(shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Design file requirements",
+            shiny::includeMarkdown(system.file("extdata", "designFile.md",
+                                               package = "DIANE")),
+            circle = TRUE,
+            status = "primary",
+            inline = TRUE,
+            icon = shiny::icon("question"),
+            width = "550px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          ),
+            'Choose CSV/TXT design file (optional)'
           )),
           accept = c(
             'text/csv',
@@ -248,8 +248,6 @@ mod_import_data_ui <- function(id) {
           )
         ),
         DT::dataTableOutput(ns("design_preview")),
-        
-        
         
         footer = "Describe the levels of each factors for your conditions"
       )
