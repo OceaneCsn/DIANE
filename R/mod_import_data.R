@@ -256,7 +256,6 @@ mod_import_data_ui <- function(id) {
     shiny::br(),
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
-    
   )
 }
 
