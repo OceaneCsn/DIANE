@@ -121,9 +121,6 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' lower than specified are returned
 #' @param lfc minimal absolute log fold change required for a gene to be considered as 
 #' differentially expressed.
-#' @param systematic_orientation If multiple conditions are indicated in reference or perturbation, compute all
-#' comparisons and return only genes that have the same orientation in all comparisons. If False (default), the mean
-#' of conditions is used.
 #' @return topTags object, which table element contains DEGs dataframe.
 #' @export
 #' @examples
@@ -142,51 +139,13 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = c("H","M","S"), p.value = 0.01)
 #' DEGs <- topTags$table
 #' head(DEGs)
-estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0, systematic_orientation = FALSE, diagnostic_plot = FALSE) {
+estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
   print(contrast)
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
   top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
   
   top$table <- top$table[abs(top$table$logFC) > lfc & top$table$FDR <= p.value,]
-  
-  ###Systematic orientation case
-  if (systematic_orientation == TRUE &&
-      length(reference) + length(perturbation) > 2) { ###Only usefull for multiple condition comparison.
-    all_vs_all_deg <- list()
-    for (ref in colnames(fit$design)[contrast > 0]) {
-      ###Reference
-      for (pert in colnames(fit$design)[contrast < 0]) {
-        ###vs perturbation
-        print(paste0(ref," vs ",pert))
-        targeted_contrast <-
-          ifelse(colnames(fit$design) == ref,
-                 -1,
-                 ifelse(colnames(fit$design) == pert, 1, 0))
-        targeted_lrt <-
-          edgeR::glmLRT(fit, contrast = targeted_contrast)
-        targeted_top <-
-          edgeR::topTags(targeted_lrt, p.value = p.value, n = Inf) ###TODO : change pvalue cutoff for lest restictive one.
-        all_vs_all_deg[[paste0(ref, "_vs_", pert)]] <-
-          targeted_top$table[abs(targeted_top$table$logFC) > lfc, ]
-      }
-    }
-    
-    ###Remove genes that are not DE in each condition.
-    DE_genes <- top$table$genes
-    upreg = DE_genes
-    downreg = DE_genes
-    for (comp in names(all_vs_all_deg)) {
-      print(comp)
-      upreg <-
-        upreg[upreg %in% rownames(all_vs_all_deg[[comp]][which(all_vs_all_deg[[comp]][2] >= 1), ])]
-      downreg  <-
-        downreg[downreg %in% rownames(all_vs_all_deg[[comp]][which(all_vs_all_deg[[comp]][2] <= -1), ])]
-    }
-    top$table <- top$table[c(upreg, downreg), ]
-    
-  }
-  
   return(top)
 }
 
@@ -300,7 +259,7 @@ draw_venn <- function(gene_list){
 #' @param comparison_point All the points in experiment_design to consider as comparison points.
 #'
 #' @noRd
-#' @return
+#' @return weighted comparison vector
 #'
 #' @examples create_versus_design(c("reference","condition1","condition2","condition3"), c("condition1", "condition2", "condition3"), "reference")
 create_versus_design <- function(experiment_design, reference_point, comparison_point){
@@ -324,18 +283,9 @@ create_versus_design <- function(experiment_design, reference_point, comparison_
   
   comparison_matrix=rep(0, length(experiment_design))
   
-  if(length(reference_point) > length(comparison_point)){
-    weight_comparison=1
-    weight_reference=length(comparison_point)/length(reference_point)
-  } else if (length(reference_point) < length(comparison_point)) {
-    weight_reference=1
-    weight_comparison=length(reference_point)/length(comparison_point)
-  } else {
-    weight_comparison=1
-    weight_reference=1
+  weight_comparison=1/length(comparison_point)
+  weight_reference=1/length(reference_point)
     
-  }
-  
   comparison_matrix[which(experiment_design %in% reference_point)] <- -weight_reference
   comparison_matrix[which(experiment_design %in% comparison_point)] <- weight_comparison
   
