@@ -72,7 +72,7 @@ mod_differential_expression_analysis_ui <- function(id) {
           label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
         ),
         
-        shiny::uiOutput(ns("multiple_DE_parameters_ui")),
+        uiOutput(ns('design_equation')),
         
         shinyWidgets::actionBttn(
           ns("deg_test_btn"),
@@ -289,10 +289,43 @@ mod_differential_expression_analysis_server <-
       } else if(length(input$reference) == 1 & length(input$perturbation) == 1) {
         comparison_type <- "Simple comparison"
       } else {
-        comparison_type <- "Multiple comparison"
+        comparison_type <- paste0(
+          "Multiple comparison",
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Gene information file requirements",
+            "To perform a multi-factorial differential expression analysis, the
+            mean of the reference is compared to the mean of the perturbation.
+            For your input, it will be the equivalent of :",
+            withMathJax(
+              "$$\\frac{",
+              paste0(input$reference, collapse = "+"),
+              "}{",
+              length(input$reference),
+              "} - \\frac{",
+              paste0(input$perturbation, collapse = "+"),
+              "}{",
+              length(input$perturbation),
+              "}\\!$$"
+            ),
+            # as.character(shiny::uiOutput(ns('design_equation'))),
+            # "To perform a multi-factorial differential expression analysis, the
+            # mean of the reference is compared to the mean of the perturbation.
+            # For your input, it will be the equivalent of :",
+            # withMathJax(sprintf("frac{%s}{%s}", input$reference ,length(input$reference))),
+            # as.character(shiny::HTML(shiny::uiOutput(ns('design_equation')))),
+            # shiny::HTML(paste0("<br>", "((", paste0(reference_text, collapse = " + "), ") / ", length(input$reference), ") / ", "((",paste0(perturbation_text, collapse = " + "), ") / ", length(input$perturbation), ")")),
+            circle = TRUE,
+            status = "success",
+            inline = TRUE,
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        )
       }
       
-      
+      # withMathJax(sprintf("frac{%s}{%s}", input$reference ,length(input$reference)))
       as.character(
         paste0(
           "<div style=\"text-align: center; font-family: 'Arial';\"> <h4 style=\"text-align: center\"><b>",comparison_type,"</b></h4>",
@@ -306,46 +339,18 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    
-    output$multiple_DE_parameters_ui <- shiny::renderUI({
-      shiny::req(!is.null(r$normalized_counts))
-      if (length(input$reference) > 1 ||
-          length(input$perturbation) > 1) {
-        shiny::tagList(shiny::HTML(
-          paste0(
-            "<span style=\"display: inline-block; margin-right: 5px; max-width: 100%;
-            # margin-bottom: 5px; \"><h5 style=\"display: inline-block; font-weight: 700;\"> Multiple DE comparison method  </h5>",
-            as.character(
-              shinyWidgets::dropdownButton(
-                size = "xs",
-                shiny::HTML(
-                  "<p>There is two methods for multiple condition comparison.<br><b>Mean of conditions</b> :
-                  the default method. Take the mean of all selected coniditions in order to perform differential expression analysis.<br>
-                  <b>Mean of condition and same orientation DE</b> :
-                  Fist perform differentiall expression using mean of conditions.
-                  Then, perform every single possible differential expression analysis using the selected conditions,
-                  and keep only genes that are differentially expressed with the same orientation in all comparison.</p>"
-                ),
-                # shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
-                circle = TRUE,
-                status = "success",
-                icon = shiny::icon("question"),
-                width = "400px",
-                tooltip = shinyWidgets::tooltipOptions(title = "More details"),
-                inline = TRUE
-              )
-            ),
-            "</span>"
-          )
-        ),
-        shinyWidgets::pickerInput(
-          inputId = ns("multiple_DE_parameters_selection"),
-          # label = "Multiple DE comparison method",
-          choices = c("Mean of conditions" = FALSE, "Mean of condition and same orientation DE" = TRUE)
-        ))
-      } else {
-        NULL
-      }
+    output$design_equation <- shiny::renderUI({
+      withMathJax(
+        "$$\\frac{",
+        paste0(input$reference, collapse = "+"),
+        "}{",
+        length(input$reference),
+        "} - \\frac{",
+        paste0(input$perturbation, collapse = "+"),
+        "}{",
+        length(input$perturbation),
+        "}\\!$$"
+      )
     })
     
     output$pvalue_hist <- shiny::renderPlot({
@@ -447,11 +452,7 @@ mod_differential_expression_analysis_server <-
       r_dea$tags <-
         estimateDEGs(r$fit,
                      reference = input$reference,
-                     perturbation = input$perturbation,
-                     systematic_orientation = ifelse(is.null(input$multiple_DE_parameters_selection),
-                                                     yes = FALSE,
-                                                     no = input$multiple_DE_parameters_selection
-                     )
+                     perturbation = input$perturbation
         )
       
       r_dea$top_tags <-
@@ -460,13 +461,14 @@ mod_differential_expression_analysis_server <-
         r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
       r_dea$DEGs <- r_dea$top_tags$genes
       
+      ###Give specific names to multiple conditions dEA
       if(length(input$reference)>1){
-        r_dea$ref <- paste0("(", paste0(input$reference, collapse = " "), ")")
+        r_dea$ref <- paste0("(", paste0(input$reference, collapse = "+"), ")")
       } else {
         r_dea$ref <- input$reference
       }
       if(length(input$perturbation)>1){
-        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = " "), ")")
+        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = "+"), ")")
       } else {
         r_dea$trt <- input$perturbation
       }
@@ -557,6 +559,12 @@ mod_differential_expression_analysis_server <-
       
       tagList(
         shiny::fluidRow(
+          shinydashboardPlus::descriptionBlock(
+            numberColor = "black",
+            header = "Current comparison",
+            text = paste0(r_dea$ref, " versus ", r_dea$trt),
+            rightBorder = TRUE
+          ),
           shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
             numberColor = "olive",
