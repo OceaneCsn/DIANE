@@ -352,7 +352,7 @@ mod_differential_expression_analysis_server <-
     
     output$pvalue_hist <- shiny::renderPlot({
       shiny::req(r_dea$tags)
-      draw_raw_pvalue_histogram(r_dea$tags)
+      draw_raw_pvalue_histogram(r_dea$tags[abs(r_dea$tags$logFC) > input$dea_lfc,])
     })
     
     #   ____________________________________________________________________________
