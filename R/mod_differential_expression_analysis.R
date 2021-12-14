@@ -13,6 +13,7 @@ mod_differential_expression_analysis_ui <- function(id) {
     shiny::h1("Differential expression analysis"),
     shiny::hr(),
     shinyalert::useShinyalert(),
+    shiny::withMathJax(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
@@ -72,7 +73,6 @@ mod_differential_expression_analysis_ui <- function(id) {
           label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
         ),
         
-        uiOutput(ns('design_equation')),
         
         shinyWidgets::actionBttn(
           ns("deg_test_btn"),
@@ -289,32 +289,43 @@ mod_differential_expression_analysis_server <-
       } else if(length(input$reference) == 1 & length(input$perturbation) == 1) {
         comparison_type <- "Simple comparison"
       } else {
+        comparison_equation <- paste0("$$",
+          "\\frac{",
+          ifelse(
+            length(input$reference) > 1,
+            paste0(
+              "\\frac{",
+              paste0(input$reference, collapse = "+"),
+              "}{",
+              length(input$reference),
+              "}"
+            ),
+            input$reference
+          ),
+          "}{", #Middle of the equation
+          ifelse(
+            length(input$perturbation) > 1,
+            paste0(
+              "\\frac{",
+              paste0(input$perturbation, collapse = "+"),
+              "}{",
+              length(input$perturbation),
+              "}"
+            ),
+            input$perturbation
+          ), "}\\!$$"
+        )
+        
         comparison_type <- paste0(
           "Multiple comparison",
           shinyWidgets::dropdownButton(
             size = 'xs',
-            label = "Gene information file requirements",
+            label = "Multiple condition differetial expression information",
             "To perform a multi-factorial differential expression analysis, the
-            mean of the reference is compared to the mean of the perturbation.
-            For your input, it will be the equivalent of :",
-            withMathJax(
-              "$$\\frac{",
-              paste0(input$reference, collapse = "+"),
-              "}{",
-              length(input$reference),
-              "} - \\frac{",
-              paste0(input$perturbation, collapse = "+"),
-              "}{",
-              length(input$perturbation),
-              "}\\!$$"
-            ),
-            # as.character(shiny::uiOutput(ns('design_equation'))),
-            # "To perform a multi-factorial differential expression analysis, the
-            # mean of the reference is compared to the mean of the perturbation.
-            # For your input, it will be the equivalent of :",
-            # withMathJax(sprintf("frac{%s}{%s}", input$reference ,length(input$reference))),
-            # as.character(shiny::HTML(shiny::uiOutput(ns('design_equation')))),
-            # shiny::HTML(paste0("<br>", "((", paste0(reference_text, collapse = " + "), ") / ", length(input$reference), ") / ", "((",paste0(perturbation_text, collapse = " + "), ") / ", length(input$perturbation), ")")),
+            mean of the reference is compared to the mean of the perturbation. The 
+            operation performed are a bit more complex than this simple calcul.
+            For your input, an easy way to visualise the comparison could be :",
+            withMathJax(comparison_equation),
             circle = TRUE,
             status = "success",
             inline = TRUE,
@@ -336,20 +347,6 @@ mod_differential_expression_analysis_server <-
                         HTML(paste0("<b>Perturbation</b><br>",perturbation_text, ""))
           )," </div>"
         )
-      )
-    })
-    
-    output$design_equation <- shiny::renderUI({
-      withMathJax(
-        "$$\\frac{",
-        paste0(input$reference, collapse = "+"),
-        "}{",
-        length(input$reference),
-        "} - \\frac{",
-        paste0(input$perturbation, collapse = "+"),
-        "}{",
-        length(input$perturbation),
-        "}\\!$$"
       )
     })
     
