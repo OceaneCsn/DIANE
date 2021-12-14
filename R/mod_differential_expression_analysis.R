@@ -125,8 +125,14 @@ mod_differential_expression_analysis_ui <- function(id) {
         ),
         shiny::tabPanel(
           title = "Pvalues histogram",
-          shiny::plotOutput(ns("pvalue_hist"), height = "450px")
-        ),
+          shiny::plotOutput(ns("pvalue_hist"), height = "450px"),
+          shiny::helpText(
+            "This raw pvalue histogram can be use as a diagnostic
+                          tool. The density of pvalue near 0 should be very high,
+                          and uniformally distributed (like a plateau) on
+                          the rest of the plot"
+          )
+        ), 
         
         
         #   ____________________________________________________________________________
@@ -202,7 +208,15 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::plotOutput(ns("venn"), height = "700px"),
           shiny::uiOutput(ns("venn_spec_comp_choice_2")),
           shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
-        )
+        ),
+        
+        #   __________________________________________________________________________
+        #   Display fit                                                           ####
+        
+        shiny::tabPanel(
+          title = "Fit (advanced)",
+          shiny::verbatimTextOutput(ns("edgeR_fit")),
+        ),
       ) 
     )
   )
@@ -352,7 +366,8 @@ mod_differential_expression_analysis_server <-
     
     output$pvalue_hist <- shiny::renderPlot({
       shiny::req(r_dea$tags)
-      draw_raw_pvalue_histogram(r_dea$tags[abs(r_dea$tags$logFC) > input$dea_lfc,])
+      # draw_raw_pvalue_histogram(r_dea$tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,])
+      draw_raw_pvalue_histogram(r_dea$tags, bins = 100, lfc = input$dea_lfc)
     })
     
     #   ____________________________________________________________________________
@@ -612,7 +627,7 @@ mod_differential_expression_analysis_server <-
     
     output$download_table_csv <- shiny::downloadHandler(
       filename = function() {
-        paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".tsv"))
+        paste(paste0("DEGs_", r_dea$ref, "-versus-", r_dea$trt, ".tsv"))
       },
       content = function(file) {
         
@@ -1298,6 +1313,12 @@ mod_differential_expression_analysis_server <-
         else
           plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
+    })
+    
+    
+    output$edgeR_fit <- shiny::renderPrint({
+      req(r$fit)
+      print(r$fit)
     })
     
     
