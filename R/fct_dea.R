@@ -154,6 +154,7 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
 #' @param tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
 #' used with \code{p.value = 1}
 #' @param bins number of bar to display
+#' @param lfc log2 fold change cutoff
 #'
 #' @import ggplot2
 #' 
@@ -165,10 +166,12 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
 #' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(abiotic_stresses$conditions))
 #' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
 #' tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
-#' DIANE::draw_raw_pvalue_histogram(tags)
-draw_raw_pvalue_histogram <- function(tags, bins=100){
+#' DIANE::draw_raw_pvalue_histogram(tags, bins=100, lfc = 0, pvalue = 0.05)
+draw_raw_pvalue_histogram <- function(tags, bins=100, lfc = 0){
   
-  diag_plot <- ggplot2::ggplot(data=tags$table, ggplot2::aes(x=tags$table$PValue)) + ggplot2::theme_classic() +
+  table <- tags$table[abs(tags$table$logFC) >= lfc,]
+  
+  diag_plot <- ggplot2::ggplot(data=table, ggplot2::aes(x=table$PValue)) + ggplot2::theme_classic() +
     ggplot2::geom_histogram(breaks=seq(0, 1, by=1/bins), 
                             fill="#92D9A2", alpha = 1) +
     ggplot2::labs(title="Histogram of raw pvalues", x="Pvalue", y="Count") + 
