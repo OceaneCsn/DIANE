@@ -246,7 +246,7 @@ draw_DEGs <- function(tags,
 draw_venn <- function(gene_list){
   if (length(gene_list) < 2 | length(gene_list)>4)
     stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
-  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888")
+  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888", edge_size = 0)
   suppressMessages(venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45"))
 }
 
