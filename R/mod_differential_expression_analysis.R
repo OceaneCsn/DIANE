@@ -130,7 +130,10 @@ mod_differential_expression_analysis_ui <- function(id) {
             "This raw pvalue histogram can be use as a diagnostic
                           tool. The density of pvalue near 0 should be very high,
                           and uniformally distributed (like a plateau) on
-                          the rest of the plot"
+                          the rest of the plot. You can dynamically change the
+                          fold change cutoff, and should observe the plot with a cutoff
+                          of 0 to observe the whole output from the differential
+                          expression analysis."
           )
         ), 
         
@@ -215,6 +218,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         
         shiny::tabPanel(
           title = "Fit (advanced)",
+          shiny::helpText("Here you can look at informations about the fitted model (This text could be improved...)"),
           shiny::verbatimTextOutput(ns("edgeR_fit")),
         ),
       ) 
@@ -306,18 +310,6 @@ mod_differential_expression_analysis_server <-
         comparison_equation <- paste0("$$",
           "\\frac{",
           ifelse(
-            length(input$reference) > 1,
-            paste0(
-              "\\frac{",
-              paste0(input$reference, collapse = "+"),
-              "}{",
-              length(input$reference),
-              "}"
-            ),
-            input$reference
-          ),
-          "}{", #Middle of the equation
-          ifelse(
             length(input$perturbation) > 1,
             paste0(
               "\\frac{",
@@ -327,6 +319,18 @@ mod_differential_expression_analysis_server <-
               "}"
             ),
             input$perturbation
+          ),
+          "}{", #Middle of the equation
+          ifelse(
+            length(input$reference) > 1,
+            paste0(
+              "\\frac{",
+              paste0(input$reference, collapse = "+"),
+              "}{",
+              length(input$reference),
+              "}"
+            ),
+            input$reference
           ), "}\\!$$"
         )
         
@@ -336,8 +340,9 @@ mod_differential_expression_analysis_server <-
             size = 'xs',
             label = "Multiple condition differetial expression information",
             "To perform a multi-factorial differential expression analysis, the
-            mean of the reference is compared to the mean of the perturbation. The 
-            operation performed are a bit more complex than this simple calcul.
+            mean of the reference is compared to the mean of the perturbation. The
+            tool perform some other complex operations to compute the fold change,
+            but this is the key idea.
             For your input, an easy way to visualise the comparison could be :",
             withMathJax(comparison_equation),
             circle = TRUE,
