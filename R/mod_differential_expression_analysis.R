@@ -219,8 +219,8 @@ mod_differential_expression_analysis_ui <- function(id) {
         shiny::tabPanel(
           title = "Fit (advanced)",
           shiny::helpText("Here you can look at informations about the fitted model (This text could be improved...)"),
-          shiny::verbatimTextOutput(ns("edgeR_fit")),
-        ),
+          shiny::verbatimTextOutput(ns("edgeR_fit"))
+        )
       ) 
     )
   )
