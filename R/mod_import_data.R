@@ -57,7 +57,7 @@ mod_import_data_ui <- function(id) {
         
         shiny::uiOutput(ns("org_selection")),
         
-        shiny::radioButtons(
+        shinyWidgets::awesomeRadio(
           ns('sep'),
           'Separator : ',
           c(
@@ -65,7 +65,8 @@ mod_import_data_ui <- function(id) {
             Semicolon = ';',
             Tab = '\t'
           ),
-          inline = TRUE
+          inline = TRUE,
+          status = "success"
         ),
         
           shiny::fileInput(
@@ -99,8 +100,9 @@ mod_import_data_ui <- function(id) {
         #   gene infos upload                                                           ####
         
         
-       shiny::radioButtons(
+        shinyWidgets::awesomeRadio(
           ns('sep_gene_info'),
+          status = "success",
           'Separator : ',
           c(Tab = '\t'),
           inline = TRUE
@@ -209,7 +211,7 @@ mod_import_data_ui <- function(id) {
         status = "success",
         collapsible = TRUE,
         closable = FALSE,
-        shiny::radioButtons(
+        shinyWidgets::awesomeRadio(
           ns('sep_design'),
           
           'Separator : ',
@@ -219,7 +221,8 @@ mod_import_data_ui <- function(id) {
             Tab = '\t'
           ),
           
-          inline = TRUE
+          inline = TRUE,
+          status = "success"
         ),
         
         
