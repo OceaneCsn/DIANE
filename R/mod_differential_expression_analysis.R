@@ -132,7 +132,7 @@ mod_differential_expression_analysis_ui <- function(id) {
                           and uniformally distributed (like a plateau) on
                           the rest of the plot. You can dynamically change the
                           fold change cutoff, and should observe the plot with a cutoff
-                          of 0 to observe the whole output from the differential
+                          of 0 to look at the whole output from the differential
                           expression analysis."
           )
         ), 
@@ -338,12 +338,12 @@ mod_differential_expression_analysis_server <-
           "Multiple comparison",
           shinyWidgets::dropdownButton(
             size = 'xs',
-            label = "Multiple condition differetial expression information",
+            label = "Multiple condition differential expression information",
             "To perform a multi-factorial differential expression analysis, the
-            mean of the reference is compared to the mean of the perturbation. The
-            tool perform some other complex operations to compute the fold change,
-            but this is the key idea.
-            For your input, an easy way to visualise the comparison could be :",
+            mean of the reference conditions is compared to the mean of the perturbation
+            conditions. the tool perform some other complex operations to compute 
+            the fold change, but this is the key idea. For your input, an intuitive way
+            to visualize the comparison could be :",
             withMathJax(comparison_equation),
             circle = TRUE,
             status = "success",

@@ -114,7 +114,7 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' @param reference condition (or a vector of conditions) being considered as the reference for differential analysis.
 #' It should corresponds to a condition name, e.g. the string before the underscore and 
 #' replicate number in your sample names.
-#' @param perturbation condition (or a vector of conditions) we compared to the reference for differential analysis.
+#' @param perturbation condition (or a vector of conditions) to compare to the reference for differential analysis.
 #' It should corresponds to a condition name, e.g. the string before the underscore and 
 #' replicate number in your sample names.
 #' @param p.value numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
@@ -141,7 +141,6 @@ estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc =
 #' head(DEGs)
 estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
-  print(contrast)
   lrt <- edgeR::glmLRT(fit, contrast = contrast)
   top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
   top$table <- top$table[abs(top$table$logFC) > lfc & top$table$FDR <= p.value,]
@@ -245,7 +244,7 @@ draw_DEGs <- function(tags,
 draw_venn <- function(gene_list){
   if (length(gene_list) < 2 | length(gene_list)>4)
     stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
-  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888", edge_size = 0)
+  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888", edge_size = 0, label_percent_digit = 2, abel_txtWidth = 40)
   suppressMessages(venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45"))
 }
 
