@@ -1,4 +1,4 @@
-# Expected GO annotation file
+# Expected design file
 
 ---
 
