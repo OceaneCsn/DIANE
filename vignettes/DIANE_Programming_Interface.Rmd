@@ -389,8 +389,8 @@ regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]]
 # use normalized counts if you did not aggregate splice variants
 grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
 
-visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
-                       grouping$correlated_regressors_graph$edges)
+# visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
+#                        grouping$correlated_regressors_graph$edges)
 
 grouped_counts <- grouping$counts
 
