@@ -436,6 +436,7 @@ knitr::kable(head(data$nodes))
 DIANE::draw_network(data$nodes, data$edges)
 ```
 
+
 `network` is an `igraph` object, and can be analyzed with all the possibilities offered by this complete package about graphs algorithms.
 
 ### DIANE's edges testing procedure
@@ -500,41 +501,49 @@ res$pvalues_distributions + xlim(0,0.1)
 kable(head(res$links))
 
 net <- DIANE::network_from_tests(res$links, fdr = 0.05)
-
-
 ```
 
-Alright, the network is ready to be analyzed!
+All right, the network is ready to be analyzed!
 
 ## Visualization
 
-```{r communities, fig.width=10, fig.height=8}
+The first graph shows, in red, the edges that were not significant according to our perumtation tests.
+
+```{r, fig.width=10, fig.height=8}
 net_data <- network_data(net, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
-
-
 draw_discarded_edges(res$links, net_data)
 
-
-draw_network(net_data$nodes, net_data$edges)
-
-data$nodes$group <- data$nodes$community
-DIANE::draw_network(data$nodes, data$edges)
-
-louvain_membership <- data$nodes$community
-names(louvain_membership) <- data$nodes$id
-
-print(head(louvain_membership, n = 10))
-
-draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_stresses$conditions)
 ```
 
-The first graph shows, in red, the edges that were not significant according to our perumtation tests.
+The second graph shows to final infered network : 
+
+```{r, fig.width=10, fig.height=8}
+draw_network(net_data$nodes, net_data$edges)
+```
 
 A community discovery is performed using the Louvain algorithm, so we can extract highly connected genes modules.
 You can see those communities on the graph and plot their profiles:
 
-Gene ontology enrichment can also be performed on gene communities, whereas they must contain quite a lot of genes.
-If there is too few genes, GO enrichment tests may not be significant.
+
+```{r communities, fig.width=10, fig.height=8}
+
+data$nodes$group <- data$nodes$community
+
+louvain_membership <- data$nodes$community
+names(louvain_membership) <- data$nodes$id
+
+knitr::kable(head(louvain_membership, n = 10))
+
+DIANE::draw_network(data$nodes, data$edges)
+```
+
+```{r, fig.width=10, fig.height=8}
+draw_profiles(aggregated_data, membership = louvain_membership, conds = abiotic_stresses$conditions)
+
+```
+
+
+Gene ontology enrichment can also be performed on gene communities (However, if there is too few genes, GO enrichment tests may not be significant).
 
 ## Analysis
 
