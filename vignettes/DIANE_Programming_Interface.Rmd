@@ -249,9 +249,7 @@ If we want to compare genes differentially expressed between Control and Heat st
 
 genes_double_stress <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "MH", p.value = 0.01, lfc = 2)$table$genes
 
-
 genes_lists <- list("C - H" = genes, "C - HM" = genes_double_stress)
-
 # if we only want the conditions used for differential expression analysis :
 DIANE::draw_venn(genes_lists)
 ```
@@ -296,11 +294,13 @@ The input genes of a clustering can't be all the genes of the data, we use the o
 
 You can also specify a subset of the conditions to be used during the clustering if we're not interested in all the conditions.
 
-```{r coseq, fig.width=8, fig.height=5}
+Do not forget to use the seed argument to that results can be reproduced.
 
+```{r coseq, fig.width=8, fig.height=5}
 genes <- topTags$table$genes
 
-clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), data = normalized_counts, genes = genes, K = 6:9, transfo = "arcsin", model = "Normal")
+clustering <- DIANE::run_coseq(conds = unique(abiotic_stresses$conditions), data = normalized_counts, 
+                               genes = genes, K = 6:9, transfo = "arcsin", model = "Normal", seed = 123)
 DIANE::draw_coseq_run(clustering$model, plot = "barplots")
 DIANE::draw_coseq_run(clustering$model, plot = "ICL")
 ```
@@ -317,7 +317,6 @@ DIANE::draw_profiles(data = normalized_counts, clustering$membership, conds = un
 All genes in one cluster can be retrieved with :
 
 ```{r genes_in_k, fig.width=10, fig.height=8}
-
 DIANE::get_genes_in_cluster(membership = clustering$membership, cluster = 3) 
 ```
 
@@ -389,15 +388,14 @@ regressors <- intersect(genes, regulators_per_organism[["Arabidopsis thaliana"]]
 # use normalized counts if you did not aggregate splice variants
 grouping <- DIANE::group_regressors(aggregated_data, genes, regressors)
 
-# visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
-#                        grouping$correlated_regressors_graph$edges)
-
 grouped_counts <- grouping$counts
 
 grouped_targets <- grouping$grouped_genes
 
 grouped_regressors <- grouping$grouped_regressors
 
+# visNetwork::visNetwork(grouping$correlated_regressors_graph$nodes, 
+# grouping$correlated_regressors_graph$edges)
 ```
 
 ## Inference and visualization
@@ -420,12 +418,18 @@ Settings relative to regulatory weights inference are presented in the left pane
 The idea is then to keep the strongest links to build the gene regulatory network.
 The way of determining the right number of final edges in the network can be based on a desired network density alone, or followed by edges statistical testing.
 
+Again, we set the seed before using the network inference procedure which is based on random processes :
+
 ```{r genie, fig.width=8, fig.height=6}
-mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, targets = grouped_targets, regressors = grouped_regressors, nCores = 1, verbose = FALSE)
+set.seed(123)
+mat <- DIANE::network_inference(grouped_counts, conds = abiotic_stresses$conditions, 
+                                targets = grouped_targets, regressors = grouped_regressors, 
+                                nCores = 1, verbose = FALSE)
 
 network <- DIANE::network_thresholding(mat, n_edges = length(genes))
 
-data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], gene_annotations$`Arabidopsis thaliana`)
+data <- network_data(network, regulators_per_organism[["Arabidopsis thaliana"]], 
+                     gene_annotations$`Arabidopsis thaliana`)
 
 knitr::kable(head(data$nodes))
 
@@ -439,7 +443,7 @@ DIANE::draw_network(data$nodes, data$edges)
 A matrix of importances is computed, just as in the previous section, but we prefer to use another importance metric for consistency reasons.
 
 ```{r sigGENIE, eval=FALSE}
-
+set.seed(123)
 mat <- DIANE::network_inference(grouped_counts, 
                                 conds = abiotic_stresses$conditions, 
                                 targets = grouped_targets,
@@ -474,7 +478,7 @@ Given this graph, we can consider that a density value of 0.03 would be a good c
 This step will take a certain time to run, from a few minutes to tens of minutes depending on your hardware.
 
 ```{r testingexpr, eval=FALSE}
-
+set.seed(123)
 res <- DIANE::test_edges(mat, normalized_counts = grouped_counts, density = 0.03,
                          nGenes = nGenes, 
                          nRegulators = nRegulators, 
@@ -495,7 +499,7 @@ res$pvalues_distributions + xlim(0,0.1)
 
 kable(head(res$links))
 
-net <- DIANE::network_from_tests(res$links, fdr = 0.01)
+net <- DIANE::network_from_tests(res$links, fdr = 0.05)
 
 
 ```
