@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.4</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.5</span>
       </span>
     </div>
 
@@ -100,10 +100,10 @@
       <a href="../articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="../articles/DIANE_normalize.html">Normalization</a>
+      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
     <li>
-      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
+      <a href="../articles/DIANE_normalize.html">Normalization</a>
     </li>
   </ul>
 </li>
@@ -400,15 +400,28 @@ symbol or name</p></td>
       <tr>
         
         <td>
-          <p><code><a href="draw_coseq_run.html">draw_coseq_run()</a></code> </p>
-        </td>
-        <td><p>Displays clustering results and quality</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="draw_DEGs.html">draw_DEGs()</a></code> </p>
         </td>
         <td><p>MA or volcano plot for differential expression results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="draw_PCA.html">draw_PCA()</a></code> </p>
+        </td>
+        <td><p>#' Multi-dimensional scaling plot
+#'
+#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
+#' @importFrom limma plotMDS
+#' @export
+#' @examples
+#' data("abiotic_stresses")
+#' DIANE::draw_MDS(abiotic_stresses$normalized_counts)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="draw_coseq_run.html">draw_coseq_run()</a></code> </p>
+        </td>
+        <td><p>Displays clustering results and quality</p></td>
       </tr><tr>
         
         <td>
@@ -463,19 +476,6 @@ symbol or name</p></td>
           <p><code><a href="draw_network_degrees.html">draw_network_degrees()</a></code> </p>
         </td>
         <td><p>Draw a network's degree distributions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_PCA.html">draw_PCA()</a></code> </p>
-        </td>
-        <td><p>#' Multi-dimensional scaling plot
-#'
-#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
-#' @importFrom limma plotMDS
-#' @export
-#' @examples
-#' data("abiotic_stresses")
-#' DIANE::draw_MDS(abiotic_stresses$normalized_counts)</p></td>
       </tr><tr>
         
         <td>
