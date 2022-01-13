@@ -152,6 +152,7 @@ test_edges <-
                                        # remove target gene from input genes
                                        theseRegulatorNames <-
                                          target_to_TF[[target]]
+                                       
                                        numRegulators <-
                                          length(theseRegulatorNames)
                                        
@@ -159,7 +160,7 @@ test_edges <-
                                          dataT[, target]
                                        
                                        x <-
-                                         data.frame(dataT[, target_to_TF[[target]]])
+                                         data.frame(dataT[, theseRegulatorNames])
                                        colnames(x) <-
                                          target_to_TF[[target]]
                                        
@@ -175,16 +176,20 @@ test_edges <-
                                            nrep = nShuffle,
                                            num.cores = 1
                                          )
-                                       if (length(target_to_TF[[target]]) == 1) {
+                                       if (numRegulators == 1) {
                                          pval <- rf$pval[, , "scaled"]
                                          names(pval) <-
                                            paste(names(pval), ".pval", sep = "")
                                          
                                          pvals <-
-                                           setNames(pval["%IncMSE.pval"], target_to_TF[[target]])
+                                           setNames(pval["%IncMSE.pval"], theseRegulatorNames)
                                        }
                                        else{
-                                         pvals <- rfPermute::rp.importance(rf)[, "%IncMSE.pval"]
+                                         # worked for v2.2 of rfpermute, but
+                                         # breaking in v2.5 : 
+                                         # rfPermute::rp.importance(rf)[, "%IncMSE.pval"]
+                                         # working in v2.5 :
+                                         pvals <- rfPermute::importance(rf)[, "%IncMSE.pval"]
                                        }
                                        
                                        res <-
