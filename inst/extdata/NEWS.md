@@ -42,3 +42,9 @@ Bug fixes :
 + Add "y axis" scrollbar to some tables which were exceeded screen boundaries in low resolutions.
 
 + Update contact email to new cnrs one.
+
+### 1.0.5 : Minor changes and update caused by breaking changes in dependency
+
++ rfPerumte was updated and code had to be change to comply with new function names
+
++ The vignette was improved (mention of seed, and rendering adjustements)
