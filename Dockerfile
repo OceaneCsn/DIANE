@@ -61,7 +61,7 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.17")
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.2.1")'
 
 RUN Rscript -e 'remotes::install_github("ryapric/loggit@8293ba322c86a80b81b07a81e1ae4f9a64b395a7")'
-RUN Rscript -e 'remotes::install_version("lubridate", version = "0.2.7", upgrade="never")'
+RUN Rscript -e 'remotes::install_version("cpp11", version = "0.2.7", upgrade="never")'
 RUN Rscript -e 'remotes::install_version("lubridate",upgrade="never")'
 RUN Rscript -e 'remotes::install_version("shinythemes",upgrade="never")'
 RUN Rscript -e 'remotes::install_version("patchwork",upgrade="never")'
