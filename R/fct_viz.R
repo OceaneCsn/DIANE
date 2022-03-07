@@ -223,7 +223,7 @@ draw_PCA <- function(data) {
   data <- data / rowMeans(data)
   acp <-
     ade4::dudi.pca(
-      data,
+      na.omit(data),
       center = TRUE,
       scale = TRUE,
       scannf = FALSE,

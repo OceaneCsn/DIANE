@@ -617,12 +617,11 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       # spreads the grouped regulators
       if (sum(grepl("mean_", genes)) > 0) {
-        individuals <- genes[!grepl("means_", genes)]
+        individuals <- genes[!grepl("mean_", genes)]
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
-                           '-')
+                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2],'-'))
         }
         genes <- individuals
       }
@@ -642,12 +641,12 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       # spreads the grouped regulators
       if (sum(grepl("mean_", genes)) > 0) {
-        individuals <- genes[!grepl("means_", genes)]
+        individuals <- genes[!grepl("mean_", genes)]
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
-                           '-')
+                           strsplit(x = stringr::str_split_fixed(group, "_", 2)[, 2], 
+                                    split = '-'))
         }
         genes <- individuals
       }
