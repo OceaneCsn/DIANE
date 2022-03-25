@@ -655,7 +655,7 @@ mod_import_data_server <- function(input, output, session, r) {
         
         if (!'label' %in% colnames(d) &
             !'description' %in% colnames(d)) {
-          stop("There should be a label or description field in the
+          stop("There should be a label and description field in the
                annotation file")
         }
         # takes as rownames only the genes present in the expression file
