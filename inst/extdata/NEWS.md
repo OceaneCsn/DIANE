@@ -48,3 +48,14 @@ Bug fixes :
 + rfPerumte was updated and code had to be change to comply with new function names
 
 + The vignette was improved (mention of seed, and rendering adjustements)
+
+
+### 1.0.6 Fixes
+
++ Changed url to diane.ipsim.inrae.fr added license to welcome pages
+
++ Fixed cutom gene info file upload in the case of splicing aware gene IDs in expression file
+
++ Fixed not displaying go results for custom org in network communities
+
++ Removed 
