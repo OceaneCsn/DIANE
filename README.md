@@ -20,7 +20,7 @@ Given the popularity of combinatorial approaches in experimental biology, we des
 
 -   Demonstration on a published dataset, and other ready to explore datasets on several organisms
 
-All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <https://diane.bpmp.inrae.fr>.
+All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <https://diane.ipsim.inrae.fr>.
 
 <img src="man/figures/net.PNG" align="center" width="900"/>
 
