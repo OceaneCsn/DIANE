@@ -658,8 +658,15 @@ mod_import_data_server <- function(input, output, session, r) {
           stop("There should be a label and description field in the
                annotation file")
         }
+        
+        if (r$splicing_aware) {
+          ids <- get_locus(rownames(r$raw_counts))
+        }
+        else{
+          ids <- rownames(r$raw_counts)
+        }
         # takes as rownames only the genes present in the expression file
-        d <- d[d$Gene %in% rownames(r$raw_counts), ]
+        d <- d[d$Gene %in% ids, ]
         
         # handles the case where genes are duplicated, and pastes
         # the annotations for the same genes in one row
