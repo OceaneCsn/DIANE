@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.5</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.6</span>
       </span>
     </div>
 
@@ -101,10 +101,10 @@
       <a href="../articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
+      <a href="../articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
-      <a href="../articles/DIANE_normalize.html">Normalization</a>
+      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
 </li>
@@ -141,7 +141,7 @@
     <pre class="usage"><span class='fu'>draw_profiles</span><span class='op'>(</span>
   <span class='va'>data</span>,
   <span class='va'>membership</span>,
-  conds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='fu'>stringr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/stringr/man/str_split.html'>str_split_fixed</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, <span class='st'>"_"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,
+  conds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='fu'>stringr</span><span class='fu'>::</span><span class='fu'><a href='https://stringr.tidyverse.org/reference/str_split.html'>str_split_fixed</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, <span class='st'>"_"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>,
   expression <span class='op'>=</span> <span class='st'>"profiles"</span>,
   k <span class='op'>=</span> <span class='cn'>NULL</span>,
   nrow <span class='op'>=</span> <span class='fl'>3</span>

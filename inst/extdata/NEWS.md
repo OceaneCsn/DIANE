@@ -58,4 +58,4 @@ Bug fixes :
 
 + Fixed not displaying go results for custom org in network communities
 
-+ Removed 
++ In draw expression levels, genes filtered because of low expression can still be viewed
