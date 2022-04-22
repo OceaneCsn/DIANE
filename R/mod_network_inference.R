@@ -628,7 +628,6 @@ mod_network_inference_server <- function(input, output, session, r){
     shiny::req(r$normalized_counts, input$input_deg_genes_net, 
                r$regulators, r$DEGs, input_net(),input$input_conditions_net)
     
-    
     if(r$splicing_aware) {
       all_genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])
       targets <- get_locus(input_net())
