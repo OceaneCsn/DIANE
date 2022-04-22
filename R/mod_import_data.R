@@ -465,12 +465,12 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (r$splicing_aware) {
       numberColor = "blue"
-      number = "Alternatifve splicing aware"
+      number = "Alternative splicing aware"
       header = "gene identifiers"
     }
     else{
       numberColor = "blue"
-      number = "No alternatifve splicing information"
+      number = "No alternative splicing information"
       header = "in gene identifiers"
     }
     shinydashboardPlus::descriptionBlock(
