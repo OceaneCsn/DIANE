@@ -6,14 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>#' Multi-dimensional scaling plot
-#'
-#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
-#' @importFrom limma plotMDS
-#' @export
-#' @examples
-#' data("abiotic_stresses")
-#' DIANE::draw_MDS(abiotic_stresses$normalized_counts) — draw_PCA • DIANE</title>
+<title>Draw PCA results — draw_PCA • DIANE</title>
 
 
 <!-- jquery -->
@@ -46,14 +39,7 @@
 
 
 
-<meta property="og:title" content="#' Multi-dimensional scaling plot
-#'
-#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
-#' @importFrom limma plotMDS
-#' @export
-#' @examples
-#' data("abiotic_stresses")
-#' DIANE::draw_MDS(abiotic_stresses$normalized_counts) — draw_PCA" />
+<meta property="og:title" content="Draw PCA results — draw_PCA" />
 <meta property="og:description" content="Draws variables contributions to principal components,
 as well as the PCA screeplot.
 First to fourth principal components are shown, except if there are
@@ -89,7 +75,7 @@ only 4 samples. In that case, 3 principal components are computed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.4</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.6</span>
       </span>
     </div>
 
@@ -118,10 +104,10 @@ only 4 samples. In that case, 3 principal components are computed." />
       <a href="../articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
+      <a href="../articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
-      <a href="../articles/DIANE_normalize.html">Normalization</a>
+      <a href="../articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
 </li>
@@ -146,14 +132,7 @@ only 4 samples. In that case, 3 principal components are computed." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>#' Multi-dimensional scaling plot
-#'
-#' @param normalized.count data to plot for MDS, with samples as columns and genes as rows
-#' @importFrom limma plotMDS
-#' @export
-#' @examples
-#' data("abiotic_stresses")
-#' DIANE::draw_MDS(abiotic_stresses$normalized_counts)</h1>
+    <h1>Draw PCA results</h1>
     <small class="dont-index">Source: <a href='https://github.com/OceaneCsn/DIANE/blob/master/R/fct_viz.R'><code>R/fct_viz.R</code></a></small>
     <div class="hidden name"><code>draw_PCA.Rd</code></div>
     </div>
@@ -176,49 +155,6 @@ only 4 samples. In that case, 3 principal components are computed.</p>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>draw_MDS &lt;- function(normalized.count) 
-  normalized.count &lt;- normalized.count / rowMeans(normalized.count)
-  mds &lt;- limma::plotMDS(normalized.count, plot = FALSE)
-  d &lt;-
-    data.frame(
-      dim1 = mds$x,
-      dim2 = mds$y,
-      sample = names(mds$x),
-      condition = stringr::str_split_fixed(names(mds$x), '_', 2)[, 1]
-    )
-  g &lt;-
-    ggplot2::ggplot(data = d,
-                    ggplot2::aes(
-                      x = dim1,
-                      y = dim2,
-                      color = condition,
-                      label = sample
-                    )) +
-    ggplot2::geom_point(size = 6) + ggplot2::geom_text(
-      color = "black",
-      size = 6,
-      alpha = 0.5,
-      nudge_x = 0.07,
-      nudge_y = 0.07
-    )  g &lt;- g + ggplot2::ggtitle("Multi Dimensional Scaling plot")  g + ggplot2::theme(
-    plot.title = ggplot2::element_text(size = 22, face = "bold"),
-    strip.text.x = ggplot2::element_text(size = 20),
-    legend.position = "bottom",
-    legend.title = ggplot2::element_text(size = 20, face = "bold"),
-    legend.text = ggplot2::element_text(size = 20, angle = 0),
-    axis.text.y = ggplot2::element_text(size = 20, angle = 0),
-    axis.text.x = ggplot2::element_text(
-      size = 20,
-      angle = 0,
-      hjust = 0
-    ),
-    legend.text.align = 1,
-    axis.title = ggplot2::element_blank()
-  )
-
-Draw PCA results</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"abiotic_stresses"</span><span class='op'>)</span>

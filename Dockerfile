@@ -43,7 +43,7 @@ RUN Rscript -e 'remotes::install_version("ggVennDiagram",upgrade="never", versio
 RUN Rscript -e 'remotes::install_version("future",upgrade="never", version = "1.21.0")'
 RUN Rscript -e 'remotes::install_version("tictoc",upgrade="never", version = "1.0")'
 RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.7")'
-RUN Rscript -e 'remotes::install_version("rfPermute",upgrade="never", version = "2.1.81")'
+RUN Rscript -e 'remotes::install_version("rfPermute",upgrade="never", version = "2.5")'
 RUN Rscript -e 'remotes::install_version("ggridges",upgrade="never", version = "0.5.3")'
 RUN Rscript -e 'remotes::install_version("ggraph",upgrade="never", version = "2.0.5")'
 RUN Rscript -e 'remotes::install_version("ade4",upgrade="never", version = "1.7-16")'
@@ -61,6 +61,7 @@ RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.17")
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.2.1")'
 
 RUN Rscript -e 'remotes::install_github("ryapric/loggit@8293ba322c86a80b81b07a81e1ae4f9a64b395a7")'
+RUN Rscript -e 'remotes::install_version("cpp11", version = "0.2.7", upgrade="never")'
 RUN Rscript -e 'remotes::install_version("lubridate",upgrade="never")'
 RUN Rscript -e 'remotes::install_version("shinythemes",upgrade="never")'
 RUN Rscript -e 'remotes::install_version("patchwork",upgrade="never")'

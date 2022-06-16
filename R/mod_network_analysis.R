@@ -617,12 +617,11 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       # spreads the grouped regulators
       if (sum(grepl("mean_", genes)) > 0) {
-        individuals <- genes[!grepl("means_", genes)]
+        individuals <- genes[!grepl("mean_", genes)]
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
-                           '-')
+                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2],'-'))
         }
         genes <- individuals
       }
@@ -642,12 +641,12 @@ mod_network_analysis_server <- function(input, output, session, r) {
       
       # spreads the grouped regulators
       if (sum(grepl("mean_", genes)) > 0) {
-        individuals <- genes[!grepl("means_", genes)]
+        individuals <- genes[!grepl("mean_", genes)]
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2]),
-                           '-')
+                           strsplit(x = stringr::str_split_fixed(group, "_", 2)[, 2], 
+                                    split = '-'))
         }
         genes <- individuals
       }
@@ -804,11 +803,6 @@ mod_network_analysis_server <- function(input, output, session, r) {
   })
   
   output$go_results <- shiny::renderUI({
-    if (r$organism == "Other")
-      shiny::h4("GO analysis is only supported for Arabidopsis and human (for now!)")
-    
-    shiny::req(r$organism != "Other")
-    
     shiny::req(r_mod$go)
     if (nrow(r_mod$go) == 0) {
       shinyalert::shinyalert(

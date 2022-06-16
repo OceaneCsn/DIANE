@@ -256,7 +256,6 @@ mod_import_data_ui <- function(id) {
     shiny::br(),
     shiny::hr(),
     DT::dataTableOutput(ns("raw_data_preview"))
-    
   )
 }
 
@@ -466,12 +465,12 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (r$splicing_aware) {
       numberColor = "blue"
-      number = "Alternatifve splicing aware"
+      number = "Alternative splicing aware"
       header = "gene identifiers"
     }
     else{
       numberColor = "blue"
-      number = "No alternatifve splicing information"
+      number = "No alternative splicing information"
       header = "in gene identifiers"
     }
     shinydashboardPlus::descriptionBlock(
@@ -656,11 +655,18 @@ mod_import_data_server <- function(input, output, session, r) {
         
         if (!'label' %in% colnames(d) &
             !'description' %in% colnames(d)) {
-          stop("There should be a label or description field in the
+          stop("There should be a label and description field in the
                annotation file")
         }
+        
+        if (r$splicing_aware) {
+          ids <- get_locus(rownames(r$raw_counts))
+        }
+        else{
+          ids <- rownames(r$raw_counts)
+        }
         # takes as rownames only the genes present in the expression file
-        d <- d[d$Gene %in% rownames(r$raw_counts), ]
+        d <- d[d$Gene %in% ids, ]
         
         # handles the case where genes are duplicated, and pastes
         # the annotations for the same genes in one row

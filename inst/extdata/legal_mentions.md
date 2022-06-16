@@ -59,3 +59,24 @@ Bât. 7 -- 2 place Pierre Viala
 All data submitted to DIANE for analysis will remain confidential as it is not stored on the server side.
 
 DIANE doesn't collect any private information on users. It only makes use of technical cookies as well as anonymous usage data.
+
+
+------------------------------------------------------------------------
+
+## License
+
+
+Copyright (C) 2020 Oceane Cassan
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

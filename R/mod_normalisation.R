@@ -405,7 +405,8 @@ mod_normalisation_server <- function(input, output, session, r) {
       paste("normalized_counts.RData")
     },
     content = function(file) {
-      save(round(r$normalized_counts, 2), file = file)
+      tosave <- round(r$normalized_counts, 2)
+      save(tosave, file = file)
     }
   )
   
