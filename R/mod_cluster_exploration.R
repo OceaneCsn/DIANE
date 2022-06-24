@@ -70,18 +70,21 @@ mod_cluster_exploration_ui <- function(id) {
           
           
           col_4(
-            shinyWidgets::actionBttn(
-              ns("go_enrich_btn"),
-              label = "Start GO enrichment analysis",
-              color = "success",
-              style = 'bordered'
-            ),
             shiny::selectInput(
+              # shinyWidgets::pickerInput(
               ns("go_list_choice"),
               label = "GO background",
               choices = c("Whole dataset" = TRUE,"Only DEG" = FALSE),
-              selected = "Other"
+              selected = "Whole dataset"
+              # , width = "fit"
+            ),
+            shinyWidgets::actionBttn(
+              ns("go_enrich_btn"),
+              label = "Start GO enrichment analysis", size = "sm",
+              color = "success",
+              style = 'material-flat'
             )
+
           ),
           
           col_4(
