@@ -69,15 +69,19 @@ mod_cluster_exploration_ui <- function(id) {
           title = "Gene Ontologies enrichment",
           
           
-          col_4(
-            shiny::selectInput(
-              # shinyWidgets::pickerInput(
-              ns("go_list_choice"),
-              label = "GO background",
-              choices = c("Whole dataset" = TRUE,"Only DEG" = FALSE),
-              selected = "Whole dataset"
-              # , width = "fit"
-            ),
+          col_12(
+            shiny::div(style="text-align: center;",
+                       shinyWidgets::radioGroupButtons(
+                         ns("go_list_choice"),
+                         choices = c("Whole genome" = TRUE, "Input differentially expressed genes" = FALSE),
+                         label = "GO Background",
+                         selected = TRUE,
+                         justified = TRUE,
+                         direction = "horizontal",
+                         checkIcon = list(yes = icon("ok",
+                                                     lib = "glyphicon"))
+                       ))
+          ),
             shinyWidgets::actionBttn(
               ns("go_enrich_btn"),
               label = "Start GO enrichment analysis", size = "sm",
@@ -440,7 +444,6 @@ mod_cluster_exploration_server <-
           intersect(rownames(r$normalized_counts), GOs[, 1])
         
         ###Select only clustered genes if the user asks to.
-        ###FIXME : if the user input a GO list at the TX lvl, this will not work
         if(input$go_list_choice == FALSE){
           universe = universe[universe %in% names(membership())]
         }
