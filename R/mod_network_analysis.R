@@ -110,6 +110,17 @@ mod_network_analysis_ui <- function(id) {
         ),
         shiny::tabPanel(
           title = "Modules GO enrichment",
+          col_12(
+            shinyWidgets::radioGroupButtons(
+              ns("go_list_choice"),
+              choices = c("Whole genome", "Only input genes"),
+              selected = "Whole genome",
+              justified = TRUE,
+              direction = "horizontal",
+              checkIcon = list(yes = icon("ok",
+                                          lib = "glyphicon"))
+            )
+          ),
           col_4(
             shinyWidgets::actionBttn(
               ns("go_enrich_btn"),
@@ -648,10 +659,17 @@ mod_network_analysis_server <- function(input, output, session, r) {
                            strsplit(x = stringr::str_split_fixed(group, "_", 2)[, 2], 
                                     split = '-'))
         }
-        genes <- individuals
+          genes <- individuals
       }
       
-      background <- rownames(r$normalized_counts)
+      ###GO background choice.
+      if(input$go_list_choice == "Whole genome"){
+        background <- rownames(r$normalized_counts)
+      } else {
+        background <- r$grouped_genes
+        unmean <- unlist(strsplit(stringr::str_remove(background[grepl("^mean_", background)], "^mean_"), "-"))
+        background <- c(background[!grepl("^mean_", background)], unmean)
+      }
       
       if (r$splicing_aware) {
         genes <- get_locus(genes)
