@@ -111,15 +111,17 @@ mod_network_analysis_ui <- function(id) {
         shiny::tabPanel(
           title = "Modules GO enrichment",
           col_12(
-            shinyWidgets::radioGroupButtons(
-              ns("go_list_choice"),
-              choices = c("Whole genome", "Only input genes"),
-              selected = "Whole genome",
-              justified = TRUE,
-              direction = "horizontal",
-              checkIcon = list(yes = icon("ok",
-                                          lib = "glyphicon"))
-            )
+            shiny::div(style="text-align: center;",
+                       shinyWidgets::radioGroupButtons(
+                         ns("go_list_choice"),
+                         choices = c("Whole genome", "Only input genes"),
+                         label = "GO Background",
+                         selected = "Whole genome",
+                         justified = TRUE,
+                         direction = "horizontal",
+                         checkIcon = list(yes = icon("ok",
+                                                     lib = "glyphicon"))
+                       ))
           ),
           col_4(
             shinyWidgets::actionBttn(
