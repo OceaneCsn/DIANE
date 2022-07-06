@@ -632,7 +632,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2],'-'))
+                           strsplit(stringr::str_split_fixed(group, "_", 2)[, 2],'-')[[1]])
         }
         genes <- individuals
       }
@@ -656,8 +656,8 @@ mod_network_analysis_server <- function(input, output, session, r) {
         groups <- setdiff(genes, individuals)
         for (group in groups) {
           individuals <- c(individuals,
-                           strsplit(x = stringr::str_split_fixed(group, "_", 2)[, 2], 
-                                    split = '-'))
+                           strsplit(stringr::str_split_fixed(
+                             group, "_", 2)[, 2],'-')[[1]])
         }
           genes <- individuals
       }
