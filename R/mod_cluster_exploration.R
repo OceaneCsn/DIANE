@@ -82,6 +82,8 @@ mod_cluster_exploration_ui <- function(id) {
                                                      lib = "glyphicon"))
                        ))
           ),
+          div(
+          col_4(
             shinyWidgets::actionBttn(
               ns("go_enrich_btn"),
               label = "Start GO enrichment analysis", size = "sm",
@@ -116,7 +118,7 @@ mod_cluster_exploration_ui <- function(id) {
               direction = "vertical",
               checkIcon = list(yes = icon("ok",
                                           lib = "glyphicon"))
-            ),
+            )),
             shiny::uiOutput(ns("max_go_choice"))
           ),
           shiny::uiOutput(ns("custom_data_go")),
