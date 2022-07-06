@@ -114,9 +114,9 @@ mod_network_analysis_ui <- function(id) {
             shiny::div(style="text-align: center;",
                        shinyWidgets::radioGroupButtons(
                          ns("go_list_choice"),
-                         choices = c("Whole genome", "Only input genes"),
+                         choices = c("Whole genome" = TRUE, "Genes used for network inference" = FALSE),
                          label = "GO Background",
-                         selected = "Whole genome",
+                         selected = TRUE,
                          justified = TRUE,
                          direction = "horizontal",
                          checkIcon = list(yes = icon("ok",
@@ -639,7 +639,14 @@ mod_network_analysis_server <- function(input, output, session, r) {
         genes <- individuals
       }
       
-      universe <- intersect(rownames(r$normalized_counts), GOs[, 1])
+      ###GO background choice for user custom GO input.
+      if(input$go_list_choice == TRUE){
+        universe <- intersect(rownames(r$normalized_counts), GOs[, 1])
+      } else {
+        universe <- r$grouped_genes
+        unmean <- unlist(strsplit(stringr::str_remove(universe[grepl("^mean_", universe)], "^mean_"), "-"))
+        universe <- c(universe[!grepl("^mean_", universe)], unmean)
+      }
       
       r_mod$go <-
         enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
@@ -665,7 +672,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
       }
       
       ###GO background choice.
-      if(input$go_list_choice == "Whole genome"){
+      if(input$go_list_choice == TRUE){
         background <- rownames(r$normalized_counts)
       } else {
         background <- r$grouped_genes
