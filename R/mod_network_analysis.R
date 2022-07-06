@@ -832,6 +832,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
   output$go_results <- shiny::renderUI({
     shiny::req(r_mod$go)
     if (nrow(r_mod$go) == 0) {
+      r_mod$go <- NULL
       shinyalert::shinyalert(
         "No enriched GO terms were found",
         "It can happen if input gene list is not big enough",
