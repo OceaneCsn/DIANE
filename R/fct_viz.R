@@ -59,6 +59,7 @@ draw_heatmap <-
       color = grDevices::colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "YlGnBu"))(100),
       annotation_col = samples,
       show_rownames = show_rownames,
+      annotation_names_col = FALSE, 
       main = title,
       fontsize = 17
     )

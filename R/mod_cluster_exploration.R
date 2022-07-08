@@ -69,13 +69,28 @@ mod_cluster_exploration_ui <- function(id) {
           title = "Gene Ontologies enrichment",
           
           
+          col_12(
+            shiny::div(style="text-align: center;",
+                       shinyWidgets::radioGroupButtons(
+                         ns("go_list_choice"),
+                         choices = c("Whole genome" = TRUE, "Input differentially expressed genes" = FALSE),
+                         label = "GO Background",
+                         selected = TRUE,
+                         justified = TRUE,
+                         direction = "horizontal",
+                         checkIcon = list(yes = icon("ok",
+                                                     lib = "glyphicon"))
+                       ))
+          ),
+          div(
           col_4(
             shinyWidgets::actionBttn(
               ns("go_enrich_btn"),
-              label = "Start GO enrichment analysis",
+              label = "Start GO enrichment analysis", size = "sm",
               color = "success",
-              style = 'bordered'
+              style = 'material-flat'
             )
+
           ),
           
           col_4(
@@ -103,7 +118,7 @@ mod_cluster_exploration_ui <- function(id) {
               direction = "vertical",
               checkIcon = list(yes = icon("ok",
                                           lib = "glyphicon"))
-            ),
+            )),
             shiny::uiOutput(ns("max_go_choice"))
           ),
           shiny::uiOutput(ns("custom_data_go")),
@@ -430,6 +445,11 @@ mod_cluster_exploration_server <-
         universe <-
           intersect(rownames(r$normalized_counts), GOs[, 1])
         
+        ###Select only clustered genes if the user asks to.
+        if(input$go_list_choice == FALSE){
+          universe = universe[universe %in% names(membership())]
+        }
+        
         r_clust$go <- enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
         
       } else{
@@ -437,11 +457,15 @@ mod_cluster_exploration_server <-
                                       cluster = input$cluster_to_explore)
         
         background <- rownames(r$normalized_counts)
-        
+        if(input$go_list_choice == FALSE){ ###Take only clusterd genes if asked.
+          background <- background[background %in% names(membership())]
+        }
+
         if (r$splicing_aware) {
           genes <- get_locus(genes)
           background <- get_locus(background)
         }
+        
         
         if (r$organism == "Lupinus albus") {
           GOs <- DIANE:::lupine$go_list
@@ -497,10 +521,10 @@ mod_cluster_exploration_server <-
           
           # TODO add check if it is entrez with regular expression here
           shiny::req(length(genes) > 0, length(background) > 0)
-          
+
           r_clust$go <-
-            enrich_go(genes,
-                      background,
+            enrich_go(genes = genes,
+                      background = background,
                       org = org,
                       GO_type = input$go_type)
           

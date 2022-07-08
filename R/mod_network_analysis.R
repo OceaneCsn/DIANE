@@ -110,6 +110,19 @@ mod_network_analysis_ui <- function(id) {
         ),
         shiny::tabPanel(
           title = "Modules GO enrichment",
+          col_12(
+            shiny::div(style="text-align: center;",
+                       shinyWidgets::radioGroupButtons(
+                         ns("go_list_choice"),
+                         choices = c("Whole genome" = TRUE, "Genes used for network inference" = FALSE),
+                         label = "GO Background",
+                         selected = TRUE,
+                         justified = TRUE,
+                         direction = "horizontal",
+                         checkIcon = list(yes = icon("ok",
+                                                     lib = "glyphicon"))
+                       ))
+          ),
           col_4(
             shinyWidgets::actionBttn(
               ns("go_enrich_btn"),
@@ -626,7 +639,14 @@ mod_network_analysis_server <- function(input, output, session, r) {
         genes <- individuals
       }
       
-      universe <- intersect(rownames(r$normalized_counts), GOs[, 1])
+      ###GO background choice for user custom GO input.
+      if(input$go_list_choice == TRUE){
+        universe <- intersect(rownames(r$normalized_counts), GOs[, 1])
+      } else {
+        universe <- r$grouped_genes
+        unmean <- unlist(strsplit(stringr::str_remove(universe[grepl("^mean_", universe)], "^mean_"), "-"))
+        universe <- c(universe[!grepl("^mean_", universe)], unmean)
+      }
       
       r_mod$go <-
         enrich_go_custom(genes, universe, GOs, GO_type = input$go_type)
@@ -648,10 +668,17 @@ mod_network_analysis_server <- function(input, output, session, r) {
                            strsplit(stringr::str_split_fixed(
                              group, "_", 2)[, 2],'-')[[1]])
         }
-        genes <- individuals
+          genes <- individuals
       }
       
-      background <- rownames(r$normalized_counts)
+      ###GO background choice.
+      if(input$go_list_choice == TRUE){
+        background <- rownames(r$normalized_counts)
+      } else {
+        background <- r$grouped_genes
+        unmean <- unlist(strsplit(stringr::str_remove(background[grepl("^mean_", background)], "^mean_"), "-"))
+        background <- c(background[!grepl("^mean_", background)], unmean)
+      }
       
       if (r$splicing_aware) {
         genes <- get_locus(genes)
@@ -805,6 +832,7 @@ mod_network_analysis_server <- function(input, output, session, r) {
   output$go_results <- shiny::renderUI({
     shiny::req(r_mod$go)
     if (nrow(r_mod$go) == 0) {
+      r_mod$go <- NULL
       shinyalert::shinyalert(
         "No enriched GO terms were found",
         "It can happen if input gene list is not big enough",
