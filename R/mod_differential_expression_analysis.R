@@ -480,12 +480,12 @@ mod_differential_expression_analysis_server <-
       
       ###Give specific names to multiple conditions dEA
       if(length(input$reference)>1){
-        r_dea$ref <- paste0("(", paste0(input$reference, collapse = "+"), ")")
+        r_dea$ref <- paste0("(", paste0(input$reference, collapse = " + "), ")")
       } else {
         r_dea$ref <- input$reference
       }
       if(length(input$perturbation)>1){
-        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = "+"), ")")
+        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = " + "), ")")
       } else {
         r_dea$trt <- input$perturbation
       }

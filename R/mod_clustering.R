@@ -310,9 +310,12 @@ mod_clustering_server <- function(input, output, session, r) {
     
     shiny::req(input$input_deg_genes)
 
-    genes_conditions <- unique(unlist(stringr::str_extract_all(
-      input$input_deg_genes, pattern = "[\\w-_]+"))
-    )
+    genes_conditions <- unique(unlist(
+      stringr::str_extract_all(
+        unlist(stringr::str_extract_all(input$input_deg_genes, pattern = "[^()+ ]+")),
+        pattern = "[^\\s\\+]+"
+      )
+    ))
     
     if (sum(genes_conditions %in% input$input_conditions) < length(genes_conditions)) {
       shinyalert::shinyalert(
