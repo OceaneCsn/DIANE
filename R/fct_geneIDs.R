@@ -88,7 +88,10 @@ get_locus <- function(gene_ids, unique = TRUE){
 #' organism = "Homo sapiens")
 check_IDs <- function(ids, organism){
   if(organism == "Arabidopsis thaliana")
-    pattern = "^AT[[:alnum:]]G[[:digit:]]{5}"
+    pattern = "^AT[[:alnum:]](G|T)[[:digit:]]{5}"
+    # to deny transposable elements : 
+    # "^AT[[:alnum:]]G[[:digit:]]{5}"
+    
   
   if(organism == "Homo sapiens")
     pattern = "^ENSG[[:digit:]]{11}"
