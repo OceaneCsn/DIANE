@@ -10,7 +10,7 @@
 mod_network_inference_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyalert::useShinyalert(),
+    #shinyalert::useShinyalert(),
     
     shinybusy::add_busy_spinner(
       spin = "self-building-square",

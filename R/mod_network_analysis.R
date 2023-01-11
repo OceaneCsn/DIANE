@@ -14,7 +14,7 @@ mod_network_analysis_ui <- function(id) {
     
     shiny::hr(),
     
-    shinyalert::useShinyalert(),
+    #shinyalert::useShinyalert(),
     
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
