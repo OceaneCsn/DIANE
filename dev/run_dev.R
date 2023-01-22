@@ -9,4 +9,4 @@ rm(list = ls(all.names = TRUE))
 golem::document_and_reload()
 
 # Run the application
-run_app(host = "0.0.0.0")
+run_app()
