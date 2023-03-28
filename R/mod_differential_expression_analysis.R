@@ -127,11 +127,11 @@ mod_differential_expression_analysis_ui <- function(id) {
           title = "Pvalues histogram",
           shiny::plotOutput(ns("pvalue_hist"), height = "450px"),
           shiny::helpText(
-            "This raw pvalue histogram can be use as a diagnostic
-                          tool. The density of pvalue near 0 should be very high,
-                          and uniformally distributed (like a plateau) on
-                          the rest of the plot. You can dynamically change the
-                          fold change cutoff, and should observe the plot with a cutoff
+            "This raw pvalue histogram can be used as a diagnostic
+                          tool. The density of pvalue shoud be evenly distributed
+                          along the plot, except for a peak near 0.
+                          You can dynamically change thefold change cutoff,
+                          and should observe the plot with a cutoff
                           of 0 to look at the whole output from the differential
                           expression analysis."
           )
@@ -341,9 +341,9 @@ mod_differential_expression_analysis_server <-
             label = "Multiple condition differential expression information",
             "To perform a multi-factorial differential expression analysis, the
             mean of the reference conditions is compared to the mean of the perturbation
-            conditions. the tool perform some other complex operations to compute 
-            the fold change, but this is the key idea. For your input, an intuitive way
-            to visualize the comparison could be :",
+            conditions. The fold change is computed using a geometric mean of 
+            the different conditions, which may be shrink a bit by EdgeR internal 
+            computation.",
             withMathJax(comparison_equation),
             circle = TRUE,
             status = "success",
@@ -1056,8 +1056,9 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$conditions)
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
+      browser()
       genes_conditions <- unique(unlist(stringr::str_extract_all( ##Catch probably any condition name.
-        paste(r_dea$ref, r_dea$trt), pattern = "[\\w-_]+"))
+        paste(r_dea$ref, r_dea$trt), pattern = "[^()+ ]+"))
       )
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("conds_heatmap"),

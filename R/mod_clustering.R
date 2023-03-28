@@ -310,6 +310,7 @@ mod_clustering_server <- function(input, output, session, r) {
     
     shiny::req(input$input_deg_genes)
 
+    ###Extract all conditions names from input comparison. Has been build to handle multiple comparison.
     genes_conditions <- unique(unlist(
       stringr::str_extract_all(
         unlist(stringr::str_extract_all(input$input_deg_genes, pattern = "[^()+ ]+")),
