@@ -55,7 +55,7 @@ mod_differential_expression_analysis_ui <- function(id) {
         
         shiny::uiOutput(ns("condition_choices")),
         
-        shiny::htmlOutput(ns("condition_choices_visualisation_2")),
+        shiny::htmlOutput(ns("condition_choices_visualisation")),
         
         shiny::numericInput(
           ns("dea_fdr"),
@@ -285,7 +285,7 @@ mod_differential_expression_analysis_server <-
       )
     })
     
-    output$condition_choices_visualisation_2 <- shiny::renderText({
+    output$condition_choices_visualisation <- shiny::renderText({
       # req(input$reference, input$perturbation)
       if(is.null(input$reference)){
         reference_text = "<span style=\"color: #A52014\">NOTHING SELECTED</span>"
@@ -341,9 +341,9 @@ mod_differential_expression_analysis_server <-
             label = "Multiple condition differential expression information",
             "To perform a multi-factorial differential expression analysis, the
             mean of the reference conditions is compared to the mean of the perturbation
-            conditions. The fold change is computed using a geometric mean of 
-            the different conditions, which may be shrink a bit by EdgeR internal 
-            computation.",
+            conditions. The fold change is computed using mainly a geometric mean of 
+            the different conditions, which may be shrink by EdgeR internal 
+            computation process.",
             withMathJax(comparison_equation),
             circle = TRUE,
             status = "success",
