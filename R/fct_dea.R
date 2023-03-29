@@ -59,7 +59,8 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   return(fit)
 }
 
-#' Estimates Differentially Expression Genes. Legacy version.
+#' Estimates Differentially Expression Genes. Legacy version. This function should
+#' no longer be used, unless for reproductibility purpose.
 #'
 #' @description Given a glmFit model, performs log ratio tests using edgeR 
 #' function glmLRT and
@@ -256,8 +257,8 @@ draw_venn <- function(gene_list){
 #'
 #'
 #' @param experiment_design A vector containing all the conditions of a studied dataset.
-#' @param reference_point All the points in experiment_design to consider as reference
-#' @param comparison_point All the points in experiment_design to consider as comparison points.
+#' @param reference_point All the conditions in experiment_design to consider as reference
+#' @param comparison_point All the conditions in experiment_design to consider as comparison points.
 #'
 #' @noRd
 #' @return weighted comparison vector
