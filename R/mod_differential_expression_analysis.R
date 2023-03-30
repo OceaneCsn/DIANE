@@ -211,15 +211,6 @@ mod_differential_expression_analysis_ui <- function(id) {
           shiny::plotOutput(ns("venn"), height = "700px"),
           shiny::uiOutput(ns("venn_spec_comp_choice_2")),
           shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
-        ),
-        
-        #   __________________________________________________________________________
-        #   Display fit                                                           ####
-        
-        shiny::tabPanel(
-          title = "Fit (advanced)",
-          shiny::helpText("Here you can look at informations about the fitted model (This text could be improved...)"),
-          shiny::verbatimTextOutput(ns("edgeR_fit"))
         )
       ) 
     )
@@ -1323,13 +1314,6 @@ mod_differential_expression_analysis_server <-
           plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
     })
-    
-    
-    output$edgeR_fit <- shiny::renderPrint({
-      req(r$fit)
-      print(r$fit)
-    })
-    
     
   }
 
