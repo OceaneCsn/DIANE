@@ -2,7 +2,7 @@
 
 ## Application presentation
 
-[DIANE](https://diane.bpmp.inrae.fr) is a R-Shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
+[DIANE](https://diane.ipsim.inrae.fr) is a R-Shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
 
 Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on **multifactorial expression data** using state of the art methods. It includes :
 
@@ -20,7 +20,7 @@ Given the popularity of combinatorial approaches in experimental biology, we des
 
 -   Demonstration on a published dataset, and other ready to explore datasets on several organisms
 
-All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <https://diane.bpmp.inrae.fr>.
+All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <https://diane.ipsim.inrae.fr>.
 
 <img src="man/figures/net.PNG" align="center" width="900"/>
 
@@ -99,6 +99,26 @@ Plus, in the following example, a session of DIANE will be allowed to use 16 CPU
     docker run -d --cpus 16 --user shiny --rm -p 8086:8086 -v /path/to/app/on/host/:/srv/shiny-server/ -v /path/to/logs/on/host/:/var/log/shiny-server/ diane
 
 You can check that the container is running with `docker ps`.
+
+------------------------------------------------------------------------
+
+## License
+
+
+Copyright (C) 2020 Oceane Cassan
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ------------------------------------------------------------------------
 

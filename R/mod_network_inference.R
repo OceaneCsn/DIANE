@@ -10,7 +10,7 @@
 mod_network_inference_ui <- function(id){
   ns <- NS(id)
   tagList(
-    shinyalert::useShinyalert(),
+    #shinyalert::useShinyalert(),
     
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
@@ -627,7 +627,6 @@ mod_network_inference_server <- function(input, output, session, r){
   shiny::observeEvent((input$launch_genie_btn), {
     shiny::req(r$normalized_counts, input$input_deg_genes_net, 
                r$regulators, r$DEGs, input_net(),input$input_conditions_net)
-    
     
     if(r$splicing_aware) {
       all_genes <- get_locus(r$DEGs[[input$input_deg_genes_net]])

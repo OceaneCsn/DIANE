@@ -8,7 +8,6 @@
 get_correlation <- function(pair, normalized.count) {
   tf1 <- stringr::str_split_fixed(pair, ' ', 2)[1]
   tf2 <- stringr::str_split_fixed(pair, ' ', 2)[2]
-  
   if (tf1 %in% rownames(normalized.count) &
       tf2 %in% rownames(normalized.count))
     return(cor(

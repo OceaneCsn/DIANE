@@ -12,7 +12,7 @@ mod_clustering_ui <- function(id) {
   tagList(
     shiny::h1("Expression based clustering"),
     shiny::hr(),
-    shinyalert::useShinyalert(),
+    #shinyalert::useShinyalert(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',

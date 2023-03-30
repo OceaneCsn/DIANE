@@ -14,7 +14,7 @@ We designed this tool to process, explore, and perform advanced statistical anal
 
 -   Machine learning based Gene regulatory network inference
 
-All of the features in DIANE are accessible via a single page shiny application that can be locally launched, or accessed online at <https://diane.bpmp.inrae.fr>.
+All of the features in DIANE are accessible via a single page shiny application that can be locally launched, or accessed online at [https://diane.ipsim.inrae.fr](https://diane.bpmp.inrae.fr){.uri}.
 
 The steps should be performed in the order of the different tabs. For instance, before running clustering or network inference, differential expression should be performed first. The figure above summarizes DIANE's main workflow.
 
@@ -60,6 +60,29 @@ library(DIANE)
 DIANE::run_app()
 ```
 
+------------------------------------------------------------------------
+
+## License
+
+
+Copyright (C) 2020 Oceane Cassan
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+---
+
 ## Deploy DIANE on your server
 
 We provide a [solution based on Docker and Shiny server](https://hub.docker.com/r/rocker/shiny) to deploy DIANE on any linux server, just as it is at <https://diane.bpmp.inrae.fr>. To do so, see the following command line instructions.
@@ -99,4 +122,4 @@ You can check that the container is running with `docker ps`.
 
 Authors : Océane Cassan, Antoine Martin, Sophie Lèbre
 
-Dev : Océane Cassan, PhD Student at BPMP (Plant Biology and Molecular Physiology) research unit, SUPAGRO Montpellier, with contributions from Alexandre Soriano.
+Dev : Océane Cassan, PhD Student at IPSIM (Institute for Plant Sciences in Montpellier) research unit, SUPAGRO Montpellier, with contributions from Alexandre Soriano.

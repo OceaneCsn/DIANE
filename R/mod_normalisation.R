@@ -271,6 +271,17 @@ mod_normalisation_server <- function(input, output, session, r) {
       r$tcc <- list(counts = r$normalized_counts)
     }
     
+    if(nrow(r$normalized_counts)==0){
+      r$normalized_counts <- NULL
+      shinyalert::shinyalert(
+        "Low-expression filtering error",
+        "The filtering threshold seems too high : no genes remaining. 
+        Please set another threshold to continue.",
+        type = "error"
+      )
+    }
+      
+    
     if(golem::get_golem_options("server_version"))
       loggit::loggit(custom_log_lvl = TRUE,
                    log_lvl = r$session_id,
@@ -405,7 +416,8 @@ mod_normalisation_server <- function(input, output, session, r) {
       paste("normalized_counts.RData")
     },
     content = function(file) {
-      save(round(r$normalized_counts, 2), file = file)
+      tosave <- round(r$normalized_counts, 2)
+      save(tosave, file = file)
     }
   )
   

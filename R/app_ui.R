@@ -119,7 +119,7 @@ app_ui <- function(request) {
           shinydashboard::menuItem(
             "Legal mentions",
             tabName = "legal_mentions",
-            icon = shiny::icon("info-circle")
+            icon = shiny::icon("info-circle",  lib = "font-awesome")
           ),
           shinydashboard::menuItem(
             "Software versions",

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">DIANE</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.4</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="Unreleased version">1.0.6</span>
       </span>
     </div>
 
@@ -60,10 +60,10 @@
       <a href="articles/DIANE_Input_data.html">Data upload</a>
     </li>
     <li>
-      <a href="articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
+      <a href="articles/DIANE_normalize.html">Normalization</a>
     </li>
     <li>
-      <a href="articles/DIANE_normalize.html">Normalization</a>
+      <a href="articles/DIANE_Programming_Interface.html">DIANE Programming Interface</a>
     </li>
   </ul>
 </li>
@@ -94,7 +94,7 @@
 <div id="application-presentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#application-presentation" class="anchor"></a>Application presentation</h2>
-<p><a href="https://diane.bpmp.inrae.fr">DIANE</a> is a R-Shiny application for the analysis of high throughput gene expression data (<strong>RNA-Seq</strong>). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.</p>
+<p><a href="https://diane.ipsim.inrae.fr">DIANE</a> is a R-Shiny application for the analysis of high throughput gene expression data (<strong>RNA-Seq</strong>). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.</p>
 <p>Given the popularity of combinatorial approaches in experimental biology, we designed this tool to process, explore, and perform advanced statistical analysis on <strong>multifactorial expression data</strong> using state of the art methods. It includes :</p>
 <ul>
 <li><p>Raw count data pre-processing and normalization</p></li>
@@ -105,7 +105,7 @@
 <li><p>Session reporting and results to download at each step of the pipeline</p></li>
 <li><p>Demonstration on a published dataset, and other ready to explore datasets on several organisms</p></li>
 </ul>
-<p>All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <a href="https://diane.bpmp.inrae.fr" class="uri">https://diane.bpmp.inrae.fr</a>.</p>
+<p>All of the features in DIANE are accessible via a single page Shiny application that can be locally launched, or used online at <a href="https://diane.ipsim.inrae.fr" class="uri">https://diane.ipsim.inrae.fr</a>.</p>
 <p><img src="reference/figures/net.PNG" align="center" width="900"></p>
 <p>For users more familiar with R programming, all server-side functions in DIANE are exported so they can be called from R scripts. Those functions documentation can be found in the <a href="https://oceanecsn.github.io/DIANE/reference/index.html">Reference</a>, and are illustrated in the <a href="https://oceanecsn.github.io/DIANE/articles/DIANE_Programming_Interface.html">corresponding vignette</a></p>
 <p><strong>To cite DIANE in publications use:</strong></p>
@@ -125,7 +125,7 @@
 <a href="#use-diane-locally" class="anchor"></a>Use DIANE locally</h2>
 <p>DIANE relies on R &gt;= 4.0.1, available for all OS at <a href="https://cloud.r-project.org/" class="uri">https://cloud.r-project.org/</a>.</p>
 <p>Download and install DIANE in your R console as follows (you need the remotes package installed <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("remotes")</a></code>) :</p>
-<pre class="{.r}"><code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("OceaneCsn/DIANE")</a></code></pre>
+<pre class="{.r}"><code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("OceaneCsn/DIANE")</a></code></pre>
 <p>You can then launch the application :</p>
 <pre class="{.r}"><code><a href="https://github.com/OceaneCsn/DIANE">library(DIANE)
 DIANE::run_app()</a></code></pre>
@@ -152,6 +152,15 @@ DIANE::run_app()</a></code></pre>
 <p>Plus, in the following example, a session of DIANE will be allowed to use 16 CPU cores :</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>docker run <span class="sc">-</span>d <span class="sc">--</span>cpus <span class="dv">16</span> <span class="sc">--</span>user shiny <span class="sc">--</span>rm <span class="sc">-</span>p <span class="dv">8086</span><span class="sc">:</span><span class="dv">8086</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>app<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>srv<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> <span class="sc">-</span>v <span class="sc">/</span>path<span class="sc">/</span>to<span class="sc">/</span>logs<span class="sc">/</span>on<span class="sc">/</span>host<span class="sc">/</span><span class="er">:/</span>var<span class="sc">/</span>log<span class="sc">/</span>shiny<span class="sc">-</span>server<span class="sc">/</span> diane</span></code></pre></div>
 <p>You can check that the container is running with <code>docker ps</code>.</p>
+<hr>
+</div>
+<div id="license" class="section level2">
+<h2 class="hasAnchor">
+<a href="#license" class="anchor"></a>License</h2>
+<p>Copyright (C) 2020 Oceane Cassan</p>
+<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/" class="uri">http://www.gnu.org/licenses/</a>.</p>
 <hr>
 <p>Authors : Océane Cassan, Antoine Martin, Sophie Lèbre.</p>
 <p>Code contributions from Alexandre Soriano.</p>

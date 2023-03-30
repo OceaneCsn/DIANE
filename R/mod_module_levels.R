@@ -15,7 +15,7 @@ mod_module_levels_ui <- function(id){
     
     shiny::hr(),
     
-    shinyalert::useShinyalert(),
+    #shinyalert::useShinyalert(),
     
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
@@ -112,16 +112,16 @@ mod_module_levels_server <- function(input, output, session, r){
   
   output$expression_plot <- shiny::renderPlot({
     
-    shiny::req(r$normalized_counts, r$conditions, input$genes)
+    shiny::req(r$normalized_counts_pre_filter, r$conditions, input$genes)
     
     genes <- unlist(strsplit(input$genes, ','))
     shiny::req(length(genes) > 0)
     shiny::req(length(genes) < 10)
     
-    shiny::req(sum(genes %in% rownames(r$normalized_counts)) > 0)
+    shiny::req(sum(genes %in% rownames(r$normalized_counts_pre_filter)) > 0)
     
   
-  draw_expression_levels(as.data.frame(r$normalized_counts),
+  draw_expression_levels(as.data.frame(r$normalized_counts_pre_filter),
                            conds = input$input_conditions,
                            genes = genes, gene.name.size = 22)
   })

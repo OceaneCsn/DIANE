@@ -28,7 +28,7 @@ are_splice_variants <- function(gene_ids){
 aggregate_splice_variants <- function(data){
   if(are_splice_variants(rownames(data))){
     
-    data <- data.frame(data)
+    data <- data.frame(data, check.names = FALSE)
     
     locus <- stringr::str_replace_all(rownames(data), 
                                       pattern = "\\.[[:digit:]]+$", "")
@@ -88,7 +88,10 @@ get_locus <- function(gene_ids, unique = TRUE){
 #' organism = "Homo sapiens")
 check_IDs <- function(ids, organism){
   if(organism == "Arabidopsis thaliana")
-    pattern = "^AT[[:alnum:]]G[[:digit:]]{5}"
+    pattern = "^AT[[:alnum:]][GTE]{1,2}[[:digit:]]{5}"
+    # to deny transposable elements : 
+    # "^AT[[:alnum:]]G[[:digit:]]{5}"
+    
   
   if(organism == "Homo sapiens")
     pattern = "^ENSG[[:digit:]]{11}"

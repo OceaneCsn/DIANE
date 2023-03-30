@@ -12,7 +12,7 @@ mod_differential_expression_analysis_ui <- function(id) {
   tagList(
     shiny::h1("Differential expression analysis"),
     shiny::hr(),
-    shinyalert::useShinyalert(),
+    # shinyalert::useShinyalert(),
     shiny::withMathJax(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
@@ -299,30 +299,30 @@ mod_differential_expression_analysis_server <-
         comparison_type <- "Simple comparison"
       } else {
         comparison_equation <- paste0("$$",
-          "\\frac{",
-          ifelse(
-            length(input$perturbation) > 1,
-            paste0(
-              "\\frac{",
-              paste0(input$perturbation, collapse = "+"),
-              "}{",
-              length(input$perturbation),
-              "}"
-            ),
-            input$perturbation
-          ),
-          "}{", #Middle of the equation
-          ifelse(
-            length(input$reference) > 1,
-            paste0(
-              "\\frac{",
-              paste0(input$reference, collapse = "+"),
-              "}{",
-              length(input$reference),
-              "}"
-            ),
-            input$reference
-          ), "}\\!$$"
+                                      "\\frac{",
+                                      ifelse(
+                                        length(input$perturbation) > 1,
+                                        paste0(
+                                          "\\frac{",
+                                          paste0(input$perturbation, collapse = "+"),
+                                          "}{",
+                                          length(input$perturbation),
+                                          "}"
+                                        ),
+                                        input$perturbation
+                                      ),
+                                      "}{", #Middle of the equation
+                                      ifelse(
+                                        length(input$reference) > 1,
+                                        paste0(
+                                          "\\frac{",
+                                          paste0(input$reference, collapse = "+"),
+                                          "}{",
+                                          length(input$reference),
+                                          "}"
+                                        ),
+                                        input$reference
+                                      ), "}\\!$$"
         )
         
         comparison_type <- paste0(
@@ -728,19 +728,19 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
       table <- DT::datatable(r_dea$gene_table,
-                    selection = "single",
-                    option = list(scrollX = TRUE))
-        
-      table <- DT::formatSignif(table, 
-                         columns = c("logFC", "logCPM", "FDR"),
-                         digits = 4)
+                             selection = "single",
+                             option = list(scrollX = TRUE))
       
-        DT::formatStyle(table,
-          columns = c("Regulation"),
-          target = c("cell", "row"),
-          backgroundColor = DT::styleEqual(c("Up", "Down"), 
-                                           c("#72F02466", c("#FF000035"))),
-        )
+      table <- DT::formatSignif(table, 
+                                columns = c("logFC", "logCPM", "FDR"),
+                                digits = 4)
+      
+      DT::formatStyle(table,
+                      columns = c("Regulation"),
+                      target = c("cell", "row"),
+                      backgroundColor = DT::styleEqual(c("Up", "Down"), 
+                                                       c("#72F02466", c("#FF000035"))),
+      )
     })
     
     shiny::observeEvent(input$deg_table_rows_selected, {
@@ -782,7 +782,7 @@ mod_differential_expression_analysis_server <-
                                            lib = "glyphicon"))
       )
     })
-
+    
     
     output$venn_lists_choice_2 <- shiny::renderUI({
       shiny::req(length(r$DEGs) > 1)

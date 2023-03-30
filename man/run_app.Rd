@@ -7,6 +7,7 @@
 run_app(
   server_version = FALSE,
   seed = round(runif(n = 1, min = 0, max = 2^7)),
+  host = "127.0.0.1",
   ...
 )
 }
@@ -16,6 +17,9 @@ else (default), FALSE}
 
 \item{seed}{seed for random state to ensure reproducible runs
 along DIANE's pipeline}
+
+\item{host}{IP address of the app 
+(e.g "127.0.0.1" for localhost, "0.0.0.0", ...)}
 
 \item{...}{A series of options to be used inside the app.}
 }

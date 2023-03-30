@@ -1,6 +1,6 @@
 Package: DIANE
 Title: DIANE
-Version: 1.0.4
+Version: 1.0.6
 Authors@R: person('Oceane', 'Cassan', email = 'oceane.cassan@cnrs.fr', role = c('cre', 'aut'))
 Description: Dashboard for the Inference and Analysis of Network from Expression data. This package is particularly well suited for combinatoric design such as perturbation experiments.
 License: GPL-3
@@ -45,7 +45,7 @@ Imports:
     ggridges,
     pkgload,
     randomForest,
-    rfPermute,
+    rfPermute (>= 2.5.0),
     knitr,
     rmarkdown,
     tictoc,
