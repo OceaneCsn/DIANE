@@ -10,8 +10,7 @@ network_inference(
   regressors,
   targets,
   nTrees = 1000,
-  nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1,
-    1)),
+  nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1, 1)),
   verbose = TRUE,
   importance_metric = "node_purity"
 )

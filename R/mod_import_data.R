@@ -468,12 +468,12 @@ mod_import_data_server <- function(input, output, session, r) {
     
     if (r$splicing_aware) {
       numberColor = "blue"
-      number = "Alternatifve splicing aware"
+      number = "Alternative splicing aware"
       header = "gene identifiers"
     }
     else{
       numberColor = "blue"
-      number = "No alternatifve splicing information"
+      number = "No Alternative splicing information"
       header = "in gene identifiers"
     }
     shinydashboardPlus::descriptionBlock(
@@ -658,7 +658,7 @@ mod_import_data_server <- function(input, output, session, r) {
         
         if (!'label' %in% colnames(d) &
             !'description' %in% colnames(d)) {
-          stop("There should be a label or description field in the
+          stop("There should be a label and description field in the
                annotation file")
         }
         # takes as rownames only the genes present in the expression file

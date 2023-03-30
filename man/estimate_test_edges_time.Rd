@@ -12,8 +12,7 @@ estimate_test_edges_time(
   density = 0.02,
   nTrees = 1000,
   nShuffle = 1000,
-  nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1,
-    1)),
+  nCores = ifelse(is.na(parallel::detectCores()), 1, max(parallel::detectCores() - 1, 1)),
   verbose = TRUE
 )
 }
