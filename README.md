@@ -1,5 +1,9 @@
 # Dashboard for the Inference and Analysis of Networks from Expression data <img src="man/figures/hex-DIANE.png" align="right" width="120"/>
 
+>**Important notice. DIANE is now being maintained and further developed by Alexandre Soriano. The most up to date version of DIANE, complying with new versions of R and other packages, is consequently on his fork : https://github.com/Alexandre-So/DIANE. Please report any bug or suggestion via github or at alexandre.soriano\@cirad.fr. If you want to discuss network inference, its statistical aspects or modelling assumptions, you can also contact oceane.cassan\@lirmm.fr**
+
+
+
 ## Application presentation
 
 [DIANE](https://diane.ipsim.inrae.fr) is a R-Shiny application for the analysis of high throughput gene expression data (**RNA-Seq**). Its function is to extract important regulatory pathways involved in the response to environmental changes, or any perturbation inducing genomic modifications.
