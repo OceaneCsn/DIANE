@@ -59,7 +59,8 @@ estimateDispersion <- function(tcc, conditions = NULL) {
   return(fit)
 }
 
-#' Estimates Differentially Expression Genes
+#' Estimates Differentially Expression Genes. Legacy version. This function should
+#' no longer be used, unless for reproductibility purpose.
 #'
 #' @description Given a glmFit model, performs log ratio tests using edgeR 
 #' function glmLRT and
@@ -91,7 +92,7 @@ estimateDispersion <- function(tcc, conditions = NULL) {
 #' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
 #' DEGs <- topTags$table
 #' head(DEGs)
-estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
+estimateDEGs_legacy <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   contrast <-
     ifelse(colnames(fit$design) == reference,
            -1,
@@ -102,10 +103,84 @@ estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
   return(top)
 }
 
+#' Estimates Differentially Expression Genes
+#'
+#' @description Given a glmFit model, performs log ratio tests using edgeR 
+#' function glmLRT and
+#' returns the genes that are differentially expressed
+#' between the reference and perturbation conditions.
+#' log ratios are expressed as log(perturbation/reference)
+#'
+#' @param fit edgeR glmFit
+#' @param reference condition (or a vector of conditions) being considered as the reference for differential analysis.
+#' It should corresponds to a condition name, e.g. the string before the underscore and 
+#' replicate number in your sample names.
+#' @param perturbation condition (or a vector of conditions) to compare to the reference for differential analysis.
+#' It should corresponds to a condition name, e.g. the string before the underscore and 
+#' replicate number in your sample names.
+#' @param p.value numeric cutoff value for adjusted p-values. Only tags with adjusted p-values equal or 
+#' lower than specified are returned
+#' @param lfc minimal absolute log fold change required for a gene to be considered as 
+#' differentially expressed.
+#' @return topTags object, which table element contains DEGs dataframe.
+#' @export
+#' @examples
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, 
+#' abiotic_stresses$conditions, iteration = FALSE)
+#' threshold = 10*length(abiotic_stresses$conditions)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, threshold)
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, 
+#' conditions = abiotic_stresses$conditions)
+#' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 0.01)
+#' DEGs <- topTags$table
+#' head(DEGs)
+#' 
+#' # For multiple conditions
+#' topTags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = c("H","M","S"), p.value = 0.01)
+#' DEGs <- topTags$table
+#' head(DEGs)
+estimateDEGs <- function(fit, reference, perturbation, p.value = 1, lfc = 0) {
+  contrast <-  create_versus_design(colnames(fit$design), reference, perturbation)
+  lrt <- edgeR::glmLRT(fit, contrast = contrast)
+  top <- edgeR::topTags(lrt, p.value = 1, n = Inf)
+  top$table <- top$table[abs(top$table$logFC) > lfc & top$table$FDR <= p.value,]
+  return(top)
+}
+
+#' Draw raw pvalue histogram
+#'
+#' @param tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
+#' used with \code{p.value = 1}
+#' @param bins number of bar to display. Default is 100.
+#' @param lfc absolute log fold change threshold for differentially expressed genes, default is 0.
+#'
+#' @import ggplot2
+#' 
+#' @return ggplot object corresponding to raw pvalue histogram.
+#' @examples
+#' data("abiotic_stresses")
+#' tcc_object <- DIANE::normalize(abiotic_stresses$raw_counts, abiotic_stresses$conditions, 
+#' iteration = FALSE)
+#' tcc_object <- DIANE::filter_low_counts(tcc_object, 10*length(abiotic_stresses$conditions))
+#' fit <- DIANE::estimateDispersion(tcc = tcc_object, conditions = abiotic_stresses$conditions)
+#' tags <- DIANE::estimateDEGs(fit, reference = "C", perturbation = "H", p.value = 1)
+#' DIANE::draw_raw_pvalue_histogram(tags, bins=100, lfc = 0)
+draw_raw_pvalue_histogram <- function(tags, bins=100, lfc = 0){
+  
+  table <- tags$table[abs(tags$table$logFC) >= lfc,]
+  
+  diag_plot <- ggplot2::ggplot(data=table, ggplot2::aes(x=PValue)) + ggplot2::theme_classic() +
+    ggplot2::geom_histogram(breaks=seq(0, 1, by=1/bins), 
+                            fill="#92D9A2", alpha = 1) +
+    ggplot2::labs(title="Histogram of raw pvalues", x="Pvalue", y="Count") + 
+    ggplot2::xlim(c(0,1))
+  return(diag_plot)
+}
 
 #' MA or volcano plot for differential expression results
 #'
-#' @param tags tags returned bu estimateDEGs, function, that is to say topTags from edgeR, 
+#' @param tags tags returned by estimateDEGs, function, that is to say topTags from edgeR, 
 #' used with \code{p.value = 1}
 #' @param fdr pvalue for DEGs detection
 #' @param MA TRUE : MA plot (LogFC depending on average log expression), or else "Volcano" for FDR depending on logFC.
@@ -170,6 +245,51 @@ draw_DEGs <- function(tags,
 draw_venn <- function(gene_list){
   if (length(gene_list) < 2 | length(gene_list)>4)
     stop("The number of gene lists must be between 2 and 4 to be shown in Venn diagram")
-  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888")
+  venn <- ggVennDiagram::ggVennDiagram(gene_list, color = "#888888", edge_size = 0, label_percent_digit = 2, abel_txtWidth = 40)
   suppressMessages(venn + ggplot2::scale_fill_gradient(low = "#EEEEEE", high = "#61BF45"))
+}
+
+#' create_versus_design
+#' 
+#' @description Given a vector containing an experiment design and two other vectors
+#' containg reference and comparison condition, return a design vector for 
+#' equilibrate comparison in edgeR
+#'
+#'
+#' @param experiment_design A vector containing all the conditions of a studied dataset.
+#' @param reference_point All the conditions in experiment_design to consider as reference
+#' @param comparison_point All the conditions in experiment_design to consider as comparison points.
+#'
+#' @noRd
+#' @return weighted comparison vector
+#'
+#' @examples create_versus_design(c("reference","condition1","condition2","condition3"), c("condition1", "condition2", "condition3"), "reference")
+create_versus_design <- function(experiment_design, reference_point, comparison_point){
+  experiment_design = unique(experiment_design) ###We just need the name of the different expriment design. We dont care about the replicates or so.
+  reference_point = unique(reference_point)
+  comparison_point = unique(comparison_point)
+  
+  ###Check that all the specified points are in the experiment design
+  if (!all(c(reference_point, comparison_point) %in% experiment_design)) {
+    stop(
+      paste0(
+        c(reference_point, comparison_point)[!c(reference_point, comparison_point) %in% experiment_design],
+        "not in design (experiment_design). Please check your input condition list."
+      )
+    )
+  }
+  ###Check that there is no common reference and perturbation.
+  if (any(reference_point %in% comparison_point) | any(comparison_point %in% reference_point)){
+    stop("A condition cannot be used as reference and comparison point. Please check your comparison vector.")
+  }
+  
+  comparison_matrix=rep(0, length(experiment_design))
+  
+  weight_comparison=1/length(comparison_point)
+  weight_reference=1/length(reference_point)
+    
+  comparison_matrix[which(experiment_design %in% reference_point)] <- -weight_reference
+  comparison_matrix[which(experiment_design %in% comparison_point)] <- weight_comparison
+  
+  return(comparison_matrix)
 }

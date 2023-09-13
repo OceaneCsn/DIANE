@@ -154,7 +154,7 @@ draw_PCA <- function(data) {
       for PCA to be interesting. It should have at least 4 samples."
     )
   }
-
+  
   
   nf = 4
   
@@ -295,7 +295,7 @@ draw_PCA <- function(data) {
   
   if (ncol(data) == 4)
     gridExtra::grid.arrange(g1_2, g2_3, screeplot, ncol = 2)
-    
+  
   else
     gridExtra::grid.arrange(g1_2, g2_3, g3_4, screeplot, ncol = 2)
 }

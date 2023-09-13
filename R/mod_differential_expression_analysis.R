@@ -12,187 +12,206 @@ mod_differential_expression_analysis_ui <- function(id) {
   tagList(
     shiny::h1("Differential expression analysis"),
     shiny::hr(),
-    #shinyalert::useShinyalert(),
+    # shinyalert::useShinyalert(),
+    shiny::withMathJax(),
     shinybusy::add_busy_spinner(
       spin = "self-building-square",
       position = 'top-left',
       margins = c(70, 1200)
     ),
+    
     #   ____________________________________________________________________________
     #   Dispersion estimation                                                   ####
     
     shiny::fluidRow(
-        shinydashboardPlus::box(
-          title = "Settings",
-          solidHeader = FALSE,
-          status = "success",
-          collapsible = TRUE,
-          closable = FALSE,
-          width = 4,
-          
-          shiny::h4("Estimation of disperion"),
-          col_2(
-            shinyWidgets::dropdownButton(
-              size = 'xs',
-              shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
-              circle = TRUE,
-              status = "success",
-              icon = shiny::icon("question"),
-              width = "600px",
-              tooltip = shinyWidgets::tooltipOptions(title = "More details")
-            )
-          ),
-          
-          shiny::hr(),
-          
-          #   ____________________________________________________________________________
-          #   DEG parameters                                                          ####
-          
-          
-          shiny::h4("Conditions to compare for differential analysis : "),
-          
-          shiny::uiOutput(ns("condition_choices")),
-          
-          
-          shiny::numericInput(
-            ns("dea_fdr"),
-            min = 0,
-            max = 1,
-            value = 0.05,
-            label = "Adjusted pvalue ( FDR )"
-          ),
-          shiny::numericInput(
-            ns("dea_lfc"),
-            min = 0,
-            max = Inf,
-            value = 1,
-            label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
-          ),
-          
-          shinyWidgets::actionBttn(
-            ns("deg_test_btn"),
-            label = "Detect differentially expressed genes",
-            color = "success",
-            style = "material-flat"
-          ),
-          
-          shiny::hr(),
-          shiny::uiOutput(ns("deg_test_summary")),
-          shiny::hr(),
-          shiny::uiOutput(ns("deg_number_summary")),
-          
-          shiny::hr(),
-          shiny::br(),
-          
-          
-          shiny::uiOutput(ns("dl_bttns"))
-          
-          
+      shinydashboardPlus::box(
+        title = "Settings",
+        solidHeader = FALSE,
+        status = "success",
+        collapsible = TRUE,
+        closable = FALSE,
+        width = 4,
+        
+        shiny::h4("Estimation of disperion"),
+        col_2(
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            shiny::includeMarkdown(system.file("extdata", "edgeR.md", package = "DIANE")),
+            circle = TRUE,
+            status = "success",
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
         ),
+        
+        shiny::hr(),
+        
+        #   ____________________________________________________________________________
+        #   DEG parameters                                                          ####
+        
+        
+        shiny::h4("Conditions to compare for differential analysis : "),
+        
+        shiny::uiOutput(ns("condition_choices")),
+        
+        shiny::htmlOutput(ns("condition_choices_visualisation")),
+        
+        shiny::numericInput(
+          ns("dea_fdr"),
+          min = 0,
+          max = 1,
+          step = 0.01,
+          value = 0.05,
+          label = "Adjusted pvalue ( FDR )"
+        ),
+        shiny::numericInput(
+          ns("dea_lfc"),
+          min = 0,
+          max = Inf,
+          value = 1,
+          label = "Absolute Log Fold Change ( Log2 ( Perturbation / Reference ) ) :"
+        ),
+        
+        
+        shinyWidgets::actionBttn(
+          ns("deg_test_btn"),
+          label = "Detect differentially expressed genes",
+          color = "success",
+          style = "material-flat"
+        ),
+        
+        shiny::hr(),
+        shiny::uiOutput(ns("deg_test_summary")),
+        shiny::hr(),
+        shiny::uiOutput(ns("deg_number_summary")),
+        
+        shiny::hr(),
+        shiny::br(),
+        
+        
+        shiny::uiOutput(ns("dl_bttns"))
+        
+        
+      ),
       
       #   ____________________________________________________________________________
       #   Visualisation of the results                                            ####
       
-        shinydashboard::tabBox(
-          title = "Results",
-          width = 8,
-          shiny::tabPanel(title = "Results table",
-                          shiny::uiOutput(ns("table_ui"))),
-          shiny::tabPanel(
-            title = "MA - Vulcano plots",
-            
-            shinyWidgets::switchInput(
-              inputId = ns("MA_vulcano_switch"),
-              value = TRUE,
-              onLabel = "MA",
-              offLabel = "Volcano",
-              onStatus = 'success'
-            ),
-            
-            
-            shiny::plotOutput(ns("ma_vulcano"), height = "700px")
-            
-          ),
-          shiny::tabPanel(
-            title = "Heatmap",
-            shiny::uiOutput(ns("heatmap_conditions_choice")),
-            shiny::plotOutput(ns("heatmap"), height = "700px")
+      shinydashboard::tabBox(
+        title = "Results",
+        width = 8,
+        shiny::tabPanel(title = "Results table",
+                        shiny::uiOutput(ns("table_ui"))),
+        shiny::tabPanel(
+          title = "MA - Vulcano plots",
+          
+          shinyWidgets::switchInput(
+            inputId = ns("MA_vulcano_switch"),
+            value = TRUE,
+            onLabel = "MA",
+            offLabel = "Volcano",
+            onStatus = 'success'
           ),
           
-          #   ____________________________________________________________________________
-          #   Go enrichment                                                           ####
           
-          shiny::tabPanel(
-            title = "Gene Ontology enrichment",
-            
+          shiny::plotOutput(ns("ma_vulcano"), height = "700px")
+          
+        ),
+        shiny::tabPanel(
+          title = "Heatmap",
+          shiny::uiOutput(ns("heatmap_conditions_choice")),
+          shiny::plotOutput(ns("heatmap"), height = "700px")
+        ),
+        shiny::tabPanel(
+          title = "Pvalues histogram",
+          shiny::plotOutput(ns("pvalue_hist"), height = "450px"),
+          shiny::helpText(
+            "This raw pvalue histogram can be used as a diagnostic
+                          tool. The density of pvalue shoud be evenly distributed
+                          along the plot, except for a peak near 0.
+                          You can dynamically change thefold change cutoff,
+                          and should observe the plot with a cutoff
+                          of 0 to look at the whole output from the differential
+                          expression analysis."
+          )
+        ), 
+        
+        
+        #   ____________________________________________________________________________
+        #   Go enrichment                                                           ####
+        
+        shiny::tabPanel(
+          title = "Gene Ontology enrichment",
+          
+          shinyWidgets::radioGroupButtons(
+            ns("up_down_go_radio"),label = "Genes to study :",
+            choices = c("All", "Up-regulated", "Down-regulated"),
+            selected = "All",
+            direction = "horizontal",
+            checkIcon = list(yes = shiny::icon("ok",
+                                               lib = "glyphicon"))
+          ),
+          
+          col_4(
+            shinyWidgets::actionBttn(
+              ns("go_enrich_btn"),
+              label = "Start GO enrichment analysis",
+              color = "success",
+              style = "material-flat"
+            )
+          ),
+          col_4(
             shinyWidgets::radioGroupButtons(
-              ns("up_down_go_radio"),label = "Genes to study :",
-              choices = c("All", "Up-regulated", "Down-regulated"),
-              selected = "All",
-              direction = "horizontal",
+              ns("draw_go"),
+              choices = c("Dot plot", "Enrichment map", "Data table"),
+              selected = "Dot plot",
+              justified = TRUE,
+              direction = "vertical",
+              checkIcon = list(yes = shiny::icon("ok",
+                                                 lib = "glyphicon"))
+            )
+            
+          ),
+          
+          col_4(
+            shinyWidgets::radioGroupButtons(
+              ns("go_type"),
+              choiceNames = c(
+                "Biological process",
+                "Cellular component",
+                "Molecular function"
+              ),
+              choiceValues = c("BP", "CC", "MF"),
+              selected = "BP",
+              justified = TRUE,
+              direction = "vertical",
               checkIcon = list(yes = shiny::icon("ok",
                                                  lib = "glyphicon"))
             ),
-            
-            col_4(
-              shinyWidgets::actionBttn(
-                ns("go_enrich_btn"),
-                label = "Start GO enrichment analysis",
-                color = "success",
-                style = "material-flat"
-              )
-            ),
-            col_4(
-              shinyWidgets::radioGroupButtons(
-                ns("draw_go"),
-                choices = c("Dot plot", "Enrichment map", "Data table"),
-                selected = "Dot plot",
-                justified = TRUE,
-                direction = "vertical",
-                checkIcon = list(yes = shiny::icon("ok",
-                                                   lib = "glyphicon"))
-              )
-              
-            ),
-            
-            col_4(
-              shinyWidgets::radioGroupButtons(
-                ns("go_type"),
-                choiceNames = c(
-                  "Biological process",
-                  "Cellular component",
-                  "Molecular function"
-                ),
-                choiceValues = c("BP", "CC", "MF"),
-                selected = "BP",
-                justified = TRUE,
-                direction = "vertical",
-                checkIcon = list(yes = shiny::icon("ok",
-                                                   lib = "glyphicon"))
-              ),
-              shiny::uiOutput(ns("max_go_choice"))
-            ),
-            
-            shiny::uiOutput(ns("custom_data_go")),
-            
-            shiny::hr(),
-            
-            shiny::fluidRow(col_12(shiny::uiOutput(ns(
-              "go_results"
-            ))))
+            shiny::uiOutput(ns("max_go_choice"))
           ),
-          shiny::tabPanel(
-            title = "Compare genes lists (Venn)",
-            shiny::h5(
-              "Once more than one differential expression analysis were performed,
+          
+          shiny::uiOutput(ns("custom_data_go")),
+          
+          shiny::hr(),
+          
+          shiny::fluidRow(col_12(shiny::uiOutput(ns(
+            "go_results"
+          ))))
+        ),
+        shiny::tabPanel(
+          title = "Compare genes lists (Venn)",
+          shiny::h5(
+            "Once more than one differential expression analysis were performed,
                     you can visualise and compare the different genes lists in a Venn
                     diagram."
-            ),
-            shiny::uiOutput(ns("venn_lists_choice_2")),
-            shiny::plotOutput(ns("venn"), height = "700px"),
-            shiny::uiOutput(ns("venn_spec_comp_choice_2")),
-            shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
-          )
+          ),
+          shiny::uiOutput(ns("venn_lists_choice_2")),
+          shiny::plotOutput(ns("venn"), height = "700px"),
+          shiny::uiOutput(ns("venn_spec_comp_choice_2")),
+          shiny::uiOutput(ns("venn_spec_comp_bttn_2"))
+        )
       ) 
     )
   )
@@ -209,8 +228,6 @@ mod_differential_expression_analysis_ui <- function(id) {
 mod_differential_expression_analysis_server <-
   function(input, output, session, r) {
     ns <- session$ns
-    
-    
     
     r_dea <- shiny::reactiveValues(
       top_tags = NULL,
@@ -232,10 +249,11 @@ mod_differential_expression_analysis_server <-
       req(r$conditions)
       tagList(
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("reference"),
             label = "Reference",
             choices = unique(r$conditions),
+            selected = unique(r$conditions)[1],
             justified = TRUE,
             direction = "vertical",
             checkIcon = list(yes = shiny::icon("ok",
@@ -244,7 +262,7 @@ mod_differential_expression_analysis_server <-
         ),
         
         col_6(
-          shinyWidgets::radioGroupButtons(
+          shinyWidgets::checkboxGroupButtons(
             inputId = ns("perturbation"),
             label = "Perturbation",
             choices = unique(r$conditions),
@@ -258,7 +276,95 @@ mod_differential_expression_analysis_server <-
       )
     })
     
+    output$condition_choices_visualisation <- shiny::renderText({
+      # req(input$reference, input$perturbation)
+      if(is.null(input$reference)){
+        reference_text = "<span style=\"color: #A52014\">NOTHING SELECTED</span>"
+      } else {
+        reference_text <- ifelse(test = length(input$reference) == 1,
+                                 yes = input$reference,
+                                 no = paste0(input$reference, collapse = " + "))
+      }
+      if(is.null(input$perturbation)){
+        perturbation_text = "<span style=\"color: #A52014\">NOTHING SELECTED</span>"
+      } else {
+        perturbation_text <- ifelse(test = length(input$perturbation) == 1,
+                                    yes = input$perturbation,
+                                    no = paste0(input$perturbation, collapse = " + "))
+      }
+      
+      if(length(input$reference) == 0 | length(input$perturbation) == 0){
+        comparison_type <- "Invalid comparison"
+      } else if(length(input$reference) == 1 & length(input$perturbation) == 1) {
+        comparison_type <- "Simple comparison"
+      } else {
+        comparison_equation <- paste0("$$",
+                                      "\\frac{",
+                                      ifelse(
+                                        length(input$perturbation) > 1,
+                                        paste0(
+                                          "\\frac{",
+                                          paste0(input$perturbation, collapse = "+"),
+                                          "}{",
+                                          length(input$perturbation),
+                                          "}"
+                                        ),
+                                        input$perturbation
+                                      ),
+                                      "}{", #Middle of the equation
+                                      ifelse(
+                                        length(input$reference) > 1,
+                                        paste0(
+                                          "\\frac{",
+                                          paste0(input$reference, collapse = "+"),
+                                          "}{",
+                                          length(input$reference),
+                                          "}"
+                                        ),
+                                        input$reference
+                                      ), "}\\!$$"
+        )
+        
+        comparison_type <- paste0(
+          "Multiple comparison",
+          shinyWidgets::dropdownButton(
+            size = 'xs',
+            label = "Multiple condition differential expression information",
+            "To perform a multi-factorial differential expression analysis, the
+            mean of the reference conditions is compared to the mean of the perturbation
+            conditions. The fold change is computed using mainly a geometric mean of 
+            the different conditions, which may be shrink by EdgeR internal 
+            computation process.",
+            withMathJax(comparison_equation),
+            circle = TRUE,
+            status = "success",
+            inline = TRUE,
+            icon = shiny::icon("question"),
+            width = "600px",
+            tooltip = shinyWidgets::tooltipOptions(title = "More details")
+          )
+        )
+      }
+      
+      # withMathJax(sprintf("frac{%s}{%s}", input$reference ,length(input$reference)))
+      as.character(
+        paste0(
+          "<div style=\"text-align: center; font-family: 'Arial';\"> <h4 style=\"text-align: center\"><b>",comparison_type,"</b></h4>",
+          shiny::column(6,
+                        HTML(paste0("<b>Reference</b><br>",reference_text,""))
+          ),
+          shiny::column(6,
+                        HTML(paste0("<b>Perturbation</b><br>",perturbation_text, ""))
+          )," </div>"
+        )
+      )
+    })
     
+    output$pvalue_hist <- shiny::renderPlot({
+      shiny::req(r_dea$tags)
+      # draw_raw_pvalue_histogram(r_dea$tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,])
+      draw_raw_pvalue_histogram(r_dea$tags, bins = 100, lfc = input$dea_lfc)
+    })
     
     #   ____________________________________________________________________________
     #   custom go                                                               ####
@@ -334,30 +440,47 @@ mod_differential_expression_analysis_server <-
       }
       
       shiny::req(r$fit,
-                 input$dea_fdr,
-                 input$reference,
-                 input$perturbation)
+                 input$dea_fdr)
       
-      if (input$reference == input$perturbation) {
+      if (is.null(input$reference) | is.null(input$perturbation)) {
+        shinyalert::shinyalert("You must select at least one reference and one perturbation.",
+                               type = "error")
+      }
+      shiny::req(input$reference, input$perturbation)
+      
+      if (any(input$reference %in% input$perturbation) |
+          any(input$perturbation %in% input$reference)) {
         shinyalert::shinyalert("You tried to compare the same conditions!
                                You may need some coffee...",
                                type = "error")
       }
-      shiny::req(!input$reference == input$perturbation)
+      shiny::req(!any(input$reference %in% input$perturbation) | !any(input$perturbation %in% input$reference))
       
       
       r_dea$tags <-
         estimateDEGs(r$fit,
                      reference = input$reference,
-                     perturbation = input$perturbation)
+                     perturbation = input$perturbation
+        )
       
       r_dea$top_tags <-
         r_dea$tags$table[r_dea$tags$table$FDR < input$dea_fdr,]
       r_dea$top_tags <-
         r_dea$top_tags[abs(r_dea$top_tags$logFC) > input$dea_lfc,]
       r_dea$DEGs <- r_dea$top_tags$genes
-      r_dea$ref <- input$reference
-      r_dea$trt <- input$perturbation
+      
+      ###Give specific names to multiple conditions dEA
+      if(length(input$reference)>1){
+        r_dea$ref <- paste0("(", paste0(input$reference, collapse = " + "), ")")
+      } else {
+        r_dea$ref <- input$reference
+      }
+      if(length(input$perturbation)>1){
+        r_dea$trt <- paste0("(", paste0(input$perturbation, collapse = " + "), ")")
+      } else {
+        r_dea$trt <- input$perturbation
+      }
+      
       r$DEGs[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$DEGs
       r$top_tags[[paste(r_dea$ref, r_dea$trt)]] <- r_dea$top_tags
       r_dea$go <- NULL
@@ -376,10 +499,8 @@ mod_differential_expression_analysis_server <-
         
         if (r$splicing_aware)
           ids <- get_locus(rownames(top), unique = FALSE)
-        
         else
           ids <- rownames(top)
-        
         top[, colnames(r$gene_info)] <-
           r$gene_info[match(ids, rownames(r$gene_info)), ]
       }
@@ -447,6 +568,12 @@ mod_differential_expression_analysis_server <-
       tagList(
         shiny::fluidRow(
           shinydashboardPlus::descriptionBlock(
+            numberColor = "black",
+            header = "Current comparison",
+            text = paste0(r_dea$ref, " versus ", r_dea$trt),
+            rightBorder = TRUE
+          ),
+          shinydashboardPlus::descriptionBlock(
             number = sum(r$top_tags[[paste(r_dea$ref, r_dea$trt)]]$logFC > 0),
             numberColor = "olive",
             numberIcon = shiny::icon('caret-up'),
@@ -496,7 +623,7 @@ mod_differential_expression_analysis_server <-
     
     output$download_table_csv <- shiny::downloadHandler(
       filename = function() {
-        paste(paste0("DEGs_", r_dea$ref, "-", r_dea$trt, ".tsv"))
+        paste(paste0("DEGs_", r_dea$ref, "-versus-", r_dea$trt, ".tsv"))
       },
       content = function(file) {
         
@@ -601,19 +728,19 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
       
       table <- DT::datatable(r_dea$gene_table,
-                    selection = "single",
-                    option = list(scrollX = TRUE))
-        
-      table <- DT::formatSignif(table, 
-                         columns = c("logFC", "logCPM", "FDR"),
-                         digits = 4)
+                             selection = "single",
+                             option = list(scrollX = TRUE))
       
-        DT::formatStyle(table,
-          columns = c("Regulation"),
-          target = c("cell", "row"),
-          backgroundColor = DT::styleEqual(c("Up", "Down"), 
-                                           c("#72F02466", c("#FF000035"))),
-        )
+      table <- DT::formatSignif(table, 
+                                columns = c("logFC", "logCPM", "FDR"),
+                                digits = 4)
+      
+      DT::formatStyle(table,
+                      columns = c("Regulation"),
+                      target = c("cell", "row"),
+                      backgroundColor = DT::styleEqual(c("Up", "Down"), 
+                                                       c("#72F02466", c("#FF000035"))),
+      )
     })
     
     shiny::observeEvent(input$deg_table_rows_selected, {
@@ -655,7 +782,7 @@ mod_differential_expression_analysis_server <-
                                            lib = "glyphicon"))
       )
     })
-
+    
     
     output$venn_lists_choice_2 <- shiny::renderUI({
       shiny::req(length(r$DEGs) > 1)
@@ -920,11 +1047,15 @@ mod_differential_expression_analysis_server <-
       shiny::req(r$conditions)
       shiny::req(r$top_tags, r_dea$ref, r_dea$trt)
       shiny::req(r$top_tags[[paste(r_dea$ref, r_dea$trt)]])
+      browser()
+      genes_conditions <- unique(unlist(stringr::str_extract_all( ##Catch probably any condition name.
+        paste(r_dea$ref, r_dea$trt), pattern = "[^()+ ]+"))
+      )
       shinyWidgets::checkboxGroupButtons(
         inputId = ns("conds_heatmap"),
         label = "Conditions :",
         choices = unique(r$conditions),
-        selected = c(r_dea$ref, r_dea$trt),
+        selected = genes_conditions,
         justified = TRUE,
         checkIcon = list(yes = shiny::icon("ok",
                                            lib = "glyphicon"))
@@ -1183,7 +1314,6 @@ mod_differential_expression_analysis_server <-
           plotly::plotlyOutput(ns("go_plot"), height = "800px")
       }
     })
-    
     
   }
 

@@ -66,9 +66,9 @@ It is also possible to visualize the expression levels of particular genes in yo
 
 This tab allows to detect genes with significant expression change between two transcriptomes.
 
-To do so, select the conditions that you want to compare for differential expression, and they will be the one tested against one another via likelihood ratio tests, as implemented in EdgeR.
+To do so, select the conditions that you want to compare for differential expression, and they will be the one tested against one another via likelihood ratio tests, as implemented in EdgeR. It is also possible to select multiples conditions as references and/or perturbations to make more complex comparisons. 
 
-The results are presented in a dataframe, ordered by adjusted pvalues (FDR). The dataframe contains the log fold changes (logFC), the average expression (logCPM) for each genes which FDR is lower than the specified adjusted p-value threshold. You can also choose to select genes having their absolute log fold change over a certain constant.
+The results are presented in a dataframe, ordered by adjusted pvalues (FDR). The dataframe contains the log2 fold changes (logFC), the average expression (logCPM) for each genes which FDR is lower than the specified adjusted p-value threshold. You can also choose to select genes having their absolute log2 fold change over a certain constant.
 
 <img src="dea.PNG" alt="Differential expression" align="center" width="800"/>
 
