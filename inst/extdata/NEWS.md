@@ -59,3 +59,7 @@ Bug fixes :
 + Fixed not displaying go results for custom org in network communities
 
 + In draw expression levels, genes filtered because of low expression can still be viewed
+
+### January 8, 2024 - Fix
+
+Fix a bug with normalization : Normalization was using total count instead of the normalization factors computed by the chosen method.
